@@ -37,7 +37,7 @@ import javafx.scene.Parent;
 public class FXML {
 
 	public static final String EXTERNAL_FXML_FILE = "urlsaver.fxml"; //$NON-NLS-1$
-	public static final String INTERNAL_FXML_FILE = "com/github/vbsw/urlsaver/default.fxml"; //$NON-NLS-1$
+	public static final String INTERNAL_FXML_FILE = "com/github/vbsw/urlsaver/urlsaver.fxml"; //$NON-NLS-1$
 
 	final Parent root;
 	final boolean external;

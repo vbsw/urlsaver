@@ -56,18 +56,24 @@ public class TaggedWordsReader extends Service<TaggedWords> {
 
 			if ( bytes!=null ) {
 				final TaggedWords taggedWords = new TaggedWords();
-				int offset = 0;
-				int progressPrev = 0;
-				int progressCurr = 0;
 
-				while ( ( offset<bytes.length )&&( isCancelled()==false ) ) {
-					offset = Parser.skipWhiteSpace(bytes,offset);
-					offset = readValues(bytes,offset,taggedWords);
-					progressCurr = offset*100/bytes.length;
-					if ( progressCurr>progressPrev ) {
-						progressPrev = progressCurr;
-						updateProgress(progressCurr,100);
+				if ( bytes.length>0 ) {
+					int offset = 0;
+					int progressPrev = 0;
+					int progressCurr = 0;
+
+					while ( ( offset<bytes.length )&&( isCancelled()==false ) ) {
+						offset = Parser.skipWhiteSpace(bytes,offset);
+						offset = readValues(bytes,offset,taggedWords);
+						progressCurr = offset*100/bytes.length;
+						if ( progressCurr>progressPrev ) {
+							progressPrev = progressCurr;
+							updateProgress(progressCurr,100);
+						}
 					}
+
+				} else {
+					updateProgress(100,100);
 				}
 				return taggedWords;
 

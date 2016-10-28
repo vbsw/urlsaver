@@ -39,7 +39,7 @@ public class FileDataList extends ArrayList<FileData> {
 	}
 
 	public void readAll ( ) {
-		final ArrayList<Path> filePaths = JarPath.getFiles(App.settings.dataFileExtension);
+		final ArrayList<Path> filePaths = JarPath.getFiles(App.settings.fileFileExtension);
 
 		super.clear();
 

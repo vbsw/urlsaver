@@ -49,6 +49,7 @@ public class Nodes {
 	public TextArea tagsTA;
 	public ListView<FileData> fileList;
 	public ListView<TaggedWords.Word> urlList;
+	public TabPane tabPane;
 	public Tab urlsTab;
 	public boolean externalFXML;
 
@@ -73,8 +74,6 @@ public class Nodes {
 
 	@SuppressWarnings ( "unchecked" )
 	private void lookupNodes ( ) {
-		final String tabPaneSelector = "#tab_pane"; //$NON-NLS-1$
-		final String urlsTabId = "urls_tab"; //$NON-NLS-1$
 		final String quitAppBtnSelector = "#quit_app_btn"; //$NON-NLS-1$
 		final String reloadFileBtnSelector = "#reload_file_btn"; //$NON-NLS-1$
 		final String reloadAllFilesBtnSelector = "#reload_all_files_btn"; //$NON-NLS-1$
@@ -86,7 +85,8 @@ public class Nodes {
 		final String urlsSearchTFSelector = "#urls_search_tf"; //$NON-NLS-1$
 		final String urlTFSelector = "#url_tf"; //$NON-NLS-1$
 		final String tagsTASelector = "#tags_ta"; //$NON-NLS-1$
-		final TabPane tabPane = (TabPane) root.lookup(tabPaneSelector);
+		final String tabPaneSelector = "#tab_pane"; //$NON-NLS-1$
+		final String urlsTabId = "urls_tab"; //$NON-NLS-1$
 
 		quitAppBtn = (Button) root.lookup(quitAppBtnSelector);
 		reloadFileBtn = (Button) root.lookup(reloadFileBtnSelector);
@@ -99,6 +99,7 @@ public class Nodes {
 		urlsSearchTF = (TextField) root.lookup(urlsSearchTFSelector);
 		urlTF = (TextField) root.lookup(urlTFSelector);
 		tagsTA = (TextArea) root.lookup(tagsTASelector);
+		tabPane = (TabPane) root.lookup(tabPaneSelector);
 		urlsTab = getTab(tabPane,urlsTabId);
 	}
 

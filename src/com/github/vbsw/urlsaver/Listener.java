@@ -51,7 +51,7 @@ public class Listener {
 
 	public static class FailFileRead implements EventHandler<WorkerStateEvent> {
 		@Override
-		public void handle ( WorkerStateEvent event ) {
+		public void handle ( final WorkerStateEvent event ) {
 			event.getSource().getException().printStackTrace();
 		}
 	}
@@ -95,11 +95,20 @@ public class Listener {
 
 		@Override
 		public void handle ( final WorkerStateEvent event ) {
-			final FileData selectedItem = App.nodes.fileList.getSelectionModel().getSelectedItem();
-			if ( fileData==selectedItem ) {
-				App.nodes.urlsTab.setDisable(false);
-			}
 			fileData.urls = (TaggedWords) event.getSource().getValue();
+
+			if ( fileData.fileName.equals(App.settings.fileAutoSelect) ) {
+				App.nodes.fileList.getSelectionModel().select(fileData);
+				App.nodes.tabPane.getSelectionModel().select(App.nodes.urlsTab);
+				App.nodes.urlsSearchTF.requestFocus();
+
+			} else {
+				final FileData selectedItem = App.nodes.fileList.getSelectionModel().getSelectedItem();
+				if ( fileData==selectedItem ) {
+					App.nodes.urlsTab.setDisable(false);
+				}
+			}
+
 		}
 	}
 
@@ -122,7 +131,7 @@ public class Listener {
 	public static class CloseWindow implements EventHandler<WindowEvent> {
 		@Override
 		public void handle ( final WindowEvent event ) {
-			System.out.println("closing");
+			System.out.println("URL Saver closed");
 		}
 	}
 
@@ -254,7 +263,7 @@ public class Listener {
 			if ( newValue!=null ) {
 				App.nodes.urlTF.setText(newValue.string);
 				App.nodes.tagsTA.setText(newValue.tagsString);
-				
+
 			} else {
 				final String defaultText = ""; //$NON-NLS-1$
 				App.nodes.urlTF.setText(defaultText);

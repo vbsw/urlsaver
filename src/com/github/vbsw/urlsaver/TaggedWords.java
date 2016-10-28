@@ -168,11 +168,11 @@ public class TaggedWords extends ArrayList<Word> {
 				final int tagWordIndex = tag.binarySearch(this);
 				final int tagInsertIndex = -tagIndex-1;
 				tags.add(tagInsertIndex,tag);
+				tagsToString();
 
 				if ( tagWordIndex<0 ) {
 					final int tagWordInsertIndex = -tagWordIndex-1;
 					tag.words.add(tagWordInsertIndex,this);
-					tagsToString();
 				}
 			}
 			return tag;
@@ -181,7 +181,7 @@ public class TaggedWords extends ArrayList<Word> {
 		private void tagsToString ( ) {
 			stringBuilder.delete(0,stringBuilder.length());
 
-			for ( Tag tag: tagList ) {
+			for ( Tag tag: tags ) {
 				if ( stringBuilder.length()>0 ) {
 					stringBuilder.append(' ');
 					stringBuilder.append(tag.string);

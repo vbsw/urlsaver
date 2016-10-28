@@ -35,14 +35,15 @@ import java.nio.file.Paths;
 public class Properties extends java.util.Properties {
 
 	private static final String EXTERNAL_FILE = "urlsaver.properties"; //$NON-NLS-1$
-	private static final String INTERNAL_PATH = "com/github/vbsw/urlsaver/default.properties"; //$NON-NLS-1$
+	private static final String INTERNAL_PATH = "com/github/vbsw/urlsaver/urlsaver.properties"; //$NON-NLS-1$
 
 	private static final String WINDOW_TITLE = "window.title"; //$NON-NLS-1$
 	private static final String WINDOW_WIDTH = "window.width"; //$NON-NLS-1$
 	private static final String WINDOW_HEIGHT = "window.height"; //$NON-NLS-1$
 	private static final String WINDOW_MAXIMIZED = "window.maximized"; //$NON-NLS-1$
-	private static final String DATA_AUTO_LOAD = "file.auto.load"; //$NON-NLS-1$
-	private static final String DATA_FILE_EXTENSION = "file.extension"; //$NON-NLS-1$
+	private static final String FILE_AUTO_LOAD = "file.auto.load"; //$NON-NLS-1$
+	private static final String FILE_EXTENSION = "file.extension"; //$NON-NLS-1$
+	private static final String FILE_AUTO_SELECT = "file.auto.select"; //$NON-NLS-1$
 
 	private final java.util.Properties properties;
 	private final boolean external;
@@ -105,23 +106,28 @@ public class Properties extends java.util.Properties {
 	/**
 	 * Returns true, if the property for data auto load has been set.
 	 * 
-	 * @param defaultAutoload
-	 * @return True, if data.autoload is set to 1, y, yes or true.
+	 * @param defaultAutoLoad
+	 * @return True, if file.auto.load is set to 1, y, yes or true.
 	 */
-	public boolean isDataAutoLoad ( final boolean defaultAutoload ) {
+	public boolean isFileAutoLoad ( final boolean defaultAutoLoad ) {
 		try {
-			final String autoloadStr = properties.getProperty(DATA_AUTO_LOAD);
-			final boolean autoload = isTrue(autoloadStr);
-			return autoload;
+			final String autoLoadStr = properties.getProperty(FILE_AUTO_LOAD);
+			final boolean autoLoad = isTrue(autoLoadStr);
+			return autoLoad;
 
 		} catch ( final Exception e ) {
-			return defaultAutoload;
+			return defaultAutoLoad;
 		}
 	}
 
-	public String getDataFileExtension ( final String defaultDataFileExtension ) {
-		final String dataFileExtension = properties.getProperty(DATA_FILE_EXTENSION,defaultDataFileExtension);
-		return dataFileExtension;
+	public String getFileExtension ( final String defaultFileExtension ) {
+		final String fileExtension = properties.getProperty(FILE_EXTENSION,defaultFileExtension);
+		return fileExtension;
+	}
+
+	public String getFileAutoSelect ( final String defaultAutoSelect ) {
+		final String fileAutoSelect = properties.getProperty(FILE_AUTO_SELECT,defaultAutoSelect);
+		return fileAutoSelect;
 	}
 
 	private static java.util.Properties getExternalProperties ( ) {

@@ -33,6 +33,9 @@ import java.nio.file.Paths;
  */
 public class CSS {
 
+	public static final String EXTERNAL_CSS_FILE = "urlsaver.css"; //$NON-NLS-1$
+	public static final String INTERNAL_CSS_FILE = "com/github/vbsw/urlsaver/urlsaver.css"; //$NON-NLS-1$
+
 	public static String getURL ( ) {
 		final String externalStylesheetURL = getExternalStylesheetURL();
 
@@ -46,13 +49,12 @@ public class CSS {
 	}
 
 	private static String getExternalStylesheetURL ( ) {
-		final String externalCSSFile = "urlsaver.css"; //$NON-NLS-1$
-		final Path externalCSSPath = Paths.get(JarPath.get().toString(),externalCSSFile);
+		final Path externalCSSPath = Paths.get(JarPath.get().toString(),EXTERNAL_CSS_FILE);
 
 		if ( Files.exists(externalCSSPath) ) {
 			try {
 				final ClassLoader classLoader = CSS.class.getClassLoader();
-				final URL url = classLoader.getResource(externalCSSFile);
+				final URL url = classLoader.getResource(EXTERNAL_CSS_FILE);
 				final String urlStr = url.toExternalForm();
 				return urlStr;
 
@@ -63,11 +65,9 @@ public class CSS {
 	}
 
 	private static String getInternalStylesheetURL ( ) {
-		final String internalCSSFile = "com/github/vbsw/urlsaver/default.css"; //$NON-NLS-1$
-
 		try {
 			final ClassLoader classLoader = CSS.class.getClassLoader();
-			final URL url = classLoader.getResource(internalCSSFile);
+			final URL url = classLoader.getResource(INTERNAL_CSS_FILE);
 			final String urlStr = url.toExternalForm();
 			return urlStr;
 

@@ -78,7 +78,7 @@ public class App extends Application {
 		stage.setMaximized(settings.windowMaximized);
 		stage.show();
 
-		if ( App.settings.dataAutoLoad ) {
+		if ( App.settings.fileAutoLoad ) {
 			App.reloadFiles();
 		}
 

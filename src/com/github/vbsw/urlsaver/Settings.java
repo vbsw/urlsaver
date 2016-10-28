@@ -31,15 +31,17 @@ public class Settings {
 	public static final double DEFAULT_WINDOW_WIDTH = 720;
 	public static final double DEFAULT_WINDOW_HEIGHT = 420;
 	public static final boolean DEFAULT_WINDOW_MAXIMIZED = false;
-	public static final boolean DEFAULT_DATA_AUTO_LOAD = false;
-	public static final String DEFAULT_DATA_FILE_EXTENSION = "urls"; //$NON-NLS-1$
+	public static final boolean DEFAULT_FILE_AUTO_LOAD = false;
+	public static final String DEFAULT_FILE_EXTENSION = "urls"; //$NON-NLS-1$
+	public static final String DEFAULT_FILE_AUTO_SELECT = "all.urls.txt"; //$NON-NLS-1$
 
 	public String windowTitle;
 	public double windowWidth;
 	public double windowHeight;
 	public boolean windowMaximized;
-	public boolean dataAutoLoad;
-	public String dataFileExtension;
+	public boolean fileAutoLoad;
+	public String fileFileExtension;
+	public String fileAutoSelect;
 	public boolean externalProperties;
 	public double decorationWidth;
 	public double decorationHeight;
@@ -50,13 +52,13 @@ public class Settings {
 
 	public void read ( ) {
 		final Properties properties = new Properties();
-
 		windowTitle = properties.getWindowTitle(DEFAULT_WINDOW_TITLE);
 		windowWidth = properties.getWindowWidth(DEFAULT_WINDOW_WIDTH);
 		windowHeight = properties.getWindowHeight(DEFAULT_WINDOW_HEIGHT);
 		windowMaximized = properties.isWindowMaximized(DEFAULT_WINDOW_MAXIMIZED);
-		dataAutoLoad = properties.isDataAutoLoad(DEFAULT_DATA_AUTO_LOAD);
-		dataFileExtension = properties.getDataFileExtension(DEFAULT_DATA_FILE_EXTENSION);
+		fileAutoLoad = properties.isFileAutoLoad(DEFAULT_FILE_AUTO_LOAD);
+		fileFileExtension = properties.getFileExtension(DEFAULT_FILE_EXTENSION);
+		fileAutoSelect = properties.getFileAutoSelect(DEFAULT_FILE_AUTO_SELECT);
 		externalProperties = properties.isExternal();
 	}
 
