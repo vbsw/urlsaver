@@ -3,7 +3,7 @@
 ## About
 URL Saver is a program to manage URLs by tags, i.e. keywords.
 
-URL Saver is created by Vitali Baumtrok <vbit@mailbox.org> and published at <https://github.com/vbsw/urlsaver>.
+URL Saver is created by Vitali Baumtrok <vbsw@mailbox.org> and published at <https://github.com/vbsw/urlsaver>.
 
 ## Copying
 URL Saver is free software: you can redistribute it and/or modify
