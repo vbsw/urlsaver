@@ -18,7 +18,7 @@
                <children>
                   <HBox prefHeight="10.0" prefWidth="720.0" spacing="5.0">
                      <children>
-                        <Button fx:id="reload_file_btn" disable="true" mnemonicParsing="false" text="Reload File" />
+                        <Button fx:id="reload_file_btn" disable="true" mnemonicParsing="false" text="Reload" />
                         <Button fx:id="reload_all_files_btn" disable="true" mnemonicParsing="false" text="Reload All" />
                      </children>
                   </HBox>
@@ -59,7 +59,7 @@
             </VBox>
          </content></Tab>
       <Tab text="Settings" />
-      <Tab text="About">
+      <Tab fx:id="about_tab" text="About">
          <content>
             <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
                <children>

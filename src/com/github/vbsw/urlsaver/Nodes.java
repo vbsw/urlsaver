@@ -51,6 +51,7 @@ public class Nodes {
 	public ListView<TaggedWords.Word> urlList;
 	public TabPane tabPane;
 	public Tab urlsTab;
+	public Tab aboutTab;
 	public boolean externalFXML;
 
 	public void recreate ( ) {
@@ -87,6 +88,7 @@ public class Nodes {
 		final String tagsTASelector = "#tags_ta"; //$NON-NLS-1$
 		final String tabPaneSelector = "#tab_pane"; //$NON-NLS-1$
 		final String urlsTabId = "urls_tab"; //$NON-NLS-1$
+		final String aboutTabId = "about_tab"; //$NON-NLS-1$
 
 		quitAppBtn = (Button) root.lookup(quitAppBtnSelector);
 		reloadFileBtn = (Button) root.lookup(reloadFileBtnSelector);
@@ -101,6 +103,7 @@ public class Nodes {
 		tagsTA = (TextArea) root.lookup(tagsTASelector);
 		tabPane = (TabPane) root.lookup(tabPaneSelector);
 		urlsTab = getTab(tabPane,urlsTabId);
+		aboutTab = getTab(tabPane,aboutTabId);
 	}
 
 	private Tab getTab ( final TabPane tabPane, final String urlsTabId ) {
@@ -115,15 +118,20 @@ public class Nodes {
 
 	private void setListeners ( ) {
 		quitAppBtn.setOnAction(new Listener.QuitAppBtn());
+		quitAppBtn.setOnKeyPressed(new Listener.KeyPressedQuitAppBtn());
 		reloadFileBtn.setOnAction(new Listener.ReloadFileBtn());
 		reloadAllFilesBtn.setOnAction(new Listener.ReloadAllFilesBtn());
 		openInBrowserBtn.setOnAction(new Listener.OpenInBrowserBtn());
+		urlsSearchBtn.setOnAction(new Listener.SearchUrlsBtn());
 		fileList.setCellFactory(new Listener.FileListCellFactory());
 		fileList.getSelectionModel().selectedItemProperty().addListener(new Listener.SelectFileListItem());
 		urlList.setCellFactory(new Listener.UrlListCellFactory());
 		urlList.getSelectionModel().selectedItemProperty().addListener(new Listener.SelectUrlListItem());
+		urlList.setOnKeyPressed(new Listener.KeyPressedUrlList());
+		urlList.setOnKeyReleased(new Listener.KeyReleasedUrlList(urlList.getOnKeyPressed()));
 		urlsSearchTF.textProperty().addListener(new Listener.TypedUrlsSearchTF());
-		urlsSearchTF.setOnAction(new Listener.ProcessUrlsSearchTF());
+		urlsSearchTF.setOnAction(new Listener.SearchUrlsTF());
+		urlsSearchTF.setOnKeyPressed(new Listener.KeyPressedUrlsSearchTF());
 	}
 
 	/*

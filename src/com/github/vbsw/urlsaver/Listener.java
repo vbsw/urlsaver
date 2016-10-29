@@ -31,15 +31,14 @@ import com.github.vbsw.urlsaver.TaggedWords.Word;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
@@ -67,21 +66,24 @@ public class Listener {
 		}
 	}
 
-	public static class ProcessUrlsSearchTF implements EventHandler<ActionEvent> {
+	public static class SearchUrlsTF implements EventHandler<ActionEvent> {
 		@Override
 		public void handle ( final ActionEvent event ) {
-			final FileData fileData = App.nodes.fileList.getSelectionModel().getSelectedItem();
-			App.nodes.urlsSearchBtn.setDisable(true);
-			fileData.updateSearchResults();
-			fileData.resambleSearchedKeys();
-			fillUrlList(fileData);
+			App.fillUrlList();
+			if ( App.nodes.urlList.getItems().size()>0 ) {
+				App.nodes.urlList.requestFocus();
+				App.nodes.urlList.getSelectionModel().select(0);
+			}
 		}
+	}
 
-		private void fillUrlList ( final FileData fileData ) {
-			final ObservableList<Word> list = App.nodes.urlList.getItems();
-			list.clear();
-			for ( Word word: fileData.searchedUrls ) {
-				list.add(word);
+	public static class KeyPressedUrlsSearchTF implements EventHandler<KeyEvent> {
+		@Override
+		public void handle ( final KeyEvent event ) {
+			final KeyCode keyCode = event.getCode();
+			if ( keyCode==KeyCode.ESCAPE ) {
+				// App.nodes.tabPane.getSelectionModel().select(App.nodes.aboutTab);
+				// App.nodes.quitAppBtn.requestFocus();
 			}
 		}
 	}
@@ -95,20 +97,18 @@ public class Listener {
 
 		@Override
 		public void handle ( final WorkerStateEvent event ) {
+			final FileData selectedFileData = App.nodes.fileList.getSelectionModel().getSelectedItem();
 			fileData.urls = (TaggedWords) event.getSource().getValue();
 
-			if ( fileData.fileName.equals(App.settings.fileAutoSelect) ) {
-				App.nodes.fileList.getSelectionModel().select(fileData);
-				App.nodes.tabPane.getSelectionModel().select(App.nodes.urlsTab);
-				App.nodes.urlsSearchTF.requestFocus();
-
-			} else {
-				final FileData selectedItem = App.nodes.fileList.getSelectionModel().getSelectedItem();
-				if ( fileData==selectedItem ) {
-					App.nodes.urlsTab.setDisable(false);
-				}
+			if ( fileData==selectedFileData ) {
+				App.nodes.urlsTab.setDisable(false);
 			}
 
+			if ( fileData.fileName.equals(App.settings.fileAutoSelect)&&( App.fileHasBeenSelected==false ) ) {
+				App.fileHasBeenSelected = true;
+				App.nodes.fileList.getSelectionModel().select(fileData);
+				App.focusUrlsSearchTF();
+			}
 		}
 	}
 
@@ -121,10 +121,8 @@ public class Listener {
 
 		@Override
 		public void changed ( final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue ) {
-			final ObservableList<FileData> fileTableItems = App.nodes.fileList.getItems();
-			final int fileDataIndex = fileTableItems.indexOf(fileData);
 			fileData.setLoaded(newValue.doubleValue());
-			fileTableItems.set(fileDataIndex,fileData);
+			App.nodes.fileList.refresh();
 		}
 	}
 
@@ -138,20 +136,26 @@ public class Listener {
 	public static class QuitAppBtn implements EventHandler<ActionEvent> {
 		@Override
 		public void handle ( final ActionEvent event ) {
-			final Node source = (Node) event.getSource();
-			final Window window = source.getScene().getWindow();
-			final WindowEvent closeEvent = new WindowEvent(window,WindowEvent.WINDOW_CLOSE_REQUEST);
-			window.fireEvent(closeEvent);
+			App.fireCloseEvent();
+		}
+	}
+
+	public static class KeyPressedQuitAppBtn implements EventHandler<KeyEvent> {
+		@Override
+		public void handle ( final KeyEvent event ) {
+			final KeyCode keyCode = event.getCode();
+			if ( keyCode==KeyCode.ENTER ) {
+				App.fireCloseEvent();
+			} else if ( keyCode==KeyCode.ESCAPE ) {
+				// App.focusUrlsSearchTF();
+			}
 		}
 	}
 
 	public static class ReloadFileBtn implements EventHandler<ActionEvent> {
 		@Override
 		public void handle ( final ActionEvent event ) {
-			final FileData fileData = App.nodes.fileList.getSelectionModel().getSelectedItem();
-			if ( fileData!=null ) {
-				fileData.read();
-			}
+			App.reloadSelectedFile();
 		}
 	}
 
@@ -160,6 +164,76 @@ public class Listener {
 		public void handle ( final ActionEvent event ) {
 			App.reloadFiles();
 		}
+	}
+
+	public static class OpenInBrowserBtn implements EventHandler<ActionEvent> {
+		@Override
+		public void handle ( final ActionEvent event ) {
+			final Word word = App.nodes.urlList.getSelectionModel().getSelectedItem();
+			if ( word!=null ) {
+				openURLInBrowser(word.string);
+			}
+		}
+	}
+
+	public static class SearchUrlsBtn implements EventHandler<ActionEvent> {
+		@Override
+		public void handle ( final ActionEvent event ) {
+			App.fillUrlList();
+		}
+	}
+
+	public static class KeyPressedUrlList implements EventHandler<KeyEvent> {
+		private boolean enterPressed;
+
+		@Override
+		public void handle ( final KeyEvent event ) {
+			final KeyCode keyCode = event.getCode();
+
+			if ( keyCode==KeyCode.ENTER ) {
+				final TaggedWords.Word selectedUrl = App.nodes.urlList.getSelectionModel().getSelectedItem();
+				if ( selectedUrl!=null ) {
+					if ( enterPressed==false ) {
+						enterPressed = true;
+						Listener.openURLInBrowser(selectedUrl.string);
+					}
+				} else {
+					enterPressed = false;
+				}
+
+			} else if ( keyCode==KeyCode.ESCAPE ) {
+				// final TaggedWords.Word selectedUrl = App.nodes.urlList.getSelectionModel().getSelectedItem();
+				// if ( selectedUrl!=null ) {
+				// App.nodes.urlsSearchTF.requestFocus();
+				// }
+			}
+		}
+	}
+
+	public static class KeyReleasedUrlList implements EventHandler<KeyEvent> {
+		private final KeyPressedUrlList keyPressedUrlList;
+
+		public KeyReleasedUrlList ( final EventHandler<? super KeyEvent> keyPressedUrlList ) {
+			this.keyPressedUrlList = (KeyPressedUrlList) keyPressedUrlList;
+		}
+
+		@Override
+		public void handle ( final KeyEvent event ) {
+			final KeyCode keyCode = event.getCode();
+			if ( keyCode==KeyCode.ENTER ) {
+				keyPressedUrlList.enterPressed = false;
+			}
+		}
+	}
+
+	public static class FileListCellFactory implements Callback<ListView<FileData>, ListCell<FileData>> {
+
+		@Override
+		public ListCell<FileData> call ( final ListView<FileData> listView ) {
+			final ListCell<FileData> listCell = new Listener.FileListCell();
+			return listCell;
+		}
+
 	}
 
 	public static class SelectFileListItem implements ChangeListener<FileData> {
@@ -180,14 +254,28 @@ public class Listener {
 		}
 	}
 
-	public static class FileListCellFactory implements Callback<ListView<FileData>, ListCell<FileData>> {
-
+	public static class UrlListCellFactory implements Callback<ListView<Word>, ListCell<Word>> {
 		@Override
-		public ListCell<FileData> call ( final ListView<FileData> listView ) {
-			final ListCell<FileData> listCell = new Listener.FileListCell();
+		public ListCell<Word> call ( final ListView<Word> param ) {
+			final ListCell<Word> listCell = new Listener.UrlListCell();
 			return listCell;
 		}
+	}
 
+	public static class SelectUrlListItem implements ChangeListener<Word> {
+		@Override
+		public void changed ( final ObservableValue<? extends Word> observable, final Word oldValue, final Word newValue ) {
+			if ( newValue!=null ) {
+				App.nodes.urlTF.setText(newValue.string);
+				App.nodes.tagsTA.setText(newValue.tagsString);
+
+			} else {
+				final String defaultText = ""; //$NON-NLS-1$
+				App.nodes.urlTF.setText(defaultText);
+				App.nodes.tagsTA.setText(defaultText);
+			}
+			App.nodes.openInBrowserBtn.setDisable(newValue==null);
+		}
 	}
 
 	private static class FileListCell extends ListCell<FileData> {
@@ -220,14 +308,6 @@ public class Listener {
 		}
 	}
 
-	public static class UrlListCellFactory implements Callback<ListView<Word>, ListCell<Word>> {
-		@Override
-		public ListCell<Word> call ( final ListView<Word> param ) {
-			final ListCell<Word> listCell = new Listener.UrlListCell();
-			return listCell;
-		}
-	}
-
 	private static class UrlListCell extends ListCell<Word> {
 		private static final EventHandler<MouseEvent> eventHandler = new Listener.DoubleClickUrlListItem();
 
@@ -253,32 +333,6 @@ public class Listener {
 				final UrlListCell cell = (UrlListCell) event.getSource();
 				final Word url = cell.getItem();
 				openURLInBrowser(url.string);
-			}
-		}
-	}
-
-	public static class SelectUrlListItem implements ChangeListener<Word> {
-		@Override
-		public void changed ( final ObservableValue<? extends Word> observable, final Word oldValue, final Word newValue ) {
-			if ( newValue!=null ) {
-				App.nodes.urlTF.setText(newValue.string);
-				App.nodes.tagsTA.setText(newValue.tagsString);
-
-			} else {
-				final String defaultText = ""; //$NON-NLS-1$
-				App.nodes.urlTF.setText(defaultText);
-				App.nodes.tagsTA.setText(defaultText);
-			}
-			App.nodes.openInBrowserBtn.setDisable(newValue==null);
-		}
-	}
-
-	public static class OpenInBrowserBtn implements EventHandler<ActionEvent> {
-		@Override
-		public void handle ( final ActionEvent event ) {
-			final Word word = App.nodes.urlList.getSelectionModel().getSelectedItem();
-			if ( word!=null ) {
-				openURLInBrowser(word.string);
 			}
 		}
 	}

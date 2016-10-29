@@ -1,11 +1,14 @@
 # URL Saver
 
 ## About
-URL Saver is a program to manage URLs by tags, i.e. keywords.
+URL Saver is a program to manage URLs by tags (i.e. keywords).
+URL Saver is published at <https://github.com/vbsw/urlsaver>.
 
-URL Saver is created by Vitali Baumtrok <vbsw@mailbox.org> and published at <https://github.com/vbsw/urlsaver>.
+Current version is 0.1.0.
 
-## Copying
+## Copyright
+Copyright 2016, Vitali Baumtrok (vbsw@mailbox.org).
+
 URL Saver is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -29,9 +32,19 @@ Clone the repository into your Eclipse workspace
 Open Eclipse and create a Java Project named URLSaver (like previously created directory).
 To create executable jar file, right click on project, then "export...", then export as "Runnable JAR file".
 
+## URL File Example
+Two consecutive lines with at least one character other then white space are
+a URL (first line) and tags (second line). Tags are separated by white space
+(no new line between tags). Example:
+
+	http://www.dict.cc
+	dictionary language lang dict
+	https://git-scm.com
+	git version control system distributed revision
+	https://www.eclipse.org
+	eclipse ide java compiler debugger
+
 ## References
-- <https://golang.org/doc/install>
 - <https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>
-- <https://github.com/golang/go/issues/12914>
-- <https://sitano.github.io/2016/04/28/golang-private/>
-- <https://github.com/aristanetworks/goarista/blob/master/monotime/nanotime.go>
+- <https://www.eclipse.org>
+- <http://www.oracle.com/technetwork/java/javase/downloads/index.html>

@@ -25,6 +25,8 @@ package com.github.vbsw.urlsaver;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import com.github.vbsw.urlsaver.TaggedWords.Word;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -32,6 +34,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 
 
 /**
@@ -46,12 +50,13 @@ public class App extends Application {
 	public static FileDataList fileDataList;
 	public static Scene scene;
 	public static Nodes nodes;
+	public static boolean fileHasBeenSelected;
 
 	public static void main ( final String[] args ) {
 		App.args = new Arguments(args);
-		App.args.print();
+		App.args.printInfo();
 
-		if ( App.args.isApplication() ) {
+		if ( App.args.hasNoInfo() ) {
 			Application.launch(App.class,args);
 
 		} else {
@@ -99,8 +104,25 @@ public class App extends Application {
 		stylesheets.add(cssURL);
 	}
 
+	public static void reloadSelectedFile ( ) {
+		final FileData fileData = App.nodes.fileList.getSelectionModel().getSelectedItem();
+		if ( fileData!=null ) {
+			fileData.clearSearch();
+			App.nodes.urlList.getItems().clear();
+			App.nodes.urlsSearchTF.clear();
+			fileData.read();
+		}
+	}
+
 	public static void reloadFiles ( ) {
+		final FileData selectedFileData = App.nodes.fileList.getSelectionModel().getSelectedItem();
+		if ( selectedFileData!=null ) {
+			selectedFileData.clearSearch();
+		}
+		App.nodes.urlList.getItems().clear();
+		App.nodes.urlsSearchTF.clear();
 		for ( FileData fileData: App.fileDataList ) {
+			fileData.clearSearch();
 			fileData.read();
 		}
 	}
@@ -113,6 +135,28 @@ public class App extends Application {
 	public static void setFileTitle ( final String fileString ) {
 		final Stage stage = (Stage) App.scene.getWindow();
 		stage.setTitle(App.settings.windowTitle+" ("+fileString+")");
+	}
+
+	public static void fillUrlList ( ) {
+		final FileData selectedFileData = App.nodes.fileList.getSelectionModel().getSelectedItem();
+		final ObservableList<Word> urlListItems = App.nodes.urlList.getItems();
+		App.nodes.urlsSearchBtn.setDisable(true);
+		selectedFileData.updateSearchedUrls();
+		urlListItems.clear();
+		for ( Word word: selectedFileData.searchedUrls ) {
+			urlListItems.add(word);
+		}
+	}
+
+	public static void fireCloseEvent ( ) {
+		final Window window = App.scene.getWindow();
+		final WindowEvent closeEvent = new WindowEvent(window,WindowEvent.WINDOW_CLOSE_REQUEST);
+		window.fireEvent(closeEvent);
+	}
+
+	public static void focusUrlsSearchTF ( ) {
+		App.nodes.tabPane.getSelectionModel().select(App.nodes.urlsTab);
+		App.nodes.urlsSearchTF.requestFocus();
 	}
 
 }

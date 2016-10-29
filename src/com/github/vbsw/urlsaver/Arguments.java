@@ -53,7 +53,7 @@ public class Arguments {
 		}
 	}
 
-	public void print ( ) {
+	public void printInfo ( ) {
 		switch ( result ) {
 			case ERROR_TOO_MANY_ARGS:
 			System.out.println("error: too many arguments");
@@ -83,7 +83,7 @@ public class Arguments {
 		}
 	}
 
-	public boolean isApplication ( ) {
+	public boolean hasNoInfo ( ) {
 		return result==ParseResult.NONE;
 	}
 

@@ -114,17 +114,19 @@ public class FileData {
 		addKey(currSearchedTags,offset,currIndex,tagsString);
 		updateSearchedTagsEqual();
 	}
-
-	public void resambleSearchedKeys ( ) {
-		prevSearchedTags.clear();
-		prevSearchedTags.addAll(currSearchedTags);
-	}
 	
 	/**
 	 * Updates {@code searchedUrls} by searched tags.
 	 */
-	public void updateSearchResults() {
+	public void updateSearchedUrls() {
+		prevSearchedTags.clear();
+		prevSearchedTags.addAll(currSearchedTags);
 		searchedUrls.searchAND(urls,currSearchedTags);
+	}
+
+	public void clearSearch ( ) {
+		prevSearchedTags.clear();
+		currSearchedTags.clear();
 	}
 
 	private void updateSearchedTagsEqual ( ) {
