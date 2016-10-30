@@ -4,7 +4,7 @@
 URL Saver is a program to manage URLs by tags (i.e. keywords).
 URL Saver is published at <https://github.com/vbsw/urlsaver>.
 
-Latest version is 0.1.0.
+Latest version is 0.2.0.
 
 ## Copyright
 Copyright 2016, Vitali Baumtrok (vbsw@mailbox.org).

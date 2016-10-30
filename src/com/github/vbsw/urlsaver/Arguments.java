@@ -71,7 +71,7 @@ public class Arguments {
 			break;
 
 			case PRINT_VERSION:
-			System.out.println("URL Saver (version 0.1.0)");
+			System.out.println("URL Saver (version 0.2.0)");
 			System.out.println("This program is free software: you can redistribute it and/or modify");
 			System.out.println("it under the terms of the GNU General Public License as published by");
 			System.out.println("the Free Software Foundation, either version 3 of the License, or");

@@ -37,6 +37,8 @@ import javafx.event.EventHandler;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.WindowEvent;
@@ -47,6 +49,32 @@ import javafx.util.Callback;
  * @author Vitali Baumtrok
  */
 public class Listener {
+
+	public static class KeyPressedScene implements EventHandler<KeyEvent> {
+		final KeyCombination keyComb = new KeyCodeCombination(KeyCode.ESCAPE,KeyCombination.CONTROL_DOWN);
+
+		@Override
+		public void handle ( final KeyEvent event ) {
+			final KeyCode keyCode = event.getCode();
+
+			if ( keyCode == KeyCode.F2 ) {
+				event.consume();
+				App.selectFileTab();
+
+			} else if ( keyCode == KeyCode.F3 ) {
+				event.consume();
+				App.selectUrlsTab();
+
+			} else if ( keyCode == KeyCode.F4 ) {
+				event.consume();
+				App.selectSettingsTab();
+
+			} else if ( keyCode == KeyCode.F5 ) {
+				event.consume();
+				App.selectAboutTab();
+			}
+		}
+	}
 
 	public static class FailFileRead implements EventHandler<WorkerStateEvent> {
 		@Override
@@ -107,7 +135,8 @@ public class Listener {
 			if ( fileData.fileName.equals(App.settings.fileAutoSelect) && (App.fileHasBeenSelected == false) ) {
 				App.fileHasBeenSelected = true;
 				App.nodes.fileList.getSelectionModel().select(fileData);
-				App.focusUrlsSearchTF();
+				App.nodes.tabPane.getSelectionModel().select(App.nodes.urlsTab);
+				App.nodes.urlsSearchTF.requestFocus();
 			}
 		}
 	}
@@ -226,14 +255,25 @@ public class Listener {
 		}
 	}
 
-	public static class FileListCellFactory implements Callback<ListView<FileData>, ListCell<FileData>> {
+	public static class KeyPressedFileList implements EventHandler<KeyEvent> {
+		@Override
+		public void handle ( final KeyEvent event ) {
+			final KeyCode keyCode = event.getCode();
+			final FileData selectedFileData = App.nodes.fileList.getSelectionModel().getSelectedItem();
+			if ( keyCode == KeyCode.ENTER && selectedFileData != null && selectedFileData.isLoaded() ) {
+				event.consume();
+				App.nodes.tabPane.getSelectionModel().select(App.nodes.urlsTab);
+				App.nodes.urlsSearchTF.requestFocus();
+			}
+		}
+	}
 
+	public static class FileListCellFactory implements Callback<ListView<FileData>, ListCell<FileData>> {
 		@Override
 		public ListCell<FileData> call ( final ListView<FileData> listView ) {
 			final ListCell<FileData> listCell = new Listener.FileListCell();
 			return listCell;
 		}
-
 	}
 
 	public static class SelectFileListItem implements ChangeListener<FileData> {
@@ -243,6 +283,8 @@ public class Listener {
 				final String filePathStr = newValue.filePathStr;
 				App.nodes.fileNameTF.setText(filePathStr);
 				App.setFileTitle(newValue.fileName);
+				App.nodes.urlsSearchTF.clear();
+				newValue.clearSearch();
 
 			} else {
 				final String defaultText = ""; //$NON-NLS-1$
@@ -274,7 +316,6 @@ public class Listener {
 				App.nodes.urlTF.setText(defaultText);
 				App.nodes.tagsTA.setText(defaultText);
 			}
-			App.nodes.openInBrowserBtn.setDisable(newValue == null);
 		}
 	}
 

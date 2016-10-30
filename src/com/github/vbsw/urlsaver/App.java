@@ -32,6 +32,7 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -74,6 +75,7 @@ public class App extends Application {
 		App.nodes = new Nodes();
 
 		App.fileDataList.readAll();
+		App.scene.addEventFilter(KeyEvent.KEY_PRESSED,new Listener.KeyPressedScene());
 		App.recreateNodes();
 		App.reloadCSS();
 
@@ -154,9 +156,34 @@ public class App extends Application {
 		window.fireEvent(closeEvent);
 	}
 
-	public static void focusUrlsSearchTF ( ) {
-		App.nodes.tabPane.getSelectionModel().select(App.nodes.urlsTab);
-		App.nodes.urlsSearchTF.requestFocus();
+	public static void selectFileTab ( ) {
+		if ( App.nodes.filesTab.isDisable() == false ) {
+			final FileData selectedFileData = App.nodes.fileList.getSelectionModel().getSelectedItem();
+			App.nodes.tabPane.getSelectionModel().select(App.nodes.filesTab);
+			if ( selectedFileData != null ) {
+				App.nodes.fileList.requestFocus();
+			}
+		}
+	}
+
+	public static void selectUrlsTab ( ) {
+		if ( App.nodes.urlsTab.isDisable() == false ) {
+			App.nodes.tabPane.getSelectionModel().select(App.nodes.urlsTab);
+			App.nodes.urlsSearchTF.requestFocus();
+		}
+	}
+
+	public static void selectAboutTab ( ) {
+		if ( App.nodes.aboutTab.isDisable() == false ) {
+			App.nodes.tabPane.getSelectionModel().select(App.nodes.aboutTab);
+			App.nodes.quitAppBtn.requestFocus();
+		}
+	}
+
+	public static void selectSettingsTab ( ) {
+		if ( App.nodes.settingsTab.isDisable() == false ) {
+			App.nodes.tabPane.getSelectionModel().select(App.nodes.settingsTab);
+		}
 	}
 
 }

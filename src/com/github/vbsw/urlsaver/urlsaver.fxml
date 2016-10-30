@@ -2,17 +2,19 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <TabPane fx:id="tab_pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="720.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
   <tabs>
-    <Tab text="Files">
+    <Tab fx:id="files_tab" text="Files">
          <content>
             <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
                <children>
@@ -20,6 +22,10 @@
                      <children>
                         <Button fx:id="reload_file_btn" disable="true" mnemonicParsing="false" text="Reload" />
                         <Button fx:id="reload_all_files_btn" disable="true" mnemonicParsing="false" text="Reload All" />
+                        <AnchorPane HBox.hgrow="ALWAYS" />
+                        <Button fx:id="files_cancel_btn" disable="true" mnemonicParsing="false" text="Cancel" />
+                        <Button fx:id="files_save_btn" disable="true" mnemonicParsing="false" text="Save" />
+                        <Button disable="true" mnemonicParsing="false" text="Save, OK" />
                      </children>
                   </HBox>
                   <ListView fx:id="file_list" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
@@ -38,11 +44,14 @@
                      <children>
                         <Button fx:id="urls_search_btn" disable="true" mnemonicParsing="false" text="Search" />
                         <Button fx:id="open_in_browser_btn" disable="true" mnemonicParsing="false" text="Open in Browser" />
-                        <Button disable="true" mnemonicParsing="false" text="Add" />
-                        <Button disable="true" mnemonicParsing="false" text="Delete" />
-                        <Button disable="true" mnemonicParsing="false" text="Save" />
-                        <Button disable="true" mnemonicParsing="false" text="Cancel" />
-                        <Button disable="true" mnemonicParsing="false" text="Confirm" />
+                        <AnchorPane HBox.hgrow="ALWAYS" />
+                        <Button fx:id="urls_cancel_btn" alignment="CENTER_RIGHT" disable="true" mnemonicParsing="false" text="Cancel" />
+                        <Button fx:id="urls_create_btn" disable="true" mnemonicParsing="false" text="Create" />
+                        <Button disable="true" mnemonicParsing="false" text="Create, OK" />
+                        <Button fx:id="urls_edit_btn" disable="true" mnemonicParsing="false" text="Edit" />
+                        <Button disable="true" mnemonicParsing="false" text="Edit, OK" />
+                        <Button fx:id="urls_delete_btn" disable="true" mnemonicParsing="false" text="Delete" />
+                        <Button fx:id="urls_delete_ok_btn" disable="true" mnemonicParsing="false" text="Delete, OK" />
                      </children>
                      <VBox.margin>
                         <Insets />
@@ -58,7 +67,14 @@
                </padding>
             </VBox>
          </content></Tab>
-      <Tab text="Settings" />
+      <Tab fx:id="settings_tab" text="Settings">
+         <content>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Label alignment="CENTER" text="not implemented" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+         </content></Tab>
       <Tab fx:id="about_tab" text="About">
          <content>
             <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
@@ -73,7 +89,7 @@
                         <Insets />
                      </VBox.margin>
                   </HBox>
-                  <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" text="URL Saver is a tool to manage URLs by keywords.&#10;&#10;URL Saver is created by Vitali Baumtrok &lt;vbsw@mailbox.org&gt;&#10;and published at &lt;https://github.com/vbsw/urlsaver&gt;.&#10;&#10;URL Saver is free software: you can redistribute it and/or modify&#10;it under the terms of the GNU General Public License as published by&#10;the Free Software Foundation, either version 3 of the License, or&#10;(at your option) any later version.&#10;&#10;URL Saver is distributed in the hope that it will be useful,&#10;but WITHOUT ANY WARRANTY; without even the implied warranty of&#10;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#10;GNU General Public License for more details.&#10;&#10;You should have received a copy of the GNU General Public License&#10;along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;." VBox.vgrow="ALWAYS" />
+                  <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" text="URL Saver is a tool to manage URLs by tags (i.e. keywords).&#10;URL Saver is published at &lt;https://github.com/vbsw/urlsaver&gt;.&#10;&#10;Copyright 2016, Vitali Baumtrok (vbsw@mailbox.org).&#10;&#10;URL Saver is free software: you can redistribute it and/or modify&#10;it under the terms of the GNU General Public License as published by&#10;the Free Software Foundation, either version 3 of the License, or&#10;(at your option) any later version.&#10;&#10;URL Saver is distributed in the hope that it will be useful,&#10;but WITHOUT ANY WARRANTY; without even the implied warranty of&#10;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#10;GNU General Public License for more details.&#10;&#10;You should have received a copy of the GNU General Public License&#10;along with URL Saver.  If not, see &lt;http://www.gnu.org/licenses/&gt;." VBox.vgrow="ALWAYS" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />

@@ -43,6 +43,7 @@ public class Nodes {
 	public Button reloadAllFilesBtn;
 	public Button openInBrowserBtn;
 	public Button urlsSearchBtn;
+	public Button urlsCancelBtn;
 	public TextField fileNameTF;
 	public TextField urlsSearchTF;
 	public TextField urlTF;
@@ -50,8 +51,10 @@ public class Nodes {
 	public ListView<FileData> fileList;
 	public ListView<TaggedWords.Word> urlList;
 	public TabPane tabPane;
+	public Tab filesTab;
 	public Tab urlsTab;
 	public Tab aboutTab;
+	public Tab settingsTab;
 	public boolean externalFXML;
 
 	public void recreate ( ) {
@@ -80,6 +83,7 @@ public class Nodes {
 		final String reloadAllFilesBtnSelector = "#reload_all_files_btn"; //$NON-NLS-1$
 		final String openInBrowserBtnSelector = "#open_in_browser_btn"; //$NON-NLS-1$
 		final String urlsSearchBtnSelector = "#urls_search_btn"; //$NON-NLS-1$
+		final String urlsCancelBtnSelector = "#urls_cancel_btn"; //$NON-NLS-1$
 		final String fileListSelector = "#file_list"; //$NON-NLS-1$
 		final String urlListSelector = "#url_list"; //$NON-NLS-1$
 		final String fileNameTFSelector = "#file_name_tf"; //$NON-NLS-1$
@@ -87,14 +91,17 @@ public class Nodes {
 		final String urlTFSelector = "#url_tf"; //$NON-NLS-1$
 		final String tagsTASelector = "#tags_ta"; //$NON-NLS-1$
 		final String tabPaneSelector = "#tab_pane"; //$NON-NLS-1$
+		final String filesTabId = "files_tab"; //$NON-NLS-1$
 		final String urlsTabId = "urls_tab"; //$NON-NLS-1$
 		final String aboutTabId = "about_tab"; //$NON-NLS-1$
+		final String settingsTabId = "settings_tab"; //$NON-NLS-1$
 
 		quitAppBtn = (Button) root.lookup(quitAppBtnSelector);
 		reloadFileBtn = (Button) root.lookup(reloadFileBtnSelector);
 		reloadAllFilesBtn = (Button) root.lookup(reloadAllFilesBtnSelector);
 		openInBrowserBtn = (Button) root.lookup(openInBrowserBtnSelector);
 		urlsSearchBtn = (Button) root.lookup(urlsSearchBtnSelector);
+		urlsCancelBtn = (Button) root.lookup(urlsCancelBtnSelector);
 		fileList = (ListView<FileData>) root.lookup(fileListSelector);
 		urlList = (ListView<TaggedWords.Word>) root.lookup(urlListSelector);
 		fileNameTF = (TextField) root.lookup(fileNameTFSelector);
@@ -102,8 +109,10 @@ public class Nodes {
 		urlTF = (TextField) root.lookup(urlTFSelector);
 		tagsTA = (TextArea) root.lookup(tagsTASelector);
 		tabPane = (TabPane) root.lookup(tabPaneSelector);
+		filesTab = getTab(tabPane,filesTabId);
 		urlsTab = getTab(tabPane,urlsTabId);
 		aboutTab = getTab(tabPane,aboutTabId);
+		settingsTab = getTab(tabPane,settingsTabId);
 	}
 
 	private Tab getTab ( final TabPane tabPane, final String urlsTabId ) {
@@ -122,9 +131,11 @@ public class Nodes {
 		reloadFileBtn.setOnAction(new Listener.ReloadFileBtn());
 		reloadAllFilesBtn.setOnAction(new Listener.ReloadAllFilesBtn());
 		openInBrowserBtn.setOnAction(new Listener.OpenInBrowserBtn());
+		openInBrowserBtn.disableProperty().bind(urlList.getSelectionModel().selectedItemProperty().isNull());
 		urlsSearchBtn.setOnAction(new Listener.SearchUrlsBtn());
 		fileList.setCellFactory(new Listener.FileListCellFactory());
 		fileList.getSelectionModel().selectedItemProperty().addListener(new Listener.SelectFileListItem());
+		fileList.setOnKeyPressed(new Listener.KeyPressedFileList());
 		urlList.setCellFactory(new Listener.UrlListCellFactory());
 		urlList.getSelectionModel().selectedItemProperty().addListener(new Listener.SelectUrlListItem());
 		urlList.setOnKeyPressed(new Listener.KeyPressedUrlList());
@@ -132,6 +143,9 @@ public class Nodes {
 		urlsSearchTF.textProperty().addListener(new Listener.TypedUrlsSearchTF());
 		urlsSearchTF.setOnAction(new Listener.SearchUrlsTF());
 		urlsSearchTF.setOnKeyPressed(new Listener.KeyPressedUrlsSearchTF());
+		filesTab.disableProperty().bind(urlsCancelBtn.disableProperty().not());
+		aboutTab.disableProperty().bind(urlsCancelBtn.disableProperty().not());
+		settingsTab.disableProperty().bind(urlsCancelBtn.disableProperty().not());
 	}
 
 	/*
