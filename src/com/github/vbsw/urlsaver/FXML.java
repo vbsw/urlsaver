@@ -45,7 +45,7 @@ public class FXML {
 	public FXML ( ) {
 		final Parent root = FXML.loadExternalFXML();
 
-		if ( root==null ) {
+		if ( root == null ) {
 			this.external = false;
 			this.root = FXML.loadInternalFXML();
 

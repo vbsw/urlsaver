@@ -54,19 +54,19 @@ public class TaggedWordsReader extends Service<TaggedWords> {
 
 			final byte[] bytes = readFile();
 
-			if ( bytes!=null ) {
+			if ( bytes != null ) {
 				final TaggedWords taggedWords = new TaggedWords();
 
-				if ( bytes.length>0 ) {
+				if ( bytes.length > 0 ) {
 					int offset = 0;
 					int progressPrev = 0;
 					int progressCurr = 0;
 
-					while ( ( offset<bytes.length )&&( isCancelled()==false ) ) {
+					while ( (offset < bytes.length) && (isCancelled() == false) ) {
 						offset = Parser.skipWhiteSpace(bytes,offset);
 						offset = readValues(bytes,offset,taggedWords);
-						progressCurr = offset*100/bytes.length;
-						if ( progressCurr>progressPrev ) {
+						progressCurr = offset * 100 / bytes.length;
+						if ( progressCurr > progressPrev ) {
 							progressPrev = progressCurr;
 							updateProgress(progressCurr,100);
 						}
@@ -95,9 +95,9 @@ public class TaggedWordsReader extends Service<TaggedWords> {
 
 		private int readValues ( final byte[] bytes, final int offset, final TaggedWords taggedWords ) {
 			final int wordLength = Parser.getLengthTillNewLine(bytes,offset);
-			int currIndex = offset+wordLength;
+			int currIndex = offset + wordLength;
 
-			if ( wordLength>0 ) {
+			if ( wordLength > 0 ) {
 				final String wordStr = new String(bytes,offset,wordLength,App.STRING_ENCODING);
 				final TaggedWords.Word word = taggedWords.add(wordStr);
 
@@ -110,17 +110,17 @@ public class TaggedWordsReader extends Service<TaggedWords> {
 		private int readTags ( final byte[] bytes, int offset, final TaggedWords.Word word ) {
 			int currIndex;
 
-			for ( currIndex = offset; currIndex<bytes.length; currIndex += 1 ) {
+			for ( currIndex = offset; currIndex < bytes.length; currIndex += 1 ) {
 				final byte byteChar = bytes[currIndex];
 
 				if ( Parser.isWhiteSpace(byteChar) ) {
-					final int tagLength = currIndex-offset;
+					final int tagLength = currIndex - offset;
 
-					if ( tagLength>0 ) {
+					if ( tagLength > 0 ) {
 						final String tagString = new String(bytes,offset,tagLength,App.STRING_ENCODING);
 						word.addTag(tagString);
 					}
-					offset = currIndex+1;
+					offset = currIndex + 1;
 
 					if ( Parser.isNewLine(byteChar) ) {
 						return currIndex;

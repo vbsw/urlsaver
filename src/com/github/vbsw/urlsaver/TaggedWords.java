@@ -53,8 +53,8 @@ public class TaggedWords extends ArrayList<Word> {
 	public Word add ( final String wordString ) {
 		final int wordIndex = binarySearch(wordString);
 
-		if ( wordIndex<0 ) {
-			final int insertIndex = -wordIndex-1;
+		if ( wordIndex < 0 ) {
+			final int insertIndex = -wordIndex - 1;
 			final Word word = addNewWord(wordString,insertIndex);
 			return word;
 
@@ -71,31 +71,31 @@ public class TaggedWords extends ArrayList<Word> {
 	public int binarySearch ( final String wordStringSearched ) {
 		final int size = super.size();
 
-		if ( size>1 ) {
+		if ( size > 1 ) {
 			int compareResult = -1;
 			int middleIndex = 0;
 
-			for ( int leftIndex = 0, rightIndex = size-1; leftIndex<=rightIndex; ) {
-				middleIndex = leftIndex+( ( rightIndex-leftIndex )/2 );
+			for ( int leftIndex = 0, rightIndex = size - 1; leftIndex <= rightIndex; ) {
+				middleIndex = leftIndex + ((rightIndex - leftIndex) / 2);
 				final Word word = get(middleIndex);
 				compareResult = word.string.compareTo(wordStringSearched);
 
-				if ( compareResult<0 ) {
-					leftIndex = middleIndex+1;
+				if ( compareResult < 0 ) {
+					leftIndex = middleIndex + 1;
 
-				} else if ( compareResult>0 ) {
-					rightIndex = middleIndex-1;
+				} else if ( compareResult > 0 ) {
+					rightIndex = middleIndex - 1;
 
 				} else {
 					return middleIndex;
 				}
 			}
-			return compareResult<0 ? -middleIndex-2 : compareResult>0 ? -middleIndex-1 : 0;
+			return compareResult < 0 ? -middleIndex - 2 : compareResult > 0 ? -middleIndex - 1 : 0;
 
-		} else if ( size==1 ) {
+		} else if ( size == 1 ) {
 			final Word word = super.get(0);
 			final int compareResult = word.string.compareTo(wordStringSearched);
-			return compareResult<0 ? -2 : compareResult>0 ? -1 : 0;
+			return compareResult < 0 ? -2 : compareResult > 0 ? -1 : 0;
 
 		} else {
 			return -1;
@@ -109,12 +109,12 @@ public class TaggedWords extends ArrayList<Word> {
 	private Word addNewWord ( final String wordString, final int insertIndex ) {
 		final Word word = new Word(tagList,wordString,insertIndex);
 		super.add(insertIndex,word);
-		incrementIndices(insertIndex+1);
+		incrementIndices(insertIndex + 1);
 		return word;
 	}
 
 	private void incrementIndices ( final int startWordIndex ) {
-		for ( int i = startWordIndex; i<super.size(); i += 1 ) {
+		for ( int i = startWordIndex; i < super.size(); i += 1 ) {
 			final Word wordData = super.get(i);
 			wordData.index += 1;
 		}
@@ -143,8 +143,8 @@ public class TaggedWords extends ArrayList<Word> {
 		public Tag addTag ( final String tagString ) {
 			final int index = tagList.binarySearch(tagString);
 
-			if ( index<0 ) {
-				final int insertIndex = -index-1;
+			if ( index < 0 ) {
+				final int insertIndex = -index - 1;
 				final Tag tag = new Tag(tagString,insertIndex);
 				tagList.add(insertIndex,tag);
 				return addTag(tag);
@@ -164,14 +164,14 @@ public class TaggedWords extends ArrayList<Word> {
 		private Tag addTag ( final Tag tag ) {
 			final int tagIndex = Collections.binarySearch(tags,tag,Tag.COMPARATOR);
 
-			if ( tagIndex<0 ) {
+			if ( tagIndex < 0 ) {
 				final int tagWordIndex = tag.binarySearch(this);
-				final int tagInsertIndex = -tagIndex-1;
+				final int tagInsertIndex = -tagIndex - 1;
 				tags.add(tagInsertIndex,tag);
 				tagsToString();
 
-				if ( tagWordIndex<0 ) {
-					final int tagWordInsertIndex = -tagWordIndex-1;
+				if ( tagWordIndex < 0 ) {
+					final int tagWordInsertIndex = -tagWordIndex - 1;
 					tag.words.add(tagWordInsertIndex,this);
 				}
 			}
@@ -182,7 +182,7 @@ public class TaggedWords extends ArrayList<Word> {
 			stringBuilder.delete(0,stringBuilder.length());
 
 			for ( Tag tag: tags ) {
-				if ( stringBuilder.length()>0 ) {
+				if ( stringBuilder.length() > 0 ) {
 					stringBuilder.append(' ');
 					stringBuilder.append(tag.string);
 
@@ -242,31 +242,31 @@ public class TaggedWords extends ArrayList<Word> {
 		}
 
 		public int binarySearch ( final String tagString ) {
-			if ( size()>1 ) {
+			if ( size() > 1 ) {
 				int compareResult = -1;
 				int middleIndex = 0;
 
-				for ( int leftIndex = 0, rightIndex = size()-1; leftIndex<=rightIndex; ) {
-					middleIndex = leftIndex+( ( rightIndex-leftIndex )/2 );
+				for ( int leftIndex = 0, rightIndex = size() - 1; leftIndex <= rightIndex; ) {
+					middleIndex = leftIndex + ((rightIndex - leftIndex) / 2);
 					final Tag tag = super.get(middleIndex);
 					compareResult = tag.string.compareTo(tagString);
 
-					if ( compareResult<0 ) {
-						leftIndex = middleIndex+1;
+					if ( compareResult < 0 ) {
+						leftIndex = middleIndex + 1;
 
-					} else if ( compareResult>0 ) {
-						rightIndex = middleIndex-1;
+					} else if ( compareResult > 0 ) {
+						rightIndex = middleIndex - 1;
 
 					} else {
 						return middleIndex;
 					}
 				}
-				return compareResult<0 ? -middleIndex-2 : compareResult>0 ? -middleIndex-1 : 0;
+				return compareResult < 0 ? -middleIndex - 2 : compareResult > 0 ? -middleIndex - 1 : 0;
 
-			} else if ( size()==1 ) {
+			} else if ( size() == 1 ) {
 				final Tag tag = super.get(0);
 				final int compareResult = tag.string.compareTo(tagString);
-				return compareResult<0 ? -2 : compareResult>0 ? -1 : 0;
+				return compareResult < 0 ? -2 : compareResult > 0 ? -1 : 0;
 
 			} else {
 				return -1;
@@ -295,7 +295,7 @@ public class TaggedWords extends ArrayList<Word> {
 			for ( String tagString: tagStrings ) {
 				final int index = taggedWords.tagList.binarySearch(tagString);
 
-				if ( index>=0 ) {
+				if ( index >= 0 ) {
 					final Tag tag = taggedWords.tagList.get(index);
 					searchedTags.add(tag);
 
@@ -313,7 +313,7 @@ public class TaggedWords extends ArrayList<Word> {
 			for ( String tagString: tagStrings ) {
 				final int index = taggedWords.tagList.binarySearch(tagString);
 
-				if ( index>=0 ) {
+				if ( index >= 0 ) {
 					final Tag tag = taggedWords.tagList.get(index);
 					searchedTags.add(tag);
 
@@ -326,20 +326,20 @@ public class TaggedWords extends ArrayList<Word> {
 
 		private void searchAND ( ) {
 			final int searchedTagsSize = searchedTags.size();
-			if ( searchedTagsSize>1 ) {
+			if ( searchedTagsSize > 1 ) {
 				prefill();
 				for ( Tag tag: searchedTags ) {
-					for ( int i = 0; i<super.size(); i += 1 ) {
+					for ( int i = 0; i < super.size(); i += 1 ) {
 						final Word word = super.get(i);
 						final int index = tag.binarySearch(word);
-						if ( index<0 ) {
+						if ( index < 0 ) {
 							super.remove(i);
 							i -= 1;
 						}
 					}
 				}
 
-			} else if ( searchedTagsSize==1 ) {
+			} else if ( searchedTagsSize == 1 ) {
 				final Tag tag = searchedTags.get(0);
 				addAll(tag.words);
 			}
@@ -347,7 +347,7 @@ public class TaggedWords extends ArrayList<Word> {
 
 		private void prefill ( ) {
 			final int searchedTagsSize = searchedTags.size();
-			final Tag tag = searchedTags.remove(searchedTagsSize-1);
+			final Tag tag = searchedTags.remove(searchedTagsSize - 1);
 			addAll(tag.words);
 		}
 	}

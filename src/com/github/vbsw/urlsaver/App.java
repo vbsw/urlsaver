@@ -87,8 +87,8 @@ public class App extends Application {
 			App.reloadFiles();
 		}
 
-		App.settings.decorationWidth = stage.getWidth()-scene.getWidth();
-		App.settings.decorationHeight = stage.getHeight()-scene.getHeight();
+		App.settings.decorationWidth = stage.getWidth() - scene.getWidth();
+		App.settings.decorationHeight = stage.getHeight() - scene.getHeight();
 	}
 
 	public static void recreateNodes ( ) {
@@ -106,7 +106,7 @@ public class App extends Application {
 
 	public static void reloadSelectedFile ( ) {
 		final FileData fileData = App.nodes.fileList.getSelectionModel().getSelectedItem();
-		if ( fileData!=null ) {
+		if ( fileData != null ) {
 			fileData.clearSearch();
 			App.nodes.urlList.getItems().clear();
 			App.nodes.urlsSearchTF.clear();
@@ -116,7 +116,7 @@ public class App extends Application {
 
 	public static void reloadFiles ( ) {
 		final FileData selectedFileData = App.nodes.fileList.getSelectionModel().getSelectedItem();
-		if ( selectedFileData!=null ) {
+		if ( selectedFileData != null ) {
 			selectedFileData.clearSearch();
 		}
 		App.nodes.urlList.getItems().clear();
@@ -134,7 +134,7 @@ public class App extends Application {
 
 	public static void setFileTitle ( final String fileString ) {
 		final Stage stage = (Stage) App.scene.getWindow();
-		stage.setTitle(App.settings.windowTitle+" ("+fileString+")");
+		stage.setTitle(App.settings.windowTitle + " (" + fileString + ")");
 	}
 
 	public static void fillUrlList ( ) {

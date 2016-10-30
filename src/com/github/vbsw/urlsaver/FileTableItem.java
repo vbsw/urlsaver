@@ -47,7 +47,7 @@ public class FileTableItem {
 	public FileTableItem ( final FileData fileData ) {
 		this.fileData = fileData;
 		setFileName();
-		setName(fileName+"    [ 0 % ]");
+		setName(fileName + "    [ 0 % ]");
 	}
 
 	public SimpleStringProperty nameProperty ( ) {
@@ -68,7 +68,7 @@ public class FileTableItem {
 
 	public boolean isEdited ( ) {
 		final String editedStr = edited.get();
-		return ( editedStr!=null )&&( editedStr.equals(NOT_EDITED_STR)==false );
+		return (editedStr != null) && (editedStr.equals(NOT_EDITED_STR) == false);
 	}
 
 	public void setEdited ( final String editedStr ) {
@@ -91,7 +91,7 @@ public class FileTableItem {
 		try {
 			final String loadedStr = loaded.get();
 			final int loadedInt = Integer.parseInt(loadedStr);
-			return loadedInt/100d;
+			return loadedInt / 100d;
 
 		} catch ( final Exception e ) {
 			return 0d;
@@ -103,9 +103,9 @@ public class FileTableItem {
 		final char fileSeperator = File.separatorChar;
 		fileName = filePath;
 
-		for ( int i = filePath.length()-1; i>=0; i -= 1 ) {
-			if ( filePath.charAt(i)==fileSeperator ) {
-				fileName = filePath.substring(i+1);
+		for ( int i = filePath.length() - 1; i >= 0; i -= 1 ) {
+			if ( filePath.charAt(i) == fileSeperator ) {
+				fileName = filePath.substring(i + 1);
 				break;
 			}
 		}

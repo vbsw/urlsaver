@@ -58,7 +58,7 @@ public class Listener {
 	public static class TypedUrlsSearchTF implements ChangeListener<String> {
 		@Override
 		public void changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
-			if ( newValue!=null ) {
+			if ( newValue != null ) {
 				final FileData fileData = App.nodes.fileList.getSelectionModel().getSelectedItem();
 				fileData.setSearchedTags(newValue);
 				App.nodes.urlsSearchBtn.setDisable(fileData.searchedTagsEqual);
@@ -70,7 +70,7 @@ public class Listener {
 		@Override
 		public void handle ( final ActionEvent event ) {
 			App.fillUrlList();
-			if ( App.nodes.urlList.getItems().size()>0 ) {
+			if ( App.nodes.urlList.getItems().size() > 0 ) {
 				App.nodes.urlList.requestFocus();
 				App.nodes.urlList.getSelectionModel().select(0);
 			}
@@ -81,7 +81,7 @@ public class Listener {
 		@Override
 		public void handle ( final KeyEvent event ) {
 			final KeyCode keyCode = event.getCode();
-			if ( keyCode==KeyCode.ESCAPE ) {
+			if ( keyCode == KeyCode.ESCAPE ) {
 				// App.nodes.tabPane.getSelectionModel().select(App.nodes.aboutTab);
 				// App.nodes.quitAppBtn.requestFocus();
 			}
@@ -100,11 +100,11 @@ public class Listener {
 			final FileData selectedFileData = App.nodes.fileList.getSelectionModel().getSelectedItem();
 			fileData.urls = (TaggedWords) event.getSource().getValue();
 
-			if ( fileData==selectedFileData ) {
+			if ( fileData == selectedFileData ) {
 				App.nodes.urlsTab.setDisable(false);
 			}
 
-			if ( fileData.fileName.equals(App.settings.fileAutoSelect)&&( App.fileHasBeenSelected==false ) ) {
+			if ( fileData.fileName.equals(App.settings.fileAutoSelect) && (App.fileHasBeenSelected == false) ) {
 				App.fileHasBeenSelected = true;
 				App.nodes.fileList.getSelectionModel().select(fileData);
 				App.focusUrlsSearchTF();
@@ -144,9 +144,9 @@ public class Listener {
 		@Override
 		public void handle ( final KeyEvent event ) {
 			final KeyCode keyCode = event.getCode();
-			if ( keyCode==KeyCode.ENTER ) {
+			if ( keyCode == KeyCode.ENTER ) {
 				App.fireCloseEvent();
-			} else if ( keyCode==KeyCode.ESCAPE ) {
+			} else if ( keyCode == KeyCode.ESCAPE ) {
 				// App.focusUrlsSearchTF();
 			}
 		}
@@ -170,7 +170,7 @@ public class Listener {
 		@Override
 		public void handle ( final ActionEvent event ) {
 			final Word word = App.nodes.urlList.getSelectionModel().getSelectedItem();
-			if ( word!=null ) {
+			if ( word != null ) {
 				openURLInBrowser(word.string);
 			}
 		}
@@ -190,10 +190,10 @@ public class Listener {
 		public void handle ( final KeyEvent event ) {
 			final KeyCode keyCode = event.getCode();
 
-			if ( keyCode==KeyCode.ENTER ) {
+			if ( keyCode == KeyCode.ENTER ) {
 				final TaggedWords.Word selectedUrl = App.nodes.urlList.getSelectionModel().getSelectedItem();
-				if ( selectedUrl!=null ) {
-					if ( enterPressed==false ) {
+				if ( selectedUrl != null ) {
+					if ( enterPressed == false ) {
 						enterPressed = true;
 						Listener.openURLInBrowser(selectedUrl.string);
 					}
@@ -201,7 +201,7 @@ public class Listener {
 					enterPressed = false;
 				}
 
-			} else if ( keyCode==KeyCode.ESCAPE ) {
+			} else if ( keyCode == KeyCode.ESCAPE ) {
 				// final TaggedWords.Word selectedUrl = App.nodes.urlList.getSelectionModel().getSelectedItem();
 				// if ( selectedUrl!=null ) {
 				// App.nodes.urlsSearchTF.requestFocus();
@@ -220,7 +220,7 @@ public class Listener {
 		@Override
 		public void handle ( final KeyEvent event ) {
 			final KeyCode keyCode = event.getCode();
-			if ( keyCode==KeyCode.ENTER ) {
+			if ( keyCode == KeyCode.ENTER ) {
 				keyPressedUrlList.enterPressed = false;
 			}
 		}
@@ -239,7 +239,7 @@ public class Listener {
 	public static class SelectFileListItem implements ChangeListener<FileData> {
 		@Override
 		public void changed ( final ObservableValue<? extends FileData> observable, final FileData oldValue, final FileData newValue ) {
-			if ( newValue!=null ) {
+			if ( newValue != null ) {
 				final String filePathStr = newValue.filePathStr;
 				App.nodes.fileNameTF.setText(filePathStr);
 				App.setFileTitle(newValue.fileName);
@@ -249,8 +249,8 @@ public class Listener {
 				App.nodes.fileNameTF.setText(defaultText);
 				App.setDefaultTitle();
 			}
-			App.nodes.reloadFileBtn.setDisable(newValue==null);
-			App.nodes.urlsTab.setDisable(( newValue==null )||( newValue.isLoaded()==false ));
+			App.nodes.reloadFileBtn.setDisable(newValue == null);
+			App.nodes.urlsTab.setDisable((newValue == null) || (newValue.isLoaded() == false));
 		}
 	}
 
@@ -265,7 +265,7 @@ public class Listener {
 	public static class SelectUrlListItem implements ChangeListener<Word> {
 		@Override
 		public void changed ( final ObservableValue<? extends Word> observable, final Word oldValue, final Word newValue ) {
-			if ( newValue!=null ) {
+			if ( newValue != null ) {
 				App.nodes.urlTF.setText(newValue.string);
 				App.nodes.tagsTA.setText(newValue.tagsString);
 
@@ -274,7 +274,7 @@ public class Listener {
 				App.nodes.urlTF.setText(defaultText);
 				App.nodes.tagsTA.setText(defaultText);
 			}
-			App.nodes.openInBrowserBtn.setDisable(newValue==null);
+			App.nodes.openInBrowserBtn.setDisable(newValue == null);
 		}
 	}
 
@@ -299,7 +299,7 @@ public class Listener {
 	private static class DoubleClickFileListItem implements EventHandler<MouseEvent> {
 		@Override
 		public void handle ( final MouseEvent event ) {
-			if ( event.getClickCount()==2 ) {
+			if ( event.getClickCount() == 2 ) {
 				final FileListCell cell = (FileListCell) event.getSource();
 				final FileData fileData = cell.getItem();
 				final String filePathStr = fileData.filePathStr;
@@ -329,7 +329,7 @@ public class Listener {
 	private static class DoubleClickUrlListItem implements EventHandler<MouseEvent> {
 		@Override
 		public void handle ( final MouseEvent event ) {
-			if ( event.getClickCount()==2 ) {
+			if ( event.getClickCount() == 2 ) {
 				final UrlListCell cell = (UrlListCell) event.getSource();
 				final Word url = cell.getItem();
 				openURLInBrowser(url.string);
@@ -344,7 +344,7 @@ public class Listener {
 			if ( desktop.isSupported(Desktop.Action.BROWSE) ) {
 				final URI uri = stringToURI(urlString);
 
-				if ( uri!=null ) {
+				if ( uri != null ) {
 					try {
 						desktop.browse(uri);
 
@@ -358,7 +358,7 @@ public class Listener {
 	private static URI stringToURI ( final String urlString ) {
 		final URL url = stringToURL(urlString);
 
-		if ( url!=null ) {
+		if ( url != null ) {
 			try {
 				return url.toURI();
 
@@ -369,7 +369,7 @@ public class Listener {
 	}
 
 	private static URL stringToURL ( final String urlString ) {
-		if ( urlString!=null&&urlString.length()>0 ) {
+		if ( urlString != null && urlString.length() > 0 ) {
 			try {
 				return new URL(urlString);
 
@@ -378,7 +378,7 @@ public class Listener {
 
 			try {
 				final String httpPrefix = "http://"; //$NON-NLS-1$
-				final String httpURLStr = httpPrefix+urlString;
+				final String httpURLStr = httpPrefix + urlString;
 				return new URL(httpURLStr);
 
 			} catch ( final MalformedURLException e ) {

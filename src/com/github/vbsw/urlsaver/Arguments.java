@@ -38,7 +38,7 @@ public class Arguments {
 		if ( tooManyArguments(args) ) {
 			result = ParseResult.ERROR_TOO_MANY_ARGS;
 
-		} else if ( args.length==1 ) {
+		} else if ( args.length == 1 ) {
 
 			if ( args[0].equals("--help") ) {
 				result = ParseResult.PRINT_HELP;
@@ -46,7 +46,7 @@ public class Arguments {
 			} else if ( args[0].equals("--version") ) {
 				result = ParseResult.PRINT_VERSION;
 
-			} else if ( args[0].length()>0 ) {
+			} else if ( args[0].length() > 0 ) {
 				result = ParseResult.ERROR_UNKNOWN_ARG;
 				unknownArg = args[0];
 			}
@@ -60,7 +60,7 @@ public class Arguments {
 			break;
 
 			case ERROR_UNKNOWN_ARG:
-			System.out.println("error: unknown argument \""+unknownArg+"\"");
+			System.out.println("error: unknown argument \"" + unknownArg + "\"");
 			break;
 
 			case PRINT_HELP:
@@ -84,11 +84,11 @@ public class Arguments {
 	}
 
 	public boolean hasNoInfo ( ) {
-		return result==ParseResult.NONE;
+		return result == ParseResult.NONE;
 	}
 
 	private boolean tooManyArguments ( final String[] args ) {
-		return args.length>1;
+		return args.length > 1;
 	}
 
 }

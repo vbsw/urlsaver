@@ -51,7 +51,7 @@ public class Properties extends java.util.Properties {
 	public Properties ( ) {
 		java.util.Properties properties = getExternalProperties();
 
-		if ( properties==null ) {
+		if ( properties == null ) {
 			external = false;
 			properties = getInternal();
 
@@ -165,7 +165,7 @@ public class Properties extends java.util.Properties {
 		final String yStr = "y"; //$NON-NLS-1$
 		final String oneStr = "1"; //$NON-NLS-1$
 
-		return boolStr.equals(trueStr)||boolStr.equals(yesStr)||boolStr.equals(yStr)||boolStr.equals(oneStr);
+		return boolStr.equals(trueStr) || boolStr.equals(yesStr) || boolStr.equals(yStr) || boolStr.equals(oneStr);
 	}
 
 }

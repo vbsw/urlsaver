@@ -109,7 +109,7 @@ public class Nodes {
 	private Tab getTab ( final TabPane tabPane, final String urlsTabId ) {
 		for ( Tab tab: tabPane.getTabs() ) {
 			final String id = tab.getId();
-			if ( ( id!=null )&&( id.equals(urlsTabId) ) ) {
+			if ( (id != null) && (id.equals(urlsTabId)) ) {
 				return tab;
 			}
 		}

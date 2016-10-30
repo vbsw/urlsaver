@@ -39,7 +39,7 @@ public class CSS {
 	public static String getURL ( ) {
 		final String externalStylesheetURL = getExternalStylesheetURL();
 
-		if ( externalStylesheetURL!=null ) {
+		if ( externalStylesheetURL != null ) {
 			return externalStylesheetURL;
 
 		} else {

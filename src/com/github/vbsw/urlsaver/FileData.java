@@ -89,36 +89,36 @@ public class FileData {
 	 */
 	public void read ( ) {
 		final FileData selectedItem = App.nodes.fileList.getSelectionModel().getSelectedItem();
-		if ( selectedItem==this ) {
+		if ( selectedItem == this ) {
 			App.nodes.urlsTab.setDisable(true);
 		}
 		reader.restart();
 	}
 
 	public boolean isLoaded ( ) {
-		return loaded>=1;
+		return loaded >= 1;
 	}
 
 	public void setSearchedTags ( final String tagsString ) {
 		int currIndex, offset;
 		currSearchedTags.clear();
 
-		for ( currIndex = 0, offset = 0; currIndex<tagsString.length(); currIndex += 1 ) {
+		for ( currIndex = 0, offset = 0; currIndex < tagsString.length(); currIndex += 1 ) {
 			final char character = tagsString.charAt(currIndex);
 
 			if ( Parser.isWhiteSpace(character) ) {
 				addKey(currSearchedTags,offset,currIndex,tagsString);
-				offset = currIndex+1;
+				offset = currIndex + 1;
 			}
 		}
 		addKey(currSearchedTags,offset,currIndex,tagsString);
 		updateSearchedTagsEqual();
 	}
-	
+
 	/**
 	 * Updates {@code searchedUrls} by searched tags.
 	 */
-	public void updateSearchedUrls() {
+	public void updateSearchedUrls ( ) {
 		prevSearchedTags.clear();
 		prevSearchedTags.addAll(currSearchedTags);
 		searchedUrls.searchAND(urls,currSearchedTags);
@@ -142,35 +142,35 @@ public class FileData {
 			searchedTagsEqual = false;
 			return;
 		}
-		searchedTagsEqual = prevSearchedTags.size()==counter;
+		searchedTagsEqual = prevSearchedTags.size() == counter;
 	}
 
 	private void addKey ( final ArrayList<String> keys, final int offset, final int currIndex, final String keysStr ) {
-		final int keyLength = currIndex-offset;
-		if ( keyLength>0 ) {
+		final int keyLength = currIndex - offset;
+		if ( keyLength > 0 ) {
 			final String keyStr = keysStr.substring(offset,currIndex);
-			if ( keys.contains(keyStr)==false ) {
+			if ( keys.contains(keyStr) == false ) {
 				keys.add(keyStr);
 			}
 		}
 	}
 
 	private String createListName ( ) {
-		final int percent = (int) ( loaded*100 );
+		final int percent = (int) (loaded * 100);
 
-		if ( percent<100 ) {
+		if ( percent < 100 ) {
 			final String prefix = "   "; //$NON-NLS-1$
 			final String postfix = "%"; //$NON-NLS-1$
 
 			if ( modified ) {
-				return MODIFIED_TOKEN+fileName+prefix+percent+postfix;
+				return MODIFIED_TOKEN + fileName + prefix + percent + postfix;
 
 			} else {
-				return fileName+prefix+percent+postfix;
+				return fileName + prefix + percent + postfix;
 			}
 
 		} else if ( modified ) {
-			return MODIFIED_TOKEN+fileName;
+			return MODIFIED_TOKEN + fileName;
 
 		} else {
 			return fileName;

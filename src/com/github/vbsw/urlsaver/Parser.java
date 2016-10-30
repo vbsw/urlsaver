@@ -38,32 +38,32 @@ public class Parser {
 
 	public static int getLengthTillNewLine ( final byte[] bytes, final int offset ) {
 		int currIndex;
-		for ( currIndex = offset; currIndex<bytes.length; currIndex += 1 ) {
+		for ( currIndex = offset; currIndex < bytes.length; currIndex += 1 ) {
 			final byte byteChar = bytes[currIndex];
 			if ( Parser.isNewLine(byteChar) ) {
-				return currIndex-offset;
+				return currIndex - offset;
 			}
 		}
-		return currIndex-offset;
+		return currIndex - offset;
 	}
 
 	public static boolean isNewLine ( final byte byteChar ) {
-		return byteChar==10||byteChar==13;
+		return byteChar == 10 || byteChar == 13;
 	}
 
 	public static int skipWhiteSpace ( final byte[] bytes, int offset ) {
-		while ( offset<bytes.length&&isWhiteSpace(bytes[offset]) ) {
+		while ( offset < bytes.length && isWhiteSpace(bytes[offset]) ) {
 			offset += 1;
 		}
 		return offset;
 	}
 
 	public static boolean isWhiteSpace ( final byte byteChar ) {
-		return byteChar>=0&&byteChar<=32;
+		return byteChar >= 0 && byteChar <= 32;
 	}
 
 	public static boolean isWhiteSpace ( final char character ) {
-		return character>=0&&character<=32;
+		return character >= 0 && character <= 32;
 	}
 
 }

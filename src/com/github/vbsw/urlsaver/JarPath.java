@@ -48,14 +48,14 @@ public class JarPath {
 
 	public static Path get ( final Class<? extends Object> clazz ) {
 		try {
-			final String className = clazz.getSimpleName()+CLASS_FILE_EXTENSION;
+			final String className = clazz.getSimpleName() + CLASS_FILE_EXTENSION;
 			final URL classUrl = clazz.getResource(className);
 			final String classUrlStr = classUrl.toString();
 			final String canonicalClassName = clazz.getCanonicalName();
-			final int canonicalClassLength = canonicalClassName.length()+CLASS_FILE_EXTENSION.length();
+			final int canonicalClassLength = canonicalClassName.length() + CLASS_FILE_EXTENSION.length();
 
 			if ( JarPath.isJarFile(classUrlStr) ) {
-				final String jarDirStr = classUrlStr.substring(4,classUrlStr.length()-canonicalClassLength-2);
+				final String jarDirStr = classUrlStr.substring(4,classUrlStr.length() - canonicalClassLength - 2);
 				final URL jarDirUrl = new URL(jarDirStr);
 				final URI jarDirUri = jarDirUrl.toURI();
 				final Path path = Paths.get(jarDirUri);
@@ -63,7 +63,7 @@ public class JarPath {
 				return path.getParent();
 
 			} else {
-				final String projDirStr = classUrlStr.substring(0,classUrlStr.length()-canonicalClassLength-BIN_FOLDER.length());
+				final String projDirStr = classUrlStr.substring(0,classUrlStr.length() - canonicalClassLength - BIN_FOLDER.length());
 				final URL projDirUrl = new URL(projDirStr);
 				final URI projDirUri = projDirUrl.toURI();
 				final Path path = Paths.get(projDirUri);
@@ -100,7 +100,7 @@ public class JarPath {
 
 		try ( final DirectoryStream<Path> filePathsStream = Files.newDirectoryStream(dir) ) {
 			for ( Path filePath: filePathsStream ) {
-				if ( Files.isDirectory(filePath)==false ) {
+				if ( Files.isDirectory(filePath) == false ) {
 					for ( String fileExtension: extensions ) {
 						if ( filePath.getFileName().toString().endsWith(fileExtension) ) {
 							paths.add(filePath);
