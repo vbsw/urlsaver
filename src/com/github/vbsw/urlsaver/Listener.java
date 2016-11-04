@@ -29,8 +29,10 @@ import java.net.URL;
 
 import com.github.vbsw.urlsaver.TaggedWords.Word;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -50,8 +52,19 @@ import javafx.util.Callback;
  */
 public class Listener {
 
-	public static class KeyPressedScene implements EventHandler<KeyEvent> {
-		final KeyCombination keyComb = new KeyCodeCombination(KeyCode.ESCAPE,KeyCombination.CONTROL_DOWN);
+	public static class SelectAboutTab implements ChangeListener<Boolean> {
+		@Override
+		public void changed ( final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue ) {
+			if ( newValue == false && App.nodes.quitAppSaveBtn.isDisable() == false ) {
+				App.nodes.quitAppBtn.setDisable(false);
+				App.nodes.quitAppSaveBtn.setDisable(true);
+				App.nodes.quitAppOKBtn.setDisable(true);
+			}
+		}
+	}
+
+	public static class HotKey implements EventHandler<KeyEvent> {
+		private final KeyCombination ctrlS = new KeyCodeCombination(KeyCode.S,KeyCombination.CONTROL_DOWN);
 
 		@Override
 		public void handle ( final KeyEvent event ) {
@@ -72,6 +85,9 @@ public class Listener {
 			} else if ( keyCode == KeyCode.F5 ) {
 				event.consume();
 				App.selectAboutTab();
+
+			} else if ( ctrlS.match(event) ) {
+				App.saveFile();
 			}
 		}
 	}
@@ -89,7 +105,7 @@ public class Listener {
 			if ( newValue != null ) {
 				final FileData fileData = App.nodes.fileList.getSelectionModel().getSelectedItem();
 				fileData.setSearchedTags(newValue);
-				App.nodes.urlsSearchBtn.setDisable(fileData.searchedTagsEqual);
+				App.nodes.urlSearchBtn.setDisable(fileData.searchedTagsEqual);
 			}
 		}
 	}
@@ -136,7 +152,7 @@ public class Listener {
 				App.fileHasBeenSelected = true;
 				App.nodes.fileList.getSelectionModel().select(fileData);
 				App.nodes.tabPane.getSelectionModel().select(App.nodes.urlsTab);
-				App.nodes.urlsSearchTF.requestFocus();
+				App.nodes.urlSearchTF.requestFocus();
 			}
 		}
 	}
@@ -158,7 +174,14 @@ public class Listener {
 	public static class CloseWindow implements EventHandler<WindowEvent> {
 		@Override
 		public void handle ( final WindowEvent event ) {
-			System.out.println("URL Saver closed");
+			if ( App.fileDataList.isModified() ) {
+				App.nodes.tabPane.getSelectionModel().select(App.nodes.aboutTab);
+				App.nodes.quitAppBtn.setDisable(true);
+				App.nodes.quitAppSaveBtn.setDisable(false);
+				App.nodes.quitAppOKBtn.setDisable(false);
+				App.nodes.quitAppSaveBtn.requestFocus();
+				event.consume();
+			}
 		}
 	}
 
@@ -178,6 +201,74 @@ public class Listener {
 			} else if ( keyCode == KeyCode.ESCAPE ) {
 				// App.focusUrlsSearchTF();
 			}
+		}
+	}
+
+	public static class KeyPressedQuitAppSaveBtn implements EventHandler<KeyEvent> {
+		@Override
+		public void handle ( final KeyEvent event ) {
+			final KeyCode keyCode = event.getCode();
+			if ( keyCode == KeyCode.ENTER ) {
+				for ( FileData fileData: App.fileDataList ) {
+					if ( fileData.isModified() ) {
+						fileData.save();
+					}
+				}
+				if ( App.fileDataList.isModified() == false ) {
+					Platform.exit();
+				}
+			}
+		}
+	}
+
+	public static class KeyPressedQuitAppOKBtn implements EventHandler<KeyEvent> {
+		@Override
+		public void handle ( final KeyEvent event ) {
+			Platform.exit();
+		}
+	}
+
+	public static class KeyPressedUrlCancelBtn implements EventHandler<KeyEvent> {
+		@Override
+		public void handle ( final KeyEvent event ) {
+			final KeyCode keyCode = event.getCode();
+			if ( keyCode == KeyCode.ENTER ) {
+				Listener.processUrlCancelButton();
+			}
+		}
+	}
+
+	public static class KeyPressedUrlDeleteOKBtn implements EventHandler<KeyEvent> {
+		@Override
+		public void handle ( final KeyEvent event ) {
+			final KeyCode keyCode = event.getCode();
+			if ( keyCode == KeyCode.ENTER ) {
+				Listener.processUrlDeleteOKButton();
+			}
+		}
+	}
+
+	public static class DeleteUrlBtn implements EventHandler<ActionEvent> {
+		@Override
+		public void handle ( final ActionEvent event ) {
+			App.nodes.urlList.requestFocus();
+			App.nodes.urlCancelBtn.setDisable(false);
+			App.nodes.urlDeleteBtn.setDisable(true);
+			App.nodes.urlDeleteOKBtn.setDisable(false);
+		}
+	}
+
+	public static class DeleteUrlOKBtn implements EventHandler<ActionEvent> {
+		@Override
+		public void handle ( final ActionEvent event ) {
+			Listener.processUrlDeleteOKButton();
+		}
+	}
+
+	public static class UrlCancelBtn implements EventHandler<ActionEvent> {
+		@Override
+		public void handle ( final ActionEvent event ) {
+			Listener.processUrlCancelButton();
 		}
 	}
 
@@ -213,45 +304,26 @@ public class Listener {
 	}
 
 	public static class KeyPressedUrlList implements EventHandler<KeyEvent> {
-		private boolean enterPressed;
-
 		@Override
 		public void handle ( final KeyEvent event ) {
 			final KeyCode keyCode = event.getCode();
+			final TaggedWords.Word selectedUrl = App.nodes.urlList.getSelectionModel().getSelectedItem();
 
-			if ( keyCode == KeyCode.ENTER ) {
-				final TaggedWords.Word selectedUrl = App.nodes.urlList.getSelectionModel().getSelectedItem();
-				if ( selectedUrl != null ) {
-					if ( enterPressed == false ) {
-						enterPressed = true;
-						Listener.openURLInBrowser(selectedUrl.string);
-					}
-				} else {
-					enterPressed = false;
-				}
+			if ( keyCode == KeyCode.ENTER && selectedUrl != null ) {
+				Listener.openURLInBrowser(selectedUrl.string);
 
-			} else if ( keyCode == KeyCode.ESCAPE ) {
-				// final TaggedWords.Word selectedUrl = App.nodes.urlList.getSelectionModel().getSelectedItem();
-				// if ( selectedUrl!=null ) {
-				// App.nodes.urlsSearchTF.requestFocus();
-				// }
+			} else if ( keyCode == KeyCode.DELETE ) {
+				App.nodes.urlDeleteBtn.setDisable(true);
+				App.nodes.urlCancelBtn.setDisable(false);
+				App.nodes.urlDeleteOKBtn.setDisable(false);
+				App.nodes.urlCancelBtn.requestFocus();
 			}
 		}
 	}
 
 	public static class KeyReleasedUrlList implements EventHandler<KeyEvent> {
-		private final KeyPressedUrlList keyPressedUrlList;
-
-		public KeyReleasedUrlList ( final EventHandler<? super KeyEvent> keyPressedUrlList ) {
-			this.keyPressedUrlList = (KeyPressedUrlList) keyPressedUrlList;
-		}
-
 		@Override
 		public void handle ( final KeyEvent event ) {
-			final KeyCode keyCode = event.getCode();
-			if ( keyCode == KeyCode.ENTER ) {
-				keyPressedUrlList.enterPressed = false;
-			}
 		}
 	}
 
@@ -263,7 +335,7 @@ public class Listener {
 			if ( keyCode == KeyCode.ENTER && selectedFileData != null && selectedFileData.isLoaded() ) {
 				event.consume();
 				App.nodes.tabPane.getSelectionModel().select(App.nodes.urlsTab);
-				App.nodes.urlsSearchTF.requestFocus();
+				App.nodes.urlSearchTF.requestFocus();
 			}
 		}
 	}
@@ -282,14 +354,14 @@ public class Listener {
 			if ( newValue != null ) {
 				final String filePathStr = newValue.filePathStr;
 				App.nodes.fileNameTF.setText(filePathStr);
-				App.setFileTitle(newValue.fileName);
-				App.nodes.urlsSearchTF.clear();
+				App.setWindowTitle(newValue.fileName);
+				App.nodes.urlSearchTF.clear();
 				newValue.clearSearch();
 
 			} else {
 				final String defaultText = ""; //$NON-NLS-1$
 				App.nodes.fileNameTF.setText(defaultText);
-				App.setDefaultTitle();
+				App.setWindowTitle();
 			}
 			App.nodes.reloadFileBtn.setDisable(newValue == null);
 			App.nodes.urlsTab.setDisable((newValue == null) || (newValue.isLoaded() == false));
@@ -308,13 +380,15 @@ public class Listener {
 		@Override
 		public void changed ( final ObservableValue<? extends Word> observable, final Word oldValue, final Word newValue ) {
 			if ( newValue != null ) {
-				App.nodes.urlTF.setText(newValue.string);
-				App.nodes.tagsTA.setText(newValue.tagsString);
+				Listener.processSelectUrlItem(newValue);
 
 			} else {
 				final String defaultText = ""; //$NON-NLS-1$
 				App.nodes.urlTF.setText(defaultText);
 				App.nodes.tagsTA.setText(defaultText);
+				App.nodes.openInBrowserBtn.setDisable(true);
+				App.nodes.urlCancelBtn.setDisable(true);
+				App.nodes.urlDeleteBtn.setDisable(true);
 			}
 		}
 	}
@@ -396,6 +470,41 @@ public class Listener {
 		}
 	}
 
+	private static void processUrlCancelButton ( ) {
+		if ( App.nodes.urlDeleteOKBtn.isDisable() == false ) {
+			App.nodes.urlCancelBtn.setDisable(true);
+			App.nodes.urlDeleteBtn.setDisable(false);
+			App.nodes.urlDeleteOKBtn.setDisable(true);
+			App.nodes.urlList.requestFocus();
+		}
+	}
+
+	private static void processUrlDeleteOKButton ( ) {
+		final ObservableList<TaggedWords.Word> urlListItems = App.nodes.urlList.getItems();
+		final int selectedIndex = App.nodes.urlList.getSelectionModel().getSelectedIndex();
+		final TaggedWords.Word selectedWord = urlListItems.get(selectedIndex);
+		final FileData fileData = App.nodes.fileList.getSelectionModel().getSelectedItem();
+
+		urlListItems.remove(selectedIndex);
+		fileData.urls.remove(selectedWord);
+		App.setFileModified(fileData);
+		App.nodes.urlCancelBtn.setDisable(true);
+
+		if ( App.nodes.urlList.getItems().size() > selectedIndex ) {
+			App.nodes.urlList.getSelectionModel().select(selectedIndex);
+			App.nodes.urlList.requestFocus();
+
+		} else if ( App.nodes.urlList.getItems().size() == selectedIndex && selectedIndex > 0 ) {
+			final TaggedWords.Word word = App.nodes.urlList.getItems().get(selectedIndex - 1);
+			Listener.processSelectUrlItem(word);
+			App.nodes.urlList.requestFocus();
+
+		} else {
+			App.nodes.urlSearchTF.requestFocus();
+		}
+		App.nodes.urlDeleteOKBtn.setDisable(true);
+	}
+
 	private static URI stringToURI ( final String urlString ) {
 		final URL url = stringToURL(urlString);
 
@@ -427,6 +536,15 @@ public class Listener {
 		}
 
 		return null;
+	}
+
+	private static void processSelectUrlItem ( final Word word ) {
+		App.nodes.urlCancelBtn.setDisable(true);
+		App.nodes.urlDeleteBtn.setDisable(false);
+		App.nodes.urlDeleteOKBtn.setDisable(true);
+		App.nodes.openInBrowserBtn.setDisable(false);
+		App.nodes.urlTF.setText(word.string);
+		App.nodes.tagsTA.setText(word.tagsString);
 	}
 
 	/*

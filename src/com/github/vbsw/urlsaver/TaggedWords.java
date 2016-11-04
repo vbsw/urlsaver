@@ -106,6 +106,17 @@ public class TaggedWords extends ArrayList<Word> {
 		return Collections.binarySearch(this,word,Word.COMPARATOR);
 	}
 
+	public boolean remove ( final Word word ) {
+		final int wordIndex = binarySearch(word);
+		if ( wordIndex >= 0 ) {
+			word.removeTags();
+			remove(wordIndex);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	private Word addNewWord ( final String wordString, final int insertIndex ) {
 		final Word word = new Word(tagList,wordString,insertIndex);
 		super.add(insertIndex,word);
@@ -153,6 +164,16 @@ public class TaggedWords extends ArrayList<Word> {
 				final Tag tag = tagList.get(index);
 				return addTag(tag);
 			}
+		}
+
+		private void removeTags ( ) {
+			for ( Tag tag: tags ) {
+				final int wordIndex = tag.binarySearch(this);
+				if ( wordIndex >= 0 ) {
+					tag.words.remove(wordIndex);
+				}
+			}
+			tags.clear();
 		}
 
 		/**

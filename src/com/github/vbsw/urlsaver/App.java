@@ -55,12 +55,12 @@ public class App extends Application {
 
 	public static void main ( final String[] args ) {
 		App.args = new Arguments(args);
-		App.args.printInfo();
 
 		if ( App.args.hasNoInfo() ) {
 			Application.launch(App.class,args);
 
 		} else {
+			App.args.printInfo();
 			Platform.exit();
 		}
 	}
@@ -75,7 +75,7 @@ public class App extends Application {
 		App.nodes = new Nodes();
 
 		App.fileDataList.readAll();
-		App.scene.addEventFilter(KeyEvent.KEY_PRESSED,new Listener.KeyPressedScene());
+		App.scene.addEventFilter(KeyEvent.KEY_PRESSED,new Listener.HotKey());
 		App.recreateNodes();
 		App.reloadCSS();
 
@@ -111,7 +111,7 @@ public class App extends Application {
 		if ( fileData != null ) {
 			fileData.clearSearch();
 			App.nodes.urlList.getItems().clear();
-			App.nodes.urlsSearchTF.clear();
+			App.nodes.urlSearchTF.clear();
 			fileData.read();
 		}
 	}
@@ -122,27 +122,27 @@ public class App extends Application {
 			selectedFileData.clearSearch();
 		}
 		App.nodes.urlList.getItems().clear();
-		App.nodes.urlsSearchTF.clear();
+		App.nodes.urlSearchTF.clear();
 		for ( FileData fileData: App.fileDataList ) {
 			fileData.clearSearch();
 			fileData.read();
 		}
 	}
 
-	public static void setDefaultTitle ( ) {
+	public static void setWindowTitle ( ) {
 		final Stage stage = (Stage) App.scene.getWindow();
 		stage.setTitle(App.settings.windowTitle);
 	}
 
-	public static void setFileTitle ( final String fileString ) {
+	public static void setWindowTitle ( final String bracketsContent ) {
 		final Stage stage = (Stage) App.scene.getWindow();
-		stage.setTitle(App.settings.windowTitle + " (" + fileString + ")");
+		stage.setTitle(App.settings.windowTitle + " (" + bracketsContent + ")");
 	}
 
 	public static void fillUrlList ( ) {
 		final FileData selectedFileData = App.nodes.fileList.getSelectionModel().getSelectedItem();
 		final ObservableList<Word> urlListItems = App.nodes.urlList.getItems();
-		App.nodes.urlsSearchBtn.setDisable(true);
+		App.nodes.urlSearchBtn.setDisable(true);
 		selectedFileData.updateSearchedUrls();
 		urlListItems.clear();
 		for ( Word word: selectedFileData.searchedUrls ) {
@@ -169,7 +169,7 @@ public class App extends Application {
 	public static void selectUrlsTab ( ) {
 		if ( App.nodes.urlsTab.isDisable() == false ) {
 			App.nodes.tabPane.getSelectionModel().select(App.nodes.urlsTab);
-			App.nodes.urlsSearchTF.requestFocus();
+			App.nodes.urlSearchTF.requestFocus();
 		}
 	}
 
@@ -183,6 +183,48 @@ public class App extends Application {
 	public static void selectSettingsTab ( ) {
 		if ( App.nodes.settingsTab.isDisable() == false ) {
 			App.nodes.tabPane.getSelectionModel().select(App.nodes.settingsTab);
+		}
+	}
+
+	public static void saveFile ( ) {
+		final FileData fileData = App.nodes.fileList.getSelectionModel().getSelectedItem();
+		if ( fileData.isModified() ) {
+			fileData.save();
+			if ( fileData.isModified() == false ) {
+				App.updateFileModifiedInfo();
+				App.nodes.fileSaveBtn.setDisable(true);
+			}
+		}
+	}
+
+	public static void setFileModified ( final FileData fileData ) {
+		if ( fileData.isModified() == false ) {
+			final FileData selectedFileData = App.nodes.fileList.getSelectionModel().getSelectedItem();
+			fileData.setModified(true);
+			App.updateFileModifiedInfo();
+			if ( fileData == selectedFileData ) {
+				App.nodes.fileSaveBtn.setDisable(false);
+			}
+		}
+	}
+
+	private static void updateFileModifiedInfo ( ) {
+		final boolean fileDataModified = App.fileDataList.isModified();
+		final String modifiedPostfix = " *"; //$NON-NLS-1$
+		final String fileTabText = App.nodes.filesTab.getText();
+		if ( fileDataModified ) {
+			if ( fileTabText.endsWith(modifiedPostfix) == false ) {
+				final String modifiedFielTabText = fileTabText + modifiedPostfix;
+				App.nodes.filesTab.setText(modifiedFielTabText);
+				App.nodes.fileList.refresh();
+			}
+		} else {
+			if ( fileTabText.endsWith(modifiedPostfix) ) {
+				final int endIndex = fileTabText.length() - modifiedPostfix.length();
+				final String modifiedFielTabText = fileTabText.substring(0,endIndex);
+				App.nodes.filesTab.setText(modifiedFielTabText);
+				App.nodes.fileList.refresh();
+			}
 		}
 	}
 

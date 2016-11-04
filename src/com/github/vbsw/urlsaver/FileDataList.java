@@ -49,4 +49,13 @@ public class FileDataList extends ArrayList<FileData> {
 		}
 	}
 
+	public boolean isModified ( ) {
+		for ( FileData fileData: this ) {
+			if ( fileData.isModified() ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }

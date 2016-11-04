@@ -23,8 +23,9 @@
                         <Button fx:id="reload_file_btn" disable="true" mnemonicParsing="false" text="Reload" />
                         <Button fx:id="reload_all_files_btn" disable="true" mnemonicParsing="false" text="Reload All" />
                         <AnchorPane HBox.hgrow="ALWAYS" />
+                        <Button fx:id="file_convert_btn" disable="true" mnemonicParsing="false" text="Convert" />
                         <Button fx:id="files_cancel_btn" disable="true" mnemonicParsing="false" text="Cancel" />
-                        <Button fx:id="files_save_btn" disable="true" mnemonicParsing="false" text="Save" />
+                        <Button fx:id="file_save_btn" disable="true" mnemonicParsing="false" text="Save" />
                         <Button disable="true" mnemonicParsing="false" text="Save, OK" />
                      </children>
                   </HBox>
@@ -42,25 +43,23 @@
                <children>
                   <HBox prefHeight="6.0" prefWidth="710.0" spacing="5.0">
                      <children>
-                        <Button fx:id="urls_search_btn" disable="true" mnemonicParsing="false" text="Search" />
+                        <Button fx:id="url_search_btn" disable="true" mnemonicParsing="false" text="Search" />
                         <Button fx:id="open_in_browser_btn" disable="true" mnemonicParsing="false" text="Open in Browser" />
                         <AnchorPane HBox.hgrow="ALWAYS" />
-                        <Button fx:id="urls_cancel_btn" alignment="CENTER_RIGHT" disable="true" mnemonicParsing="false" text="Cancel" />
-                        <Button fx:id="urls_create_btn" disable="true" mnemonicParsing="false" text="Create" />
-                        <Button disable="true" mnemonicParsing="false" text="Create, OK" />
-                        <Button fx:id="urls_edit_btn" disable="true" mnemonicParsing="false" text="Edit" />
-                        <Button disable="true" mnemonicParsing="false" text="Edit, OK" />
-                        <Button fx:id="urls_delete_btn" disable="true" mnemonicParsing="false" text="Delete" />
-                        <Button fx:id="urls_delete_ok_btn" disable="true" mnemonicParsing="false" text="Delete, OK" />
+                        <Button fx:id="url_cancel_btn" alignment="CENTER_RIGHT" disable="true" mnemonicParsing="false" text="Cancel" />
+                        <Button fx:id="url_delete_btn" disable="true" mnemonicParsing="false" text="Delete" />
+                        <Button fx:id="url_create_ok_btn" disable="true" mnemonicParsing="false" text="Create, OK" />
+                        <Button fx:id="url_edit_ok_btn" disable="true" mnemonicParsing="false" text="Edit, OK" />
+                        <Button fx:id="url_delete_ok_btn" disable="true" mnemonicParsing="false" text="Delete, OK" />
                      </children>
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                   </HBox>
-                  <TextField fx:id="urls_search_tf" promptText="search" />
+                  <TextField fx:id="url_search_tf" promptText="search" />
                   <ListView fx:id="url_list" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                  <TextField fx:id="url_tf" editable="false" promptText="url" />
-                  <TextArea fx:id="tags_ta" editable="false" prefHeight="50.0" prefWidth="200.0" promptText="tags" wrapText="true" />
+                  <TextField fx:id="url_tf" promptText="url" />
+                  <TextArea fx:id="tags_ta" prefHeight="50.0" prefWidth="200.0" promptText="tags" wrapText="true" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
@@ -82,8 +81,8 @@
                   <HBox prefHeight="16.0" prefWidth="720.0" spacing="5.0">
                      <children>
                         <Button fx:id="quit_app_btn" mnemonicParsing="false" text="Quit Application" />
-                        <Button disable="true" mnemonicParsing="false" text="Save and Quit" />
-                        <Button disable="true" mnemonicParsing="false" text="Don't Save, Just Quit" />
+                        <Button fx:id="quit_app_save_btn" disable="true" mnemonicParsing="false" text="Save and Quit" />
+                        <Button fx:id="quit_app_ok_btn" disable="true" mnemonicParsing="false" text="Don't Save, Just Quit" />
                      </children>
                      <VBox.margin>
                         <Insets />

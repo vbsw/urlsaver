@@ -39,13 +39,18 @@ public class Nodes {
 
 	public Parent root;
 	public Button quitAppBtn;
+	public Button quitAppSaveBtn;
+	public Button quitAppOKBtn;
 	public Button reloadFileBtn;
 	public Button reloadAllFilesBtn;
+	public Button fileSaveBtn;
 	public Button openInBrowserBtn;
-	public Button urlsSearchBtn;
-	public Button urlsCancelBtn;
+	public Button urlSearchBtn;
+	public Button urlCancelBtn;
+	public Button urlDeleteBtn;
+	public Button urlDeleteOKBtn;
 	public TextField fileNameTF;
-	public TextField urlsSearchTF;
+	public TextField urlSearchTF;
 	public TextField urlTF;
 	public TextArea tagsTA;
 	public ListView<FileData> fileList;
@@ -79,15 +84,20 @@ public class Nodes {
 	@SuppressWarnings ( "unchecked" )
 	private void lookupNodes ( ) {
 		final String quitAppBtnSelector = "#quit_app_btn"; //$NON-NLS-1$
+		final String quitAppSaveBtnSelector = "#quit_app_save_btn"; //$NON-NLS-1$
+		final String quitAppOKBtnSelector = "#quit_app_ok_btn"; //$NON-NLS-1$
 		final String reloadFileBtnSelector = "#reload_file_btn"; //$NON-NLS-1$
 		final String reloadAllFilesBtnSelector = "#reload_all_files_btn"; //$NON-NLS-1$
+		final String fileSaveBtnSelector = "#file_save_btn"; //$NON-NLS-1$
 		final String openInBrowserBtnSelector = "#open_in_browser_btn"; //$NON-NLS-1$
-		final String urlsSearchBtnSelector = "#urls_search_btn"; //$NON-NLS-1$
-		final String urlsCancelBtnSelector = "#urls_cancel_btn"; //$NON-NLS-1$
+		final String urlsSearchBtnSelector = "#url_search_btn"; //$NON-NLS-1$
+		final String urlsCancelBtnSelector = "#url_cancel_btn"; //$NON-NLS-1$
+		final String urlsDeleteBtnSelector = "#url_delete_btn"; //$NON-NLS-1$
+		final String urlsDeleteOKBtnSelector = "#url_delete_ok_btn"; //$NON-NLS-1$
 		final String fileListSelector = "#file_list"; //$NON-NLS-1$
 		final String urlListSelector = "#url_list"; //$NON-NLS-1$
 		final String fileNameTFSelector = "#file_name_tf"; //$NON-NLS-1$
-		final String urlsSearchTFSelector = "#urls_search_tf"; //$NON-NLS-1$
+		final String urlSearchTFSelector = "#url_search_tf"; //$NON-NLS-1$
 		final String urlTFSelector = "#url_tf"; //$NON-NLS-1$
 		final String tagsTASelector = "#tags_ta"; //$NON-NLS-1$
 		final String tabPaneSelector = "#tab_pane"; //$NON-NLS-1$
@@ -97,15 +107,20 @@ public class Nodes {
 		final String settingsTabId = "settings_tab"; //$NON-NLS-1$
 
 		quitAppBtn = (Button) root.lookup(quitAppBtnSelector);
+		quitAppSaveBtn = (Button) root.lookup(quitAppSaveBtnSelector);
+		quitAppOKBtn = (Button) root.lookup(quitAppOKBtnSelector);
 		reloadFileBtn = (Button) root.lookup(reloadFileBtnSelector);
 		reloadAllFilesBtn = (Button) root.lookup(reloadAllFilesBtnSelector);
+		fileSaveBtn = (Button) root.lookup(fileSaveBtnSelector);
 		openInBrowserBtn = (Button) root.lookup(openInBrowserBtnSelector);
-		urlsSearchBtn = (Button) root.lookup(urlsSearchBtnSelector);
-		urlsCancelBtn = (Button) root.lookup(urlsCancelBtnSelector);
+		urlSearchBtn = (Button) root.lookup(urlsSearchBtnSelector);
+		urlCancelBtn = (Button) root.lookup(urlsCancelBtnSelector);
+		urlDeleteBtn = (Button) root.lookup(urlsDeleteBtnSelector);
+		urlDeleteOKBtn = (Button) root.lookup(urlsDeleteOKBtnSelector);
 		fileList = (ListView<FileData>) root.lookup(fileListSelector);
 		urlList = (ListView<TaggedWords.Word>) root.lookup(urlListSelector);
 		fileNameTF = (TextField) root.lookup(fileNameTFSelector);
-		urlsSearchTF = (TextField) root.lookup(urlsSearchTFSelector);
+		urlSearchTF = (TextField) root.lookup(urlSearchTFSelector);
 		urlTF = (TextField) root.lookup(urlTFSelector);
 		tagsTA = (TextArea) root.lookup(tagsTASelector);
 		tabPane = (TabPane) root.lookup(tabPaneSelector);
@@ -128,87 +143,27 @@ public class Nodes {
 	private void setListeners ( ) {
 		quitAppBtn.setOnAction(new Listener.QuitAppBtn());
 		quitAppBtn.setOnKeyPressed(new Listener.KeyPressedQuitAppBtn());
+		quitAppSaveBtn.setOnKeyPressed(new Listener.KeyPressedQuitAppSaveBtn());
+		quitAppOKBtn.setOnKeyPressed(new Listener.KeyPressedQuitAppOKBtn());
 		reloadFileBtn.setOnAction(new Listener.ReloadFileBtn());
 		reloadAllFilesBtn.setOnAction(new Listener.ReloadAllFilesBtn());
 		openInBrowserBtn.setOnAction(new Listener.OpenInBrowserBtn());
-		openInBrowserBtn.disableProperty().bind(urlList.getSelectionModel().selectedItemProperty().isNull());
-		urlsSearchBtn.setOnAction(new Listener.SearchUrlsBtn());
+		urlSearchBtn.setOnAction(new Listener.SearchUrlsBtn());
+		urlDeleteBtn.setOnAction(new Listener.DeleteUrlBtn());
+		urlDeleteOKBtn.setOnAction(new Listener.DeleteUrlOKBtn());
+		urlDeleteOKBtn.setOnKeyPressed(new Listener.KeyPressedUrlDeleteOKBtn());
+		urlCancelBtn.setOnAction(new Listener.UrlCancelBtn());
+		urlCancelBtn.setOnKeyPressed(new Listener.KeyPressedUrlCancelBtn());
 		fileList.setCellFactory(new Listener.FileListCellFactory());
 		fileList.getSelectionModel().selectedItemProperty().addListener(new Listener.SelectFileListItem());
 		fileList.setOnKeyPressed(new Listener.KeyPressedFileList());
 		urlList.setCellFactory(new Listener.UrlListCellFactory());
 		urlList.getSelectionModel().selectedItemProperty().addListener(new Listener.SelectUrlListItem());
 		urlList.setOnKeyPressed(new Listener.KeyPressedUrlList());
-		urlList.setOnKeyReleased(new Listener.KeyReleasedUrlList(urlList.getOnKeyPressed()));
-		urlsSearchTF.textProperty().addListener(new Listener.TypedUrlsSearchTF());
-		urlsSearchTF.setOnAction(new Listener.SearchUrlsTF());
-		urlsSearchTF.setOnKeyPressed(new Listener.KeyPressedUrlsSearchTF());
-		filesTab.disableProperty().bind(urlsCancelBtn.disableProperty().not());
-		aboutTab.disableProperty().bind(urlsCancelBtn.disableProperty().not());
-		settingsTab.disableProperty().bind(urlsCancelBtn.disableProperty().not());
+		urlSearchTF.textProperty().addListener(new Listener.TypedUrlsSearchTF());
+		urlSearchTF.setOnAction(new Listener.SearchUrlsTF());
+		urlSearchTF.setOnKeyPressed(new Listener.KeyPressedUrlsSearchTF());
+		aboutTab.selectedProperty().addListener(new Listener.SelectAboutTab());
 	}
-
-	/*
-	 * public void fillFileTable ( final FileTable fileTable ) {
-	 * final ObservableList<FileTableItem> tableItems =
-	 * this.fileTable.getItems();
-	 * 
-	 * for ( FileData fileData: fileTable.data ) {
-	 * final FileTableItem fileTableItem = fileData.tableItem;
-	 * tableItems.add(fileTableItem);
-	 * }
-	 * }
-	 */
-
-	/*
-	 * private void createFileTableColumns ( final Scene scene ) {
-	 * final String nameColumnTitle = "File"; //$NON-NLS-1$
-	 * final String nameColumnId = "name_column"; //$NON-NLS-1$
-	 * final String nameColumnPropField = "name"; //$NON-NLS-1$
-	 * final String editedColumnTitle = "Edited"; //$NON-NLS-1$
-	 * final String editedColumnId = "edited_column"; //$NON-NLS-1$
-	 * final String editedColumnPropField = "edited"; //$NON-NLS-1$
-	 * final String loadedColumnTitle = "Loaded %"; //$NON-NLS-1$
-	 * final String loadedColumnId = "loaded_column"; //$NON-NLS-1$
-	 * final String loadedColumnPropField = "loaded"; //$NON-NLS-1$
-	 * final ObservableList<FileTableItem> tableData = fileTable.getItems();
-	 * final ObservableList<TableColumn<FileTableItem, ?>> columns =
-	 * fileTable.getColumns();
-	 * final TableColumn<FileTableItem, String> nameColumn = new
-	 * TableColumn<FileTableItem, String>(nameColumnTitle);
-	 * final TableColumn<FileTableItem, String> editedColumn = new
-	 * TableColumn<FileTableItem, String>(editedColumnTitle);
-	 * final TableColumn<FileTableItem, String> loadedColumn = new
-	 * TableColumn<FileTableItem, String>(loadedColumnTitle);
-	 * // final double nameColumnWidth = scene.getWidth()*70/100;
-	 * 
-	 * tableData.clear();
-	 * columns.clear();
-	 * 
-	 * editedColumn.setId(editedColumnId);
-	 * // editedColumn.setMinWidth(70);
-	 * // editedColumn.setMaxWidth(70);
-	 * editedColumn.setCellValueFactory(new PropertyValueFactory<FileTableItem,
-	 * String>(editedColumnPropField));
-	 * 
-	 * nameColumn.setId(nameColumnId);
-	 * // nameColumn.setMinWidth(nameColumnWidth);
-	 * nameColumn.setCellValueFactory(new PropertyValueFactory<FileTableItem,
-	 * String>(nameColumnPropField));
-	 * 
-	 * loadedColumn.setId(loadedColumnId);
-	 * // loadedColumn.setMinWidth(80);
-	 * // loadedColumn.setMaxWidth(80);
-	 * loadedColumn.setCellValueFactory(new PropertyValueFactory<FileTableItem,
-	 * String>(loadedColumnPropField));
-	 * 
-	 * columns.add(editedColumn);
-	 * columns.add(nameColumn);
-	 * columns.add(loadedColumn);
-	 * 
-	 * fileTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-	 * fileTable.setRowFactory(new Listener.FileTableRowFactory());
-	 * }
-	 */
 
 }

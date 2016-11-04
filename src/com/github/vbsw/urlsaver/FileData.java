@@ -22,6 +22,9 @@
 package com.github.vbsw.urlsaver;
 
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
@@ -32,7 +35,7 @@ import java.util.ArrayList;
 public class FileData {
 
 	private static final int INITIAL_CAPACITY = 10;
-	private static final String MODIFIED_TOKEN = "* ";
+	private static final String MODIFIED_TOKEN = " *"; //$NON-NLS-1$
 
 	private final TaggedWordsReader reader;
 	private final ArrayList<String> prevSearchedTags;
@@ -129,6 +132,28 @@ public class FileData {
 		currSearchedTags.clear();
 	}
 
+	public void save ( ) {
+		final int space = ' ';
+		try ( final BufferedWriter writer = Files.newBufferedWriter(filePath,App.STRING_ENCODING) ) {
+			for ( TaggedWords.Word word: urls ) {
+				writer.write(word.string);
+				writer.newLine();
+				if ( word.tags.size() > 0 ) {
+					writer.write(word.tags.get(0).string);
+				}
+				for ( int i = 1; i < word.tags.size(); i += 1 ) {
+					writer.write(space);
+					writer.write(word.tags.get(i).string);
+				}
+				writer.newLine();
+			}
+			setModified(false);
+
+		} catch ( final IOException e ) {
+			e.printStackTrace();
+		}
+	}
+
 	private void updateSearchedTagsEqual ( ) {
 		int counter = 0;
 		Outer:
@@ -163,14 +188,14 @@ public class FileData {
 			final String postfix = "%"; //$NON-NLS-1$
 
 			if ( modified ) {
-				return MODIFIED_TOKEN + fileName + prefix + percent + postfix;
+				return fileName + MODIFIED_TOKEN + prefix + percent + postfix;
 
 			} else {
 				return fileName + prefix + percent + postfix;
 			}
 
 		} else if ( modified ) {
-			return MODIFIED_TOKEN + fileName;
+			return fileName + MODIFIED_TOKEN;
 
 		} else {
 			return fileName;
