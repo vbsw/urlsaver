@@ -23,8 +23,8 @@ package com.github.vbsw.urlsaver;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import com.github.vbsw.urlsaver.TaggedWords.Word;
 
@@ -309,7 +309,7 @@ public class TaggedWords extends ArrayList<Word> {
 			super(INITIAL_WORD_CAPACITY);
 		}
 
-		public void searchAND ( final TaggedWords taggedWords, final List<String> tagStrings ) {
+		public void searchAND ( final TaggedWords taggedWords, final Collection<String> tagStrings ) {
 			super.clear();
 			searchedTags.clear();
 

@@ -26,7 +26,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 
 
 /**
@@ -38,11 +37,11 @@ public class FileData {
 	private static final String MODIFIED_TOKEN = " *"; //$NON-NLS-1$
 
 	private final TaggedWordsReader reader;
-	private final ArrayList<String> prevSearchedTags;
-	private final ArrayList<String> currSearchedTags;
+	private final StringList newSearchedTags;
 	public final Path filePath;
 	public final String filePathStr;
 	public final String fileName;
+	public final StringList searchedTags;
 	public final TaggedWords.SearchResult searchedUrls;
 
 	private double loaded;
@@ -58,8 +57,8 @@ public class FileData {
 		this.searchedUrls = new TaggedWords.SearchResult();
 		this.urls = new TaggedWords();
 		this.reader = new TaggedWordsReader(filePath);
-		this.prevSearchedTags = new ArrayList<String>(INITIAL_CAPACITY);
-		this.currSearchedTags = new ArrayList<String>(INITIAL_CAPACITY);
+		this.newSearchedTags = new StringList(INITIAL_CAPACITY);
+		this.searchedTags = new StringList(INITIAL_CAPACITY);
 
 		this.reader.progressProperty().addListener(new Listener.ProgressFileLoading(this));
 		this.reader.setOnSucceeded(new Listener.SuccessFileRead(this));
@@ -103,33 +102,14 @@ public class FileData {
 	}
 
 	public void setSearchedTags ( final String tagsString ) {
-		int currIndex, offset;
-		currSearchedTags.clear();
-
-		for ( currIndex = 0, offset = 0; currIndex < tagsString.length(); currIndex += 1 ) {
-			final char character = tagsString.charAt(currIndex);
-
-			if ( Parser.isWhiteSpace(character) ) {
-				addKey(currSearchedTags,offset,currIndex,tagsString);
-				offset = currIndex + 1;
-			}
-		}
-		addKey(currSearchedTags,offset,currIndex,tagsString);
-		updateSearchedTagsEqual();
+		newSearchedTags.set(tagsString);
+		searchedTagsEqual = searchedTags.equals(newSearchedTags);
 	}
 
-	/**
-	 * Updates {@code searchedUrls} by searched tags.
-	 */
 	public void updateSearchedUrls ( ) {
-		prevSearchedTags.clear();
-		prevSearchedTags.addAll(currSearchedTags);
-		searchedUrls.searchAND(urls,currSearchedTags);
-	}
-
-	public void clearSearch ( ) {
-		prevSearchedTags.clear();
-		currSearchedTags.clear();
+		searchedTags.clear();
+		searchedTags.addAll(newSearchedTags);
+		searchedUrls.searchAND(urls,searchedTags);
 	}
 
 	public void save ( ) {
@@ -151,32 +131,6 @@ public class FileData {
 
 		} catch ( final IOException e ) {
 			e.printStackTrace();
-		}
-	}
-
-	private void updateSearchedTagsEqual ( ) {
-		int counter = 0;
-		Outer:
-		for ( String currKeyStr: currSearchedTags ) {
-			for ( String prevKeyStr: prevSearchedTags ) {
-				if ( currKeyStr.equals(prevKeyStr) ) {
-					counter += 1;
-					continue Outer;
-				}
-			}
-			searchedTagsEqual = false;
-			return;
-		}
-		searchedTagsEqual = prevSearchedTags.size() == counter;
-	}
-
-	private void addKey ( final ArrayList<String> keys, final int offset, final int currIndex, final String keysStr ) {
-		final int keyLength = currIndex - offset;
-		if ( keyLength > 0 ) {
-			final String keyStr = keysStr.substring(offset,currIndex);
-			if ( keys.contains(keyStr) == false ) {
-				keys.add(keyStr);
-			}
 		}
 	}
 

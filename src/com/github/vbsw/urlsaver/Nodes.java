@@ -49,6 +49,8 @@ public class Nodes {
 	public Button urlCancelBtn;
 	public Button urlDeleteBtn;
 	public Button urlDeleteOKBtn;
+	public Button urlCreateOKBtn;
+	public Button urlEditOKBtn;
 	public TextField fileNameTF;
 	public TextField urlSearchTF;
 	public TextField urlTF;
@@ -94,6 +96,8 @@ public class Nodes {
 		final String urlsCancelBtnSelector = "#url_cancel_btn"; //$NON-NLS-1$
 		final String urlsDeleteBtnSelector = "#url_delete_btn"; //$NON-NLS-1$
 		final String urlsDeleteOKBtnSelector = "#url_delete_ok_btn"; //$NON-NLS-1$
+		final String urlsCreateOKBtnSelector = "#url_create_ok_btn"; //$NON-NLS-1$
+		final String urlsEditOKBtnSelector = "#url_edit_ok_btn"; //$NON-NLS-1$
 		final String fileListSelector = "#file_list"; //$NON-NLS-1$
 		final String urlListSelector = "#url_list"; //$NON-NLS-1$
 		final String fileNameTFSelector = "#file_name_tf"; //$NON-NLS-1$
@@ -117,6 +121,8 @@ public class Nodes {
 		urlCancelBtn = (Button) root.lookup(urlsCancelBtnSelector);
 		urlDeleteBtn = (Button) root.lookup(urlsDeleteBtnSelector);
 		urlDeleteOKBtn = (Button) root.lookup(urlsDeleteOKBtnSelector);
+		urlCreateOKBtn = (Button) root.lookup(urlsCreateOKBtnSelector);
+		urlEditOKBtn = (Button) root.lookup(urlsEditOKBtnSelector);
 		fileList = (ListView<FileData>) root.lookup(fileListSelector);
 		urlList = (ListView<TaggedWords.Word>) root.lookup(urlListSelector);
 		fileNameTF = (TextField) root.lookup(fileNameTFSelector);
@@ -144,7 +150,9 @@ public class Nodes {
 		quitAppBtn.setOnAction(new Listener.QuitAppBtn());
 		quitAppBtn.setOnKeyPressed(new Listener.KeyPressedQuitAppBtn());
 		quitAppSaveBtn.setOnKeyPressed(new Listener.KeyPressedQuitAppSaveBtn());
+		quitAppSaveBtn.setOnAction(new Listener.QuitAppSaveBtn());
 		quitAppOKBtn.setOnKeyPressed(new Listener.KeyPressedQuitAppOKBtn());
+		quitAppOKBtn.setOnAction(new Listener.QuitAppOKBtn());
 		reloadFileBtn.setOnAction(new Listener.ReloadFileBtn());
 		reloadAllFilesBtn.setOnAction(new Listener.ReloadAllFilesBtn());
 		openInBrowserBtn.setOnAction(new Listener.OpenInBrowserBtn());
@@ -152,8 +160,11 @@ public class Nodes {
 		urlDeleteBtn.setOnAction(new Listener.DeleteUrlBtn());
 		urlDeleteOKBtn.setOnAction(new Listener.DeleteUrlOKBtn());
 		urlDeleteOKBtn.setOnKeyPressed(new Listener.KeyPressedUrlDeleteOKBtn());
+		urlCreateOKBtn.setOnAction(new Listener.CreateUrlOKBtn());
+		urlCreateOKBtn.setOnKeyPressed(new Listener.KeyPressedUrlCreateOKBtn());
 		urlCancelBtn.setOnAction(new Listener.UrlCancelBtn());
 		urlCancelBtn.setOnKeyPressed(new Listener.KeyPressedUrlCancelBtn());
+		urlTF.textProperty().addListener(new Listener.TypedUrlTF());
 		fileList.setCellFactory(new Listener.FileListCellFactory());
 		fileList.getSelectionModel().selectedItemProperty().addListener(new Listener.SelectFileListItem());
 		fileList.setOnKeyPressed(new Listener.KeyPressedFileList());
@@ -162,7 +173,7 @@ public class Nodes {
 		urlList.setOnKeyPressed(new Listener.KeyPressedUrlList());
 		urlSearchTF.textProperty().addListener(new Listener.TypedUrlsSearchTF());
 		urlSearchTF.setOnAction(new Listener.SearchUrlsTF());
-		urlSearchTF.setOnKeyPressed(new Listener.KeyPressedUrlsSearchTF());
+		urlSearchTF.setOnKeyPressed(new Listener.KeyPressedUrlSearchTF());
 		aboutTab.selectedProperty().addListener(new Listener.SelectAboutTab());
 	}
 

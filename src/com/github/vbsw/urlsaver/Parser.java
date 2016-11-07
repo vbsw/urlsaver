@@ -30,6 +30,16 @@ import java.nio.charset.Charset;
  */
 public class Parser {
 
+	public static boolean isWhiteSpace ( final String string ) {
+		for ( int i = 0; i < string.length(); i += 1 ) {
+			final char character = string.charAt(i);
+			if ( isWhiteSpace(character) == false ) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public static String getStringTillNewLine ( final byte[] bytes, final int offset, final Charset encoding ) {
 		final int stringLength = Parser.getLengthTillNewLine(bytes,offset);
 		final String str = new String(bytes,offset,stringLength,encoding);

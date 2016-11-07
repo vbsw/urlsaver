@@ -109,7 +109,7 @@ public class App extends Application {
 	public static void reloadSelectedFile ( ) {
 		final FileData fileData = App.nodes.fileList.getSelectionModel().getSelectedItem();
 		if ( fileData != null ) {
-			fileData.clearSearch();
+			fileData.searchedTags.clear();
 			App.nodes.urlList.getItems().clear();
 			App.nodes.urlSearchTF.clear();
 			fileData.read();
@@ -119,12 +119,12 @@ public class App extends Application {
 	public static void reloadFiles ( ) {
 		final FileData selectedFileData = App.nodes.fileList.getSelectionModel().getSelectedItem();
 		if ( selectedFileData != null ) {
-			selectedFileData.clearSearch();
+			selectedFileData.searchedTags.clear();
 		}
 		App.nodes.urlList.getItems().clear();
 		App.nodes.urlSearchTF.clear();
 		for ( FileData fileData: App.fileDataList ) {
-			fileData.clearSearch();
+			fileData.searchedTags.clear();
 			fileData.read();
 		}
 	}

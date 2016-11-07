@@ -52,6 +52,51 @@ import javafx.util.Callback;
  */
 public class Listener {
 
+	private static final StringList tmpTagList = new StringList(20);
+
+	public static class KeyPressedUrlCreateOKBtn implements EventHandler<KeyEvent> {
+		@Override
+		public void handle ( final KeyEvent event ) {
+			Listener.processUrlCreateOKBtn();
+		}
+	}
+
+	public static class CreateUrlOKBtn implements EventHandler<ActionEvent> {
+		@Override
+		public void handle ( final ActionEvent event ) {
+			Listener.processUrlCreateOKBtn();
+		}
+	}
+
+	public static class TypedUrlTF implements ChangeListener<String> {
+		@Override
+		public void changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
+			final TaggedWords.Word selectedItem = App.nodes.urlList.getSelectionModel().getSelectedItem();
+			if ( selectedItem != null ) {
+				final String selectedUrlString = selectedItem.string;
+				if ( oldValue.isEmpty() || selectedUrlString.equals(oldValue) ) {
+					if ( newValue.isEmpty() == false && selectedUrlString.equals(newValue) == false ) {
+						Listener.enableUrlEdit();
+					}
+				} else {
+					if ( newValue.isEmpty() || selectedUrlString.equals(newValue) ) {
+						Listener.disableUrlEdit();
+					}
+				}
+			} else {
+				if ( oldValue.isEmpty() ) {
+					if ( newValue.isEmpty() == false ) {
+						Listener.enableUrlEdit();
+					}
+				} else {
+					if ( newValue.isEmpty() ) {
+						Listener.disableUrlEdit();
+					}
+				}
+			}
+		}
+	}
+
 	public static class SelectAboutTab implements ChangeListener<Boolean> {
 		@Override
 		public void changed ( final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue ) {
@@ -121,14 +166,14 @@ public class Listener {
 		}
 	}
 
-	public static class KeyPressedUrlsSearchTF implements EventHandler<KeyEvent> {
+	public static class KeyPressedUrlSearchTF implements EventHandler<KeyEvent> {
 		@Override
 		public void handle ( final KeyEvent event ) {
-			final KeyCode keyCode = event.getCode();
-			if ( keyCode == KeyCode.ESCAPE ) {
-				// App.nodes.tabPane.getSelectionModel().select(App.nodes.aboutTab);
-				// App.nodes.quitAppBtn.requestFocus();
-			}
+			// final KeyCode keyCode = event.getCode();
+			// if ( keyCode == KeyCode.ESCAPE ) {
+			// App.nodes.tabPane.getSelectionModel().select(App.nodes.aboutTab);
+			// App.nodes.quitAppBtn.requestFocus();
+			// }
 		}
 	}
 
@@ -221,9 +266,33 @@ public class Listener {
 		}
 	}
 
+	public static class QuitAppSaveBtn implements EventHandler<ActionEvent> {
+		@Override
+		public void handle ( final ActionEvent event ) {
+			for ( FileData fileData: App.fileDataList ) {
+				if ( fileData.isModified() ) {
+					fileData.save();
+				}
+			}
+			if ( App.fileDataList.isModified() == false ) {
+				Platform.exit();
+			}
+		}
+	}
+
 	public static class KeyPressedQuitAppOKBtn implements EventHandler<KeyEvent> {
 		@Override
 		public void handle ( final KeyEvent event ) {
+			final KeyCode keyCode = event.getCode();
+			if ( keyCode == KeyCode.ENTER ) {
+				Platform.exit();
+			}
+		}
+	}
+
+	public static class QuitAppOKBtn implements EventHandler<ActionEvent> {
+		@Override
+		public void handle ( final ActionEvent event ) {
 			Platform.exit();
 		}
 	}
@@ -356,7 +425,7 @@ public class Listener {
 				App.nodes.fileNameTF.setText(filePathStr);
 				App.setWindowTitle(newValue.fileName);
 				App.nodes.urlSearchTF.clear();
-				newValue.clearSearch();
+				newValue.searchedTags.clear();
 
 			} else {
 				final String defaultText = ""; //$NON-NLS-1$
@@ -470,13 +539,72 @@ public class Listener {
 		}
 	}
 
+	private static void processUrlCreateOKBtn ( ) {
+		final FileData fileData = App.nodes.fileList.getSelectionModel().getSelectedItem();
+		final TaggedWords urls = fileData.urls;
+		final String wordString = App.nodes.urlTF.getText();
+		final TaggedWords.Word word = urls.add(wordString);
+		final String tagsTAString = App.nodes.tagsTA.getText();
+		final String tagStrings;
+
+		if ( Parser.isWhiteSpace(tagsTAString) == false ) {
+			tagStrings = App.nodes.tagsTA.getText();
+		} else {
+			tagStrings = "any"; //$NON-NLS-1$
+		}
+		Listener.tmpTagList.set(tagStrings);
+		for ( String tagString: Listener.tmpTagList ) {
+			word.addTag(tagString);
+		}
+		processUrlCancelButton();
+		App.setFileModified(fileData);
+		App.nodes.urlSearchTF.requestFocus();
+	}
+
 	private static void processUrlCancelButton ( ) {
 		if ( App.nodes.urlDeleteOKBtn.isDisable() == false ) {
 			App.nodes.urlCancelBtn.setDisable(true);
 			App.nodes.urlDeleteBtn.setDisable(false);
 			App.nodes.urlDeleteOKBtn.setDisable(true);
 			App.nodes.urlList.requestFocus();
+
+		} else if ( App.nodes.urlCreateOKBtn.isDisable() == false ) {
+			final TaggedWords.Word selectedItem = App.nodes.urlList.getSelectionModel().getSelectedItem();
+			App.nodes.urlCancelBtn.setDisable(true);
+			App.nodes.urlDeleteBtn.setDisable(false);
+			App.nodes.urlDeleteOKBtn.setDisable(true);
+			App.nodes.urlCreateOKBtn.setDisable(true);
+
+			if ( selectedItem != null ) {
+				final String selectedUrlString = selectedItem.string;
+				final String selectedTagsString = selectedItem.tagsString;
+				App.nodes.urlTF.setText(selectedUrlString);
+				App.nodes.tagsTA.setText(selectedTagsString);
+				App.nodes.urlList.requestFocus();
+
+			} else {
+				final String defaultString = ""; //$NON-NLS-1$
+				App.nodes.urlTF.setText(defaultString);
+				App.nodes.tagsTA.setText(defaultString);
+				App.nodes.urlSearchTF.requestFocus();
+			}
 		}
+	}
+
+	private static void enableUrlEdit ( ) {
+		App.nodes.urlDeleteBtn.setDisable(true);
+		App.nodes.urlDeleteOKBtn.setDisable(true);
+		App.nodes.urlCreateOKBtn.setDisable(false);
+		App.nodes.urlEditOKBtn.setDisable(true);
+		App.nodes.urlCancelBtn.setDisable(false);
+	}
+
+	private static void disableUrlEdit ( ) {
+		final TaggedWords.Word selectedItem = App.nodes.urlList.getSelectionModel().getSelectedItem();
+		App.nodes.urlDeleteBtn.setDisable(selectedItem == null);
+		App.nodes.urlCreateOKBtn.setDisable(true);
+		App.nodes.urlEditOKBtn.setDisable(true);
+		App.nodes.urlCancelBtn.setDisable(true);
 	}
 
 	private static void processUrlDeleteOKButton ( ) {
