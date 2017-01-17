@@ -151,6 +151,15 @@ public class TaggedWords extends ArrayList<Word> {
 			this.tagsString = EMPTY_STRING;
 		}
 
+		public boolean hasTag ( final String tagString ) {
+			for ( Tag tag: tagList ) {
+				if ( tag.string.equals(tagString) ) {
+					return true;
+				}
+			}
+			return false;
+		}
+
 		public Tag addTag ( final String tagString ) {
 			final int index = tagList.binarySearch(tagString);
 

@@ -22,36 +22,54 @@
 package com.github.vbsw.urlsaver.binding;
 
 
+import java.util.ArrayList;
+
+import com.github.vbsw.urlsaver.Parser;
+import com.github.vbsw.urlsaver.TaggedWords;
+
 import javafx.beans.binding.BooleanBinding;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public class UrlModifiedBinding extends BooleanBinding {
+public class TagsEnteredBinding extends BooleanBinding {
 
-	private final UrlEnteredBinding newUrlEntered;
-	private final TagsEnteredBinding tagsEntered;
-	private final TextField urlTF;
+	private final ListView<TaggedWords.Word> urlList;
 	private final TextArea tagsTA;
 
-	public UrlModifiedBinding ( final UrlEnteredBinding urlEntered, final TagsEnteredBinding tagsEntered, final TextField urlTF, final TextArea tagsTA ) {
-		this.newUrlEntered = urlEntered;
-		this.tagsEntered = tagsEntered;
-		this.urlTF = urlTF;
+	public TagsEnteredBinding ( final ListView<TaggedWords.Word> urlList, final TextArea tagsTA ) {
+		this.urlList = urlList;
 		this.tagsTA = tagsTA;
 
-		bind(urlEntered,tagsEntered);
+		bind(tagsTA.textProperty());
 	}
 
 	@Override
 	protected boolean computeValue ( ) {
-		final boolean urlTextAvailable = !urlTF.getText().isEmpty();
-		final boolean tagsTextAvailable = !tagsTA.getText().isEmpty();
+		final String tagsAsOneString = tagsTA.getText();
+		final ArrayList<String> tagStringList = Parser.toStringArray(tagsAsOneString);
+		final boolean newTags = hasNewTags(tagStringList);
+		
+		return newTags;
+	}
 
-		return !newUrlEntered.getValue() && tagsEntered.getValue() && urlTextAvailable && tagsTextAvailable;
+	private boolean hasNewTags ( final ArrayList<String> tagStringList ) {
+		final TaggedWords.Word selectedItem = urlList.getSelectionModel().getSelectedItem();
+
+		if ( selectedItem == null ) {
+			return !tagStringList.isEmpty();
+
+		} else {
+			for ( String tagString: tagStringList ) {
+				if ( !selectedItem.hasTag(tagString) ) {
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 
 }

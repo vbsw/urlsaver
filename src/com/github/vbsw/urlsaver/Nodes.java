@@ -24,8 +24,13 @@ package com.github.vbsw.urlsaver;
 
 import com.github.vbsw.urlsaver.app.App;
 import com.github.vbsw.urlsaver.app.FXML;
+import com.github.vbsw.urlsaver.binding.TagsEnteredBinding;
+import com.github.vbsw.urlsaver.binding.UrlActionBinding;
+import com.github.vbsw.urlsaver.binding.UrlModifiedBinding;
+import com.github.vbsw.urlsaver.binding.UrlSelectedBinding;
 import com.github.vbsw.urlsaver.binding.UrlEnteredBinding;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -152,8 +157,15 @@ public class Nodes {
 
 	private void configure ( ) {
 		final UrlEnteredBinding urlEntered = new UrlEnteredBinding(urlList,urlTF);
+		final TagsEnteredBinding tagsEntered = new TagsEnteredBinding(urlList,tagsTA);
+		final UrlModifiedBinding urlModified = new UrlModifiedBinding(urlEntered,tagsEntered,urlTF,tagsTA);
+		final UrlActionBinding urlAction = new UrlActionBinding(urlEntered,urlModified);
+		final UrlSelectedBinding urlSelected = new UrlSelectedBinding(urlEntered,urlModified,urlList);
 
 		urlCreateOKBtn.disableProperty().bind(urlEntered.not());
+		urlEditOKBtn.disableProperty().bind(urlModified.not());
+		urlCancelBtn.disableProperty().bind(urlAction.not());
+		urlDeleteBtn.disableProperty().bind(urlSelected.not());
 
 		quitAppBtn.setOnAction(new Listener.QuitAppBtn());
 		quitAppBtn.setOnKeyPressed(new Listener.KeyPressedQuitAppBtn());

@@ -23,35 +23,26 @@ package com.github.vbsw.urlsaver.binding;
 
 
 import javafx.beans.binding.BooleanBinding;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public class UrlModifiedBinding extends BooleanBinding {
+public class UrlActionBinding extends BooleanBinding {
 
-	private final UrlEnteredBinding newUrlEntered;
-	private final TagsEnteredBinding tagsEntered;
-	private final TextField urlTF;
-	private final TextArea tagsTA;
+	private final UrlEnteredBinding urlEntered;
+	private final UrlModifiedBinding urlModified;
 
-	public UrlModifiedBinding ( final UrlEnteredBinding urlEntered, final TagsEnteredBinding tagsEntered, final TextField urlTF, final TextArea tagsTA ) {
-		this.newUrlEntered = urlEntered;
-		this.tagsEntered = tagsEntered;
-		this.urlTF = urlTF;
-		this.tagsTA = tagsTA;
+	public UrlActionBinding ( final UrlEnteredBinding urlEntered, final UrlModifiedBinding urlModified ) {
+		this.urlEntered = urlEntered;
+		this.urlModified = urlModified;
 
-		bind(urlEntered,tagsEntered);
+		bind(urlEntered,urlModified);
 	}
 
 	@Override
 	protected boolean computeValue ( ) {
-		final boolean urlTextAvailable = !urlTF.getText().isEmpty();
-		final boolean tagsTextAvailable = !tagsTA.getText().isEmpty();
-
-		return !newUrlEntered.getValue() && tagsEntered.getValue() && urlTextAvailable && tagsTextAvailable;
+		return urlEntered.getValue() || urlModified.getValue();
 	}
 
 }

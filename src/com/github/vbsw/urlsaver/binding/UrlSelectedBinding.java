@@ -22,36 +22,34 @@
 package com.github.vbsw.urlsaver.binding;
 
 
+import com.github.vbsw.urlsaver.TaggedWords.Word;
+
 import javafx.beans.binding.BooleanBinding;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ListView;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public class UrlModifiedBinding extends BooleanBinding {
+public class UrlSelectedBinding extends BooleanBinding {
 
-	private final UrlEnteredBinding newUrlEntered;
-	private final TagsEnteredBinding tagsEntered;
-	private final TextField urlTF;
-	private final TextArea tagsTA;
+	private final UrlEnteredBinding urlEntered;
+	private final UrlModifiedBinding urlModified;
+	private final ListView<Word> urlList;
 
-	public UrlModifiedBinding ( final UrlEnteredBinding urlEntered, final TagsEnteredBinding tagsEntered, final TextField urlTF, final TextArea tagsTA ) {
-		this.newUrlEntered = urlEntered;
-		this.tagsEntered = tagsEntered;
-		this.urlTF = urlTF;
-		this.tagsTA = tagsTA;
+	public UrlSelectedBinding ( final UrlEnteredBinding urlEntered, final UrlModifiedBinding urlModified, final ListView<Word> urlList ) {
+		this.urlEntered = urlEntered;
+		this.urlModified = urlModified;
+		this.urlList = urlList;
 
-		bind(urlEntered,tagsEntered);
+		bind(urlEntered,urlModified);
 	}
 
 	@Override
 	protected boolean computeValue ( ) {
-		final boolean urlTextAvailable = !urlTF.getText().isEmpty();
-		final boolean tagsTextAvailable = !tagsTA.getText().isEmpty();
+		final boolean urlItemSelected = urlList.getSelectionModel().getSelectedItem() != null;
 
-		return !newUrlEntered.getValue() && tagsEntered.getValue() && urlTextAvailable && tagsTextAvailable;
+		return !urlEntered.getValue() && !urlModified.getValue() && urlItemSelected;
 	}
 
 }

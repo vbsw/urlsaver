@@ -23,12 +23,27 @@ package com.github.vbsw.urlsaver;
 
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 
 
 /**
  * @author Vitali Baumtrok
  */
 public class Parser {
+
+	public static ArrayList<String> toStringArray ( final String string ) {
+		final ArrayList<String> list = new ArrayList<String>();
+		int offset = skipWhiteSpace(string,0);
+
+		while ( offset < string.length() ) {
+			final int endIndex = skipNonWhiteSpace(string,offset);
+			final String word = string.substring(offset,endIndex);
+			offset = skipWhiteSpace(string,endIndex);
+
+			list.add(word);
+		}
+		return list;
+	}
 
 	public static boolean isWhiteSpace ( final String string ) {
 		for ( int i = 0; i < string.length(); i += 1 ) {
@@ -59,6 +74,20 @@ public class Parser {
 
 	public static boolean isNewLine ( final byte byteChar ) {
 		return byteChar == 10 || byteChar == 13;
+	}
+
+	private static int skipNonWhiteSpace ( final String string, int offset ) {
+		while ( offset < string.length() && !isWhiteSpace(string.charAt(offset)) ) {
+			offset += 1;
+		}
+		return offset;
+	}
+
+	public static int skipWhiteSpace ( final String string, int offset ) {
+		while ( offset < string.length() && isWhiteSpace(string.charAt(offset)) ) {
+			offset += 1;
+		}
+		return offset;
 	}
 
 	public static int skipWhiteSpace ( final byte[] bytes, int offset ) {

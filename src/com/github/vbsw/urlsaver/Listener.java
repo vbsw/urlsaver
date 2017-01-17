@@ -322,8 +322,8 @@ public class Listener {
 		@Override
 		public void handle ( final ActionEvent event ) {
 			App.nodes.urlList.requestFocus();
-			App.nodes.urlCancelBtn.setDisable(false);
-			App.nodes.urlDeleteBtn.setDisable(true);
+//			App.nodes.urlCancelBtn.setDisable(false);
+//			App.nodes.urlDeleteBtn.setDisable(true);
 			App.nodes.urlDeleteOKBtn.setDisable(false);
 		}
 	}
@@ -383,8 +383,8 @@ public class Listener {
 				Listener.openURLInBrowser(selectedUrl.string);
 
 			} else if ( keyCode == KeyCode.DELETE ) {
-				App.nodes.urlDeleteBtn.setDisable(true);
-				App.nodes.urlCancelBtn.setDisable(false);
+//				App.nodes.urlDeleteBtn.setDisable(true);
+//				App.nodes.urlCancelBtn.setDisable(false);
 				App.nodes.urlDeleteOKBtn.setDisable(false);
 				App.nodes.urlCancelBtn.requestFocus();
 			}
@@ -457,8 +457,8 @@ public class Listener {
 				App.nodes.urlTF.setText(defaultText);
 				App.nodes.tagsTA.setText(defaultText);
 				App.nodes.openInBrowserBtn.setDisable(true);
-				App.nodes.urlCancelBtn.setDisable(true);
-				App.nodes.urlDeleteBtn.setDisable(true);
+//				App.nodes.urlCancelBtn.setDisable(true);
+//				App.nodes.urlDeleteBtn.setDisable(true);
 			}
 		}
 	}
@@ -564,8 +564,8 @@ public class Listener {
 
 	private static void processUrlCancelButton ( ) {
 		if ( App.nodes.urlDeleteOKBtn.isDisable() == false ) {
-			App.nodes.urlCancelBtn.setDisable(true);
-			App.nodes.urlDeleteBtn.setDisable(false);
+//			App.nodes.urlCancelBtn.setDisable(true);
+//			App.nodes.urlDeleteBtn.setDisable(false);
 			App.nodes.urlDeleteOKBtn.setDisable(true);
 			App.nodes.urlList.requestFocus();
 
@@ -593,19 +593,19 @@ public class Listener {
 	}
 
 	private static void enableUrlEdit ( ) {
-		App.nodes.urlDeleteBtn.setDisable(true);
+//		App.nodes.urlDeleteBtn.setDisable(true);
 		App.nodes.urlDeleteOKBtn.setDisable(true);
 //		App.nodes.urlCreateOKBtn.setDisable(false);
-		App.nodes.urlEditOKBtn.setDisable(true);
-		App.nodes.urlCancelBtn.setDisable(false);
+//		App.nodes.urlEditOKBtn.setDisable(true);
+//		App.nodes.urlCancelBtn.setDisable(false);
 	}
 
 	private static void disableUrlEdit ( ) {
 		final TaggedWords.Word selectedItem = App.nodes.urlList.getSelectionModel().getSelectedItem();
-		App.nodes.urlDeleteBtn.setDisable(selectedItem == null);
+//		App.nodes.urlDeleteBtn.setDisable(selectedItem == null);
 //		App.nodes.urlCreateOKBtn.setDisable(true);
-		App.nodes.urlEditOKBtn.setDisable(true);
-		App.nodes.urlCancelBtn.setDisable(true);
+//		App.nodes.urlEditOKBtn.setDisable(true);
+//		App.nodes.urlCancelBtn.setDisable(true);
 	}
 
 	private static void processUrlDeleteOKButton ( ) {
@@ -617,7 +617,7 @@ public class Listener {
 		urlListItems.remove(selectedIndex);
 		fileData.urls.remove(selectedWord);
 		App.setFileModified(fileData);
-		App.nodes.urlCancelBtn.setDisable(true);
+//		App.nodes.urlCancelBtn.setDisable(true);
 
 		if ( App.nodes.urlList.getItems().size() > selectedIndex ) {
 			App.nodes.urlList.getSelectionModel().select(selectedIndex);
@@ -668,8 +668,8 @@ public class Listener {
 	}
 
 	private static void processSelectUrlItem ( final Word word ) {
-		App.nodes.urlCancelBtn.setDisable(true);
-		App.nodes.urlDeleteBtn.setDisable(false);
+//		App.nodes.urlCancelBtn.setDisable(true);
+//		App.nodes.urlDeleteBtn.setDisable(false);
 		App.nodes.urlDeleteOKBtn.setDisable(true);
 		App.nodes.openInBrowserBtn.setDisable(false);
 		App.nodes.urlTF.setText(word.string);
