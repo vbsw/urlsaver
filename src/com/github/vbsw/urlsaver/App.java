@@ -46,7 +46,7 @@ public class App extends Application {
 
 	public static final Charset STRING_ENCODING = StandardCharsets.UTF_8;
 
-	public static Arguments args;
+	public static CLInfo clinfo;
 	public static Settings settings;
 	public static FileDataList fileDataList;
 	public static Scene scene;
@@ -54,13 +54,13 @@ public class App extends Application {
 	public static boolean fileHasBeenSelected;
 
 	public static void main ( final String[] args ) {
-		App.args = new Arguments(args);
+		App.clinfo = new CLInfo(args);
 
-		if ( App.args.hasNoInfo() ) {
+		if ( App.clinfo.isEmpty() ) {
 			Application.launch(App.class,args);
 
 		} else {
-			App.args.printInfo();
+			App.clinfo.print();
 			Platform.exit();
 		}
 	}

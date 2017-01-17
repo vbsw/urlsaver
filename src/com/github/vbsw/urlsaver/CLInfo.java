@@ -25,36 +25,39 @@ package com.github.vbsw.urlsaver;
 /**
  * @author Vitali Baumtrok
  */
-public class Arguments {
+public class CLInfo {
 
-	private static enum ParseResult {
-		NONE, ERROR_TOO_MANY_ARGS, ERROR_UNKNOWN_ARG, PRINT_HELP, PRINT_VERSION
+	private static enum ArgumentType {
+		NONE, ERROR_TOO_MANY_ARGS, ERROR_UNKNOWN_ARG, PRINT_HELP, PRINT_VERSION, PRINT_COPYRIGHT
 	}
 
-	private ParseResult result = ParseResult.NONE;
+	private ArgumentType argumentType = ArgumentType.NONE;
 	private String unknownArg = null;
 
-	public Arguments ( final String[] args ) {
+	public CLInfo ( final String[] args ) {
 		if ( tooManyArguments(args) ) {
-			result = ParseResult.ERROR_TOO_MANY_ARGS;
+			argumentType = ArgumentType.ERROR_TOO_MANY_ARGS;
 
 		} else if ( args.length == 1 ) {
 
-			if ( args[0].equals("--help") ) {
-				result = ParseResult.PRINT_HELP;
+			if ( Parser.isHelp(args[0]) ) {
+				argumentType = ArgumentType.PRINT_HELP;
 
-			} else if ( args[0].equals("--version") ) {
-				result = ParseResult.PRINT_VERSION;
+			} else if ( Parser.isVersion(args[0]) ) {
+				argumentType = ArgumentType.PRINT_VERSION;
+
+			} else if ( Parser.isCopyright(args[0]) ) {
+				argumentType = ArgumentType.PRINT_COPYRIGHT;
 
 			} else if ( args[0].length() > 0 ) {
-				result = ParseResult.ERROR_UNKNOWN_ARG;
+				argumentType = ArgumentType.ERROR_UNKNOWN_ARG;
 				unknownArg = args[0];
 			}
 		}
 	}
 
-	public void printInfo ( ) {
-		switch ( result ) {
+	public void print ( ) {
+		switch ( argumentType ) {
 			case ERROR_TOO_MANY_ARGS:
 			System.out.println("error: too many arguments");
 			break;
@@ -71,8 +74,12 @@ public class Arguments {
 			break;
 
 			case PRINT_VERSION:
-			System.out.println("URL Saver (version 0.2.0)");
-			System.out.println("This program is free software: you can redistribute it and/or modify");
+			System.out.println(Version.STRING);
+			break;
+
+			case PRINT_COPYRIGHT:
+			System.out.println("Copyright 2016 Vitali Baumtrok (vbsw@mailbox.org)");
+			System.out.println("URL Saver is free software: you can redistribute it and/or modify");
 			System.out.println("it under the terms of the GNU General Public License as published by");
 			System.out.println("the Free Software Foundation, either version 3 of the License, or");
 			System.out.println("(at your option) any later version.");
@@ -83,8 +90,8 @@ public class Arguments {
 		}
 	}
 
-	public boolean hasNoInfo ( ) {
-		return result == ParseResult.NONE;
+	public boolean isEmpty ( ) {
+		return argumentType == ArgumentType.NONE;
 	}
 
 	private boolean tooManyArguments ( final String[] args ) {

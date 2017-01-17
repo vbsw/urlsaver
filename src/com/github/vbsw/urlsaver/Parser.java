@@ -76,4 +76,16 @@ public class Parser {
 		return character >= 0 && character <= 32;
 	}
 
+	public static boolean isHelp ( final String param ) {
+		return param.equals("--help") || param.equals("-help") || param.equals("help");
+	}
+
+	public static boolean isVersion ( final String param ) {
+		return param.equals("--version") || param.equals("-version") || param.equals("version");
+	}
+
+	public static boolean isCopyright ( final String param ) {
+		return param.equals("--copyright") || param.equals("-copyright") || param.equals("copyright");
+	}
+
 }
