@@ -21,6 +21,7 @@
 
 package com.github.vbsw.urlsaver;
 
+import com.github.vbsw.urlsaver.app.Properties;
 
 /**
  * @author Vitali Baumtrok

@@ -19,46 +19,17 @@
  */
 
 
-package com.github.vbsw.urlsaver;
-
-
-import java.nio.file.Path;
-import java.util.ArrayList;
-
-import com.github.vbsw.urlsaver.app.App;
-import com.github.vbsw.urlsaver.util.JarPath;
+package com.github.vbsw.urlsaver.app;
 
 
 /**
  * @author Vitali Baumtrok
  */
-@SuppressWarnings ( "serial" )
-public class FileDataList extends ArrayList<FileData> {
+public class Version {
 
-	public static final int INITIAL_DATA_CAPACITY = 10;
-
-	public FileDataList ( ) {
-		super(INITIAL_DATA_CAPACITY);
-	}
-
-	public void readAll ( ) {
-		final ArrayList<Path> filePaths = JarPath.getFiles(App.settings.fileFileExtension);
-
-		super.clear();
-
-		for ( Path filePath: filePaths ) {
-			final FileData fileData = new FileData(filePath);
-			super.add(fileData);
-		}
-	}
-
-	public boolean isModified ( ) {
-		for ( FileData fileData: this ) {
-			if ( fileData.isModified() ) {
-				return true;
-			}
-		}
-		return false;
-	}
+	final static int MAJOR = 0;
+	final static int MINOR = 2;
+	final static int PATCH = 0;
+	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
 
 }

@@ -1,6 +1,6 @@
 /**
  * URL Saver (a tool to manage URLs by keywords)
- * Copyright 2016 Vitali Baumtrok
+ * Copyright 2017 Vitali Baumtrok
  * 
  * This file is part of URL Saver.
  * 
@@ -19,45 +19,19 @@
  */
 
 
-package com.github.vbsw.urlsaver;
+package com.github.vbsw.urlsaver.binding;
 
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-
-import com.github.vbsw.urlsaver.app.App;
-import com.github.vbsw.urlsaver.util.JarPath;
+import javafx.beans.binding.BooleanBinding;
 
 
 /**
  * @author Vitali Baumtrok
  */
-@SuppressWarnings ( "serial" )
-public class FileDataList extends ArrayList<FileData> {
+public class UrlModifiedBinding extends BooleanBinding {
 
-	public static final int INITIAL_DATA_CAPACITY = 10;
-
-	public FileDataList ( ) {
-		super(INITIAL_DATA_CAPACITY);
-	}
-
-	public void readAll ( ) {
-		final ArrayList<Path> filePaths = JarPath.getFiles(App.settings.fileFileExtension);
-
-		super.clear();
-
-		for ( Path filePath: filePaths ) {
-			final FileData fileData = new FileData(filePath);
-			super.add(fileData);
-		}
-	}
-
-	public boolean isModified ( ) {
-		for ( FileData fileData: this ) {
-			if ( fileData.isModified() ) {
-				return true;
-			}
-		}
+	@Override
+	protected boolean computeValue ( ) {
 		return false;
 	}
 

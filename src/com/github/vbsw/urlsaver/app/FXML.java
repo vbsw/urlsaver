@@ -1,6 +1,6 @@
 /**
  * URL Saver (a tool to manage URLs by keywords)
- * Copyright 2016 Vitali Baumtrok
+ * Copyright 2016, 2017 Vitali Baumtrok
  * 
  * This file is part of URL Saver.
  * 
@@ -19,13 +19,16 @@
  */
 
 
-package com.github.vbsw.urlsaver;
+package com.github.vbsw.urlsaver.app;
 
 
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import com.github.vbsw.urlsaver.res.Ressource;
+import com.github.vbsw.urlsaver.util.JarPath;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -35,9 +38,6 @@ import javafx.scene.Parent;
  * @author Vitali Baumtrok
  */
 public class FXML {
-
-	public static final String EXTERNAL_FXML_FILE = "urlsaver.fxml"; //$NON-NLS-1$
-	public static final String INTERNAL_FXML_FILE = "com/github/vbsw/urlsaver/urlsaver.fxml"; //$NON-NLS-1$
 
 	final Parent root;
 	final boolean external;
@@ -64,7 +64,7 @@ public class FXML {
 	}
 
 	private static Parent loadExternalFXML ( ) {
-		final Path externalFXMLPath = Paths.get(JarPath.get().toString(),EXTERNAL_FXML_FILE);
+		final Path externalFXMLPath = Paths.get(JarPath.get().toString(),Ressource.EXTERNAL_FXML_FILE);
 
 		if ( Files.exists(externalFXMLPath) ) {
 
@@ -81,7 +81,7 @@ public class FXML {
 	}
 
 	private static Parent loadInternalFXML ( ) {
-		try ( InputStream stream = JarPath.getStream(INTERNAL_FXML_FILE) ) {
+		try ( InputStream stream = JarPath.getStream(Ressource.INTERNAL_FXML_FILE) ) {
 			final FXMLLoader fxmlLoader = new FXMLLoader();
 			final Parent fxml = fxmlLoader.load(stream);
 			return fxml;

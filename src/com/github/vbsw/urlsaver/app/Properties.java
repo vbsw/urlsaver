@@ -19,7 +19,7 @@
  */
 
 
-package com.github.vbsw.urlsaver;
+package com.github.vbsw.urlsaver.app;
 
 
 import java.io.InputStream;
@@ -27,15 +27,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import com.github.vbsw.urlsaver.res.Ressource;
+import com.github.vbsw.urlsaver.util.JarPath;
+
 
 /**
  * @author Vitali Baumtrok
  */
 @SuppressWarnings ( "serial" )
 public class Properties extends java.util.Properties {
-
-	private static final String EXTERNAL_FILE = "urlsaver.properties"; //$NON-NLS-1$
-	private static final String INTERNAL_PATH = "com/github/vbsw/urlsaver/urlsaver.properties"; //$NON-NLS-1$
 
 	private static final String WINDOW_TITLE = "window.title"; //$NON-NLS-1$
 	private static final String WINDOW_WIDTH = "window.width"; //$NON-NLS-1$
@@ -131,7 +131,7 @@ public class Properties extends java.util.Properties {
 	}
 
 	private static java.util.Properties getExternalProperties ( ) {
-		final Path filePath = Paths.get(JarPath.get().toString(),EXTERNAL_FILE);
+		final Path filePath = Paths.get(JarPath.get().toString(),Ressource.EXTERNAL_PROP_FILE);
 
 		if ( Files.exists(filePath) ) {
 
@@ -148,7 +148,7 @@ public class Properties extends java.util.Properties {
 	}
 
 	private static java.util.Properties getInternal ( ) {
-		try ( InputStream stream = JarPath.getStream(INTERNAL_PATH) ) {
+		try ( InputStream stream = JarPath.getStream(Ressource.INTERNAL_PROP_PATH) ) {
 			final java.util.Properties properties = new java.util.Properties();
 			properties.load(stream);
 			return properties;

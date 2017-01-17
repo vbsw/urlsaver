@@ -1,6 +1,6 @@
 /**
  * URL Saver (a tool to manage URLs by keywords)
- * Copyright 2016 Vitali Baumtrok
+ * Copyright 2016, 2017 Vitali Baumtrok
  * 
  * This file is part of URL Saver.
  * 
@@ -19,7 +19,7 @@
  */
 
 
-package com.github.vbsw.urlsaver;
+package com.github.vbsw.urlsaver.app;
 
 
 import java.net.URL;
@@ -27,14 +27,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import com.github.vbsw.urlsaver.res.Ressource;
+import com.github.vbsw.urlsaver.util.JarPath;
+
 
 /**
  * @author Vitali Baumtrok
  */
 public class CSS {
-
-	public static final String EXTERNAL_CSS_FILE = "urlsaver.css"; //$NON-NLS-1$
-	public static final String INTERNAL_CSS_FILE = "com/github/vbsw/urlsaver/urlsaver.css"; //$NON-NLS-1$
 
 	public static String getURL ( ) {
 		final String externalStylesheetURL = getExternalStylesheetURL();
@@ -49,12 +49,12 @@ public class CSS {
 	}
 
 	private static String getExternalStylesheetURL ( ) {
-		final Path externalCSSPath = Paths.get(JarPath.get().toString(),EXTERNAL_CSS_FILE);
+		final Path externalCSSPath = Paths.get(JarPath.get().toString(),Ressource.EXTERNAL_CSS_FILE);
 
 		if ( Files.exists(externalCSSPath) ) {
 			try {
 				final ClassLoader classLoader = CSS.class.getClassLoader();
-				final URL url = classLoader.getResource(EXTERNAL_CSS_FILE);
+				final URL url = classLoader.getResource(Ressource.EXTERNAL_CSS_FILE);
 				final String urlStr = url.toExternalForm();
 				return urlStr;
 
@@ -67,7 +67,7 @@ public class CSS {
 	private static String getInternalStylesheetURL ( ) {
 		try {
 			final ClassLoader classLoader = CSS.class.getClassLoader();
-			final URL url = classLoader.getResource(INTERNAL_CSS_FILE);
+			final URL url = classLoader.getResource(Ressource.INTERNAL_CSS_FILE);
 			final String urlStr = url.toExternalForm();
 			return urlStr;
 

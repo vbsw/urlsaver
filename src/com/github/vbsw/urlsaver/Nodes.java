@@ -22,6 +22,10 @@
 package com.github.vbsw.urlsaver;
 
 
+import com.github.vbsw.urlsaver.app.App;
+import com.github.vbsw.urlsaver.app.FXML;
+import com.github.vbsw.urlsaver.binding.UrlEnteredBinding;
+
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -71,7 +75,7 @@ public class Nodes {
 		externalFXML = fxml.isExternal();
 
 		lookupNodes();
-		setListeners();
+		configure();
 		fillFileList();
 	}
 
@@ -146,7 +150,11 @@ public class Nodes {
 		return null;
 	}
 
-	private void setListeners ( ) {
+	private void configure ( ) {
+		final UrlEnteredBinding urlEntered = new UrlEnteredBinding(urlList,urlTF);
+
+		urlCreateOKBtn.disableProperty().bind(urlEntered.not());
+
 		quitAppBtn.setOnAction(new Listener.QuitAppBtn());
 		quitAppBtn.setOnKeyPressed(new Listener.KeyPressedQuitAppBtn());
 		quitAppSaveBtn.setOnKeyPressed(new Listener.KeyPressedQuitAppSaveBtn());

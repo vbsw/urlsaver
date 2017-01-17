@@ -19,12 +19,20 @@
  */
 
 
-package com.github.vbsw.urlsaver;
+package com.github.vbsw.urlsaver.app;
 
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import com.github.vbsw.urlsaver.FileData;
+import com.github.vbsw.urlsaver.FileDataList;
+import com.github.vbsw.urlsaver.Listener;
+import com.github.vbsw.urlsaver.Nodes;
+import com.github.vbsw.urlsaver.Settings;
+import com.github.vbsw.urlsaver.TaggedWords;
+import com.github.vbsw.urlsaver.Listener.CloseWindow;
+import com.github.vbsw.urlsaver.Listener.HotKey;
 import com.github.vbsw.urlsaver.TaggedWords.Word;
 
 import javafx.application.Application;
@@ -46,7 +54,7 @@ public class App extends Application {
 
 	public static final Charset STRING_ENCODING = StandardCharsets.UTF_8;
 
-	public static CLInfo clinfo;
+	public static CommandLine commandLine;
 	public static Settings settings;
 	public static FileDataList fileDataList;
 	public static Scene scene;
@@ -54,13 +62,13 @@ public class App extends Application {
 	public static boolean fileHasBeenSelected;
 
 	public static void main ( final String[] args ) {
-		App.clinfo = new CLInfo(args);
+		App.commandLine = new CommandLine(args);
 
-		if ( App.clinfo.isEmpty() ) {
+		if ( App.commandLine.isEmpty() ) {
 			Application.launch(App.class,args);
 
 		} else {
-			App.clinfo.print();
+			App.commandLine.print();
 			Platform.exit();
 		}
 	}

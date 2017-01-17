@@ -19,13 +19,14 @@
  */
 
 
-package com.github.vbsw.urlsaver;
+package com.github.vbsw.urlsaver.app;
 
+import com.github.vbsw.urlsaver.Parser;
 
 /**
  * @author Vitali Baumtrok
  */
-public class CLInfo {
+public class CommandLine {
 
 	private static enum ArgumentType {
 		NONE, ERROR_TOO_MANY_ARGS, ERROR_UNKNOWN_ARG, PRINT_HELP, PRINT_VERSION, PRINT_COPYRIGHT
@@ -34,7 +35,7 @@ public class CLInfo {
 	private ArgumentType argumentType = ArgumentType.NONE;
 	private String unknownArg = null;
 
-	public CLInfo ( final String[] args ) {
+	public CommandLine ( final String[] args ) {
 		if ( tooManyArguments(args) ) {
 			argumentType = ArgumentType.ERROR_TOO_MANY_ARGS;
 

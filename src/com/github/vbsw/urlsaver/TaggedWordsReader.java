@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import com.github.vbsw.urlsaver.app.App;
+
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 

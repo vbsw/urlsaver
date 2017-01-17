@@ -28,6 +28,7 @@ import java.net.URI;
 import java.net.URL;
 
 import com.github.vbsw.urlsaver.TaggedWords.Word;
+import com.github.vbsw.urlsaver.app.App;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -573,7 +574,7 @@ public class Listener {
 			App.nodes.urlCancelBtn.setDisable(true);
 			App.nodes.urlDeleteBtn.setDisable(false);
 			App.nodes.urlDeleteOKBtn.setDisable(true);
-			App.nodes.urlCreateOKBtn.setDisable(true);
+//			App.nodes.urlCreateOKBtn.setDisable(true);
 
 			if ( selectedItem != null ) {
 				final String selectedUrlString = selectedItem.string;
@@ -594,7 +595,7 @@ public class Listener {
 	private static void enableUrlEdit ( ) {
 		App.nodes.urlDeleteBtn.setDisable(true);
 		App.nodes.urlDeleteOKBtn.setDisable(true);
-		App.nodes.urlCreateOKBtn.setDisable(false);
+//		App.nodes.urlCreateOKBtn.setDisable(false);
 		App.nodes.urlEditOKBtn.setDisable(true);
 		App.nodes.urlCancelBtn.setDisable(false);
 	}
@@ -602,7 +603,7 @@ public class Listener {
 	private static void disableUrlEdit ( ) {
 		final TaggedWords.Word selectedItem = App.nodes.urlList.getSelectionModel().getSelectedItem();
 		App.nodes.urlDeleteBtn.setDisable(selectedItem == null);
-		App.nodes.urlCreateOKBtn.setDisable(true);
+//		App.nodes.urlCreateOKBtn.setDisable(true);
 		App.nodes.urlEditOKBtn.setDisable(true);
 		App.nodes.urlCancelBtn.setDisable(true);
 	}
