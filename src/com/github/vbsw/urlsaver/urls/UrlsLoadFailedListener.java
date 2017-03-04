@@ -19,17 +19,21 @@
  */
 
 
-package com.github.vbsw.urlsaver.app;
+package com.github.vbsw.urlsaver.urls;
+
+
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+final class UrlsLoadFailedListener implements EventHandler<WorkerStateEvent> {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	@Override
+	public void handle ( final WorkerStateEvent event ) {
+		event.getSource().getException().printStackTrace();
+	}
 
 }

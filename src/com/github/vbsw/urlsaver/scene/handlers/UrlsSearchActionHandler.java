@@ -19,17 +19,32 @@
  */
 
 
-package com.github.vbsw.urlsaver.app;
+package com.github.vbsw.urlsaver.scene.handlers;
+
+
+import com.github.vbsw.urlsaver.app.App;
+import com.github.vbsw.urlsaver.urls.UrlsFile;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+public class UrlsSearchActionHandler implements EventHandler<ActionEvent> {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	@Override
+	public void handle ( final ActionEvent event ) {
+		final UrlsFile selectedUrlsFile = App.scene.lv.files.getSelectionModel().getSelectedItem();
+
+		selectedUrlsFile.fillSearchUrls();
+		App.scene.lv.urls.getItems().setAll(selectedUrlsFile.getSearchUrls());
+
+		if ( App.scene.lv.urls.getItems().size() > 0 ) {
+			App.scene.lv.urls.requestFocus();
+			App.scene.lv.urls.getSelectionModel().select(0);
+		}
+	}
 
 }

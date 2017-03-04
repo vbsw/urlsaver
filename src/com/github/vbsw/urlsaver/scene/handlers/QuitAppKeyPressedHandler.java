@@ -19,17 +19,28 @@
  */
 
 
-package com.github.vbsw.urlsaver.app;
+package com.github.vbsw.urlsaver.scene.handlers;
+
+
+import com.github.vbsw.urlsaver.scene.controller.AppQuitCtrl;
+
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+public class QuitAppKeyPressedHandler implements EventHandler<KeyEvent> {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	@Override
+	public void handle ( final KeyEvent event ) {
+		final KeyCode keyCode = event.getCode();
+
+		if ( keyCode == KeyCode.ENTER ) {
+			AppQuitCtrl.closeApplication();
+		}
+	}
 
 }

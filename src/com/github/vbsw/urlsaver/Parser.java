@@ -1,6 +1,6 @@
 /**
  * URL Saver (a tool to manage URLs by keywords)
- * Copyright 2016 Vitali Baumtrok
+ * Copyright 2017 Vitali Baumtrok
  * 
  * This file is part of URL Saver.
  * 
@@ -24,26 +24,13 @@ package com.github.vbsw.urlsaver;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public class Parser {
-
-	public static ArrayList<String> toStringArray ( final String string ) {
-		final ArrayList<String> list = new ArrayList<String>();
-		int offset = skipWhiteSpace(string,0);
-
-		while ( offset < string.length() ) {
-			final int endIndex = skipNonWhiteSpace(string,offset);
-			final String word = string.substring(offset,endIndex);
-			offset = skipWhiteSpace(string,endIndex);
-
-			list.add(word);
-		}
-		return list;
-	}
+public final class Parser {
 
 	public static boolean isWhiteSpace ( final String string ) {
 		for ( int i = 0; i < string.length(); i += 1 ) {
@@ -76,7 +63,7 @@ public class Parser {
 		return byteChar == 10 || byteChar == 13;
 	}
 
-	private static int skipNonWhiteSpace ( final String string, int offset ) {
+	public static int skipNonWhiteSpace ( final String string, int offset ) {
 		while ( offset < string.length() && !isWhiteSpace(string.charAt(offset)) ) {
 			offset += 1;
 		}
@@ -97,6 +84,13 @@ public class Parser {
 		return offset;
 	}
 
+	public static int skipWhiteSpaceReverse ( final String string, int endIndexExclusive ) {
+		while ( endIndexExclusive > 0 && isWhiteSpace(string.charAt(endIndexExclusive - 1)) ) {
+			endIndexExclusive -= 1;
+		}
+		return endIndexExclusive;
+	}
+
 	public static boolean isWhiteSpace ( final byte byteChar ) {
 		return byteChar >= 0 && byteChar <= 32;
 	}
@@ -106,15 +100,57 @@ public class Parser {
 	}
 
 	public static boolean isHelp ( final String param ) {
-		return param.equals("--help") || param.equals("-help") || param.equals("help");
+		return param.equals("--help") || param.equals("-help") || param.equals("help") || param.equals("-h");
 	}
 
 	public static boolean isVersion ( final String param ) {
-		return param.equals("--version") || param.equals("-version") || param.equals("version");
+		return param.equals("--version") || param.equals("-version") || param.equals("version") || param.equals("-v");
 	}
 
 	public static boolean isCopyright ( final String param ) {
-		return param.equals("--copyright") || param.equals("-copyright") || param.equals("copyright");
+		return param.equals("--copyright") || param.equals("-copyright") || param.equals("copyright") || param.equals("-c");
+	}
+
+	public static boolean isTrue ( final String boolStr ) {
+		final String trueStr = "true"; //$NON-NLS-1$
+		final String yesStr = "yes"; //$NON-NLS-1$
+		final String yStr = "y"; //$NON-NLS-1$
+		final String oneStr = "1"; //$NON-NLS-1$
+
+		return boolStr.equals(trueStr) || boolStr.equals(yesStr) || boolStr.equals(yStr) || boolStr.equals(oneStr);
+	}
+
+	public static boolean isEqualSortedLists ( final ArrayList<String> leftList, final ArrayList<String> rightList ) {
+		for ( String key: rightList ) {
+			final int index = Collections.binarySearch(leftList,key);
+
+			if ( index < 0 ) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static String trim ( final String string ) {
+		final int beginIndex = skipWhiteSpace(string,0);
+
+		if ( beginIndex < string.length() ) {
+			int endIndex = string.length();
+
+			while ( Parser.isWhiteSpace(string.charAt(endIndex - 1)) ) {
+				endIndex -= 1;
+			}
+
+			if ( string.length() == endIndex - beginIndex ) {
+				return string;
+
+			} else {
+				return string.substring(beginIndex,endIndex);
+			}
+
+		} else {
+			return "";
+		}
 	}
 
 }

@@ -19,17 +19,24 @@
  */
 
 
-package com.github.vbsw.urlsaver.app;
+package com.github.vbsw.urlsaver.scene.listeners;
+
+
+import com.github.vbsw.urlsaver.scene.controller.AppQuitCtrl;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.Tab;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+public class TabSelectionListener implements ChangeListener<Tab> {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	@Override
+	public void changed ( final ObservableValue<? extends Tab> observable, final Tab oldValue, final Tab newValue ) {
+		AppQuitCtrl.topTabSelected(newValue);
+	}
 
 }

@@ -19,17 +19,28 @@
  */
 
 
-package com.github.vbsw.urlsaver.app;
+package com.github.vbsw.urlsaver.scene.listeners;
+
+
+import com.github.vbsw.urlsaver.app.App;
+import com.github.vbsw.urlsaver.urls.UrlsFile;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+public class UrlsSearchChangeListener implements ChangeListener<String> {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	@Override
+	public void changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
+		if ( newValue != null ) {
+			final UrlsFile urlsFile = App.scene.lv.files.getSelectionModel().getSelectedItem();
+
+			urlsFile.setSearchTagsString(newValue);
+		}
+	}
 
 }

@@ -19,17 +19,23 @@
  */
 
 
-package com.github.vbsw.urlsaver.app;
+package com.github.vbsw.urlsaver.scene;
+
+
+import com.github.vbsw.urlsaver.scene.controller.WebBrowserCtrl;
+
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyEvent;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+public class OpenInBrowserKeyPressedHandler implements EventHandler<KeyEvent> {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	@Override
+	public void handle ( final KeyEvent event ) {
+		WebBrowserCtrl.openSelectedUrl();
+	}
 
 }

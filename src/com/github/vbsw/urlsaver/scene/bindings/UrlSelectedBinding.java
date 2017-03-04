@@ -19,17 +19,32 @@
  */
 
 
-package com.github.vbsw.urlsaver.app;
+package com.github.vbsw.urlsaver.scene.bindings;
+
+
+import com.github.vbsw.urlsaver.Parser;
+import com.github.vbsw.urlsaver.app.App;
+
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.ReadOnlyObjectProperty;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+public class UrlSelectedBinding extends BooleanBinding {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	public UrlSelectedBinding ( ) {
+		final ReadOnlyObjectProperty<String> selectedUrlProperty = App.scene.lv.urls.getSelectionModel().selectedItemProperty();
+
+		bind(selectedUrlProperty);
+	}
+
+	@Override
+	protected boolean computeValue ( ) {
+		final String url = App.scene.lv.urls.getSelectionModel().getSelectedItem();
+
+		return url != null && Parser.isWhiteSpace(url) == false;
+	}
 
 }

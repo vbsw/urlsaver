@@ -19,17 +19,35 @@
  */
 
 
-package com.github.vbsw.urlsaver.app;
+package com.github.vbsw.urlsaver.scene.handlers;
+
+
+import com.github.vbsw.urlsaver.app.App;
+import com.github.vbsw.urlsaver.scene.controller.AppQuitCtrl;
+import com.github.vbsw.urlsaver.urls.UrlsFile;
+
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+public class QuitAppSaveKeyPressedHandler implements EventHandler<KeyEvent> {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	@Override
+	public void handle ( final KeyEvent event ) {
+		final KeyCode keyCode = event.getCode();
+
+		if ( keyCode == KeyCode.ENTER ) {
+			for ( UrlsFile urlsFile: App.files ) {
+				if ( urlsFile.isDirty() ) {
+					urlsFile.save();
+				}
+			}
+			AppQuitCtrl.exitApplication();
+		}
+	}
 
 }

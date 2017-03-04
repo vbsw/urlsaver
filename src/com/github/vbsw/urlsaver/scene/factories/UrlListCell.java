@@ -19,17 +19,35 @@
  */
 
 
-package com.github.vbsw.urlsaver.app;
+package com.github.vbsw.urlsaver.scene.factories;
+
+
+import com.github.vbsw.urlsaver.scene.handlers.UrlDoubleClickHandler;
+
+import javafx.event.EventHandler;
+import javafx.scene.control.ListCell;
+import javafx.scene.input.MouseEvent;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+public final class UrlListCell extends ListCell<String> {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	private static final EventHandler<MouseEvent> eventHandler = new UrlDoubleClickHandler();
+
+	@Override
+	protected void updateItem ( final String item, final boolean empty ) {
+		super.updateItem(item,empty);
+
+		if ( empty ) {
+			setText(null);
+			setOnMouseClicked(null);
+
+		} else {
+			setText(item);
+			setOnMouseClicked(eventHandler);
+		}
+	}
 
 }

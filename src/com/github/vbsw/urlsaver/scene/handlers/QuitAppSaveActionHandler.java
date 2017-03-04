@@ -19,17 +19,30 @@
  */
 
 
-package com.github.vbsw.urlsaver.app;
+package com.github.vbsw.urlsaver.scene.handlers;
+
+
+import com.github.vbsw.urlsaver.app.App;
+import com.github.vbsw.urlsaver.scene.controller.AppQuitCtrl;
+import com.github.vbsw.urlsaver.urls.UrlsFile;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+public class QuitAppSaveActionHandler implements EventHandler<ActionEvent> {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	@Override
+	public void handle ( final ActionEvent event ) {
+		for ( UrlsFile urlsFile: App.files ) {
+			if ( urlsFile.isDirty() ) {
+				urlsFile.save();
+			}
+		}
+		AppQuitCtrl.exitApplication();
+	}
 
 }

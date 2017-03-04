@@ -19,17 +19,23 @@
  */
 
 
-package com.github.vbsw.urlsaver.app;
+package com.github.vbsw.urlsaver.scene.factories;
+
+
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.util.Callback;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+public class UrlsCellFactory implements Callback<ListView<String>, ListCell<String>> {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	@Override
+	public ListCell<String> call ( final ListView<String> param ) {
+		final ListCell<String> listCell = new UrlListCell();
+		return listCell;
+	}
 
 }

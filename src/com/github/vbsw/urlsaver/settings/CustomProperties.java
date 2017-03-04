@@ -19,17 +19,32 @@
  */
 
 
-package com.github.vbsw.urlsaver.app;
+package com.github.vbsw.urlsaver.settings;
+
+
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import com.github.vbsw.urlsaver.JarPath;
+import com.github.vbsw.urlsaver.resources.Resources;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+@SuppressWarnings ( "serial" )
+final class CustomProperties extends DefaultProperties {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	CustomProperties ( ) {
+		final String FILE_NAME = Resources.CUSTOM_PROPERTIES_FILE_PATH;
+		final Path filePath = Paths.get(JarPath.get().toString(),FILE_NAME);
+
+		try ( final InputStream stream = Files.newInputStream(filePath) ) {
+			load(stream);
+		} catch ( final Exception e ) {
+		}
+	}
 
 }

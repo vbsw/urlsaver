@@ -19,17 +19,29 @@
  */
 
 
-package com.github.vbsw.urlsaver.app;
+package com.github.vbsw.urlsaver.scene.controller;
+
+
+import com.github.vbsw.urlsaver.app.App;
+import com.github.vbsw.urlsaver.urls.UrlsFile;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+public class FilesCtrl {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	public static void saveCurrent ( ) {
+		final UrlsFile selectedUrlsFile = App.scene.lv.files.getSelectionModel().getSelectedItem();
+
+		if ( selectedUrlsFile != null ) {
+			UrlsCtrl.selectedUrlCreateOrEdit();
+
+			if ( selectedUrlsFile.isDirty() ) {
+				selectedUrlsFile.save();
+				App.scene.updateWindowTitle();
+			}
+		}
+	}
 
 }

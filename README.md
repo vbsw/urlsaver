@@ -7,7 +7,7 @@ URL Saver is published at <https://github.com/vbsw/urlsaver>.
 Latest version is 0.2.0.
 
 ## Copyright
-Copyright 2016, Vitali Baumtrok (vbsw@mailbox.org).
+Copyright 2017, Vitali Baumtrok (vbsw@mailbox.org).
 
 URL Saver is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ Open Eclipse and create a Java Project named URLSaver (like previously created d
 To create executable jar file, right click on project, then "export...", then export as "Runnable JAR file".
 
 ## Usage
-At start up all URL files with the extension "urls.txt" are read in.
+At start up all URL files with the extension "urls.txt" are read.
 These files must be in the same directory as the jar file.
 
 A valid URL file consists of pairs of lines. The first line is the URL, the second line

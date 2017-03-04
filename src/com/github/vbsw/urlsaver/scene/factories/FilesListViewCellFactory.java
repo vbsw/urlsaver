@@ -19,17 +19,25 @@
  */
 
 
-package com.github.vbsw.urlsaver.app;
+package com.github.vbsw.urlsaver.scene.factories;
+
+
+import com.github.vbsw.urlsaver.urls.UrlsFile;
+
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.util.Callback;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+public class FilesListViewCellFactory implements Callback<ListView<UrlsFile>, ListCell<UrlsFile>> {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	@Override
+	public ListCell<UrlsFile> call ( ListView<UrlsFile> param ) {
+		final ListCell<UrlsFile> listCell = new FilesListViewCell();
+		return listCell;
+	}
 
 }

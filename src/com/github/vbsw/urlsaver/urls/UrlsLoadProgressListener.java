@@ -19,17 +19,30 @@
  */
 
 
-package com.github.vbsw.urlsaver.app;
+package com.github.vbsw.urlsaver.urls;
+
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+final class UrlsLoadProgressListener implements ChangeListener<Number> {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	private final UrlsFile urlsFile;
+
+	public UrlsLoadProgressListener ( final UrlsFile urlsFile ) {
+		this.urlsFile = urlsFile;
+	}
+
+	@Override
+	public void changed ( final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue ) {
+		final int percent = (int) (newValue.doubleValue() * 100);
+		final String listViewText = urlsFile.getLoadingListViewText(percent);
+
+		urlsFile.setItemText(listViewText);
+	}
 
 }

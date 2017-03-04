@@ -19,17 +19,24 @@
  */
 
 
-package com.github.vbsw.urlsaver.app;
+package com.github.vbsw.urlsaver.scene;
+
+
+import javafx.scene.Parent;
+import javafx.scene.control.TextArea;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+public final class TextAreas {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	public final TextArea tags;
+
+	TextAreas ( final Parent root ) {
+		final String tagsTextAreaSelector = "#tags_ta"; //$NON-NLS-1$
+
+		tags = (TextArea) root.lookup(tagsTextAreaSelector);
+	}
 
 }

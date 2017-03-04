@@ -19,17 +19,36 @@
  */
 
 
-package com.github.vbsw.urlsaver.app;
+package com.github.vbsw.urlsaver.scene.factories;
+
+
+import com.github.vbsw.urlsaver.scene.handlers.FileDoubleClickHandler;
+import com.github.vbsw.urlsaver.urls.UrlsFile;
+
+import javafx.event.EventHandler;
+import javafx.scene.control.ListCell;
+import javafx.scene.input.MouseEvent;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+public class FilesListViewCell extends ListCell<UrlsFile> {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	private static final EventHandler<MouseEvent> eventHandler = new FileDoubleClickHandler();
+
+	@Override
+	protected void updateItem ( final UrlsFile item, final boolean empty ) {
+		super.updateItem(item,empty);
+
+		if ( empty ) {
+			setText(null);
+			setOnMouseClicked(null);
+
+		} else {
+			setText(item.getItemText());
+			setOnMouseClicked(eventHandler);
+		}
+	}
 
 }

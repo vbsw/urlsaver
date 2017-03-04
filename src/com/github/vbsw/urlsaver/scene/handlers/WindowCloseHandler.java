@@ -19,17 +19,24 @@
  */
 
 
-package com.github.vbsw.urlsaver.app;
+package com.github.vbsw.urlsaver.scene.handlers;
+
+
+import com.github.vbsw.urlsaver.scene.controller.AppQuitCtrl;
+
+import javafx.event.EventHandler;
+import javafx.stage.WindowEvent;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+public class WindowCloseHandler implements EventHandler<WindowEvent> {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	@Override
+	public void handle ( final WindowEvent event ) {
+		event.consume();
+		AppQuitCtrl.closeApplication();
+	}
 
 }

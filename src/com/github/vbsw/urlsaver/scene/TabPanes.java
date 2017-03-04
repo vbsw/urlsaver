@@ -19,17 +19,42 @@
  */
 
 
-package com.github.vbsw.urlsaver.app;
+package com.github.vbsw.urlsaver.scene;
+
+
+import com.github.vbsw.urlsaver.scene.listeners.TabSelectionListener;
+
+import javafx.scene.Parent;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+public final class TabPanes {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	public final TabPane top;
+
+	TabPanes ( final Parent root ) {
+		final String topTabPaneSelector = "#top_tab_pane"; //$NON-NLS-1$
+
+		top = (TabPane) root.lookup(topTabPaneSelector);
+	}
+
+	Tab getTopPaneTab ( final String tabId ) {
+		for ( Tab tab: top.getTabs() ) {
+			final String id = tab.getId();
+
+			if ( (id != null) && (id.equals(tabId)) ) {
+				return tab;
+			}
+		}
+		return null;
+	}
+
+	public void configure ( ) {
+		top.getSelectionModel().selectedItemProperty().addListener(new TabSelectionListener());
+	}
 
 }

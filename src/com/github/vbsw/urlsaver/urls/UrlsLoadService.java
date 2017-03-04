@@ -19,17 +19,31 @@
  */
 
 
-package com.github.vbsw.urlsaver.app;
+package com.github.vbsw.urlsaver.urls;
+
+
+import java.nio.file.Path;
+
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+final class UrlsLoadService extends Service<UrlsData> {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	private final Path urlsFilePath;
+
+	public UrlsLoadService ( final Path urlsFilePath ) {
+		this.urlsFilePath = urlsFilePath;
+	}
+
+	@Override
+	protected Task<UrlsData> createTask ( ) {
+		final Task<UrlsData> loadingTask = new UrlsLoadTask(urlsFilePath);
+
+		return loadingTask;
+	}
 
 }
