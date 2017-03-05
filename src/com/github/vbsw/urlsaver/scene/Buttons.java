@@ -48,6 +48,7 @@ import com.github.vbsw.urlsaver.scene.handlers.QuitAppSaveKeyPressedHandler;
 import com.github.vbsw.urlsaver.scene.handlers.UrlCancelActionHandler;
 import com.github.vbsw.urlsaver.scene.handlers.UrlCreateOKActionHandler;
 import com.github.vbsw.urlsaver.scene.handlers.UrlDeleteActionHandler;
+import com.github.vbsw.urlsaver.scene.handlers.UrlDeleteOKActionHandler;
 import com.github.vbsw.urlsaver.scene.handlers.UrlEditOKActionHandler;
 import com.github.vbsw.urlsaver.scene.handlers.UrlsSearchActionHandler;
 import com.github.vbsw.urlsaver.scene.handlers.UrlsSearchKeyPressedHandler;

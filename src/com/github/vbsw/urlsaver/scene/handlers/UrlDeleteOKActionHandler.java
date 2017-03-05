@@ -19,7 +19,7 @@
  */
 
 
-package com.github.vbsw.urlsaver.scene;
+package com.github.vbsw.urlsaver.scene.handlers;
 
 
 import com.github.vbsw.urlsaver.scene.controller.UrlsCtrl;
