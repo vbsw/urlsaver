@@ -38,6 +38,9 @@ import javafx.beans.property.SimpleBooleanProperty;
 public final class UrlsFileList extends ArrayList<UrlsFile> {
 
 	private final SimpleBooleanProperty loaded = new SimpleBooleanProperty();
+	private final SimpleBooleanProperty dirty = new SimpleBooleanProperty();
+	private final SimpleBooleanProperty savingMode = new SimpleBooleanProperty();
+	private final SimpleBooleanProperty empty = new SimpleBooleanProperty();
 
 	public UrlsFileList ( final String fileExtension ) {
 		final ArrayList<Path> filePaths = JarPath.getPaths(fileExtension);
@@ -47,12 +50,7 @@ public final class UrlsFileList extends ArrayList<UrlsFile> {
 
 			add(urlFile);
 		}
-	}
-
-	public void loadAll ( ) {
-		for ( UrlsFile urlsFile: this ) {
-			urlsFile.load();
-		}
+		empty.setValue(super.size() == 0);
 	}
 
 	public void loadDefault ( ) {
@@ -76,7 +74,19 @@ public final class UrlsFileList extends ArrayList<UrlsFile> {
 		return loaded;
 	}
 
-	public boolean isDirty ( ) {
+	public SimpleBooleanProperty dirtyProperty ( ) {
+		return dirty;
+	}
+
+	public SimpleBooleanProperty savingModeProperty ( ) {
+		return savingMode;
+	}
+
+	public SimpleBooleanProperty emptyProperty ( ) {
+		return empty;
+	}
+
+	public boolean isAnyFileDirty ( ) {
 		for ( UrlsFile urlsFile: App.files ) {
 			if ( urlsFile.isDirty() ) {
 				return true;

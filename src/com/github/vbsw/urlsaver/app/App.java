@@ -23,6 +23,7 @@ package com.github.vbsw.urlsaver.app;
 
 
 import com.github.vbsw.urlsaver.scene.Scene;
+import com.github.vbsw.urlsaver.scene.controller.FilesCtrl;
 import com.github.vbsw.urlsaver.scene.handlers.WindowCloseHandler;
 import com.github.vbsw.urlsaver.settings.Settings;
 import com.github.vbsw.urlsaver.urls.UrlsFileList;
@@ -73,7 +74,7 @@ public final class App extends Application {
 		App.scene.setDecorationSize(primaryStage.getWidth(),primaryStage.getHeight());
 
 		if ( App.settings.isAutoload() ) {
-			App.files.loadAll();
+			FilesCtrl.reloadAll();
 
 		} else {
 			App.files.loadDefault();

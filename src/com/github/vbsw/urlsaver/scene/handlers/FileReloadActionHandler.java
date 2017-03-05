@@ -22,8 +22,7 @@
 package com.github.vbsw.urlsaver.scene.handlers;
 
 
-import com.github.vbsw.urlsaver.app.App;
-import com.github.vbsw.urlsaver.urls.UrlsFile;
+import com.github.vbsw.urlsaver.scene.controller.FilesCtrl;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -36,11 +35,7 @@ public final class FileReloadActionHandler implements EventHandler<ActionEvent> 
 
 	@Override
 	public void handle ( final ActionEvent event ) {
-		final UrlsFile selectedUrlsFile = App.scene.lv.files.getSelectionModel().getSelectedItem();
-
-		if ( selectedUrlsFile != null ) {
-			selectedUrlsFile.load();
-		}
+		FilesCtrl.reloadCurrent();
 	}
 
 }

@@ -24,18 +24,23 @@ package com.github.vbsw.urlsaver.scene.handlers;
 
 import com.github.vbsw.urlsaver.scene.controller.UrlsCtrl;
 
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public final class UrlsSearchActionHandler implements EventHandler<ActionEvent> {
+public final class UrlsSearchKeyPressedHandler implements EventHandler<KeyEvent> {
 
 	@Override
-	public void handle ( final ActionEvent event ) {
-		UrlsCtrl.searchCurrent();
+	public void handle ( final KeyEvent event ) {
+		final KeyCode keyCode = event.getCode();
+
+		if ( keyCode == KeyCode.ENTER ) {
+			UrlsCtrl.searchCurrent();
+		}
 	}
 
 }

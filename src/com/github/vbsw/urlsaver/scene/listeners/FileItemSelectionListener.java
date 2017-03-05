@@ -22,7 +22,7 @@
 package com.github.vbsw.urlsaver.scene.listeners;
 
 
-import com.github.vbsw.urlsaver.app.App;
+import com.github.vbsw.urlsaver.scene.controller.FilesCtrl;
 import com.github.vbsw.urlsaver.urls.UrlsFile;
 
 import javafx.beans.value.ChangeListener;
@@ -36,25 +36,7 @@ public final class FileItemSelectionListener implements ChangeListener<UrlsFile>
 
 	@Override
 	public void changed ( final ObservableValue<? extends UrlsFile> observable, final UrlsFile oldValue, final UrlsFile selectedUrlsFile ) {
-		if ( selectedUrlsFile != null ) {
-			final String filePathStr = selectedUrlsFile.getPath();
-
-			App.scene.tf.fileName.setText(filePathStr);
-
-			if ( selectedUrlsFile.getData() != null ) {
-				App.files.loadedProperty().setValue(true);
-
-			} else {
-				App.files.loadedProperty().setValue(false);
-			}
-
-		} else {
-			final String emptyString = ""; //$NON-NLS-1$
-
-			App.scene.tf.fileName.setText(emptyString);
-			App.files.loadedProperty().setValue(false);
-		}
-		App.scene.updateWindowTitle();
+		FilesCtrl.selectCurrent();
 	}
 
 }

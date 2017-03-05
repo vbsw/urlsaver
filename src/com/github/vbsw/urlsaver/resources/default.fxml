@@ -24,8 +24,8 @@
                         <Button fx:id="reload_all_files_btn" disable="true" mnemonicParsing="false" text="Reload All" />
                         <AnchorPane HBox.hgrow="ALWAYS" />
                         <Button fx:id="file_save_btn" disable="true" mnemonicParsing="false" text="Save" />
-                        <Button fx:id="files_save_cancel_btn" disable="true" mnemonicParsing="false" text="Save, Cancel" />
-                        <Button disable="true" mnemonicParsing="false" text="Save, OK" />
+                        <Button fx:id="file_save_cancel_btn" disable="true" mnemonicParsing="false" text="Save, Cancel" />
+                        <Button fx:id="file_save_ok_btn" disable="true" mnemonicParsing="false" text="Save, OK" />
                      </children>
                   </HBox>
                   <ListView fx:id="file_list_view" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />

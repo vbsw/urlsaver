@@ -34,7 +34,7 @@ import javafx.scene.control.Tab;
 public final class AppQuitCtrl {
 
 	public static void closeApplication ( ) {
-		if ( App.files.isDirty() ) {
+		if ( App.files.isAnyFileDirty() ) {
 			if ( App.scene.tp.top.getSelectionModel().getSelectedItem() != App.scene.topTab.about ) {
 				App.scene.tp.top.getSelectionModel().select(App.scene.topTab.about);
 				AppQuitCtrl.enableQuitConfirmation();

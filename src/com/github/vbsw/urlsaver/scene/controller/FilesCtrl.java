@@ -39,9 +39,68 @@ public final class FilesCtrl {
 
 			if ( selectedUrlsFile.isDirty() ) {
 				selectedUrlsFile.save();
+				App.files.savingModeProperty().setValue(false);
 				App.scene.updateWindowTitle();
 			}
 		}
+	}
+
+	public static void reloadCurrent ( ) {
+		final UrlsFile selectedUrlsFile = App.scene.lv.files.getSelectionModel().getSelectedItem();
+
+		if ( selectedUrlsFile != null ) {
+			selectedUrlsFile.load();
+		}
+	}
+
+	public static void reloadAll ( ) {
+		for ( UrlsFile urlsFile: App.scene.lv.files.getItems() ) {
+			urlsFile.load();
+		}
+	}
+
+	public static void selectCurrent ( ) {
+		final UrlsFile selectedUrlsFile = App.scene.lv.files.getSelectionModel().getSelectedItem();
+
+		if ( selectedUrlsFile != null ) {
+			updateUrlsFileView(selectedUrlsFile);
+
+		} else {
+			updateUrlsFileView();
+		}
+		App.files.savingModeProperty().setValue(false);
+		App.scene.updateWindowTitle();
+	}
+
+	public static void saveCurrentWithConfirm ( ) {
+		App.files.savingModeProperty().setValue(true);
+	}
+
+	public static void saveCurrentCancel ( ) {
+		App.files.savingModeProperty().setValue(false);
+	}
+
+	private static void updateUrlsFileView ( final UrlsFile selectedUrlsFile ) {
+		final String filePathStr = selectedUrlsFile.getPath();
+
+		App.scene.tf.fileName.setText(filePathStr);
+
+		if ( selectedUrlsFile.getData() != null ) {
+			App.files.loadedProperty().setValue(true);
+			App.files.dirtyProperty().setValue(selectedUrlsFile.isDirty());
+
+		} else {
+			App.files.loadedProperty().setValue(false);
+			App.files.dirtyProperty().setValue(false);
+		}
+	}
+
+	private static void updateUrlsFileView ( ) {
+		final String emptyString = ""; //$NON-NLS-1$
+
+		App.scene.tf.fileName.setText(emptyString);
+		App.files.loadedProperty().setValue(false);
+		App.files.dirtyProperty().setValue(false);
 	}
 
 }

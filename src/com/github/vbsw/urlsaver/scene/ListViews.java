@@ -55,13 +55,6 @@ public final class ListViews {
 		files.getItems().addAll(App.files);
 	}
 
-	public UrlsFile getSelectedUrlsFile ( ) {
-		final MultipleSelectionModel<UrlsFile> selectionModel = files.getSelectionModel();
-		final UrlsFile selectedItem = selectionModel.getSelectedItem();
-
-		return selectedItem;
-	}
-
 	public String getSelectedUrl ( ) {
 		final MultipleSelectionModel<String> selectionModel = urls.getSelectionModel();
 		final String selectedItem = selectionModel.getSelectedItem();

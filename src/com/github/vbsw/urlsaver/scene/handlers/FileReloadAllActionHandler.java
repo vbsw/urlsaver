@@ -22,7 +22,7 @@
 package com.github.vbsw.urlsaver.scene.handlers;
 
 
-import com.github.vbsw.urlsaver.scene.controller.UrlsCtrl;
+import com.github.vbsw.urlsaver.scene.controller.FilesCtrl;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -31,11 +31,11 @@ import javafx.event.EventHandler;
 /**
  * @author Vitali Baumtrok
  */
-public final class UrlsSearchActionHandler implements EventHandler<ActionEvent> {
+public class FileReloadAllActionHandler implements EventHandler<ActionEvent> {
 
 	@Override
 	public void handle ( final ActionEvent event ) {
-		UrlsCtrl.searchCurrent();
+		FilesCtrl.reloadAll();
 	}
 
 }

@@ -55,6 +55,7 @@ public final class UrlsCtrl {
 		tagsTmp.setStrings(App.scene.ta.tags.getText());
 		selectedTags.setAllSorted(tagsTmp);
 		selectedUrlsFile.setDirty();
+		App.files.dirtyProperty().setValue(true);
 		UrlsCtrl.updateUrlsView(selectedUrlsFile,selectedUrl,selectedTags);
 	}
 
@@ -73,7 +74,20 @@ public final class UrlsCtrl {
 			urlsData.addTagToUrl(urlIndex,tag);
 		}
 		selectedUrlsFile.setDirty();
+		App.files.dirtyProperty().setValue(true);
 		UrlsCtrl.updateUrlsView(selectedUrlsFile,selectedUrl,selectedTags);
+	}
+
+	public static void searchCurrent ( ) {
+		final UrlsFile selectedUrlsFile = App.scene.lv.files.getSelectionModel().getSelectedItem();
+
+		selectedUrlsFile.fillSearchUrls();
+		App.scene.lv.urls.getItems().setAll(selectedUrlsFile.getSearchUrls());
+
+		if ( App.scene.lv.urls.getItems().size() > 0 ) {
+			App.scene.lv.urls.requestFocus();
+			App.scene.lv.urls.getSelectionModel().select(0);
+		}
 	}
 
 	private static void updateUrlsView ( final UrlsFile selectedUrlsFile, final String selectedUrl, final SortedUniqueStringList selectedTags ) {
