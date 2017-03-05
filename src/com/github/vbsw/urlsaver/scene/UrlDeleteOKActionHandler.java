@@ -19,23 +19,23 @@
  */
 
 
-package com.github.vbsw.urlsaver.scene.listeners;
+package com.github.vbsw.urlsaver.scene;
 
 
 import com.github.vbsw.urlsaver.scene.controller.UrlsCtrl;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public final class UrlItemSelectionListener implements ChangeListener<String> {
+public class UrlDeleteOKActionHandler implements EventHandler<ActionEvent> {
 
 	@Override
-	public void changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
-		UrlsCtrl.selectCurrent();
+	public void handle ( final ActionEvent event ) {
+		UrlsCtrl.deleteCurrent();
 	}
 
 }

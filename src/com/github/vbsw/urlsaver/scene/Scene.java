@@ -26,6 +26,8 @@ import com.github.vbsw.urlsaver.app.App;
 import com.github.vbsw.urlsaver.scene.handlers.HotKeyHandler;
 import com.github.vbsw.urlsaver.urls.UrlsFile;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -49,6 +51,9 @@ public final class Scene extends javafx.scene.Scene {
 
 	public double decorationWidth;
 	public double decorationHeight;
+
+	// TODO: move this property somewhere else
+	private final SimpleBooleanProperty deletingMode = new SimpleBooleanProperty();
 
 	public Scene ( ) {
 		super(new AnchorPane(),App.settings.getWindowWidth(),App.settings.getWindowHeight());
@@ -109,6 +114,10 @@ public final class Scene extends javafx.scene.Scene {
 			windowTitle = App.settings.getWindowTitle();
 		}
 		stage.setTitle(windowTitle);
+	}
+
+	public BooleanProperty deletingModeProperty ( ) {
+		return deletingMode;
 	}
 
 }

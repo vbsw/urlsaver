@@ -90,6 +90,52 @@ public final class UrlsCtrl {
 		}
 	}
 
+	public static void deleteCurrentWithConfirm ( ) {
+		App.scene.deletingModeProperty().setValue(true);
+		App.scene.btn.urlCancel.requestFocus();
+	}
+
+	public static void selectCurrent ( ) {
+		final String selectedUrl = App.scene.lv.urls.getSelectionModel().getSelectedItem();
+
+		if ( selectedUrl != null ) {
+			UrlsCtrl.updateUrlsView(selectedUrl);
+
+		} else {
+			UrlsCtrl.updateUrlsView();
+		}
+		App.scene.deletingModeProperty().setValue(false);
+	}
+
+	public static void cancel ( ) {
+		final String selectedUrl = App.scene.lv.urls.getSelectionModel().getSelectedItem();
+
+		if ( selectedUrl != null ) {
+			final UrlsFile selectedUrlsFile = App.scene.lv.files.getSelectionModel().getSelectedItem();
+			final UrlsData urlsData = selectedUrlsFile.getData();
+			final int selectedUrlIndex = urlsData.getUrlIndex(selectedUrl);
+			final SortedUniqueStringList selectedTags = urlsData.urlTagsList.get(selectedUrlIndex);
+			final String tags = Convert.toString(selectedTags);
+
+			App.scene.tf.url.setText(selectedUrl);
+			App.scene.ta.tags.setText(tags);
+			App.scene.lv.urls.requestFocus();
+
+		} else {
+			App.scene.tf.url.setText("");
+			App.scene.ta.tags.setText("");
+		}
+		App.scene.deletingModeProperty().setValue(false);
+	}
+
+	public static void deleteCurrent ( ) {
+		final String selectedUrl = App.scene.lv.urls.getSelectionModel().getSelectedItem();
+		final int selectedUrlIndex = App.scene.lv.urls.getSelectionModel().getSelectedIndex();
+
+		App.scene.deletingModeProperty().setValue(false);
+
+	}
+
 	private static void updateUrlsView ( final UrlsFile selectedUrlsFile, final String selectedUrl, final SortedUniqueStringList selectedTags ) {
 		final String tagsString = Convert.toString(selectedTags);
 
@@ -97,6 +143,26 @@ public final class UrlsCtrl {
 		App.scene.ta.tags.setText(tagsString);
 		App.scene.lv.urls.requestFocus();
 		App.scene.updateWindowTitle();
+	}
+
+	private static void updateUrlsView ( final String selectedUrl ) {
+		final int selectedUrlIndex = App.scene.lv.urls.getSelectionModel().getSelectedIndex();
+		final UrlsFile selectedUrlsFile = App.scene.lv.files.getSelectionModel().getSelectedItem();
+		final UrlsData urlsData = selectedUrlsFile.getData();
+		final int urlIndex = urlsData.getUrlIndex(selectedUrl);
+		final SortedUniqueStringList urlTags = urlsData.urlTagsList.get(urlIndex);
+		final String tagsString = Convert.toString(urlTags);
+
+		App.scene.tf.url.setText(selectedUrl);
+		App.scene.ta.tags.setText(tagsString);
+		selectedUrlsFile.setUrlIndex(selectedUrlIndex);
+	}
+
+	private static void updateUrlsView ( ) {
+		final String emptyString = ""; //$NON-NLS-1$
+
+		App.scene.tf.url.setText(emptyString);
+		App.scene.ta.tags.setText(emptyString);
 	}
 
 }

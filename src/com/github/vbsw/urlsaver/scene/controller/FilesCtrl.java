@@ -63,10 +63,10 @@ public final class FilesCtrl {
 		final UrlsFile selectedUrlsFile = App.scene.lv.files.getSelectionModel().getSelectedItem();
 
 		if ( selectedUrlsFile != null ) {
-			updateUrlsFileView(selectedUrlsFile);
+			FilesCtrl.updateUrlsFileView(selectedUrlsFile);
 
 		} else {
-			updateUrlsFileView();
+			FilesCtrl.updateUrlsFileView();
 		}
 		App.files.savingModeProperty().setValue(false);
 		App.scene.updateWindowTitle();

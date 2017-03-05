@@ -22,11 +22,7 @@
 package com.github.vbsw.urlsaver.scene.handlers;
 
 
-import com.github.vbsw.urlsaver.Convert;
-import com.github.vbsw.urlsaver.SortedUniqueStringList;
-import com.github.vbsw.urlsaver.app.App;
-import com.github.vbsw.urlsaver.urls.UrlsData;
-import com.github.vbsw.urlsaver.urls.UrlsFile;
+import com.github.vbsw.urlsaver.scene.controller.UrlsCtrl;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -39,23 +35,7 @@ public final class UrlCancelActionHandler implements EventHandler<ActionEvent> {
 
 	@Override
 	public void handle ( final ActionEvent event ) {
-		final String selectedUrl = App.scene.lv.urls.getSelectionModel().getSelectedItem();
-
-		if ( selectedUrl != null ) {
-			final UrlsFile selectedUrlsFile = App.scene.lv.files.getSelectionModel().getSelectedItem();
-			final UrlsData urlsData = selectedUrlsFile.getData();
-			final int selectedUrlIndex = urlsData.getUrlIndex(selectedUrl);
-			final SortedUniqueStringList selectedTags = urlsData.urlTagsList.get(selectedUrlIndex);
-			final String tags = Convert.toString(selectedTags);
-
-			App.scene.tf.url.setText(selectedUrl);
-			App.scene.ta.tags.setText(tags);
-			App.scene.lv.urls.requestFocus();
-
-		} else {
-			App.scene.tf.url.setText("");
-			App.scene.ta.tags.setText("");
-		}
+		UrlsCtrl.cancel();
 	}
 
 }
