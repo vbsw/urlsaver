@@ -32,7 +32,7 @@ import javafx.util.Callback;
 /**
  * @author Vitali Baumtrok
  */
-public class FilesListViewCellFactory implements Callback<ListView<UrlsFile>, ListCell<UrlsFile>> {
+public final class FilesListViewCellFactory implements Callback<ListView<UrlsFile>, ListCell<UrlsFile>> {
 
 	@Override
 	public ListCell<UrlsFile> call ( ListView<UrlsFile> param ) {

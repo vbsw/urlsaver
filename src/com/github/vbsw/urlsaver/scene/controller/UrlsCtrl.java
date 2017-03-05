@@ -22,7 +22,7 @@
 package com.github.vbsw.urlsaver.scene.controller;
 
 
-import com.github.vbsw.urlsaver.Converter;
+import com.github.vbsw.urlsaver.Convert;
 import com.github.vbsw.urlsaver.SortedUniqueStringList;
 import com.github.vbsw.urlsaver.app.App;
 import com.github.vbsw.urlsaver.urls.UrlsData;
@@ -32,7 +32,7 @@ import com.github.vbsw.urlsaver.urls.UrlsFile;
 /**
  * @author Vitali Baumtrok
  */
-public class UrlsCtrl {
+public final class UrlsCtrl {
 
 	private static final SortedUniqueStringList tagsTmp = new SortedUniqueStringList();
 
@@ -77,7 +77,7 @@ public class UrlsCtrl {
 	}
 
 	private static void updateUrlsView ( final UrlsFile selectedUrlsFile, final String selectedUrl, final SortedUniqueStringList selectedTags ) {
-		final String tagsString = Converter.toString(selectedTags);
+		final String tagsString = Convert.toString(selectedTags);
 
 		App.scene.tf.url.setText(selectedUrl);
 		App.scene.ta.tags.setText(tagsString);

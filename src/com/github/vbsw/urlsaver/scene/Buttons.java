@@ -28,6 +28,7 @@ import com.github.vbsw.urlsaver.scene.bindings.UrlSelectedBinding;
 import com.github.vbsw.urlsaver.scene.bindings.UrlsFileSelectedBinding;
 import com.github.vbsw.urlsaver.scene.handlers.FileReloadActionHandler;
 import com.github.vbsw.urlsaver.scene.handlers.OpenInBrowserActionHandler;
+import com.github.vbsw.urlsaver.scene.handlers.OpenInBrowserKeyPressedHandler;
 import com.github.vbsw.urlsaver.scene.handlers.QuitAppActionHandler;
 import com.github.vbsw.urlsaver.scene.handlers.QuitAppKeyPressedHandler;
 import com.github.vbsw.urlsaver.scene.handlers.QuitAppOKActionHandler;

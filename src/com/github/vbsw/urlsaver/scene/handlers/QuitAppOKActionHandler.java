@@ -31,7 +31,7 @@ import javafx.event.EventHandler;
 /**
  * @author Vitali Baumtrok
  */
-public class QuitAppOKActionHandler implements EventHandler<ActionEvent> {
+public final class QuitAppOKActionHandler implements EventHandler<ActionEvent> {
 
 	@Override
 	public void handle ( final ActionEvent event ) {

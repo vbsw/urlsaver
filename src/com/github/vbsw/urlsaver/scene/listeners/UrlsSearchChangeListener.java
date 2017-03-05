@@ -32,7 +32,7 @@ import javafx.beans.value.ObservableValue;
 /**
  * @author Vitali Baumtrok
  */
-public class UrlsSearchChangeListener implements ChangeListener<String> {
+public final class UrlsSearchChangeListener implements ChangeListener<String> {
 
 	@Override
 	public void changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {

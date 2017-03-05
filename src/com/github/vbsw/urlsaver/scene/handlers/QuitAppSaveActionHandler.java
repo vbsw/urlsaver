@@ -33,7 +33,7 @@ import javafx.event.EventHandler;
 /**
  * @author Vitali Baumtrok
  */
-public class QuitAppSaveActionHandler implements EventHandler<ActionEvent> {
+public final class QuitAppSaveActionHandler implements EventHandler<ActionEvent> {
 
 	@Override
 	public void handle ( final ActionEvent event ) {

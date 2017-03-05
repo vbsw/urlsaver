@@ -30,7 +30,7 @@ import javafx.util.Callback;
 /**
  * @author Vitali Baumtrok
  */
-public class UrlsCellFactory implements Callback<ListView<String>, ListCell<String>> {
+public final class UrlsCellFactory implements Callback<ListView<String>, ListCell<String>> {
 
 	@Override
 	public ListCell<String> call ( final ListView<String> param ) {

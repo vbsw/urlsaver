@@ -32,7 +32,7 @@ import javafx.event.EventHandler;
 /**
  * @author Vitali Baumtrok
  */
-public class FileReloadActionHandler implements EventHandler<ActionEvent> {
+public final class FileReloadActionHandler implements EventHandler<ActionEvent> {
 
 	@Override
 	public void handle ( final ActionEvent event ) {

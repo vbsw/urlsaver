@@ -36,7 +36,7 @@ import com.github.vbsw.urlsaver.resources.Resources;
 /**
  * @author Vitali Baumtrok
  */
-public class UrlsFile {
+public final class UrlsFile {
 
 	private UrlsData data;
 	private boolean dirty;

@@ -22,7 +22,7 @@
 package com.github.vbsw.urlsaver.scene.listeners;
 
 
-import com.github.vbsw.urlsaver.Converter;
+import com.github.vbsw.urlsaver.Convert;
 import com.github.vbsw.urlsaver.SortedUniqueStringList;
 import com.github.vbsw.urlsaver.app.App;
 import com.github.vbsw.urlsaver.urls.UrlsData;
@@ -35,7 +35,7 @@ import javafx.beans.value.ObservableValue;
 /**
  * @author Vitali Baumtrok
  */
-public class UrlItemSelectionListener implements ChangeListener<String> {
+public final class UrlItemSelectionListener implements ChangeListener<String> {
 
 	@Override
 	public void changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
@@ -45,7 +45,7 @@ public class UrlItemSelectionListener implements ChangeListener<String> {
 			final UrlsData urlsData = selectedUrlsFile.getData();
 			final int urlIndex = urlsData.getUrlIndex(newValue);
 			final SortedUniqueStringList urlTags = urlsData.urlTagsList.get(urlIndex);
-			final String tagsString = Converter.toString(urlTags);
+			final String tagsString = Convert.toString(urlTags);
 
 			App.scene.tf.url.setText(newValue);
 			App.scene.ta.tags.setText(tagsString);

@@ -31,7 +31,7 @@ import javafx.scene.control.Tab;
 /**
  * @author Vitali Baumtrok
  */
-public class AppQuitCtrl {
+public final class AppQuitCtrl {
 
 	public static void closeApplication ( ) {
 		if ( App.files.isDirty() ) {

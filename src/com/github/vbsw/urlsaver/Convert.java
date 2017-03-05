@@ -33,7 +33,7 @@ import java.util.Collections;
 /**
  * @author Vitali Baumtrok
  */
-public class Converter {
+public final class Convert {
 
 	public static String toString ( final Collection<String> list ) {
 		final StringBuilder stringBuilder = new StringBuilder();

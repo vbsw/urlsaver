@@ -32,7 +32,7 @@ import javafx.beans.property.StringProperty;
 /**
  * @author Vitali Baumtrok
  */
-public class UrlModifiedBinding extends BooleanBinding {
+public final class UrlModifiedBinding extends BooleanBinding {
 
 	public UrlModifiedBinding ( ) {
 		final StringProperty urlSearchTextProperty = App.scene.tf.url.textProperty();

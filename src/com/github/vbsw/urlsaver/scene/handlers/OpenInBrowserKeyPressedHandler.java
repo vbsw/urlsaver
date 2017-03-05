@@ -19,33 +19,23 @@
  */
 
 
-package com.github.vbsw.urlsaver.scene;
+package com.github.vbsw.urlsaver.scene.handlers;
 
 
-import com.github.vbsw.urlsaver.app.App;
 import com.github.vbsw.urlsaver.scene.controller.WebBrowserCtrl;
 
 import javafx.event.EventHandler;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public class UrlsKeyPressedHandler implements EventHandler<KeyEvent> {
+public final class OpenInBrowserKeyPressedHandler implements EventHandler<KeyEvent> {
 
 	@Override
 	public void handle ( final KeyEvent event ) {
-		final KeyCode keyCode = event.getCode();
-
-		if ( keyCode == KeyCode.ENTER ) {
-			final String selectedUrl = App.scene.lv.urls.getSelectionModel().getSelectedItem();
-
-			if ( selectedUrl != null ) {
-				WebBrowserCtrl.openURL(selectedUrl);
-			}
-		}
+		WebBrowserCtrl.openSelectedUrl();
 	}
 
 }

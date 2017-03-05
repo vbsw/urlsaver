@@ -32,7 +32,7 @@ import javafx.scene.control.Tab;
 /**
  * @author Vitali Baumtrok
  */
-public class TabSelectionListener implements ChangeListener<Tab> {
+public final class TabSelectionListener implements ChangeListener<Tab> {
 
 	@Override
 	public void changed ( final ObservableValue<? extends Tab> observable, final Tab oldValue, final Tab newValue ) {

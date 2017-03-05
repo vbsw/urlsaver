@@ -31,7 +31,7 @@ import com.github.vbsw.urlsaver.SortedUniqueStringList;
 /**
  * @author Vitali Baumtrok
  */
-public class UrlsData {
+public final class UrlsData {
 
 	public static final int INITIAL_CAPACITY = 250;
 

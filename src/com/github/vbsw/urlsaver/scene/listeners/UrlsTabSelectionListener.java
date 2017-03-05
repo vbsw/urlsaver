@@ -32,7 +32,7 @@ import javafx.beans.value.ObservableValue;
 /**
  * @author Vitali Baumtrok
  */
-public class UrlsTabSelectionListener implements ChangeListener<Boolean> {
+public final class UrlsTabSelectionListener implements ChangeListener<Boolean> {
 
 	private UrlsFile previouslySelectedUrlsFile = null;
 

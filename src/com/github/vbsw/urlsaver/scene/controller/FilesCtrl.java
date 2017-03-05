@@ -29,7 +29,7 @@ import com.github.vbsw.urlsaver.urls.UrlsFile;
 /**
  * @author Vitali Baumtrok
  */
-public class FilesCtrl {
+public final class FilesCtrl {
 
 	public static void saveCurrent ( ) {
 		final UrlsFile selectedUrlsFile = App.scene.lv.files.getSelectionModel().getSelectedItem();

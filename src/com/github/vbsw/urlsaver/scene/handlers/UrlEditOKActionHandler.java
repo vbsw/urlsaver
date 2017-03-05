@@ -31,7 +31,7 @@ import javafx.event.EventHandler;
 /**
  * @author Vitali Baumtrok
  */
-public class UrlEditOKActionHandler implements EventHandler<ActionEvent> {
+public final class UrlEditOKActionHandler implements EventHandler<ActionEvent> {
 
 	@Override
 	public void handle ( final ActionEvent event ) {

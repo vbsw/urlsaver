@@ -47,7 +47,7 @@ public class SortedUniqueStringList extends ArrayList<String> {
 		}
 	}
 
-	public boolean equalsByStrings ( final SortedUniqueStringList list ) {
+	public boolean isEqualByStrings ( final SortedUniqueStringList list ) {
 		if ( this != list ) {
 			for ( String key: this ) {
 				final int index = Collections.binarySearch(list,key);

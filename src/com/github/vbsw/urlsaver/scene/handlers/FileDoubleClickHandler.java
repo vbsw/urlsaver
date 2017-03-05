@@ -33,7 +33,7 @@ import javafx.scene.input.MouseEvent;
 /**
  * @author Vitali Baumtrok
  */
-public class FileDoubleClickHandler implements EventHandler<MouseEvent> {
+public final class FileDoubleClickHandler implements EventHandler<MouseEvent> {
 
 	@Override
 	public void handle ( final MouseEvent event ) {

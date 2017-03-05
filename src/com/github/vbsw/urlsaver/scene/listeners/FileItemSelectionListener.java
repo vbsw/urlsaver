@@ -32,7 +32,7 @@ import javafx.beans.value.ObservableValue;
 /**
  * @author Vitali Baumtrok
  */
-public class FileItemSelectionListener implements ChangeListener<UrlsFile> {
+public final class FileItemSelectionListener implements ChangeListener<UrlsFile> {
 
 	@Override
 	public void changed ( final ObservableValue<? extends UrlsFile> observable, final UrlsFile oldValue, final UrlsFile selectedUrlsFile ) {

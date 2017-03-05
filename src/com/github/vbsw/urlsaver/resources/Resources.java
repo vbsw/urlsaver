@@ -29,7 +29,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * @author Vitali Baumtrok
  */
-public class Resources {
+public final class Resources {
 
 	public static final Charset ENCODING = StandardCharsets.UTF_8;
 

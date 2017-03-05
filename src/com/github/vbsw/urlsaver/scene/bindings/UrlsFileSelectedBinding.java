@@ -32,7 +32,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 /**
  * @author Vitali Baumtrok
  */
-public class UrlsFileSelectedBinding extends BooleanBinding {
+public final class UrlsFileSelectedBinding extends BooleanBinding {
 
 	public UrlsFileSelectedBinding ( ) {
 		final ReadOnlyObjectProperty<UrlsFile> selectedUrlsFileProperty = App.scene.lv.files.getSelectionModel().selectedItemProperty();

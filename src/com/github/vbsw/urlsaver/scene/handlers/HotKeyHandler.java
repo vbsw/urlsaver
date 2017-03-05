@@ -37,7 +37,7 @@ import javafx.scene.input.KeyEvent;
 /**
  * @author Vitali Baumtrok
  */
-public class HotKeyHandler implements EventHandler<KeyEvent> {
+public final class HotKeyHandler implements EventHandler<KeyEvent> {
 
 	private static final KeyCombination ctrlS = new KeyCodeCombination(KeyCode.S,KeyCombination.CONTROL_DOWN);
 	private static final KeyCombination ctrlU = new KeyCodeCombination(KeyCode.U,KeyCombination.CONTROL_DOWN);

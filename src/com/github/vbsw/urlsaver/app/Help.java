@@ -26,7 +26,7 @@ import com.github.vbsw.urlsaver.Parser;
 /**
  * @author Vitali Baumtrok
  */
-class Help {
+final class Help {
 
 	private static enum ArgumentType {
 		NONE, ERROR_TOO_MANY_ARGS, ERROR_UNKNOWN_ARG, PRINT_HELP, PRINT_VERSION, PRINT_COPYRIGHT

@@ -26,14 +26,14 @@ import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 
-import com.github.vbsw.urlsaver.Converter;
+import com.github.vbsw.urlsaver.Convert;
 import com.github.vbsw.urlsaver.app.App;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public class WebBrowserCtrl {
+public final class WebBrowserCtrl {
 
 	public static void openSelectedUrl ( ) {
 		final String selectedUrl = App.scene.lv.urls.getSelectionModel().getSelectedItem();
@@ -82,7 +82,7 @@ public class WebBrowserCtrl {
 			final Desktop desktop = Desktop.getDesktop();
 
 			if ( desktop.isSupported(Desktop.Action.BROWSE) ) {
-				final URI uri = Converter.toURI(url);
+				final URI uri = Convert.toURI(url);
 
 				if ( uri != null ) {
 					try {

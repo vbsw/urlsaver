@@ -32,7 +32,7 @@ import javafx.event.EventHandler;
 /**
  * @author Vitali Baumtrok
  */
-public class UrlsSearchActionHandler implements EventHandler<ActionEvent> {
+public final class UrlsSearchActionHandler implements EventHandler<ActionEvent> {
 
 	@Override
 	public void handle ( final ActionEvent event ) {

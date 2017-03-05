@@ -26,6 +26,7 @@ import com.github.vbsw.urlsaver.app.App;
 import com.github.vbsw.urlsaver.scene.factories.FilesListViewCellFactory;
 import com.github.vbsw.urlsaver.scene.factories.UrlsCellFactory;
 import com.github.vbsw.urlsaver.scene.handlers.FilesKeyPressedHandler;
+import com.github.vbsw.urlsaver.scene.handlers.UrlsKeyPressedHandler;
 import com.github.vbsw.urlsaver.scene.listeners.FileItemSelectionListener;
 import com.github.vbsw.urlsaver.scene.listeners.UrlItemSelectionListener;
 import com.github.vbsw.urlsaver.urls.UrlsFile;

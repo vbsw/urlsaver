@@ -22,7 +22,7 @@
 package com.github.vbsw.urlsaver.scene.handlers;
 
 
-import com.github.vbsw.urlsaver.Converter;
+import com.github.vbsw.urlsaver.Convert;
 import com.github.vbsw.urlsaver.SortedUniqueStringList;
 import com.github.vbsw.urlsaver.app.App;
 import com.github.vbsw.urlsaver.urls.UrlsData;
@@ -35,7 +35,7 @@ import javafx.event.EventHandler;
 /**
  * @author Vitali Baumtrok
  */
-public class UrlCancelActionHandler implements EventHandler<ActionEvent> {
+public final class UrlCancelActionHandler implements EventHandler<ActionEvent> {
 
 	@Override
 	public void handle ( final ActionEvent event ) {
@@ -46,7 +46,7 @@ public class UrlCancelActionHandler implements EventHandler<ActionEvent> {
 			final UrlsData urlsData = selectedUrlsFile.getData();
 			final int selectedUrlIndex = urlsData.getUrlIndex(selectedUrl);
 			final SortedUniqueStringList selectedTags = urlsData.urlTagsList.get(selectedUrlIndex);
-			final String tags = Converter.toString(selectedTags);
+			final String tags = Convert.toString(selectedTags);
 
 			App.scene.tf.url.setText(selectedUrl);
 			App.scene.ta.tags.setText(tags);

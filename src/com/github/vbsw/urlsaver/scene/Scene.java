@@ -36,7 +36,7 @@ import javafx.stage.WindowEvent;
 /**
  * @author Vitali Baumtrok
  */
-public class Scene extends javafx.scene.Scene {
+public final class Scene extends javafx.scene.Scene {
 
 	public FXML fxml;
 	public CSS css;

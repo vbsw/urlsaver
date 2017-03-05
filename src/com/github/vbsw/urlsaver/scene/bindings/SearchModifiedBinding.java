@@ -34,7 +34,7 @@ import javafx.beans.property.StringProperty;
 /**
  * @author Vitali Baumtrok
  */
-public class SearchModifiedBinding extends BooleanBinding {
+public final class SearchModifiedBinding extends BooleanBinding {
 
 	private final SortedUniqueStringList tagsCurrent = new SortedUniqueStringList();
 
@@ -54,7 +54,7 @@ public class SearchModifiedBinding extends BooleanBinding {
 
 			tagsCurrent.setStrings(urlSearch);
 
-			return tagsCurrent.equalsByStrings(tagsPrevious) == false;
+			return tagsCurrent.isEqualByStrings(tagsPrevious) == false;
 
 		} else {
 			return false;

@@ -31,7 +31,7 @@ import javafx.stage.WindowEvent;
 /**
  * @author Vitali Baumtrok
  */
-public class WindowCloseHandler implements EventHandler<WindowEvent> {
+public final class WindowCloseHandler implements EventHandler<WindowEvent> {
 
 	@Override
 	public void handle ( final WindowEvent event ) {

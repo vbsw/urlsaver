@@ -32,7 +32,7 @@ import javafx.scene.input.KeyEvent;
 /**
  * @author Vitali Baumtrok
  */
-public class QuitAppOKKeyPressedHandler implements EventHandler<KeyEvent> {
+public final class QuitAppOKKeyPressedHandler implements EventHandler<KeyEvent> {
 
 	@Override
 	public void handle ( final KeyEvent event ) {

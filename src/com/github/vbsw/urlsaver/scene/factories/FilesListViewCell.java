@@ -33,7 +33,7 @@ import javafx.scene.input.MouseEvent;
 /**
  * @author Vitali Baumtrok
  */
-public class FilesListViewCell extends ListCell<UrlsFile> {
+public final class FilesListViewCell extends ListCell<UrlsFile> {
 
 	private static final EventHandler<MouseEvent> eventHandler = new FileDoubleClickHandler();
 
