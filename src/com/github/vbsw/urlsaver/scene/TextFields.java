@@ -23,6 +23,7 @@ package com.github.vbsw.urlsaver.scene;
 
 
 import com.github.vbsw.urlsaver.scene.handlers.UrlsSearchActionHandler;
+import com.github.vbsw.urlsaver.scene.listeners.UrlChangeListener;
 import com.github.vbsw.urlsaver.scene.listeners.UrlsSearchChangeListener;
 
 import javafx.scene.Parent;
@@ -51,6 +52,7 @@ public final class TextFields {
 	public void configure ( ) {
 		urlSearch.textProperty().addListener(new UrlsSearchChangeListener());
 		urlSearch.setOnAction(new UrlsSearchActionHandler());
+		url.textProperty().addListener(new UrlChangeListener());
 	}
 
 }

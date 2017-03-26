@@ -22,7 +22,7 @@
 package com.github.vbsw.urlsaver.scene.factories;
 
 
-import com.github.vbsw.urlsaver.urls.UrlsFile;
+import java.nio.file.Path;
 
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -32,11 +32,11 @@ import javafx.util.Callback;
 /**
  * @author Vitali Baumtrok
  */
-public final class FilesListViewCellFactory implements Callback<ListView<UrlsFile>, ListCell<UrlsFile>> {
+public final class FilesListViewCellFactory implements Callback<ListView<Path>, ListCell<Path>> {
 
 	@Override
-	public ListCell<UrlsFile> call ( ListView<UrlsFile> param ) {
-		final ListCell<UrlsFile> listCell = new FilesListViewCell();
+	public ListCell<Path> call ( ListView<Path> param ) {
+		final ListCell<Path> listCell = new FilesListViewCell();
 		return listCell;
 	}
 

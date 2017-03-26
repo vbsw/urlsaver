@@ -22,7 +22,7 @@
 package com.github.vbsw.urlsaver.scene.handlers;
 
 
-import com.github.vbsw.urlsaver.scene.controller.WebBrowserCtrl;
+import com.github.vbsw.urlsaver.WebBrowser;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -35,7 +35,7 @@ public final class OpenInBrowserActionHandler implements EventHandler<ActionEven
 
 	@Override
 	public void handle ( final ActionEvent event ) {
-		WebBrowserCtrl.openSelectedUrl();
+		WebBrowser.openSelectedUrl();
 	}
 
 }

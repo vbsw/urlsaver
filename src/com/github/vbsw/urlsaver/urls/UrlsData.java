@@ -23,6 +23,7 @@ package com.github.vbsw.urlsaver.urls;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 
 import com.github.vbsw.urlsaver.SortedUniqueStringList;
@@ -111,13 +112,13 @@ public final class UrlsData {
 		final int urlIndex = Collections.binarySearch(urls,url);
 
 		if ( urlIndex >= 0 ) {
-			final ArrayList<String> urlTagsRelation = urlTagsList.get(urlIndex);
+			final ArrayList<String> urlTags = urlTagsList.get(urlIndex);
 
-			for ( String tag: urlTagsRelation ) {
+			for ( String tag: urlTags ) {
 				final int tagIndex = getTagIndex(tag);
-				final ArrayList<String> tagUrlsRelation = tagUrlsList.get(tagIndex);
-				final int tagUrlsRelationIndex = Collections.binarySearch(tagUrlsRelation,url);
-				tagUrlsRelation.remove(tagUrlsRelationIndex);
+				final ArrayList<String> tagUrls = tagUrlsList.get(tagIndex);
+				final int tagUrlsIndex = Collections.binarySearch(tagUrls,url);
+				tagUrls.remove(tagUrlsIndex);
 			}
 			urls.remove(urlIndex);
 			urlTagsList.remove(urlIndex);
@@ -130,22 +131,42 @@ public final class UrlsData {
 	}
 
 	public final boolean removeTagFromUrl ( final int urlIndex, final String tag ) {
-		final ArrayList<String> urlTagsRelation = urlTagsList.get(urlIndex);
-		final int urlTagsRelationIndex = Collections.binarySearch(urlTagsRelation,tag);
+		final ArrayList<String> urlTags = urlTagsList.get(urlIndex);
+		final int urlTagsIndex = Collections.binarySearch(urlTags,tag);
 
-		if ( urlTagsRelationIndex >= 0 ) {
+		if ( urlTagsIndex >= 0 ) {
 			final int tagIndex = getTagIndex(tag);
-			final ArrayList<String> tagUrlsRelation = tagUrlsList.get(tagIndex);
+			final ArrayList<String> tagUrls = tagUrlsList.get(tagIndex);
 			final String url = urls.get(urlIndex);
-			final int tagUrlsRelationIndex = Collections.binarySearch(tagUrlsRelation,url);
+			final int tagUrlsIndex = Collections.binarySearch(tagUrls,url);
 
-			urlTagsRelation.remove(urlTagsRelationIndex);
-			tagUrlsRelation.remove(tagUrlsRelationIndex);
+			urlTags.remove(urlTagsIndex);
+			tagUrls.remove(tagUrlsIndex);
 
 			return true;
 
 		} else {
 			return false;
+		}
+	}
+
+	public void setTagsOfUrl ( final int urlIndex, final Collection<String> tags ) {
+		final ArrayList<String> urlTags = urlTagsList.get(urlIndex);
+
+		while ( urlTags.isEmpty() == false ) {
+			final int urlTagsIndex = urlTags.size() - 1;
+			final String tag = urlTags.get(urlTagsIndex);
+			final int tagIndex = getTagIndex(tag);
+			final ArrayList<String> tagUrls = tagUrlsList.get(tagIndex);
+			final String url = urls.get(urlIndex);
+			final int tagUrlsIndex = Collections.binarySearch(tagUrls,url);
+
+			urlTags.remove(urlTagsIndex);
+			tagUrls.remove(tagUrlsIndex);
+		}
+
+		for ( String tag: tags ) {
+			addTagToUrl(urlIndex,tag);
 		}
 	}
 

@@ -22,8 +22,8 @@
 package com.github.vbsw.urlsaver.scene.handlers;
 
 
+import com.github.vbsw.urlsaver.WebBrowser;
 import com.github.vbsw.urlsaver.app.App;
-import com.github.vbsw.urlsaver.scene.controller.WebBrowserCtrl;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
@@ -43,7 +43,7 @@ public final class UrlsKeyPressedHandler implements EventHandler<KeyEvent> {
 			final String selectedUrl = App.scene.lv.urls.getSelectionModel().getSelectedItem();
 
 			if ( selectedUrl != null ) {
-				WebBrowserCtrl.openURL(selectedUrl);
+				WebBrowser.openURL(selectedUrl);
 			}
 		}
 	}

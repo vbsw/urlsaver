@@ -19,32 +19,23 @@
  */
 
 
-package com.github.vbsw.urlsaver.scene.bindings;
-
-
-import com.github.vbsw.urlsaver.app.App;
-import com.github.vbsw.urlsaver.urls.UrlsFile;
-
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.ReadOnlyObjectProperty;
+package com.github.vbsw.urlsaver.urls;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public final class UrlsFileSelectedBinding extends BooleanBinding {
+public final class UrlsViewData {
 
-	public UrlsFileSelectedBinding ( ) {
-		final ReadOnlyObjectProperty<UrlsFile> selectedUrlsFileProperty = App.scene.lv.files.getSelectionModel().selectedItemProperty();
+	public final UrlsSearchResult searchResult = new UrlsSearchResult();
 
-		bind(selectedUrlsFileProperty);
-	}
+	public String searchTagsString = ""; //$NON-NLS-1$
+	public int selectedIndex = -1;
 
-	@Override
-	protected boolean computeValue ( ) {
-		final UrlsFile urlsFile = App.scene.lv.files.getSelectionModel().getSelectedItem();
-
-		return urlsFile != null;
+	public void clear ( ) {
+		searchResult.clear();
+		searchTagsString = ""; //$NON-NLS-1$
+		selectedIndex = -1;
 	}
 
 }

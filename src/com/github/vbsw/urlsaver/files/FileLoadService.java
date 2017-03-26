@@ -19,31 +19,33 @@
  */
 
 
-package com.github.vbsw.urlsaver.scene.listeners;
+package com.github.vbsw.urlsaver.files;
 
 
-import com.github.vbsw.urlsaver.app.App;
-import com.github.vbsw.urlsaver.urls.UrlsViewData;
+import java.nio.file.Path;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import com.github.vbsw.urlsaver.urls.UrlsData;
+
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public final class UrlsSearchChangeListener implements ChangeListener<String> {
+final class FileLoadService extends Service<UrlsData> {
+
+	private final Path urlsFilePath;
+
+	public FileLoadService ( final Path urlsFilePath ) {
+		this.urlsFilePath = urlsFilePath;
+	}
 
 	@Override
-	public void changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
-		final UrlsViewData urlsViewData = App.urls.getViewData();
+	protected Task<UrlsData> createTask ( ) {
+		final Task<UrlsData> loadingTask = new FileLoadTask(urlsFilePath);
 
-		if ( newValue != null ) {
-			urlsViewData.searchTagsString = newValue;
-
-		} else {
-			urlsViewData.searchTagsString = "";
-		}
+		return loadingTask;
 	}
 
 }

@@ -53,7 +53,7 @@ public final class TopTabs {
 	}
 
 	void configure ( ) {
-		urls.disableProperty().bind(Bindings.not(App.files.loadedProperty()));
+		urls.disableProperty().bind(Bindings.not(App.urls.availableProperty()));
 		urls.selectedProperty().addListener(new UrlsTabSelectionListener());
 	}
 

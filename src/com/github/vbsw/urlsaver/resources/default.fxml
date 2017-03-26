@@ -23,8 +23,8 @@
                         <Button fx:id="reload_file_btn" disable="true" mnemonicParsing="false" text="Reload" />
                         <Button fx:id="reload_all_files_btn" disable="true" mnemonicParsing="false" text="Reload All" />
                         <AnchorPane HBox.hgrow="ALWAYS" />
+                        <Button fx:id="file_cancel_btn" disable="true" mnemonicParsing="false" text="Cancel" />
                         <Button fx:id="file_save_btn" disable="true" mnemonicParsing="false" text="Save" />
-                        <Button fx:id="file_save_cancel_btn" disable="true" mnemonicParsing="false" text="Save, Cancel" />
                         <Button fx:id="file_save_ok_btn" disable="true" mnemonicParsing="false" text="Save, OK" />
                      </children>
                   </HBox>

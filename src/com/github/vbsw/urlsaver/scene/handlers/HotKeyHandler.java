@@ -23,9 +23,6 @@ package com.github.vbsw.urlsaver.scene.handlers;
 
 
 import com.github.vbsw.urlsaver.app.App;
-import com.github.vbsw.urlsaver.scene.controller.AppQuitCtrl;
-import com.github.vbsw.urlsaver.scene.controller.FilesCtrl;
-import com.github.vbsw.urlsaver.scene.controller.UrlsCtrl;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
@@ -71,15 +68,16 @@ public final class HotKeyHandler implements EventHandler<KeyEvent> {
 
 		} else if ( ctrlS.match(event) ) {
 			event.consume();
-			FilesCtrl.saveCurrent();
+			App.urls.confirmAny();
+			App.files.confirmSaveSelected();
 
 		} else if ( ctrlU.match(event) ) {
 			event.consume();
-			UrlsCtrl.selectedUrlCreateOrEdit();
+			App.urls.confirmAny();
 
 		} else if ( keyCode == KeyCode.ESCAPE ) {
 			event.consume();
-			AppQuitCtrl.closeApplication();
+			App.close();
 		}
 	}
 

@@ -93,12 +93,12 @@ class DefaultProperties extends Properties {
 		return -1;
 	}
 
-	public int getAutoload ( ) {
-		final String key = "autoload"; //$NON-NLS-1$
-		final String autoloadStr = getProperty(key);
+	public int getAutoloadAll ( ) {
+		final String key = "autoload.all"; //$NON-NLS-1$
+		final String autoloadAllStr = getProperty(key);
 
-		if ( autoloadStr != null ) {
-			return Parser.isTrue(autoloadStr) ? 1 : 0;
+		if ( autoloadAllStr != null ) {
+			return Parser.isTrue(autoloadAllStr) ? 1 : 0;
 		}
 		return -1;
 	}
@@ -115,10 +115,10 @@ class DefaultProperties extends Properties {
 
 	public int getSearchByPrefix ( ) {
 		final String key = "search.by.prefix"; //$NON-NLS-1$
-		final String autoloadStr = getProperty(key);
+		final String autoloadAllStr = getProperty(key);
 
-		if ( autoloadStr != null ) {
-			return Parser.isTrue(autoloadStr) ? 1 : 0;
+		if ( autoloadAllStr != null ) {
+			return Parser.isTrue(autoloadAllStr) ? 1 : 0;
 		}
 		return -1;
 	}

@@ -22,7 +22,7 @@
 package com.github.vbsw.urlsaver.scene.listeners;
 
 
-import com.github.vbsw.urlsaver.scene.controller.UrlsCtrl;
+import com.github.vbsw.urlsaver.app.App;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -35,7 +35,7 @@ public final class UrlItemSelectionListener implements ChangeListener<String> {
 
 	@Override
 	public void changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
-		UrlsCtrl.selectCurrent();
+		App.urls.resetSelectedInfo();
 	}
 
 }

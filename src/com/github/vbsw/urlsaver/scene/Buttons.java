@@ -23,10 +23,6 @@ package com.github.vbsw.urlsaver.scene;
 
 
 import com.github.vbsw.urlsaver.app.App;
-import com.github.vbsw.urlsaver.scene.bindings.TagsModifiedBinding;
-import com.github.vbsw.urlsaver.scene.bindings.UrlModifiedBinding;
-import com.github.vbsw.urlsaver.scene.bindings.UrlSelectedBinding;
-import com.github.vbsw.urlsaver.scene.bindings.UrlsFileSelectedBinding;
 import com.github.vbsw.urlsaver.scene.handlers.FileReloadActionHandler;
 import com.github.vbsw.urlsaver.scene.handlers.FileReloadAllActionHandler;
 import com.github.vbsw.urlsaver.scene.handlers.FileReloadAllKeyPressedHandler;
@@ -54,6 +50,8 @@ import com.github.vbsw.urlsaver.scene.handlers.UrlsSearchActionHandler;
 import com.github.vbsw.urlsaver.scene.handlers.UrlsSearchKeyPressedHandler;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 
@@ -69,7 +67,7 @@ public final class Buttons {
 	public final Button reloadFile;
 	public final Button reloadAllFiles;
 	public final Button fileSave;
-	public final Button fileSaveCancel;
+	public final Button fileCancel;
 	public final Button fileSaveOK;
 	public final Button openInBrowser;
 	public final Button urlSearch;
@@ -86,7 +84,7 @@ public final class Buttons {
 		final String reloadFileBtnSelector = "#reload_file_btn"; //$NON-NLS-1$
 		final String reloadAllFilesBtnSelector = "#reload_all_files_btn"; //$NON-NLS-1$
 		final String fileSaveBtnSelector = "#file_save_btn"; //$NON-NLS-1$
-		final String fileSaveCancelBtnSelector = "#file_save_cancel_btn"; //$NON-NLS-1$
+		final String fileCancelBtnSelector = "#file_cancel_btn"; //$NON-NLS-1$
 		final String fileSaveOKBtnSelector = "#file_save_ok_btn"; //$NON-NLS-1$
 		final String openInBrowserBtnSelector = "#open_in_browser_btn"; //$NON-NLS-1$
 		final String urlsSearchBtnSelector = "#url_search_btn"; //$NON-NLS-1$
@@ -102,7 +100,7 @@ public final class Buttons {
 		reloadFile = (Button) root.lookup(reloadFileBtnSelector);
 		reloadAllFiles = (Button) root.lookup(reloadAllFilesBtnSelector);
 		fileSave = (Button) root.lookup(fileSaveBtnSelector);
-		fileSaveCancel = (Button) root.lookup(fileSaveCancelBtnSelector);
+		fileCancel = (Button) root.lookup(fileCancelBtnSelector);
 		fileSaveOK = (Button) root.lookup(fileSaveOKBtnSelector);
 		openInBrowser = (Button) root.lookup(openInBrowserBtnSelector);
 		urlSearch = (Button) root.lookup(urlsSearchBtnSelector);
@@ -114,47 +112,73 @@ public final class Buttons {
 	}
 
 	void configure ( ) {
-		final UrlsFileSelectedBinding urlsFileSelectedBinding = new UrlsFileSelectedBinding();
-		final UrlSelectedBinding urlSelectedBinding = new UrlSelectedBinding();
-		final UrlModifiedBinding urlModifiedBinding = new UrlModifiedBinding();
-		final TagsModifiedBinding tagsModifiedBinding = new TagsModifiedBinding();
-
 		quitApp.setOnAction(new QuitAppActionHandler());
 		quitApp.setOnKeyPressed(new QuitAppKeyPressedHandler());
 		quitAppSave.setOnAction(new QuitAppSaveActionHandler());
 		quitAppSave.setOnKeyPressed(new QuitAppSaveKeyPressedHandler());
 		quitAppOK.setOnAction(new QuitAppOKActionHandler());
 		quitAppOK.setOnKeyPressed(new QuitAppOKKeyPressedHandler());
-		reloadFile.disableProperty().bind(Bindings.or(Bindings.not(urlsFileSelectedBinding),App.files.savingModeProperty()));
+		reloadFile.disableProperty().bind(Bindings.or(Bindings.not(App.files.selectedProperty()),App.files.confirmingSaveProperty()));
 		reloadFile.setOnAction(new FileReloadActionHandler());
 		reloadFile.setOnKeyPressed(new FileReloadKeyPressedHandler());
-		reloadAllFiles.disableProperty().bind(Bindings.or(App.files.emptyProperty(),App.files.savingModeProperty()));
+		reloadAllFiles.disableProperty().bind(Bindings.or(App.files.selectedProperty(),App.files.confirmingSaveProperty()));
 		reloadAllFiles.setOnAction(new FileReloadAllActionHandler());
 		reloadAllFiles.setOnKeyPressed(new FileReloadAllKeyPressedHandler());
-		fileSave.disableProperty().bind(Bindings.or(Bindings.not(App.files.dirtyProperty()),App.files.savingModeProperty()));
+		fileSave.disableProperty().bind(Bindings.or(Bindings.not(App.files.selectedFileDirtyProperty()),App.files.confirmingSaveProperty()));
 		fileSave.setOnAction(new FileSaveActionHandler());
 		fileSave.setOnKeyPressed(new FileSaveKeyPressedHandler());
-		fileSaveCancel.disableProperty().bind(Bindings.not(App.files.savingModeProperty()));
-		fileSaveCancel.setOnAction(new FileSaveCancelActionHandler());
-		fileSaveCancel.setOnKeyPressed(new FileSaveCancelKeyPressedHandler());
-		fileSaveOK.disableProperty().bind(Bindings.not(App.files.savingModeProperty()));
+		fileCancel.disableProperty().bind(Bindings.not(App.files.confirmingSaveProperty()));
+		fileCancel.setOnAction(new FileSaveCancelActionHandler());
+		fileCancel.setOnKeyPressed(new FileSaveCancelKeyPressedHandler());
+		fileSaveOK.disableProperty().bind(Bindings.not(App.files.confirmingSaveProperty()));
 		fileSaveOK.setOnAction(new FileSaveOKActionHandler());
 		fileSaveOK.setOnKeyPressed(new FileSaveOKKeyPressedHandler());
-		openInBrowser.disableProperty().bind(Bindings.not(urlSelectedBinding));
+		openInBrowser.disableProperty().bind(Bindings.not(App.urls.selectedProperty()));
 		openInBrowser.setOnAction(new OpenInBrowserActionHandler());
 		openInBrowser.setOnKeyPressed(new OpenInBrowserKeyPressedHandler());
 		urlSearch.setOnAction(new UrlsSearchActionHandler());
 		urlSearch.setOnKeyPressed(new UrlsSearchKeyPressedHandler());
-		urlCancel.disableProperty().bind(Bindings.not(Bindings.or(Bindings.or(urlModifiedBinding,tagsModifiedBinding),App.scene.deletingModeProperty())));
+		urlCancel.disableProperty().bind(createUrlCancelDisableBinding());
 		urlCancel.setOnAction(new UrlCancelActionHandler());
-		urlDelete.disableProperty().bind(Bindings.or(Bindings.not(urlSelectedBinding),App.scene.deletingModeProperty()));
+		urlDelete.disableProperty().bind(createUrlDeleteDisableBinding());
 		urlDelete.setOnAction(new UrlDeleteActionHandler());
-		urlDeleteOK.disableProperty().bind(Bindings.not(App.scene.deletingModeProperty()));
+		urlDeleteOK.disableProperty().bind(Bindings.not(App.urls.deleteRequestedProperty()));
 		urlDeleteOK.setOnAction(new UrlDeleteOKActionHandler());
-		urlCreateOK.disableProperty().bind(Bindings.not(urlModifiedBinding));
+		urlCreateOK.disableProperty().bind(Bindings.not(App.urls.urlModifiedProperty()));
 		urlCreateOK.setOnAction(new UrlCreateOKActionHandler());
-		urlEditOK.disableProperty().bind(Bindings.not(Bindings.and(Bindings.not(urlModifiedBinding),tagsModifiedBinding)));
+		urlEditOK.disableProperty().bind(createEditOKDisableBinding());
 		urlEditOK.setOnAction(new UrlEditOKActionHandler());
+	}
+
+	private ObservableValue<? extends Boolean> createUrlCancelDisableBinding ( ) {
+		BooleanBinding binding;
+
+		binding = Bindings.or(App.urls.urlModifiedProperty(),App.urls.tagsModifiedProperty());
+		binding = Bindings.or(binding,App.urls.deleteRequestedProperty());
+		binding = Bindings.not(binding);
+
+		return binding;
+	}
+
+	private ObservableValue<? extends Boolean> createUrlDeleteDisableBinding ( ) {
+		BooleanBinding binding;
+
+		binding = Bindings.not(App.urls.selectedProperty());
+		binding = Bindings.or(binding,App.urls.deleteRequestedProperty());
+		binding = Bindings.or(binding,App.urls.urlModifiedProperty());
+		binding = Bindings.or(binding,App.urls.tagsModifiedProperty());
+
+		return binding;
+	}
+
+	private ObservableValue<? extends Boolean> createEditOKDisableBinding ( ) {
+		BooleanBinding binding;
+
+		binding = Bindings.not(App.urls.urlModifiedProperty());
+		binding = Bindings.and(binding,App.urls.tagsModifiedProperty());
+		binding = Bindings.not(binding);
+
+		return binding;
 	}
 
 }

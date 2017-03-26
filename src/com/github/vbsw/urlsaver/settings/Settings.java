@@ -43,9 +43,9 @@ public final class Settings {
 	private int customWindowMaximized;
 	private int defaultWindowMaximized;
 
-	private int autoload;
-	private int customAutoload;
-	private int defaultAutoload;
+	private int autoloadAll;
+	private int customAutoloadAll;
+	private int defaultAutoloadAll;
 
 	private String fileExtension;
 	private String customFileExtension;
@@ -66,7 +66,7 @@ public final class Settings {
 		defaultWindowWidth = defaultProperties.getWindowWidth();
 		defaultWindowHeight = defaultProperties.getWindowHeight();
 		defaultWindowMaximized = defaultProperties.getWindowMaximized();
-		defaultAutoload = defaultProperties.getAutoload();
+		defaultAutoloadAll = defaultProperties.getAutoloadAll();
 		defaultFileExtension = defaultProperties.getFileExtension();
 		defaultFileSelect = defaultProperties.getFileSelect();
 		defaultSearchByPrefix = defaultProperties.getSearchByPrefix();
@@ -82,7 +82,7 @@ public final class Settings {
 		customWindowWidth = properties.getWindowWidth();
 		customWindowHeight = properties.getWindowHeight();
 		customWindowMaximized = properties.getWindowMaximized();
-		customAutoload = properties.getAutoload();
+		customAutoloadAll = properties.getAutoloadAll();
 		customFileExtension = properties.getFileExtension();
 		customFileSelect = properties.getFileSelect();
 		customSearchByPrefix = properties.getSearchByPrefix();
@@ -93,7 +93,7 @@ public final class Settings {
 		windowWidth = isCustomWindowWidthAvailable() ? customWindowWidth : defaultWindowWidth;
 		windowHeight = isCustomWindowHeightAvailable() ? customWindowHeight : defaultWindowHeight;
 		windowMaximized = isCustomWindowMaximizedAvailable() ? customWindowMaximized : defaultWindowMaximized;
-		autoload = isCustomAutoloadAvailable() ? customAutoload : defaultAutoload;
+		autoloadAll = isCustomAutoloadAllAvailable() ? customAutoloadAll : defaultAutoloadAll;
 		fileExtension = isCustomUrlsFileExtensionAvailable() ? customFileExtension : defaultFileExtension;
 		fileSelect = isCustomUrlsFileSelectAvailable() ? customFileSelect : defaultFileSelect;
 		searchByPrefix = isCustomSearchByPrefixAvailable() ? customSearchByPrefix : defaultSearchByPrefix;
@@ -104,7 +104,7 @@ public final class Settings {
 		windowWidth = customWindowWidth = defaultWindowWidth;
 		windowHeight = customWindowHeight = defaultWindowHeight;
 		windowMaximized = customWindowMaximized = defaultWindowMaximized;
-		autoload = customAutoload = defaultAutoload;
+		autoloadAll = customAutoloadAll = defaultAutoloadAll;
 		fileExtension = customFileExtension = defaultFileExtension;
 		fileSelect = customFileSelect = defaultFileSelect;
 	}
@@ -189,24 +189,24 @@ public final class Settings {
 		return customWindowMaximized >= 0;
 	}
 
-	public boolean isAutoload ( ) {
-		return autoload > 0;
+	public boolean isAutoloadAll ( ) {
+		return autoloadAll > 0;
 	}
 
-	public boolean isCustomAutoload ( ) {
-		return customAutoload > 0;
+	public boolean isCustomAutoloadAll ( ) {
+		return customAutoloadAll > 0;
 	}
 
-	public void setAutoload ( final boolean autoload ) {
-		this.autoload = autoload ? 1 : 0;
+	public void setAutoloadAll ( final boolean autoloadAll ) {
+		this.autoloadAll = autoloadAll ? 1 : 0;
 	}
 
-	public void setCustomAutoload ( final boolean autoload ) {
-		customAutoload = autoload ? 1 : 0;
+	public void setCustomAutoloadAll ( final boolean autoloadAll ) {
+		customAutoloadAll = autoloadAll ? 1 : 0;
 	}
 
-	public boolean isCustomAutoloadAvailable ( ) {
-		return customAutoload >= 0;
+	public boolean isCustomAutoloadAllAvailable ( ) {
+		return customAutoloadAll >= 0;
 	}
 
 	public String getUrlsFileExtension ( ) {

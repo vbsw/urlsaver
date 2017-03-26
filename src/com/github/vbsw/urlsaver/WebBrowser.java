@@ -19,27 +19,26 @@
  */
 
 
-package com.github.vbsw.urlsaver.scene.controller;
+package com.github.vbsw.urlsaver;
 
 
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 
-import com.github.vbsw.urlsaver.Convert;
 import com.github.vbsw.urlsaver.app.App;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public final class WebBrowserCtrl {
+public final class WebBrowser {
 
 	public static void openSelectedUrl ( ) {
 		final String selectedUrl = App.scene.lv.urls.getSelectionModel().getSelectedItem();
 
 		if ( selectedUrl != null ) {
-			WebBrowserCtrl.openURL(selectedUrl);
+			WebBrowser.openURL(selectedUrl);
 		}
 	}
 

@@ -22,14 +22,15 @@
 package com.github.vbsw.urlsaver.app;
 
 
+import com.github.vbsw.urlsaver.files.Files;
 import com.github.vbsw.urlsaver.scene.Scene;
-import com.github.vbsw.urlsaver.scene.controller.FilesCtrl;
 import com.github.vbsw.urlsaver.scene.handlers.WindowCloseHandler;
 import com.github.vbsw.urlsaver.settings.Settings;
-import com.github.vbsw.urlsaver.urls.UrlsFileList;
+import com.github.vbsw.urlsaver.urls.Urls;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.scene.control.Tab;
 import javafx.stage.Stage;
 
 
@@ -39,7 +40,8 @@ import javafx.stage.Stage;
 public final class App extends Application {
 
 	public static Settings settings;
-	public static UrlsFileList files;
+	public static Files files;
+	public static Urls urls;
 	public static Scene scene;
 	public static boolean urlsFileAutoSelectRequested;
 
@@ -58,10 +60,11 @@ public final class App extends Application {
 	@Override
 	public void start ( final Stage primaryStage ) throws Exception {
 		App.settings = new Settings();
-		App.files = new UrlsFileList(App.settings.getUrlsFileExtension());
+		App.files = new Files();
+		App.urls = new Urls();
 		App.scene = new Scene();
-		App.urlsFileAutoSelectRequested = App.files.getByName(App.settings.getUrlsFileSelect()) != null;
 
+		App.files.initialize();
 		App.scene.loadFXML();
 		App.scene.loadCSS();
 
@@ -72,12 +75,40 @@ public final class App extends Application {
 
 		App.scene.updateWindowTitle();
 		App.scene.setDecorationSize(primaryStage.getWidth(),primaryStage.getHeight());
+		App.files.selectDefault();
+		App.files.processAutoLoad();
+	}
 
-		if ( App.settings.isAutoload() ) {
-			FilesCtrl.reloadAll();
+	public static void close ( ) {
+		if ( App.files.isAnyDirty() ) {
+			if ( App.scene.tp.top.getSelectionModel().getSelectedItem() != App.scene.topTab.about ) {
+				App.scene.tp.top.getSelectionModel().select(App.scene.topTab.about);
+				App.scene.btn.quitApp.setDisable(true);
+				App.scene.btn.quitAppSave.setDisable(false);
+				App.scene.btn.quitAppOK.setDisable(false);
+				App.scene.btn.quitAppSave.requestFocus();
+
+			} else if ( App.scene.btn.quitApp.isDisable() == false ) {
+				App.scene.btn.quitApp.setDisable(false);
+				App.scene.btn.quitAppSave.setDisable(true);
+				App.scene.btn.quitAppOK.setDisable(true);
+				App.scene.btn.quitAppSave.requestFocus();
+			}
 
 		} else {
-			App.files.loadDefault();
+			App.exit();
+		}
+	}
+
+	public static void exit ( ) {
+		Platform.exit();
+	}
+
+	public static void topTabSelected ( final Tab tab ) {
+		if ( tab != App.scene.topTab.about ) {
+			App.scene.btn.quitApp.setDisable(false);
+			App.scene.btn.quitAppSave.setDisable(true);
+			App.scene.btn.quitAppOK.setDisable(true);
 		}
 	}
 

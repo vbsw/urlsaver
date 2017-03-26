@@ -21,7 +21,6 @@
 
 package com.github.vbsw.urlsaver.urls;
 
-
 /**
  * @author Vitali Baumtrok
  */

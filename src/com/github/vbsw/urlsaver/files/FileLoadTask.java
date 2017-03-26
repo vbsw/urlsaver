@@ -19,7 +19,7 @@
  */
 
 
-package com.github.vbsw.urlsaver.urls;
+package com.github.vbsw.urlsaver.files;
 
 
 import java.io.IOException;
@@ -28,6 +28,7 @@ import java.nio.file.Path;
 
 import com.github.vbsw.urlsaver.Parser;
 import com.github.vbsw.urlsaver.resources.Resources;
+import com.github.vbsw.urlsaver.urls.UrlsData;
 
 import javafx.concurrent.Task;
 
@@ -35,11 +36,11 @@ import javafx.concurrent.Task;
 /**
  * @author Vitali Baumtrok
  */
-final class UrlsLoadTask extends Task<UrlsData> {
+final class FileLoadTask extends Task<UrlsData> {
 
 	private final Path urlsFilePath;
 
-	public UrlsLoadTask ( final Path urlsFilePath ) {
+	public FileLoadTask ( final Path urlsFilePath ) {
 		this.urlsFilePath = urlsFilePath;
 	}
 

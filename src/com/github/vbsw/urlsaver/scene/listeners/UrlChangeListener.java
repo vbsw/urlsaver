@@ -19,38 +19,23 @@
  */
 
 
-package com.github.vbsw.urlsaver.scene.bindings;
+package com.github.vbsw.urlsaver.scene.listeners;
 
 
-import com.github.vbsw.urlsaver.Parser;
 import com.github.vbsw.urlsaver.app.App;
 
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public final class UrlModifiedBinding extends BooleanBinding {
-
-	public UrlModifiedBinding ( ) {
-		final StringProperty urlSearchTextProperty = App.scene.tf.url.textProperty();
-
-		bind(urlSearchTextProperty);
-	}
+public final class UrlChangeListener implements ChangeListener<String> {
 
 	@Override
-	protected boolean computeValue ( ) {
-		final String urlCurrent = Parser.trim(App.scene.tf.url.getText());
-		final String urlPrevious = App.scene.lv.urls.getSelectionModel().getSelectedItem();
-
-		if ( urlPrevious != null ) {
-			return urlPrevious.equals(urlCurrent) == false;
-
-		} else {
-			return urlCurrent.length() > 0;
-		}
+	public void changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
+		App.urls.updateUrlModifiedProperty();
 	}
 
 }

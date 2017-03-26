@@ -22,7 +22,7 @@
 package com.github.vbsw.urlsaver.scene.handlers;
 
 
-import com.github.vbsw.urlsaver.scene.controller.WebBrowserCtrl;
+import com.github.vbsw.urlsaver.WebBrowser;
 import com.github.vbsw.urlsaver.scene.factories.UrlListCell;
 
 import javafx.event.EventHandler;
@@ -40,7 +40,7 @@ public final class UrlDoubleClickHandler implements EventHandler<MouseEvent> {
 			final UrlListCell cell = (UrlListCell) event.getSource();
 			final String url = cell.getItem();
 
-			WebBrowserCtrl.openURL(url);
+			WebBrowser.openURL(url);
 		}
 	}
 

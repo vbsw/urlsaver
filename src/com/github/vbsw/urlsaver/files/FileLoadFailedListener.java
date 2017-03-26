@@ -19,32 +19,21 @@
  */
 
 
-package com.github.vbsw.urlsaver.scene.bindings;
+package com.github.vbsw.urlsaver.files;
 
 
-import com.github.vbsw.urlsaver.Parser;
-import com.github.vbsw.urlsaver.app.App;
-
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public final class UrlSelectedBinding extends BooleanBinding {
-
-	public UrlSelectedBinding ( ) {
-		final ReadOnlyObjectProperty<String> selectedUrlProperty = App.scene.lv.urls.getSelectionModel().selectedItemProperty();
-
-		bind(selectedUrlProperty);
-	}
+final class FileLoadFailedListener implements EventHandler<WorkerStateEvent> {
 
 	@Override
-	protected boolean computeValue ( ) {
-		final String url = App.scene.lv.urls.getSelectionModel().getSelectedItem();
-
-		return url != null && Parser.isWhiteSpace(url) == false;
+	public void handle ( final WorkerStateEvent event ) {
+		event.getSource().getException().printStackTrace();
 	}
 
 }

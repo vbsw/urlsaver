@@ -19,8 +19,10 @@
  */
 
 
-package com.github.vbsw.urlsaver.urls;
+package com.github.vbsw.urlsaver.scene;
 
+
+import com.github.vbsw.urlsaver.app.App;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -29,20 +31,11 @@ import javafx.beans.value.ObservableValue;
 /**
  * @author Vitali Baumtrok
  */
-final class UrlsLoadProgressListener implements ChangeListener<Number> {
-
-	private final UrlsFile urlsFile;
-
-	public UrlsLoadProgressListener ( final UrlsFile urlsFile ) {
-		this.urlsFile = urlsFile;
-	}
+public final class TagsChangeListener implements ChangeListener<String> {
 
 	@Override
-	public void changed ( final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue ) {
-		final int percent = (int) (newValue.doubleValue() * 100);
-		final String listViewText = urlsFile.getLoadingListViewText(percent);
-
-		urlsFile.setItemText(listViewText);
+	public void changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
+		App.urls.updateTagsModifiedProperty();
 	}
 
 }

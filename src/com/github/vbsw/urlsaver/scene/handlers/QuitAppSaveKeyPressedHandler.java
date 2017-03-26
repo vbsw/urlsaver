@@ -23,8 +23,6 @@ package com.github.vbsw.urlsaver.scene.handlers;
 
 
 import com.github.vbsw.urlsaver.app.App;
-import com.github.vbsw.urlsaver.scene.controller.AppQuitCtrl;
-import com.github.vbsw.urlsaver.urls.UrlsFile;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
@@ -41,12 +39,13 @@ public final class QuitAppSaveKeyPressedHandler implements EventHandler<KeyEvent
 		final KeyCode keyCode = event.getCode();
 
 		if ( keyCode == KeyCode.ENTER ) {
-			for ( UrlsFile urlsFile: App.files ) {
-				if ( urlsFile.isDirty() ) {
-					urlsFile.save();
-				}
-			}
-			AppQuitCtrl.exitApplication();
+			//		for ( UrlsFile urlsFile: App.files ) {
+			//			if ( urlsFile.isDirty() ) {
+			//				urlsFile.save();
+			//			}
+			//		}
+			// TODO QuitAppSaveActionHandler
+			App.exit();
 		}
 	}
 

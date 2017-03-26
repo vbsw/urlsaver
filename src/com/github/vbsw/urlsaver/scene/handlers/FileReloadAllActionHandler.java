@@ -22,7 +22,7 @@
 package com.github.vbsw.urlsaver.scene.handlers;
 
 
-import com.github.vbsw.urlsaver.scene.controller.FilesCtrl;
+import com.github.vbsw.urlsaver.app.App;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -35,7 +35,7 @@ public class FileReloadAllActionHandler implements EventHandler<ActionEvent> {
 
 	@Override
 	public void handle ( final ActionEvent event ) {
-		FilesCtrl.reloadAll();
+		App.files.reloadAll();
 	}
 
 }

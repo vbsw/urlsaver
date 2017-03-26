@@ -22,7 +22,7 @@
 package com.github.vbsw.urlsaver.scene.listeners;
 
 
-import com.github.vbsw.urlsaver.scene.controller.AppQuitCtrl;
+import com.github.vbsw.urlsaver.app.App;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -36,7 +36,7 @@ public final class TabSelectionListener implements ChangeListener<Tab> {
 
 	@Override
 	public void changed ( final ObservableValue<? extends Tab> observable, final Tab oldValue, final Tab newValue ) {
-		AppQuitCtrl.topTabSelected(newValue);
+		App.topTabSelected(newValue);
 	}
 
 }

@@ -22,7 +22,7 @@
 package com.github.vbsw.urlsaver.scene.handlers;
 
 
-import com.github.vbsw.urlsaver.scene.controller.FilesCtrl;
+import com.github.vbsw.urlsaver.app.App;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
@@ -39,7 +39,7 @@ public class FileReloadAllKeyPressedHandler implements EventHandler<KeyEvent> {
 		final KeyCode keyCode = event.getCode();
 
 		if ( keyCode == KeyCode.ENTER ) {
-			FilesCtrl.reloadAll();
+			App.files.reloadAll();
 		}
 	}
 

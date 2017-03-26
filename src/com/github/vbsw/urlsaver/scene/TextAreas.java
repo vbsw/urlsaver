@@ -39,4 +39,8 @@ public final class TextAreas {
 		tags = (TextArea) root.lookup(tagsTextAreaSelector);
 	}
 
+	public void configure ( ) {
+		tags.textProperty().addListener(new TagsChangeListener());
+	}
+
 }

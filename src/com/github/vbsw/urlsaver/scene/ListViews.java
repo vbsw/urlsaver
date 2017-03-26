@@ -22,6 +22,8 @@
 package com.github.vbsw.urlsaver.scene;
 
 
+import java.nio.file.Path;
+
 import com.github.vbsw.urlsaver.app.App;
 import com.github.vbsw.urlsaver.scene.factories.FilesListViewCellFactory;
 import com.github.vbsw.urlsaver.scene.factories.UrlsCellFactory;
@@ -29,7 +31,6 @@ import com.github.vbsw.urlsaver.scene.handlers.FilesKeyPressedHandler;
 import com.github.vbsw.urlsaver.scene.handlers.UrlsKeyPressedHandler;
 import com.github.vbsw.urlsaver.scene.listeners.FileItemSelectionListener;
 import com.github.vbsw.urlsaver.scene.listeners.UrlItemSelectionListener;
-import com.github.vbsw.urlsaver.urls.UrlsFile;
 
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
@@ -41,7 +42,7 @@ import javafx.scene.control.MultipleSelectionModel;
  */
 public final class ListViews {
 
-	public final ListView<UrlsFile> files;
+	public final ListView<Path> files;
 	public final ListView<String> urls;
 
 	@SuppressWarnings ( "unchecked" )
@@ -49,10 +50,10 @@ public final class ListViews {
 		final String fileListViewSelector = "#file_list_view"; //$NON-NLS-1$
 		final String urlListViewSelector = "#url_list_view"; //$NON-NLS-1$
 
-		files = (ListView<UrlsFile>) root.lookup(fileListViewSelector);
+		files = (ListView<Path>) root.lookup(fileListViewSelector);
 		urls = (ListView<String>) root.lookup(urlListViewSelector);
 
-		files.getItems().addAll(App.files);
+		files.getItems().addAll(App.files.getPaths());
 	}
 
 	public String getSelectedUrl ( ) {

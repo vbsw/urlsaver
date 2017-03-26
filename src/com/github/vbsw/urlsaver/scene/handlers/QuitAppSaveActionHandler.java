@@ -23,8 +23,6 @@ package com.github.vbsw.urlsaver.scene.handlers;
 
 
 import com.github.vbsw.urlsaver.app.App;
-import com.github.vbsw.urlsaver.scene.controller.AppQuitCtrl;
-import com.github.vbsw.urlsaver.urls.UrlsFile;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -37,12 +35,8 @@ public final class QuitAppSaveActionHandler implements EventHandler<ActionEvent>
 
 	@Override
 	public void handle ( final ActionEvent event ) {
-		for ( UrlsFile urlsFile: App.files ) {
-			if ( urlsFile.isDirty() ) {
-				urlsFile.save();
-			}
-		}
-		AppQuitCtrl.exitApplication();
+		App.files.saveAll();
+		App.exit();
 	}
 
 }

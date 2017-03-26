@@ -23,8 +23,6 @@ package com.github.vbsw.urlsaver.scene.handlers;
 
 
 import com.github.vbsw.urlsaver.app.App;
-import com.github.vbsw.urlsaver.scene.factories.FilesListViewCell;
-import com.github.vbsw.urlsaver.urls.UrlsFile;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
@@ -38,11 +36,7 @@ public final class FileDoubleClickHandler implements EventHandler<MouseEvent> {
 	@Override
 	public void handle ( final MouseEvent event ) {
 		if ( event.getClickCount() == 2 ) {
-			final FilesListViewCell cell = (FilesListViewCell) event.getSource();
-			final UrlsFile urlsFile = cell.getItem();
-			final String filePathStr = urlsFile.getPath();
-
-			App.scene.tf.fileName.setText(filePathStr);
+			App.files.updateSelectedInfo();
 		}
 	}
 

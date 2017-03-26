@@ -32,7 +32,7 @@ import com.github.vbsw.urlsaver.SortedUniqueStringList;
  * @author Vitali Baumtrok
  */
 @SuppressWarnings ( "serial" )
-final class SearchUrlList extends SortedUniqueStringList {
+public final class UrlsSearchResult extends SortedUniqueStringList {
 
 	private final SortedUniqueStringList tags = new SortedUniqueStringList();
 	private final TagIndices tagIndices = new TagIndices();

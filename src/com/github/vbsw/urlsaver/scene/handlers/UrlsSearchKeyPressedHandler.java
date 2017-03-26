@@ -22,7 +22,7 @@
 package com.github.vbsw.urlsaver.scene.handlers;
 
 
-import com.github.vbsw.urlsaver.scene.controller.UrlsCtrl;
+import com.github.vbsw.urlsaver.app.App;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
@@ -39,7 +39,7 @@ public final class UrlsSearchKeyPressedHandler implements EventHandler<KeyEvent>
 		final KeyCode keyCode = event.getCode();
 
 		if ( keyCode == KeyCode.ENTER ) {
-			UrlsCtrl.searchCurrent();
+			App.urls.search();
 		}
 	}
 

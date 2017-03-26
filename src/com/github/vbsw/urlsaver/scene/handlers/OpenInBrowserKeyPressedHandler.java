@@ -22,7 +22,7 @@
 package com.github.vbsw.urlsaver.scene.handlers;
 
 
-import com.github.vbsw.urlsaver.scene.controller.WebBrowserCtrl;
+import com.github.vbsw.urlsaver.WebBrowser;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
@@ -39,7 +39,7 @@ public final class OpenInBrowserKeyPressedHandler implements EventHandler<KeyEve
 		final KeyCode keyCode = event.getCode();
 
 		if ( keyCode == KeyCode.ENTER ) {
-			WebBrowserCtrl.openSelectedUrl();
+			WebBrowser.openSelectedUrl();
 		}
 	}
 

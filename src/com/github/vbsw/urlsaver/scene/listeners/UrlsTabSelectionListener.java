@@ -22,8 +22,9 @@
 package com.github.vbsw.urlsaver.scene.listeners;
 
 
+import java.nio.file.Path;
+
 import com.github.vbsw.urlsaver.app.App;
-import com.github.vbsw.urlsaver.urls.UrlsFile;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -34,7 +35,7 @@ import javafx.beans.value.ObservableValue;
  */
 public final class UrlsTabSelectionListener implements ChangeListener<Boolean> {
 
-	private UrlsFile previouslySelectedUrlsFile = null;
+	private Path previouslySelectedFilePath = null;
 
 	@Override
 	public void changed ( final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue ) {
@@ -45,12 +46,13 @@ public final class UrlsTabSelectionListener implements ChangeListener<Boolean> {
 	}
 
 	private void updateUrlsTabContent ( ) {
-		final UrlsFile selectedFile = App.scene.lv.files.getSelectionModel().getSelectedItem();
+		final Path filePath = App.scene.lv.files.getSelectionModel().getSelectedItem();
 
-		if ( previouslySelectedUrlsFile != selectedFile ) {
-			previouslySelectedUrlsFile = selectedFile;
+		if ( previouslySelectedFilePath != filePath ) {
+			previouslySelectedFilePath = filePath;
 
-			previouslySelectedUrlsFile.updateUrlsSearchView();
+			//			previouslySelectedFilePath.updateUrlsSearchView();
+			// TODO updateUrlsTabContent
 		}
 	}
 

@@ -19,31 +19,34 @@
  */
 
 
-package com.github.vbsw.urlsaver.urls;
+package com.github.vbsw.urlsaver.files;
 
 
 import java.nio.file.Path;
 
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
+import com.github.vbsw.urlsaver.app.App;
+import com.github.vbsw.urlsaver.urls.UrlsData;
+
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class UrlsLoadService extends Service<UrlsData> {
+final class FileLoadSucceededListener implements EventHandler<WorkerStateEvent> {
 
-	private final Path urlsFilePath;
+	private final Path filePath;
 
-	public UrlsLoadService ( final Path urlsFilePath ) {
-		this.urlsFilePath = urlsFilePath;
+	public FileLoadSucceededListener ( final Path filePath ) {
+		this.filePath = filePath;
 	}
 
 	@Override
-	protected Task<UrlsData> createTask ( ) {
-		final Task<UrlsData> loadingTask = new UrlsLoadTask(urlsFilePath);
+	public void handle ( final WorkerStateEvent event ) {
+		final UrlsData urlsData = (UrlsData) event.getSource().getValue();
 
-		return loadingTask;
+		App.files.setUrlsData(filePath,urlsData);
 	}
 
 }

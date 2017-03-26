@@ -22,8 +22,10 @@
 package com.github.vbsw.urlsaver.scene.factories;
 
 
+import java.nio.file.Path;
+
+import com.github.vbsw.urlsaver.app.App;
 import com.github.vbsw.urlsaver.scene.handlers.FileDoubleClickHandler;
-import com.github.vbsw.urlsaver.urls.UrlsFile;
 
 import javafx.event.EventHandler;
 import javafx.scene.control.ListCell;
@@ -33,12 +35,18 @@ import javafx.scene.input.MouseEvent;
 /**
  * @author Vitali Baumtrok
  */
-public final class FilesListViewCell extends ListCell<UrlsFile> {
+public final class FilesListViewCell extends ListCell<Path> {
 
 	private static final EventHandler<MouseEvent> eventHandler = new FileDoubleClickHandler();
+	public static FilesListViewCell cell = null;
+
+	public FilesListViewCell ( ) {
+		if ( cell == null )
+			cell = this;
+	}
 
 	@Override
-	protected void updateItem ( final UrlsFile item, final boolean empty ) {
+	protected void updateItem ( final Path item, final boolean empty ) {
 		super.updateItem(item,empty);
 
 		if ( empty ) {
@@ -46,7 +54,10 @@ public final class FilesListViewCell extends ListCell<UrlsFile> {
 			setOnMouseClicked(null);
 
 		} else {
-			setText(item.getItemText());
+			final int fileDataIndex = App.files.getDataIndex(item);
+			final String listViewText = App.files.getDataLabel(fileDataIndex);
+
+			setText(listViewText);
 			setOnMouseClicked(eventHandler);
 		}
 	}

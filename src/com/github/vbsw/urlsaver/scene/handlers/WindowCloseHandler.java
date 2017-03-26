@@ -22,7 +22,7 @@
 package com.github.vbsw.urlsaver.scene.handlers;
 
 
-import com.github.vbsw.urlsaver.scene.controller.AppQuitCtrl;
+import com.github.vbsw.urlsaver.app.App;
 
 import javafx.event.EventHandler;
 import javafx.stage.WindowEvent;
@@ -36,7 +36,7 @@ public final class WindowCloseHandler implements EventHandler<WindowEvent> {
 	@Override
 	public void handle ( final WindowEvent event ) {
 		event.consume();
-		AppQuitCtrl.closeApplication();
+		App.close();
 	}
 
 }

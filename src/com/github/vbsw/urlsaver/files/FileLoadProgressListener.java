@@ -19,21 +19,33 @@
  */
 
 
-package com.github.vbsw.urlsaver.urls;
+package com.github.vbsw.urlsaver.files;
 
 
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
+import java.nio.file.Path;
+
+import com.github.vbsw.urlsaver.app.App;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 
 /**
  * @author Vitali Baumtrok
  */
-final class UrlsLoadFailedListener implements EventHandler<WorkerStateEvent> {
+public class FileLoadProgressListener implements ChangeListener<Number> {
+
+	private final Path filePath;
+
+	public FileLoadProgressListener ( final Path filePath ) {
+		this.filePath = filePath;
+	}
 
 	@Override
-	public void handle ( final WorkerStateEvent event ) {
-		event.getSource().getException().printStackTrace();
+	public void changed ( final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue ) {
+		final int percent = (int) (newValue.doubleValue() * 100);
+
+		App.files.setFileLoadProgress(filePath,percent);
 	}
 
 }
