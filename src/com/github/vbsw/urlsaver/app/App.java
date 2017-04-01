@@ -22,11 +22,12 @@
 package com.github.vbsw.urlsaver.app;
 
 
-import com.github.vbsw.urlsaver.files.Files;
-import com.github.vbsw.urlsaver.scene.Scene;
-import com.github.vbsw.urlsaver.scene.handlers.WindowCloseHandler;
-import com.github.vbsw.urlsaver.settings.Settings;
-import com.github.vbsw.urlsaver.urls.Urls;
+import com.github.vbsw.urlsaver.app.window.Window;
+import com.github.vbsw.urlsaver.app.window.about.About;
+import com.github.vbsw.urlsaver.app.window.files.Files;
+import com.github.vbsw.urlsaver.app.window.scene.Scene;
+import com.github.vbsw.urlsaver.app.window.settings.Settings;
+import com.github.vbsw.urlsaver.app.window.urls.Urls;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -42,7 +43,9 @@ public final class App extends Application {
 	public static Settings settings;
 	public static Files files;
 	public static Urls urls;
+	public static About about;
 	public static Scene scene;
+	public static Window window;
 	public static boolean urlsFileAutoSelectRequested;
 
 	public static void main ( final String[] args ) {
@@ -62,18 +65,21 @@ public final class App extends Application {
 		App.settings = new Settings();
 		App.files = new Files();
 		App.urls = new Urls();
+		App.about = new About();
 		App.scene = new Scene();
+		App.window = new Window(primaryStage);
 
+		App.window.setHotKeys(App.scene);
 		App.files.initialize();
 		App.scene.loadFXML();
 		App.scene.loadCSS();
 
-		primaryStage.setOnCloseRequest(new WindowCloseHandler());
+		primaryStage.setOnCloseRequest(event -> App.window.mv.onCloseRequest(event));
 		primaryStage.setScene(scene);
 		primaryStage.setMaximized(App.settings.isWindowMaximized());
 		primaryStage.show();
 
-		App.scene.updateWindowTitle();
+		App.window.updateTitle();
 		App.scene.setDecorationSize(primaryStage.getWidth(),primaryStage.getHeight());
 		App.files.selectDefault();
 		App.files.processAutoLoad();
