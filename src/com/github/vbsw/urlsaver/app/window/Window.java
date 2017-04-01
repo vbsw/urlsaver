@@ -25,6 +25,7 @@ package com.github.vbsw.urlsaver.app.window;
 import java.nio.file.Path;
 
 import com.github.vbsw.urlsaver.app.App;
+import com.github.vbsw.urlsaver.app.Version;
 import com.github.vbsw.urlsaver.app.window.scene.Scene;
 
 import javafx.scene.input.KeyEvent;
@@ -37,7 +38,7 @@ import javafx.stage.Stage;
 public class Window {
 
 	private final Stage stage;
-	
+
 	public final WindowModelView mv = new WindowModelView();
 
 	public Window ( final Stage primaryStage ) {
@@ -52,14 +53,14 @@ public class Window {
 			final int fileDataIndex = App.files.getDataIndex(filePath);
 
 			if ( App.files.isDirty(fileDataIndex) ) {
-				windowTitle = App.settings.getWindowTitle() + " (" + filePath.getFileName() + " *)";
+				windowTitle = App.settings.getWindowTitle() + " " + Version.STRING + " (" + filePath.getFileName() + " *)";
 
 			} else {
-				windowTitle = App.settings.getWindowTitle() + " (" + filePath.getFileName() + ")";
+				windowTitle = App.settings.getWindowTitle() + " " + Version.STRING + " (" + filePath.getFileName() + ")";
 			}
 
 		} else {
-			windowTitle = App.settings.getWindowTitle();
+			windowTitle = App.settings.getWindowTitle() + " " + Version.STRING;
 		}
 		stage.setTitle(windowTitle);
 	}

@@ -25,11 +25,11 @@ package com.github.vbsw.urlsaver.app;
 /**
  * @author Vitali Baumtrok
  */
-final class Version {
+public final class Version {
 
-	final static int MAJOR = 0;
-	final static int MINOR = 2;
-	final static int PATCH = 0;
-	final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
+	public final static int MAJOR = 0;
+	public final static int MINOR = 2;
+	public final static int PATCH = 0;
+	public final static String STRING = "" + MAJOR + "." + MINOR + "." + PATCH;
 
 }
