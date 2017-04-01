@@ -80,7 +80,7 @@ public final class App extends Application {
 		primaryStage.show();
 
 		App.window.updateTitle();
-		App.scene.setDecorationSize(primaryStage.getWidth(),primaryStage.getHeight());
+		App.window.setDecorationSize(App.scene.getWidth(),App.scene.getHeight());
 		App.files.selectDefault();
 		App.files.processAutoLoad();
 	}

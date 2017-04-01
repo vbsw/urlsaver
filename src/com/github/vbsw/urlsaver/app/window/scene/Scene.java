@@ -43,9 +43,6 @@ public final class Scene extends javafx.scene.Scene {
 	public TextAreas ta;
 	public TextFields tf;
 
-	public double decorationWidth;
-	public double decorationHeight;
-
 	public Scene ( ) {
 		super(new AnchorPane(),App.settings.getWindowWidth(),App.settings.getWindowHeight());
 	}
@@ -73,11 +70,6 @@ public final class Scene extends javafx.scene.Scene {
 
 		getStylesheets().clear();
 		getStylesheets().add(css.getUrlString());
-	}
-
-	public void setDecorationSize ( final double windowWidth, final double windowHeight ) {
-		decorationWidth = windowWidth - getWidth();
-		decorationHeight = windowHeight - getHeight();
 	}
 
 	public void fireCloseEvent ( ) {

@@ -39,6 +39,9 @@ public class Window {
 
 	private final Stage stage;
 
+	private double decorationWidth;
+	private double decorationHeight;
+
 	public final WindowModelView mv = new WindowModelView();
 
 	public Window ( final Stage primaryStage ) {
@@ -67,6 +70,16 @@ public class Window {
 
 	public void setHotKeys ( final Scene scene ) {
 		scene.addEventFilter(KeyEvent.KEY_PRESSED,event -> App.window.mv.keyPressed(event));
+	}
+
+	public void setDecorationSize ( final double sceneWidth, final double sceneHeight ) {
+		decorationWidth = stage.getWidth() - sceneWidth;
+		decorationHeight = stage.getHeight() - sceneHeight;
+	}
+
+	public void setSize ( final double sceneWidth, final double sceneHeight ) {
+		stage.setWidth(sceneWidth + decorationWidth);
+		stage.setHeight(sceneHeight + decorationHeight);
 	}
 
 }
