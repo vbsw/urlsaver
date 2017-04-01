@@ -26,6 +26,7 @@ import java.nio.file.Path;
 
 import com.github.vbsw.urlsaver.app.App;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ListCell;
@@ -39,6 +40,22 @@ import javafx.scene.input.MouseEvent;
  * @author Vitali Baumtrok
  */
 public class FilesModelView {
+
+	final SimpleBooleanProperty selectedFileDirty = new SimpleBooleanProperty();
+	final SimpleBooleanProperty confirmingSave = new SimpleBooleanProperty();
+	final SimpleBooleanProperty selected = new SimpleBooleanProperty();
+
+	public SimpleBooleanProperty selectedFileDirtyProperty ( ) {
+		return selectedFileDirty;
+	}
+
+	public SimpleBooleanProperty confirmingSaveProperty ( ) {
+		return confirmingSave;
+	}
+
+	public SimpleBooleanProperty selectedProperty ( ) {
+		return selected;
+	}
 
 	public void button_reloadFile_clicked ( final ActionEvent event ) {
 		App.files.reloadSelected();

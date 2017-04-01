@@ -31,17 +31,12 @@ import com.github.vbsw.urlsaver.app.App;
 import com.github.vbsw.urlsaver.app.window.urls.UrlsData;
 import com.github.vbsw.urlsaver.app.window.urls.UrlsViewData;
 
-import javafx.beans.property.SimpleBooleanProperty;
-
 
 /**
  * @author Vitali Baumtrok
  */
 public class Files {
 
-	private final SimpleBooleanProperty selectedFileDirty = new SimpleBooleanProperty();
-	private final SimpleBooleanProperty confirmingSave = new SimpleBooleanProperty();
-	private final SimpleBooleanProperty selected = new SimpleBooleanProperty();
 	private final FilesData data = new FilesData();
 
 	private boolean autoSelectRequested;
@@ -113,9 +108,9 @@ public class Files {
 		}
 		App.scene.tf.fileName.setText(filePathString);
 		App.urls.setData(urlsData,urlsViewData);
-		selectedFileDirty.set(dirty);
-		selected.set(fileDataIndex >= 0);
-		confirmingSave.set(false);
+		mv.selectedFileDirty.set(dirty);
+		mv.selected.set(fileDataIndex >= 0);
+		mv.confirmingSave.set(false);
 	}
 
 	public int getDataIndex ( final Path filePath ) {
@@ -167,10 +162,6 @@ public class Files {
 		data.loadServices.get(dataIndex).restart();
 	}
 
-	public void setSearchTagsString ( final Path filePath, final String newValue ) {
-		// TODO Auto-generated method stub
-	}
-
 	public UrlsData getUrlsData ( final int index ) {
 		return data.urlsData.get(index);
 	}
@@ -216,18 +207,6 @@ public class Files {
 		}
 	}
 
-	public SimpleBooleanProperty selectedFileDirtyProperty ( ) {
-		return selectedFileDirty;
-	}
-
-	public SimpleBooleanProperty confirmingSaveProperty ( ) {
-		return confirmingSave;
-	}
-
-	public SimpleBooleanProperty selectedProperty ( ) {
-		return selected;
-	}
-
 	public boolean isDirty ( final int index ) {
 		return data.dirtyFlags.get(index);
 	}
@@ -246,13 +225,13 @@ public class Files {
 		final int fileIndex = getSelectedFileIndex();
 
 		data.save(fileIndex);
-		selectedFileDirty.setValue(false);
-		confirmingSave.setValue(false);
+		mv.selectedFileDirty.setValue(false);
+		mv.confirmingSave.setValue(false);
 		App.window.updateTitle();
 	}
 
 	public void saveSelected ( ) {
-		confirmingSave.setValue(true);
+		mv.confirmingSave.setValue(true);
 	}
 
 	public void setDirty ( final int index ) {
@@ -260,7 +239,7 @@ public class Files {
 
 		if ( getSelectedFileIndex() == index ) {
 			App.window.updateTitle();
-			selectedFileDirty.setValue(true);
+			mv.selectedFileDirty.setValue(true);
 		}
 	}
 
@@ -276,7 +255,7 @@ public class Files {
 	}
 
 	public void cancel ( ) {
-		confirmingSave.setValue(false);
+		mv.confirmingSave.setValue(false);
 		App.scene.lv.files.requestFocus();
 	}
 
