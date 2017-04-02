@@ -1,10 +1,10 @@
 # URL Saver
 
 ## About
-URL Saver is a program to manage URLs by tags (i.e. keywords).
+URL Saver is a program to manage URLs by tags/keywords.
 URL Saver is published at <https://github.com/vbsw/urlsaver>.
 
-Latest version is 0.2.0.
+Latest version is 0.3.0.
 
 ## Copyright
 Copyright 2017, Vitali Baumtrok (vbsw@mailbox.org).
@@ -23,9 +23,9 @@ You should have received a copy of the GNU General Public License
 along with URL Saver.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Compiling
-Download Eclipse: <https://www.eclipse.org>
+Install [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html), [Git](https://git-scm.com) and [Eclipse](https://www.eclipse.org).
 
-Clone the repository into your Eclipse workspace
+Then clone this project into your Eclipse workspace
 
 	$ git clone https://github.com/vbsw/urlsaver.git URLSaver
 
