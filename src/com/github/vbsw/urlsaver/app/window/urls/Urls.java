@@ -119,19 +119,19 @@ public class Urls {
 
 	public void cancel ( ) {
 		resetSelectedInfo();
-		App.scene.lv.urls.requestFocus();
+
+		if ( App.scene.lv.urls.getItems().size() > 0 ) {
+			App.scene.lv.urls.requestFocus();
+
+		} else {
+			App.scene.tf.urlSearch.requestFocus();
+		}
 	}
 
 	public void updateUrlModifiedProperty ( ) {
-		final String urlSelected = App.scene.lv.urls.getSelectionModel().getSelectedItem();
 		final String urlTyped = Parser.trim(App.scene.tf.url.getText());
 
-		if ( urlSelected != null ) {
-			mv.urlModified.set(data.getUrlIndex(urlTyped) < 0);
-
-		} else {
-			mv.urlModified.set(urlTyped.length() > 0);
-		}
+		mv.urlModified.set(urlTyped.length() > 0 && data.getUrlIndex(urlTyped) < 0);
 	}
 
 	public void updateTagsModifiedProperty ( ) {
