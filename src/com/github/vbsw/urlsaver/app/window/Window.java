@@ -25,7 +25,6 @@ package com.github.vbsw.urlsaver.app.window;
 import java.nio.file.Path;
 
 import com.github.vbsw.urlsaver.app.App;
-import com.github.vbsw.urlsaver.app.Version;
 import com.github.vbsw.urlsaver.app.window.scene.Scene;
 
 import javafx.scene.input.KeyEvent;
@@ -56,14 +55,14 @@ public class Window {
 			final int fileDataIndex = App.files.getDataIndex(filePath);
 
 			if ( App.files.isDirty(fileDataIndex) ) {
-				windowTitle = App.settings.getWindowTitle() + " " + Version.STRING + " (" + filePath.getFileName() + " *)";
+				windowTitle = App.settings.getWindowTitle() + " (" + filePath.getFileName() + " *)";
 
 			} else {
-				windowTitle = App.settings.getWindowTitle() + " " + Version.STRING + " (" + filePath.getFileName() + ")";
+				windowTitle = App.settings.getWindowTitle() + " (" + filePath.getFileName() + ")";
 			}
 
 		} else {
-			windowTitle = App.settings.getWindowTitle() + " " + Version.STRING;
+			windowTitle = App.settings.getWindowTitle();
 		}
 		stage.setTitle(windowTitle);
 	}
