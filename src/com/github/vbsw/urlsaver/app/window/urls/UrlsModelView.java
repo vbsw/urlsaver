@@ -95,20 +95,60 @@ public class UrlsModelView {
 		App.urls.cancel();
 	}
 
+	public void button_urlCancel_keyPressed ( final KeyEvent event ) {
+		final KeyCode keyCode = event.getCode();
+
+		if ( keyCode == KeyCode.ENTER ) {
+			App.urls.cancel();
+		}
+	}
+
 	public void button_urlDelete_clicked ( final ActionEvent event ) {
 		App.urls.deleteSelected();
+	}
+
+	public void button_urlDelete_keyPressed ( final KeyEvent event ) {
+		final KeyCode keyCode = event.getCode();
+
+		if ( keyCode == KeyCode.ENTER ) {
+			App.urls.deleteSelected();
+		}
 	}
 
 	public void button_urlDeleteOK_clicked ( final ActionEvent event ) {
 		App.urls.confirmDelete();
 	}
 
+	public void button_urlDeleteOK_keyPressed ( final KeyEvent event ) {
+		final KeyCode keyCode = event.getCode();
+
+		if ( keyCode == KeyCode.ENTER ) {
+			App.urls.confirmDelete();
+		}
+	}
+
 	public void button_urlCreateOK_clicked ( final ActionEvent event ) {
 		App.urls.confirmCreate();
 	}
 
+	public void button_urlCreateOK_keyPressed ( final KeyEvent event ) {
+		final KeyCode keyCode = event.getCode();
+
+		if ( keyCode == KeyCode.ENTER ) {
+			App.urls.confirmCreate();
+		}
+	}
+
 	public void button_urlEditOK_clicked ( final ActionEvent event ) {
 		App.urls.confirmEdit();
+	}
+
+	public void button_urlEditOK_keyPressed ( final KeyEvent event ) {
+		final KeyCode keyCode = event.getCode();
+
+		if ( keyCode == KeyCode.ENTER ) {
+			App.urls.confirmEdit();
+		}
 	}
 
 	public void textField_urlSearch_enterPressed ( final ActionEvent event ) {
@@ -138,6 +178,9 @@ public class UrlsModelView {
 			if ( selectedUrl != null ) {
 				WebBrowser.openURL(selectedUrl);
 			}
+
+		} else if ( keyCode == KeyCode.DELETE ) {
+			App.urls.deleteSelected();
 		}
 	}
 

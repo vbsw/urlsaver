@@ -115,14 +115,19 @@ public final class Buttons {
 		urlSearch.setOnKeyPressed(event -> App.urls.mv.button_urlSearch_keyPressed(event));
 		urlCancel.disableProperty().bind(createUrlCancelDisableBinding());
 		urlCancel.setOnAction(event -> App.urls.mv.button_urlCancel_clicked(event));
+		urlCancel.setOnKeyPressed(event -> App.urls.mv.button_urlCancel_keyPressed(event));
 		urlDelete.disableProperty().bind(createUrlDeleteDisableBinding());
 		urlDelete.setOnAction(event -> App.urls.mv.button_urlDelete_clicked(event));
+		urlDelete.setOnKeyPressed(event -> App.urls.mv.button_urlDelete_keyPressed(event));
 		urlDeleteOK.disableProperty().bind(Bindings.not(App.urls.mv.deleteRequestedProperty()));
 		urlDeleteOK.setOnAction(event -> App.urls.mv.button_urlDeleteOK_clicked(event));
+		urlDeleteOK.setOnKeyPressed(event -> App.urls.mv.button_urlDeleteOK_keyPressed(event));
 		urlCreateOK.disableProperty().bind(Bindings.not(App.urls.mv.urlModifiedProperty()));
 		urlCreateOK.setOnAction(event -> App.urls.mv.button_urlCreateOK_clicked(event));
+		urlCreateOK.setOnKeyPressed(event -> App.urls.mv.button_urlCreateOK_keyPressed(event));
 		urlEditOK.disableProperty().bind(createEditOKDisableBinding());
 		urlEditOK.setOnAction(event -> App.urls.mv.button_urlEditOK_clicked(event));
+		urlEditOK.setOnKeyPressed(event -> App.urls.mv.button_urlEditOK_keyPressed(event));
 	}
 
 	private ObservableValue<? extends Boolean> createUrlCancelDisableBinding ( ) {

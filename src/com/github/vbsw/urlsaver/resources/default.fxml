@@ -80,14 +80,14 @@
                   <HBox prefHeight="16.0" prefWidth="720.0" spacing="5.0">
                      <children>
                         <Button fx:id="quit_app_btn" mnemonicParsing="false" text="Quit Application" />
-                        <Button fx:id="quit_app_save_btn" disable="true" mnemonicParsing="false" text="Save and Quit" />
-                        <Button fx:id="quit_app_ok_btn" disable="true" mnemonicParsing="false" text="Don't Save, Just Quit" />
+                        <Button fx:id="quit_app_save_btn" disable="true" mnemonicParsing="false" text="Save and Quit, OK" />
+                        <Button fx:id="quit_app_ok_btn" disable="true" mnemonicParsing="false" text="Quit, OK" />
                      </children>
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                   </HBox>
-                  <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" text="URL Saver is a tool to manage URLs by tags (i.e. by keywords).&#10;URL Saver is published at &lt;https://github.com/vbsw/urlsaver&gt;.&#10;&#10;Copyright 2017 Vitali Baumtrok (vbsw@mailbox.org).&#10;&#10;URL Saver is free software: you can redistribute it and/or modify&#10;it under the terms of the GNU General Public License as published by&#10;the Free Software Foundation, either version 3 of the License, or&#10;(at your option) any later version.&#10;&#10;URL Saver is distributed in the hope that it will be useful,&#10;but WITHOUT ANY WARRANTY; without even the implied warranty of&#10;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#10;GNU General Public License for more details.&#10;&#10;You should have received a copy of the GNU General Public License&#10;along with URL Saver.  If not, see &lt;http://www.gnu.org/licenses/&gt;." VBox.vgrow="ALWAYS" />
+                  <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" text="URL Saver is a tool to manage URLs by tags (i.e. by keywords).&#10;URL Saver is published at &lt;https://github.com/vbsw/urlsaver&gt;.&#10;&#10;Copyright 2017, Vitali Baumtrok (vbsw@mailbox.org).&#10;&#10;URL Saver is free software: you can redistribute it and/or modify&#10;it under the terms of the GNU General Public License as published by&#10;the Free Software Foundation, either version 3 of the License, or&#10;(at your option) any later version.&#10;&#10;URL Saver is distributed in the hope that it will be useful,&#10;but WITHOUT ANY WARRANTY; without even the implied warranty of&#10;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#10;GNU General Public License for more details.&#10;&#10;You should have received a copy of the GNU General Public License&#10;along with URL Saver.  If not, see &lt;http://www.gnu.org/licenses/&gt;." VBox.vgrow="ALWAYS" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
