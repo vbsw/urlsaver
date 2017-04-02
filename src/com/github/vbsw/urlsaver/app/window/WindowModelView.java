@@ -88,7 +88,7 @@ public class WindowModelView {
 	}
 
 	public void topTab_selected ( final ObservableValue<? extends Tab> observable, final Tab oldValue, final Tab newValue ) {
-		App.topTabSelected(newValue);
+		App.window.topTabSelected(newValue);
 	}
 
 }

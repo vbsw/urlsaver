@@ -188,8 +188,30 @@ public class UrlsModelView {
 		App.urls.updateUrlModifiedProperty();
 	}
 
-	public void listView_itemSelected ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
+	public void listViewItem_selected ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		App.urls.resetSelectedInfo();
+	}
+
+	public void textField_urlSearch_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
+		final UrlsViewData urlsViewData = App.urls.getViewData();
+
+		if ( newValue != null ) {
+			urlsViewData.searchTagsString = newValue;
+
+		} else {
+			urlsViewData.searchTagsString = "";
+		}
+	}
+
+	public void topTab_urls_selected ( final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue ) {
+		if ( newValue ) {
+			if ( App.scene.lv.urls.getItems().isEmpty() == false ) {
+				App.scene.lv.urls.requestFocus();
+
+			} else {
+				App.scene.tf.urlSearch.requestFocus();
+			}
+		}
 	}
 
 	private static final class UrlListCell extends ListCell<String> {
@@ -208,28 +230,6 @@ public class UrlsModelView {
 			}
 		}
 
-	}
-
-	public void textField_urlSearch_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
-		final UrlsViewData urlsViewData = App.urls.getViewData();
-
-		if ( newValue != null ) {
-			urlsViewData.searchTagsString = newValue;
-
-		} else {
-			urlsViewData.searchTagsString = "";
-		}
-	}
-
-	public void listViewItem_selected ( final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue ) {
-		if ( newValue ) {
-			if ( App.scene.lv.urls.getItems().isEmpty() == false ) {
-				App.scene.lv.urls.requestFocus();
-
-			} else {
-				App.scene.tf.urlSearch.requestFocus();
-			}
-		}
 	}
 
 }

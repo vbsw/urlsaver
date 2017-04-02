@@ -87,10 +87,13 @@ public final class Buttons {
 	}
 
 	void configure ( ) {
+		quitApp.disableProperty().bind(App.about.mv.confirmQuitAppProperty());
 		quitApp.setOnAction(event -> App.about.mv.button_quitApp_clicked(event));
 		quitApp.setOnKeyPressed(event -> App.about.mv.button_quitApp_keyPressed(event));
+		quitAppSave.disableProperty().bind(Bindings.not(App.about.mv.confirmQuitAppProperty()));
 		quitAppSave.setOnAction(event -> App.about.mv.button_quitAppSave_clicked(event));
 		quitAppSave.setOnKeyPressed(event -> App.about.mv.button_quitAppSave_keyPressed(event));
+		quitAppOK.disableProperty().bind(Bindings.not(App.about.mv.confirmQuitAppProperty()));
 		quitAppOK.setOnAction(event -> App.about.mv.button_quitAppOK_clicked(event));
 		quitAppOK.setOnKeyPressed(event -> App.about.mv.button_quitAppOK_keyPressed(event));
 		reloadFile.disableProperty().bind(Bindings.or(Bindings.not(App.files.mv.selectedProperty()),App.files.mv.confirmingSaveProperty()));

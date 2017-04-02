@@ -21,16 +21,25 @@
 
 package com.github.vbsw.urlsaver.app.window.about;
 
+
 import com.github.vbsw.urlsaver.app.App;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+
 
 /**
  * @author Vitali Baumtrok
  */
 public class AboutModelView {
+
+	final SimpleBooleanProperty confirmQuitApp = new SimpleBooleanProperty();
+
+	public SimpleBooleanProperty confirmQuitAppProperty ( ) {
+		return confirmQuitApp;
+	}
 
 	public void button_quitApp_clicked ( final ActionEvent event ) {
 		App.close();

@@ -62,7 +62,7 @@ public final class ListViews {
 		files.setCellFactory( ( ListView<Path> param ) -> App.files.mv.cellFactory(param));
 		files.getSelectionModel().selectedItemProperty().addListener( ( ObservableValue<? extends Path> observable, Path oldValue, Path newValue ) -> App.files.mv.listViewItem_selected(observable,oldValue,newValue));
 		files.setOnKeyPressed(event -> App.files.mv.listView_keyPressed(event));
-		urls.getSelectionModel().selectedItemProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> App.urls.mv.listView_itemSelected(observable,oldValue,newValue));
+		urls.getSelectionModel().selectedItemProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> App.urls.mv.listViewItem_selected(observable,oldValue,newValue));
 		urls.setCellFactory( ( ListView<String> param ) -> App.urls.mv.cellFactory(param));
 		urls.setOnKeyPressed(event -> App.urls.mv.listView_keyPressed(event));
 	}

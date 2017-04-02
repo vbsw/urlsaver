@@ -27,6 +27,7 @@ import java.nio.file.Path;
 import com.github.vbsw.urlsaver.app.App;
 import com.github.vbsw.urlsaver.app.window.scene.Scene;
 
+import javafx.scene.control.Tab;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
@@ -79,6 +80,12 @@ public class Window {
 	public void setSize ( final double sceneWidth, final double sceneHeight ) {
 		stage.setWidth(sceneWidth + decorationWidth);
 		stage.setHeight(sceneHeight + decorationHeight);
+	}
+
+	public void topTabSelected ( final Tab tab ) {
+		if ( tab != App.scene.topTab.about ) {
+			App.about.setConfirmQuitAppProperty(false);
+		}
 	}
 
 }

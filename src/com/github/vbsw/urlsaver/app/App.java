@@ -31,7 +31,6 @@ import com.github.vbsw.urlsaver.app.window.urls.Urls;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.scene.control.Tab;
 import javafx.stage.Stage;
 
 
@@ -89,15 +88,10 @@ public final class App extends Application {
 		if ( App.files.isAnyDirty() ) {
 			if ( App.scene.tp.top.getSelectionModel().getSelectedItem() != App.scene.topTab.about ) {
 				App.scene.tp.top.getSelectionModel().select(App.scene.topTab.about);
-				App.scene.btn.quitApp.setDisable(true);
-				App.scene.btn.quitAppSave.setDisable(false);
-				App.scene.btn.quitAppOK.setDisable(false);
-				App.scene.btn.quitAppSave.requestFocus();
+			}
 
-			} else if ( App.scene.btn.quitApp.isDisable() == false ) {
-				App.scene.btn.quitApp.setDisable(false);
-				App.scene.btn.quitAppSave.setDisable(true);
-				App.scene.btn.quitAppOK.setDisable(true);
+			if ( App.about.mv.confirmQuitAppProperty().get() == false ) {
+				App.about.setConfirmQuitAppProperty(true);
 				App.scene.btn.quitAppSave.requestFocus();
 			}
 
@@ -108,14 +102,6 @@ public final class App extends Application {
 
 	public static void exit ( ) {
 		Platform.exit();
-	}
-
-	public static void topTabSelected ( final Tab tab ) {
-		if ( tab != App.scene.topTab.about ) {
-			App.scene.btn.quitApp.setDisable(false);
-			App.scene.btn.quitAppSave.setDisable(true);
-			App.scene.btn.quitAppOK.setDisable(true);
-		}
 	}
 
 }

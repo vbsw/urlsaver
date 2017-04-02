@@ -29,4 +29,8 @@ public class About {
 
 	public final AboutModelView mv = new AboutModelView();
 
+	public void setConfirmQuitAppProperty ( final boolean enable ) {
+		mv.confirmQuitApp.set(enable);
+	}
+
 }
