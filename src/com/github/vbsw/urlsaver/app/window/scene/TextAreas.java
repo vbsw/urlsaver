@@ -22,6 +22,9 @@
 package com.github.vbsw.urlsaver.app.window.scene;
 
 
+import com.github.vbsw.urlsaver.app.App;
+
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
 import javafx.scene.control.TextArea;
 
@@ -40,7 +43,7 @@ public final class TextAreas {
 	}
 
 	public void configure ( ) {
-		tags.textProperty().addListener(new TagsChangeListener());
+		tags.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> App.urls.mv.textField_tags_changed(observable,oldValue,newValue));
 	}
 
 }

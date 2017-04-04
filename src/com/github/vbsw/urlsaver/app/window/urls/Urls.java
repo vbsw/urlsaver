@@ -179,15 +179,16 @@ public class Urls {
 		final ArrayList<String> urlTags = data.urlTagsList.get(urlIndex);
 		final String tagsString = Convert.toString(urlTags);
 
-		App.scene.ta.tags.setText(tagsString);
-		App.scene.lv.urls.requestFocus();
 		mv.urlModified.set(false);
 		mv.tagsModified.set(false);
+		App.scene.ta.tags.setText(tagsString);
+		App.scene.lv.urls.requestFocus();
 	}
 
 	public void confirmEdit ( ) {
+		final String url = Parser.trim(App.scene.tf.url.getText());
 		final int fileIndex = App.files.getSelectedFileIndex();
-		final int urlIndex = data.getUrlIndex(App.scene.lv.getSelectedUrl());
+		final int urlIndex = data.getUrlIndex(url);
 
 		tagsTmp.setStrings(App.scene.ta.tags.getText());
 		data.setTagsOfUrl(urlIndex,tagsTmp);

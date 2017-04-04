@@ -188,6 +188,10 @@ public class UrlsModelView {
 		App.urls.updateUrlModifiedProperty();
 	}
 
+	public void textField_tags_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
+		App.urls.updateTagsModifiedProperty();
+	}
+
 	public void listViewItem_selected ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		App.urls.resetSelectedInfo();
 	}
