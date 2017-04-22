@@ -104,14 +104,14 @@ public class UrlsModelView {
 	}
 
 	public void button_urlDelete_clicked ( final ActionEvent event ) {
-		App.urls.deleteSelected();
+		App.urls.updateDeleteRequestedProperty(true);
 	}
 
 	public void button_urlDelete_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 
 		if ( keyCode == KeyCode.ENTER ) {
-			App.urls.deleteSelected();
+			App.urls.updateDeleteRequestedProperty(true);
 		}
 	}
 
@@ -180,20 +180,22 @@ public class UrlsModelView {
 			}
 
 		} else if ( keyCode == KeyCode.DELETE ) {
-			App.urls.deleteSelected();
+			App.urls.updateDeleteRequestedProperty(true);
 		}
 	}
 
 	public void textField_url_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		App.urls.updateUrlModifiedProperty();
+		App.urls.updateDeleteRequestedProperty(false);
 	}
 
 	public void textField_tags_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		App.urls.updateTagsModifiedProperty();
+		App.urls.updateDeleteRequestedProperty(false);
 	}
 
 	public void listViewItem_selected ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
-		App.urls.resetSelectedInfo();
+		App.urls.updateSelectedInfo();
 	}
 
 	public void textField_urlSearch_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {

@@ -41,9 +41,16 @@
          <content>
             <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
                <children>
+                  <HBox prefHeight="15.0" prefWidth="710.0" spacing="5.0">
+                     <children>
+                        <TextField fx:id="url_search_tf" promptText="search" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" text="Clear" />
+                        <Button fx:id="url_search_btn" mnemonicParsing="false" text="Search" />
+                     </children>
+                  </HBox>
+                  <ListView fx:id="url_list_view" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                   <HBox prefHeight="6.0" prefWidth="710.0" spacing="5.0">
                      <children>
-                        <Button fx:id="url_search_btn" mnemonicParsing="false" text="Search" />
                         <Button fx:id="open_in_browser_btn" disable="true" mnemonicParsing="false" text="Open in Browser" />
                         <AnchorPane HBox.hgrow="ALWAYS" />
                         <Button fx:id="url_cancel_btn" alignment="CENTER_RIGHT" disable="true" mnemonicParsing="false" text="Cancel" />
@@ -56,8 +63,6 @@
                         <Insets />
                      </VBox.margin>
                   </HBox>
-                  <TextField fx:id="url_search_tf" promptText="search" />
-                  <ListView fx:id="url_list_view" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                   <TextField fx:id="url_tf" promptText="url" />
                   <TextArea fx:id="tags_ta" prefHeight="50.0" prefWidth="200.0" promptText="tags" wrapText="true" />
                </children>
@@ -78,43 +83,45 @@
          <content>
             <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
                <children>
-                  <HBox prefHeight="16.0" prefWidth="720.0" spacing="5.0">
+                  <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                      <children>
-                        <Button fx:id="quit_app_btn" mnemonicParsing="false" text="Quit Application" />
-                        <Button fx:id="quit_app_save_btn" disable="true" mnemonicParsing="false" text="Save and Quit, OK" />
-                        <Button fx:id="quit_app_ok_btn" disable="true" mnemonicParsing="false" text="Quit, OK" />
-                     </children>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </HBox>
-                  <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="326.0" prefWidth="478.0">
-                     <children>
-                        <Label prefHeight="17.0" prefWidth="530.0" text="  " />
-                        <Label alignment="CENTER" prefHeight="20.0" prefWidth="589.0" text="URL Saver">
+                        <Label maxWidth="1.7976931348623157E308" text="  " />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="URL Saver">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="547.0" text="Version 0.2.0" />
-                        <Label prefHeight="17.0" prefWidth="530.0" text="  " />
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="547.0" text="It's a tool to manage URLs by tags/keywords." />
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="547.0" text="Source code is on &lt;https://github.com/vbsw/urlsaver&gt;." />
-                        <Label prefHeight="17.0" prefWidth="529.0" text="  " />
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="546.0" text="Copyright 2017, Vitali Baumtrok (vbsw@mailbox.org)." />
-                        <Label prefHeight="17.0" prefWidth="518.0" text="  " />
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="510.0" text="URL Saver is free software: you can redistribute it and/or modify" />
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="527.0" text="it under the terms of the GNU General Public License as published by" />
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="504.0" text="the Free Software Foundation, either version 3 of the License, or" />
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="524.0" text="(at your option) any later version." />
-                        <Label prefHeight="17.0" prefWidth="526.0" text="  " />
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="521.0" text="URL Saver is distributed in the hope that it will be useful," />
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="513.0" text="but WITHOUT ANY WARRANTY; without even the implied warranty of" />
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="517.0" text="MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the" />
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="500.0" text="GNU General Public License for more details." />
-                        <Label prefHeight="17.0" prefWidth="543.0" text="  " />
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="527.0" text="You should have received a copy of the GNU General Public License" />
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="520.0" text="along with URL Saver.  If not, see &lt;http://www.gnu.org/licenses/&gt;." />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Version 0.2.0" />
+                        <Label maxWidth="1.7976931348623157E308" text="  " />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="It's a tool to manage URLs by tags/keywords." />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Source code is on &lt;https://github.com/vbsw/urlsaver&gt;." />
+                        <Label maxWidth="1.7976931348623157E308" text="  " />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Copyright 2017, Vitali Baumtrok (vbsw@mailbox.org)." />
+                        <Label maxWidth="1.7976931348623157E308" text="  " />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="URL Saver is free software: you can redistribute it and/or modify" />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="it under the terms of the GNU General Public License as published by" />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="the Free Software Foundation, either version 3 of the License, or" />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="17.0" text="(at your option) any later version." />
+                        <Label maxWidth="1.7976931348623157E308" text="  " />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="URL Saver is distributed in the hope that it will be useful," />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="but WITHOUT ANY WARRANTY; without even the implied warranty of" />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the" />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="GNU General Public License for more details." />
+                        <Label maxWidth="1.7976931348623157E308" text="  " />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="You should have received a copy of the GNU General Public License" />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="along with URL Saver.  If not, see &lt;http://www.gnu.org/licenses/&gt;." />
+                        <Label maxWidth="1.7976931348623157E308" text="  " />
+                        <Label maxWidth="1.7976931348623157E308" text="  " />
+                        <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="5.0">
+                           <children>
+                              <Button fx:id="quit_app_btn" mnemonicParsing="false" text="Quit Application" />
+                              <Button fx:id="quit_app_save_btn" disable="true" mnemonicParsing="false" text="Save and Quit, OK" />
+                              <Button fx:id="quit_app_ok_btn" disable="true" mnemonicParsing="false" text="Quit, OK" />
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </HBox>
                      </children>
                   </VBox>
                </children>

@@ -76,7 +76,7 @@ public class Urls {
 			App.scene.lv.urls.requestFocus();
 			App.scene.lv.urls.getSelectionModel().select(0);
 		}
-		App.urls.resetSelectedInfo();
+		App.urls.updateSelectedInfo();
 	}
 
 	public UrlsData getData ( ) {
@@ -87,7 +87,7 @@ public class Urls {
 		return viewData;
 	}
 
-	public void resetSelectedInfo ( ) {
+	public void updateSelectedInfo ( ) {
 		final String selectedUrl = App.scene.lv.urls.getSelectionModel().getSelectedItem();
 
 		if ( selectedUrl != null ) {
@@ -112,13 +112,24 @@ public class Urls {
 		mv.deleteRequested.set(false);
 	}
 
-	public void deleteSelected ( ) {
-		mv.deleteRequested.set(true);
-		App.scene.btn.urlCancel.requestFocus();
+	public void updateDeleteRequestedProperty ( final boolean requested ) {
+		final String url = Parser.trim(App.scene.tf.url.getText());
+		final boolean urlExists = data.getUrlIndex(url) >= 0;
+		final boolean deleteRequestValid = !mv.urlModified.get() && !mv.tagsModified.get() && urlExists;
+
+		if ( deleteRequestValid ) {
+			if ( requested ) {
+				mv.deleteRequested.set(true);
+				App.scene.btn.urlCancel.requestFocus();
+			}
+
+		} else {
+			mv.deleteRequested.set(false);
+		}
 	}
 
 	public void cancel ( ) {
-		resetSelectedInfo();
+		updateSelectedInfo();
 
 		if ( App.scene.lv.urls.getItems().size() > 0 ) {
 			App.scene.lv.urls.requestFocus();
@@ -130,23 +141,30 @@ public class Urls {
 
 	public void updateUrlModifiedProperty ( ) {
 		final String urlTyped = Parser.trim(App.scene.tf.url.getText());
+		final boolean urlModified = urlTyped.length() > 0 && data.getUrlIndex(urlTyped) < 0;
 
-		mv.urlModified.set(urlTyped.length() > 0 && data.getUrlIndex(urlTyped) < 0);
+		mv.urlModified.set(urlModified);
 	}
 
 	public void updateTagsModifiedProperty ( ) {
-		final String urlSelected = App.scene.lv.urls.getSelectionModel().getSelectedItem();
+		final String urlSelected = Parser.trim(App.scene.tf.url.getText());
 		final String tagsTyped = Parser.trim(App.scene.ta.tags.getText());
 
 		if ( urlSelected != null ) {
 			final int urlIndex = data.getUrlIndex(urlSelected);
-			final SortedUniqueStringList tagsSelected = data.urlTagsList.get(urlIndex);
 
-			tagsTmp.setStrings(tagsTyped);
-			mv.tagsModified.setValue(tagsTmp.isEqualByStrings(tagsSelected) == false);
+			if ( urlIndex >= 0 ) {
+				final SortedUniqueStringList tagsSelected = data.urlTagsList.get(urlIndex);
+
+				tagsTmp.setStrings(tagsTyped);
+				mv.tagsModified.setValue(tagsTmp.isEqualByStrings(tagsSelected) == false);
+
+			} else {
+				mv.tagsModified.setValue(false);
+			}
 
 		} else {
-			mv.tagsModified.setValue(tagsTyped.length() > 0);
+			mv.tagsModified.setValue(false);
 		}
 	}
 
@@ -197,9 +215,9 @@ public class Urls {
 		final ArrayList<String> urlTags = data.urlTagsList.get(urlIndex);
 		final String tagsString = Convert.toString(urlTags);
 
+		mv.tagsModified.set(false);
 		App.scene.ta.tags.setText(tagsString);
 		App.scene.lv.urls.requestFocus();
-		mv.tagsModified.set(false);
 	}
 
 	public void confirmAny ( ) {
