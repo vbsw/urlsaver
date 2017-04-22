@@ -44,7 +44,6 @@
                   <HBox prefHeight="15.0" prefWidth="710.0" spacing="5.0">
                      <children>
                         <TextField fx:id="url_search_tf" promptText="search" HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" text="Clear" />
                         <Button fx:id="url_search_btn" mnemonicParsing="false" text="Search" />
                      </children>
                   </HBox>

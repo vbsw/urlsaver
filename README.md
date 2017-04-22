@@ -25,7 +25,7 @@ along with URL Saver.  If not, see <http://www.gnu.org/licenses/>.
 ## Compiling
 Install [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html), [Git](https://git-scm.com) and [Eclipse](https://www.eclipse.org).
 
-Then clone this project into your Eclipse workspace
+Clone this project into your Eclipse workspace
 
 	$ git clone https://github.com/vbsw/urlsaver.git URLSaver
 
