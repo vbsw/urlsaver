@@ -111,7 +111,7 @@ public final class Buttons {
 		fileSaveOK.disableProperty().bind(Bindings.not(App.files.mv.confirmingSaveProperty()));
 		fileSaveOK.setOnAction(event -> App.files.mv.button_fileSaveOK_clicked(event));
 		fileSaveOK.setOnKeyPressed(event -> App.files.mv.button_fileSaveOK_keyPressed(event));
-		openInBrowser.disableProperty().bind(Bindings.not(App.urls.mv.selectedProperty()));
+		openInBrowser.disableProperty().bind(Bindings.not(App.urls.mv.existsProperty()));
 		openInBrowser.setOnAction(event -> App.urls.mv.button_openInBrowser_clicked(event));
 		openInBrowser.setOnKeyPressed(event -> App.urls.mv.button_openInBrowser_keyPressed(event));
 		urlSearch.setOnAction(event -> App.urls.mv.button_urlSearch_clicked(event));
@@ -146,7 +146,7 @@ public final class Buttons {
 	private ObservableValue<? extends Boolean> getUrlDeleteDisableBinding ( ) {
 		BooleanBinding binding;
 
-		binding = Bindings.not(App.urls.mv.selectedProperty());
+		binding = Bindings.not(App.urls.mv.existsProperty());
 		binding = Bindings.or(binding,App.urls.mv.deleteRequestedProperty());
 		binding = Bindings.or(binding,App.urls.mv.urlModifiedProperty());
 		binding = Bindings.or(binding,App.urls.mv.tagsModifiedProperty());

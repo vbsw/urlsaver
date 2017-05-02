@@ -90,7 +90,7 @@
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Version 0.2.0" />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Version 0.2.1" />
                         <Label maxWidth="1.7976931348623157E308" text="  " />
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="It's a tool to manage URLs by tags/keywords." />
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Source code is on &lt;https://github.com/vbsw/urlsaver&gt;." />

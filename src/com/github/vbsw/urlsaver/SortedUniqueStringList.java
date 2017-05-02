@@ -33,10 +33,8 @@ import java.util.Collections;
 @SuppressWarnings ( "serial" )
 public class SortedUniqueStringList extends ArrayList<String> {
 
-	public void setStrings ( final String strings ) {
+	public void addStringsSeparatedByWhiteSpace ( final String strings ) {
 		int offset = Parser.skipWhiteSpace(strings,0);
-
-		this.clear();
 
 		while ( offset < strings.length() ) {
 			final int endIndex = Parser.skipNonWhiteSpace(strings,offset);

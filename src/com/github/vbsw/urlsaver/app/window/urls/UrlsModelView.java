@@ -41,82 +41,96 @@ import javafx.scene.input.MouseEvent;
  */
 public class UrlsModelView {
 
-	final SimpleBooleanProperty available = new SimpleBooleanProperty();
-	final SimpleBooleanProperty selected = new SimpleBooleanProperty();
-	final SimpleBooleanProperty deleteRequested = new SimpleBooleanProperty();
-	final SimpleBooleanProperty urlModified = new SimpleBooleanProperty();
-	final SimpleBooleanProperty tagsModified = new SimpleBooleanProperty();
+	private final UrlsProperties properties = new UrlsProperties();
 
 	public SimpleBooleanProperty availableProperty ( ) {
-		return available;
+		return properties.available;
 	}
 
-	public SimpleBooleanProperty selectedProperty ( ) {
-		return selected;
+	public SimpleBooleanProperty existsProperty ( ) {
+		return properties.exists;
 	}
 
 	public ObservableBooleanValue deleteRequestedProperty ( ) {
-		return deleteRequested;
+		return properties.deleteRequested;
 	}
 
 	public ObservableBooleanValue urlModifiedProperty ( ) {
-		return urlModified;
+		return properties.urlModified;
 	}
 
 	public ObservableBooleanValue tagsModifiedProperty ( ) {
-		return tagsModified;
+		return properties.tagsModified;
 	}
 
 	public void button_openInBrowser_clicked ( final ActionEvent event ) {
-		WebBrowser.openSelectedUrl();
+		WebBrowser.openTypedUrl();
 	}
 
 	public void button_openInBrowser_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 
 		if ( keyCode == KeyCode.ENTER ) {
-			WebBrowser.openSelectedUrl();
+			WebBrowser.openTypedUrl();
 		}
 	}
 
+	public void initProperties ( final boolean urlsLoaded ) {
+		properties.init(urlsLoaded);
+	}
+
 	public void button_urlSearch_clicked ( final ActionEvent event ) {
-		App.urls.search();
+		App.urls.updateSearchResult();
+		App.urls.updateSearchResultListView();
+		App.urls.setSelectedAsInfoView();
+		properties.button_urlSearch_clicked();
 	}
 
 	public void button_urlSearch_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 
 		if ( keyCode == KeyCode.ENTER ) {
-			App.urls.search();
+			App.urls.updateSearchResult();
+			App.urls.updateSearchResultListView();
+			App.urls.setSelectedAsInfoView();
+			properties.button_urlSearch_clicked();
 		}
 	}
 
 	public void button_urlCancel_clicked ( final ActionEvent event ) {
-		App.urls.cancel();
+		App.urls.setSelectedAsInfoView();
+		App.urls.focusUrlsListOrSearchView();
+		properties.button_urlCancel_clicked();
 	}
 
 	public void button_urlCancel_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 
 		if ( keyCode == KeyCode.ENTER ) {
-			App.urls.cancel();
+			App.urls.setSelectedAsInfoView();
+			App.urls.focusUrlsListOrSearchView();
+			properties.button_urlCancel_clicked();
 		}
 	}
 
 	public void button_urlDelete_clicked ( final ActionEvent event ) {
-		App.urls.updateDeleteRequestedProperty(true);
+		properties.button_urlDelete_clicked();
+		App.urls.focusUrlCancel();
 	}
 
 	public void button_urlDelete_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 
 		if ( keyCode == KeyCode.ENTER ) {
-			App.urls.updateDeleteRequestedProperty(true);
+			properties.button_urlDelete_clicked();
+			App.urls.focusUrlCancel();
 		}
 	}
 
 	public void button_urlDeleteOK_clicked ( final ActionEvent event ) {
 		App.urls.confirmDelete();
+		App.urls.setSelectedAsInfoView();
+		properties.button_urlDeleteOK_clicked();
 	}
 
 	public void button_urlDeleteOK_keyPressed ( final KeyEvent event ) {
@@ -124,11 +138,14 @@ public class UrlsModelView {
 
 		if ( keyCode == KeyCode.ENTER ) {
 			App.urls.confirmDelete();
+			App.urls.setSelectedAsInfoView();
+			properties.button_urlDeleteOK_clicked();
 		}
 	}
 
 	public void button_urlCreateOK_clicked ( final ActionEvent event ) {
 		App.urls.confirmCreate();
+		properties.button_urlCreateOK_clicked();
 	}
 
 	public void button_urlCreateOK_keyPressed ( final KeyEvent event ) {
@@ -136,11 +153,13 @@ public class UrlsModelView {
 
 		if ( keyCode == KeyCode.ENTER ) {
 			App.urls.confirmCreate();
+			properties.button_urlCreateOK_clicked();
 		}
 	}
 
 	public void button_urlEditOK_clicked ( final ActionEvent event ) {
 		App.urls.confirmEdit();
+		properties.button_urlEditOK_clicked();
 	}
 
 	public void button_urlEditOK_keyPressed ( final KeyEvent event ) {
@@ -148,11 +167,15 @@ public class UrlsModelView {
 
 		if ( keyCode == KeyCode.ENTER ) {
 			App.urls.confirmEdit();
+			properties.button_urlEditOK_clicked();
 		}
 	}
 
 	public void textField_urlSearch_enterPressed ( final ActionEvent event ) {
-		App.urls.search();
+		App.urls.updateSearchResult();
+		App.urls.updateSearchResultListView();
+		App.urls.setSelectedAsInfoView();
+		properties.button_urlSearch_clicked();
 	}
 
 	public ListCell<String> cellFactory ( final ListView<String> param ) {
@@ -180,22 +203,22 @@ public class UrlsModelView {
 			}
 
 		} else if ( keyCode == KeyCode.DELETE ) {
-			App.urls.updateDeleteRequestedProperty(true);
+			properties.button_urlDelete_clicked();
+			App.urls.focusUrlCancel();
 		}
 	}
 
 	public void textField_url_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
-		App.urls.updateUrlModifiedProperty();
-		App.urls.updateDeleteRequestedProperty(false);
+		properties.textField_url_changed();
 	}
 
 	public void textField_tags_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
-		App.urls.updateTagsModifiedProperty();
-		App.urls.updateDeleteRequestedProperty(false);
+		properties.textField_tags_changed();
 	}
 
 	public void listViewItem_selected ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
-		App.urls.updateSelectedInfo();
+		App.urls.setSelectedAsInfoView();
+		properties.listViewItem_selected();
 	}
 
 	public void textField_urlSearch_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
@@ -236,6 +259,10 @@ public class UrlsModelView {
 			}
 		}
 
+	}
+
+	public void allConfirmed ( ) {
+		properties.allConfirmed();
 	}
 
 }

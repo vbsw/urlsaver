@@ -39,7 +39,8 @@ public final class UrlsSearchResult extends SortedUniqueStringList {
 
 	public void fillByPrefix ( final UrlsData urlsData, final String tagsString ) {
 		super.clear();
-		tags.setStrings(tagsString);
+		tags.clear();
+		tags.addStringsSeparatedByWhiteSpace(tagsString);
 
 		if ( tags.size() > 0 ) {
 			final String firstTag = tags.get(0);
@@ -89,7 +90,8 @@ public final class UrlsSearchResult extends SortedUniqueStringList {
 
 	public void fillByWord ( final UrlsData urlsData, final String tagsString ) {
 		super.clear();
-		tags.setStrings(tagsString);
+		tags.clear();
+		tags.addStringsSeparatedByWhiteSpace(tagsString);
 
 		if ( tags.size() > 0 ) {
 			final String firstTag = tags.get(0);

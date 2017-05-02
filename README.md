@@ -4,7 +4,7 @@
 URL Saver is a program to manage URLs by tags/keywords.
 URL Saver is published at <https://github.com/vbsw/urlsaver>.
 
-Latest version is 0.2.0.
+Current version is 0.2.1.
 
 ## Copyright
 Copyright 2017, Vitali Baumtrok (vbsw@mailbox.org).
@@ -33,17 +33,17 @@ Open Eclipse and create a Java Project named URLSaver (like previously created d
 To create executable jar file, right click on project, then "export...", then export as "Runnable JAR file".
 
 ## Usage
-At start up all URL files with the extension "urls.txt" are read.
+When starting URL Saver all URL files with the extension "urls.txt" are read.
 These files must be in the same directory as the jar file.
 
 A valid URL file consists of pairs of lines. The first line is the URL, the second line
 are the tags. Tags are separated by white space (no new line between tags).
-Example file content:
+Example URL file:
 
-	http://www.dict.cc
-	dictionary language lang dict
+	https://vivaldi.com
+	browser internet linux windows mac vivaldi
 	https://git-scm.com
-	git version control system distributed revision
+	git version control system distributed revision scm
 	https://www.eclipse.org
 	eclipse ide java compiler debugger
 

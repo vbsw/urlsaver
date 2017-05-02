@@ -35,10 +35,10 @@ import com.github.vbsw.urlsaver.app.App;
  */
 public class Urls {
 
+	private final SortedUniqueStringList tagsTmp = new SortedUniqueStringList();
+
 	private UrlsData data = null;
 	private UrlsViewData viewData = null;
-
-	private final SortedUniqueStringList tagsTmp = new SortedUniqueStringList();
 
 	public final UrlsModelView mv = new UrlsModelView();
 
@@ -46,11 +46,7 @@ public class Urls {
 		data = urlsData;
 		viewData = urlsViewData;
 
-		mv.available.set(urlsData != null);
-		mv.selected.set(false);
-		mv.deleteRequested.set(false);
-		mv.urlModified.set(false);
-		mv.tagsModified.set(false);
+		mv.initProperties(urlsData != null);
 
 		if ( urlsViewData != null ) {
 			App.scene.tf.urlSearch.setText(urlsViewData.searchTagsString);
@@ -63,31 +59,25 @@ public class Urls {
 		}
 	}
 
-	public void search ( ) {
+	public void updateSearchResult ( ) {
 		if ( App.settings.isSearchByPrefix() ) {
 			viewData.searchResult.fillByPrefix(data,viewData.searchTagsString);
 
 		} else {
 			viewData.searchResult.fillByWord(data,viewData.searchTagsString);
 		}
+	}
+
+	public void updateSearchResultListView ( ) {
 		App.scene.lv.urls.getItems().setAll(viewData.searchResult);
 
 		if ( App.scene.lv.urls.getItems().size() > 0 ) {
 			App.scene.lv.urls.requestFocus();
 			App.scene.lv.urls.getSelectionModel().select(0);
 		}
-		App.urls.updateSelectedInfo();
 	}
 
-	public UrlsData getData ( ) {
-		return data;
-	}
-
-	public UrlsViewData getViewData ( ) {
-		return viewData;
-	}
-
-	public void updateSelectedInfo ( ) {
+	public void setSelectedAsInfoView ( ) {
 		final String selectedUrl = App.scene.lv.urls.getSelectionModel().getSelectedItem();
 
 		if ( selectedUrl != null ) {
@@ -108,29 +98,9 @@ public class Urls {
 			App.scene.tf.url.setText(emptyString);
 			App.scene.ta.tags.setText(emptyString);
 		}
-		mv.selected.setValue(selectedUrl != null);
-		mv.deleteRequested.set(false);
 	}
 
-	public void updateDeleteRequestedProperty ( final boolean requested ) {
-		final String url = Parser.trim(App.scene.tf.url.getText());
-		final boolean urlExists = data.getUrlIndex(url) >= 0;
-		final boolean deleteRequestValid = !mv.urlModified.get() && !mv.tagsModified.get() && urlExists;
-
-		if ( deleteRequestValid ) {
-			if ( requested ) {
-				mv.deleteRequested.set(true);
-				App.scene.btn.urlCancel.requestFocus();
-			}
-
-		} else {
-			mv.deleteRequested.set(false);
-		}
-	}
-
-	public void cancel ( ) {
-		updateSelectedInfo();
-
+	public void focusUrlsListOrSearchView ( ) {
 		if ( App.scene.lv.urls.getItems().size() > 0 ) {
 			App.scene.lv.urls.requestFocus();
 
@@ -139,49 +109,32 @@ public class Urls {
 		}
 	}
 
-	public void updateUrlModifiedProperty ( ) {
-		final String urlTyped = Parser.trim(App.scene.tf.url.getText());
-		final boolean urlModified = urlTyped.length() > 0 && data.getUrlIndex(urlTyped) < 0;
-
-		mv.urlModified.set(urlModified);
+	public UrlsData getData ( ) {
+		return data;
 	}
 
-	public void updateTagsModifiedProperty ( ) {
-		final String urlSelected = Parser.trim(App.scene.tf.url.getText());
-		final String tagsTyped = Parser.trim(App.scene.ta.tags.getText());
-
-		if ( urlSelected != null ) {
-			final int urlIndex = data.getUrlIndex(urlSelected);
-
-			if ( urlIndex >= 0 ) {
-				final SortedUniqueStringList tagsSelected = data.urlTagsList.get(urlIndex);
-
-				tagsTmp.setStrings(tagsTyped);
-				mv.tagsModified.setValue(tagsTmp.isEqualByStrings(tagsSelected) == false);
-
-			} else {
-				mv.tagsModified.setValue(false);
-			}
-
-		} else {
-			mv.tagsModified.setValue(false);
-		}
+	public UrlsViewData getViewData ( ) {
+		return viewData;
 	}
 
 	public void confirmDelete ( ) {
-		final int fileIndex = App.files.getSelectedFileIndex();
+		final String urlTyped = Parser.trim(App.scene.tf.url.getText());
 		final String urlSelected = App.scene.lv.getSelectedUrl();
-		final int selectedIndex = viewData.selectedIndex;
+		final int fileIndex = App.files.getSelectedFileIndex();
 
-		data.removeUrl(urlSelected);
-		viewData.searchResult.remove(selectedIndex);
-		App.scene.lv.urls.getItems().remove(selectedIndex);
+		data.removeUrl(urlTyped);
 		App.files.setDirty(fileIndex);
 
-		if ( viewData.searchResult.size() > selectedIndex ) {
-			App.scene.lv.urls.getSelectionModel().select(selectedIndex);
+		if ( urlTyped.equals(urlSelected) ) {
+			final int selectedIndex = viewData.selectedIndex;
+
+			viewData.searchResult.remove(selectedIndex);
+			App.scene.lv.urls.getItems().remove(selectedIndex);
+
+			if ( viewData.searchResult.size() > selectedIndex ) {
+				App.scene.lv.urls.getSelectionModel().select(selectedIndex);
+			}
 		}
-		mv.deleteRequested.setValue(false);
 		App.scene.lv.urls.requestFocus();
 	}
 
@@ -190,15 +143,14 @@ public class Urls {
 		final String url = Parser.trim(App.scene.tf.url.getText());
 		final int urlIndex = data.addUrl(url);
 
-		tagsTmp.setStrings(App.scene.ta.tags.getText());
+		tagsTmp.addStringsSeparatedByWhiteSpace(App.scene.ta.tags.getText());
 		data.setTagsOfUrl(urlIndex,tagsTmp);
+		tagsTmp.clear();
 		App.files.setDirty(fileIndex);
 
 		final ArrayList<String> urlTags = data.urlTagsList.get(urlIndex);
 		final String tagsString = Convert.toString(urlTags);
 
-		mv.urlModified.set(false);
-		mv.tagsModified.set(false);
 		App.scene.ta.tags.setText(tagsString);
 		App.scene.lv.urls.requestFocus();
 	}
@@ -208,14 +160,14 @@ public class Urls {
 		final int fileIndex = App.files.getSelectedFileIndex();
 		final int urlIndex = data.getUrlIndex(url);
 
-		tagsTmp.setStrings(App.scene.ta.tags.getText());
+		tagsTmp.addStringsSeparatedByWhiteSpace(App.scene.ta.tags.getText());
 		data.setTagsOfUrl(urlIndex,tagsTmp);
+		tagsTmp.clear();
 		App.files.setDirty(fileIndex);
 
 		final ArrayList<String> urlTags = data.urlTagsList.get(urlIndex);
 		final String tagsString = Convert.toString(urlTags);
 
-		mv.tagsModified.set(false);
 		App.scene.ta.tags.setText(tagsString);
 		App.scene.lv.urls.requestFocus();
 	}
@@ -230,6 +182,10 @@ public class Urls {
 		} else if ( App.scene.btn.urlEditOK.isDisable() == false ) {
 			confirmEdit();
 		}
+	}
+
+	public void focusUrlCancel ( ) {
+		App.scene.btn.urlCancel.requestFocus();
 	}
 
 }

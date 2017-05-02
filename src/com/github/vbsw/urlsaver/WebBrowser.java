@@ -34,12 +34,10 @@ import com.github.vbsw.urlsaver.app.App;
  */
 public final class WebBrowser {
 
-	public static void openSelectedUrl ( ) {
-		final String selectedUrl = App.scene.lv.urls.getSelectionModel().getSelectedItem();
+	public static void openTypedUrl ( ) {
+		final String urlTyped = Parser.trim(App.scene.tf.url.getText());
 
-		if ( selectedUrl != null ) {
-			WebBrowser.openURL(selectedUrl);
-		}
+		WebBrowser.openURL(urlTyped);
 	}
 
 	public static void openURL ( final String url ) {
