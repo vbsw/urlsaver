@@ -21,7 +21,7 @@
 
 package com.github.vbsw.urlsaver.app;
 
-import com.github.vbsw.urlsaver.Parser;
+import com.github.vbsw.urlsaver.utility.Parser;
 
 /**
  * @author Vitali Baumtrok

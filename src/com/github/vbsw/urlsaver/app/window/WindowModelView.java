@@ -71,12 +71,14 @@ public class WindowModelView {
 			event.consume();
 			App.urls.confirmAny();
 			App.files.confirmSaveSelected();
-			App.urls.mv.allConfirmed();
+			App.files.vm.hotKey_ctrlS();
+			App.window.updateTitle();
+			App.urls.vm.allConfirmed();
 
 		} else if ( keyCombination_ctrlU.match(event) ) {
 			event.consume();
 			App.urls.confirmAny();
-			App.urls.mv.allConfirmed();
+			App.urls.vm.allConfirmed();
 
 		} else if ( keyCode == KeyCode.ESCAPE ) {
 			event.consume();

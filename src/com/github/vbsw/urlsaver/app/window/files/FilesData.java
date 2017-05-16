@@ -29,11 +29,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import com.github.vbsw.urlsaver.SortedUniqueStringList;
 import com.github.vbsw.urlsaver.app.window.urls.UrlsData;
 import com.github.vbsw.urlsaver.app.window.urls.UrlsSearchResult;
 import com.github.vbsw.urlsaver.app.window.urls.UrlsViewData;
 import com.github.vbsw.urlsaver.resources.Resources;
+import com.github.vbsw.urlsaver.utility.SortedUniqueStringList;
 
 
 /**

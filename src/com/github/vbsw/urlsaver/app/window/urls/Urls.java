@@ -24,10 +24,10 @@ package com.github.vbsw.urlsaver.app.window.urls;
 
 import java.util.ArrayList;
 
-import com.github.vbsw.urlsaver.Convert;
-import com.github.vbsw.urlsaver.Parser;
-import com.github.vbsw.urlsaver.SortedUniqueStringList;
 import com.github.vbsw.urlsaver.app.App;
+import com.github.vbsw.urlsaver.utility.Convert;
+import com.github.vbsw.urlsaver.utility.Parser;
+import com.github.vbsw.urlsaver.utility.SortedUniqueStringList;
 
 
 /**
@@ -40,17 +40,22 @@ public class Urls {
 	private UrlsData data = null;
 	private UrlsViewData viewData = null;
 
-	public final UrlsModelView mv = new UrlsModelView();
+	public final UrlsViewModel vm = new UrlsViewModel();
 
 	public void setData ( final UrlsData urlsData, final UrlsViewData urlsViewData ) {
 		data = urlsData;
 		viewData = urlsViewData;
 
-		mv.initProperties(urlsData != null);
+		vm.initProperties(urlsData != null);
 
-		if ( urlsViewData != null ) {
+		if ( urlsData != null ) {
+			final int selectedIndex = urlsViewData.selectedIndex;
+
 			App.scene.tf.urlSearch.setText(urlsViewData.searchTagsString);
+			// setAll() resets selectedIndex
 			App.scene.lv.urls.getItems().setAll(urlsViewData.searchResult);
+
+			viewData.selectedIndex = selectedIndex;
 
 			if ( App.scene.lv.urls.getItems().size() > 0 ) {
 				App.scene.lv.urls.requestFocus();
@@ -86,7 +91,6 @@ public class Urls {
 			final String tagsString = Convert.toString(urlTags);
 
 			viewData.selectedIndex = App.scene.lv.urls.getSelectionModel().getSelectedIndex();
-
 			App.scene.tf.url.setText(selectedUrl);
 			App.scene.ta.tags.setText(tagsString);
 

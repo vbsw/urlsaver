@@ -27,8 +27,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.github.vbsw.urlsaver.JarPath;
 import com.github.vbsw.urlsaver.resources.Resources;
+import com.github.vbsw.urlsaver.utility.Jar;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -60,7 +60,7 @@ public final class FXML {
 	}
 
 	private static Parent loadCustomFXML ( ) {
-		final Path externalFXMLPath = Paths.get(JarPath.get().toString(),Resources.CUSTOM_FXML_FILE_PATH);
+		final Path externalFXMLPath = Paths.get(Jar.getPathToJar().toString(),Resources.CUSTOM_FXML_FILE_PATH);
 
 		if ( Files.exists(externalFXMLPath) ) {
 
@@ -77,7 +77,7 @@ public final class FXML {
 	}
 
 	private static Parent loadDefaultFXML ( ) {
-		try ( InputStream stream = JarPath.getStream(Resources.DEFAULT_FXML_FILE_PATH) ) {
+		try ( InputStream stream = Jar.getResourceAsStream(Resources.DEFAULT_FXML_FILE_PATH) ) {
 			final FXMLLoader fxmlLoader = new FXMLLoader();
 			final Parent fxml = fxmlLoader.load(stream);
 			return fxml;

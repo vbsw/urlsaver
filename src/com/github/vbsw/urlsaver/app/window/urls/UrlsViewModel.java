@@ -22,8 +22,8 @@
 package com.github.vbsw.urlsaver.app.window.urls;
 
 
-import com.github.vbsw.urlsaver.WebBrowser;
 import com.github.vbsw.urlsaver.app.App;
+import com.github.vbsw.urlsaver.utility.WebBrowser;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
@@ -39,7 +39,7 @@ import javafx.scene.input.MouseEvent;
 /**
  * @author Vitali Baumtrok
  */
-public class UrlsModelView {
+public class UrlsViewModel {
 
 	private final UrlsProperties properties = new UrlsProperties();
 
@@ -243,6 +243,10 @@ public class UrlsModelView {
 		}
 	}
 
+	public void allConfirmed ( ) {
+		properties.allConfirmed();
+	}
+
 	private static final class UrlListCell extends ListCell<String> {
 
 		@Override
@@ -255,14 +259,10 @@ public class UrlsModelView {
 
 			} else {
 				setText(item);
-				setOnMouseClicked(event -> App.urls.mv.listView_clicked(event));
+				setOnMouseClicked(event -> App.urls.vm.listView_clicked(event));
 			}
 		}
 
-	}
-
-	public void allConfirmed ( ) {
-		properties.allConfirmed();
 	}
 
 }

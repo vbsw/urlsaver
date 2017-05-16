@@ -19,7 +19,7 @@
  */
 
 
-package com.github.vbsw.urlsaver;
+package com.github.vbsw.urlsaver.utility;
 
 
 import java.net.MalformedURLException;
@@ -47,7 +47,7 @@ public final class Convert {
 		return stringBuilder.toString();
 	}
 
-	public static ArrayList<String> toArrayList ( final String string ) {
+	public static ArrayList<String> toStringArrayList ( final String string ) {
 		final ArrayList<String> list = new ArrayList<String>();
 		int offset = Parser.skipWhiteSpace(string,0);
 

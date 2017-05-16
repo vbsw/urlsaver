@@ -19,7 +19,7 @@
  */
 
 
-package com.github.vbsw.urlsaver;
+package com.github.vbsw.urlsaver.utility;
 
 
 import java.io.IOException;
@@ -36,17 +36,17 @@ import java.util.ArrayList;
 /**
  * @author Vitali Baumtrok
  */
-public final class JarPath {
+public final class Jar {
 	public static final String JAR_PREFIX = "jar:"; //$NON-NLS-1$
 	public static final String CLASS_FILE_EXTENSION = ".class"; //$NON-NLS-1$
 	public static final String BIN_FOLDER = "/bin"; //$NON-NLS-1$
 	public static final int INITIAL_ARRAY_CAPACITY = 10;
 
-	public static Path get ( ) {
-		return get(JarPath.class);
+	public static Path getPathToJar ( ) {
+		return getPathToJar(Jar.class);
 	}
 
-	public static Path get ( final Class<? extends Object> clazz ) {
+	public static Path getPathToJar ( final Class<? extends Object> clazz ) {
 		try {
 			final String className = clazz.getSimpleName() + CLASS_FILE_EXTENSION;
 			final URL classUrl = clazz.getResource(className);
@@ -54,7 +54,7 @@ public final class JarPath {
 			final String canonicalClassName = clazz.getCanonicalName();
 			final int canonicalClassLength = canonicalClassName.length() + CLASS_FILE_EXTENSION.length();
 
-			if ( JarPath.isJarFile(classUrlStr) ) {
+			if ( Jar.isJarFile(classUrlStr) ) {
 				final String jarDirStr = classUrlStr.substring(4,classUrlStr.length() - canonicalClassLength - 2);
 				final URL jarDirUrl = new URL(jarDirStr);
 				final URI jarDirUri = jarDirUrl.toURI();
@@ -78,24 +78,24 @@ public final class JarPath {
 		}
 	}
 
-	public static InputStream getStream ( final String pathInsideJar ) {
-		final ClassLoader classLoader = JarPath.class.getClassLoader();
+	public static InputStream getResourceAsStream ( final String pathInsideJar ) {
+		final ClassLoader classLoader = Jar.class.getClassLoader();
 		final InputStream stream = classLoader.getResourceAsStream(pathInsideJar);
 
 		return stream;
 	}
 
-	public static void copy ( final String fromPathInsideJar, final Path to ) {
-		try ( final InputStream inStream = JarPath.getStream(fromPathInsideJar) ) {
-			Files.copy(inStream,to);
+	public static void copy ( final String srcPathInsideJar, final Path dest ) {
+		try ( final InputStream srcInStream = Jar.getResourceAsStream(srcPathInsideJar) ) {
+			Files.copy(srcInStream,dest);
 
 		} catch ( final Exception e ) {
 			e.printStackTrace();
 		}
 	}
 
-	public static ArrayList<Path> getPaths ( final String... extensions ) {
-		final Path dir = JarPath.get();
+	public static ArrayList<Path> getFilePaths ( final String... extensions ) {
+		final Path dir = Jar.getPathToJar();
 		final ArrayList<Path> paths = new ArrayList<Path>(INITIAL_ARRAY_CAPACITY);
 
 		try ( final DirectoryStream<Path> filePathsStream = Files.newDirectoryStream(dir) ) {

@@ -43,7 +43,7 @@ public final class TextAreas {
 	}
 
 	public void configure ( ) {
-		tags.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> App.urls.mv.textField_tags_changed(observable,oldValue,newValue));
+		tags.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> App.urls.vm.textField_tags_changed(observable,oldValue,newValue));
 	}
 
 }

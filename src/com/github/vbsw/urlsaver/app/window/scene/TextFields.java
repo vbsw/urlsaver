@@ -49,9 +49,9 @@ public final class TextFields {
 	}
 
 	public void configure ( ) {
-		urlSearch.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> App.urls.mv.textField_urlSearch_changed(observable,oldValue,newValue));
-		urlSearch.setOnAction(event -> App.urls.mv.textField_urlSearch_enterPressed(event));
-		url.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> App.urls.mv.textField_url_changed(observable,oldValue,newValue));
+		urlSearch.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> App.urls.vm.textField_urlSearch_changed(observable,oldValue,newValue));
+		urlSearch.setOnAction(event -> App.urls.vm.textField_urlSearch_enterPressed(event));
+		url.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> App.urls.vm.textField_url_changed(observable,oldValue,newValue));
 	}
 
 }

@@ -53,8 +53,8 @@ public final class TopTabs {
 	}
 
 	void configure ( ) {
-		urls.disableProperty().bind(Bindings.not(App.urls.mv.availableProperty()));
-		urls.selectedProperty().addListener( ( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) -> App.urls.mv.topTab_urls_selected(observable,oldValue,newValue));
+		urls.disableProperty().bind(Bindings.not(App.urls.vm.availableProperty()));
+		urls.selectedProperty().addListener( ( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) -> App.urls.vm.topTab_urls_selected(observable,oldValue,newValue));
 	}
 
 }

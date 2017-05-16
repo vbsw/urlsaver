@@ -39,7 +39,7 @@ import javafx.scene.input.MouseEvent;
 /**
  * @author Vitali Baumtrok
  */
-public class FilesModelView {
+public class FilesViewModel {
 
 	final SimpleBooleanProperty selectedFileDirty = new SimpleBooleanProperty();
 	final SimpleBooleanProperty confirmingSave = new SimpleBooleanProperty();
@@ -107,6 +107,14 @@ public class FilesModelView {
 
 	public void button_fileSaveOK_clicked ( final ActionEvent event ) {
 		App.files.confirmSaveSelected();
+		selectedFileDirty.setValue(false);
+		confirmingSave.setValue(false);
+		App.window.updateTitle();
+	}
+
+	public void hotKey_ctrlS ( ) {
+		selectedFileDirty.setValue(false);
+		confirmingSave.setValue(false);
 	}
 
 	public void button_fileSaveOK_keyPressed ( final KeyEvent event ) {
@@ -114,13 +122,23 @@ public class FilesModelView {
 
 		if ( keyCode == KeyCode.ENTER ) {
 			App.files.confirmSaveSelected();
+			selectedFileDirty.setValue(false);
+			confirmingSave.setValue(false);
+			App.window.updateTitle();
 		}
 	}
 
 	public void listViewItem_clicked ( final MouseEvent event ) {
 		if ( event.getClickCount() == 2 ) {
 			App.files.updateSelectedInfo();
+			updatePropertiesAfterFileSelection();
 		}
+	}
+
+	public void listViewItem_selected ( final ObservableValue<? extends Path> observable, final Path oldValue, final Path newValue ) {
+		App.files.updateSelectedInfo();
+		updatePropertiesAfterFileSelection();
+		App.window.updateTitle();
 	}
 
 	public void listView_keyPressed ( final KeyEvent event ) {
@@ -136,14 +154,24 @@ public class FilesModelView {
 		}
 	}
 
-	public void listViewItem_selected ( final ObservableValue<? extends Path> observable, final Path oldValue, final Path newValue ) {
-		App.files.updateSelectedInfo();
-		App.window.updateTitle();
-	}
-
 	public ListCell<Path> cellFactory ( final ListView<Path> param ) {
 		final ListCell<Path> listCell = new FileListCell();
 		return listCell;
+	}
+
+	private void updatePropertiesAfterFileSelection ( ) {
+		final Path selectedFilePath = App.scene.lv.files.getSelectionModel().getSelectedItem();
+		final int fileDataIndex = App.files.getDataIndex(selectedFilePath);
+		final boolean dirty;
+
+		if ( fileDataIndex >= 0 ) {
+			dirty = App.files.isDirty(fileDataIndex);
+		} else {
+			dirty = false;
+		}
+		selectedFileDirty.set(dirty);
+		selected.set(fileDataIndex >= 0);
+		confirmingSave.set(false);
 	}
 
 	private static final class FileListCell extends ListCell<Path> {
@@ -161,7 +189,7 @@ public class FilesModelView {
 				final String listViewText = App.files.getDataLabel(fileDataIndex);
 
 				setText(listViewText);
-				setOnMouseClicked(event -> App.files.mv.listViewItem_clicked(event));
+				setOnMouseClicked(event -> App.files.vm.listViewItem_clicked(event));
 			}
 		}
 

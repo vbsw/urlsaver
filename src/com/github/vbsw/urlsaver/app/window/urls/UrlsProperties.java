@@ -22,9 +22,9 @@
 package com.github.vbsw.urlsaver.app.window.urls;
 
 
-import com.github.vbsw.urlsaver.Parser;
-import com.github.vbsw.urlsaver.SortedUniqueStringList;
 import com.github.vbsw.urlsaver.app.App;
+import com.github.vbsw.urlsaver.utility.Parser;
+import com.github.vbsw.urlsaver.utility.SortedUniqueStringList;
 
 import javafx.beans.property.SimpleBooleanProperty;
 

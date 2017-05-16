@@ -96,48 +96,48 @@ public final class Buttons {
 		quitAppOK.disableProperty().bind(Bindings.not(App.about.mv.confirmQuitAppProperty()));
 		quitAppOK.setOnAction(event -> App.about.mv.button_quitAppOK_clicked(event));
 		quitAppOK.setOnKeyPressed(event -> App.about.mv.button_quitAppOK_keyPressed(event));
-		reloadFile.disableProperty().bind(Bindings.or(Bindings.not(App.files.mv.selectedProperty()),App.files.mv.confirmingSaveProperty()));
-		reloadFile.setOnAction(event -> App.files.mv.button_reloadFile_clicked(event));
-		reloadFile.setOnKeyPressed(event -> App.files.mv.button_reloadFile_keyPressed(event));
-		reloadAllFiles.disableProperty().bind(Bindings.or(Bindings.not(App.files.mv.selectedProperty()),App.files.mv.confirmingSaveProperty()));
-		reloadAllFiles.setOnAction(event -> App.files.mv.button_reloadAllFiles_clicked(event));
-		reloadAllFiles.setOnKeyPressed(event -> App.files.mv.button_reloadAllFiles_keyPressed(event));
-		fileSave.disableProperty().bind(Bindings.or(Bindings.not(App.files.mv.selectedFileDirtyProperty()),App.files.mv.confirmingSaveProperty()));
-		fileSave.setOnAction(event -> App.files.mv.button_fileSave_clicked(event));
-		fileSave.setOnKeyPressed(event -> App.files.mv.button_fileSave_keyPressed(event));
-		fileCancel.disableProperty().bind(Bindings.not(App.files.mv.confirmingSaveProperty()));
-		fileCancel.setOnAction(event -> App.files.mv.button_fileCancel_clicked(event));
-		fileCancel.setOnKeyPressed(event -> App.files.mv.button_fileCancel_keyPressed(event));
-		fileSaveOK.disableProperty().bind(Bindings.not(App.files.mv.confirmingSaveProperty()));
-		fileSaveOK.setOnAction(event -> App.files.mv.button_fileSaveOK_clicked(event));
-		fileSaveOK.setOnKeyPressed(event -> App.files.mv.button_fileSaveOK_keyPressed(event));
-		openInBrowser.disableProperty().bind(Bindings.not(App.urls.mv.existsProperty()));
-		openInBrowser.setOnAction(event -> App.urls.mv.button_openInBrowser_clicked(event));
-		openInBrowser.setOnKeyPressed(event -> App.urls.mv.button_openInBrowser_keyPressed(event));
-		urlSearch.setOnAction(event -> App.urls.mv.button_urlSearch_clicked(event));
-		urlSearch.setOnKeyPressed(event -> App.urls.mv.button_urlSearch_keyPressed(event));
+		reloadFile.disableProperty().bind(Bindings.or(Bindings.not(App.files.vm.selectedProperty()),App.files.vm.confirmingSaveProperty()));
+		reloadFile.setOnAction(event -> App.files.vm.button_reloadFile_clicked(event));
+		reloadFile.setOnKeyPressed(event -> App.files.vm.button_reloadFile_keyPressed(event));
+		reloadAllFiles.disableProperty().bind(Bindings.or(Bindings.not(App.files.vm.selectedProperty()),App.files.vm.confirmingSaveProperty()));
+		reloadAllFiles.setOnAction(event -> App.files.vm.button_reloadAllFiles_clicked(event));
+		reloadAllFiles.setOnKeyPressed(event -> App.files.vm.button_reloadAllFiles_keyPressed(event));
+		fileSave.disableProperty().bind(Bindings.or(Bindings.not(App.files.vm.selectedFileDirtyProperty()),App.files.vm.confirmingSaveProperty()));
+		fileSave.setOnAction(event -> App.files.vm.button_fileSave_clicked(event));
+		fileSave.setOnKeyPressed(event -> App.files.vm.button_fileSave_keyPressed(event));
+		fileCancel.disableProperty().bind(Bindings.not(App.files.vm.confirmingSaveProperty()));
+		fileCancel.setOnAction(event -> App.files.vm.button_fileCancel_clicked(event));
+		fileCancel.setOnKeyPressed(event -> App.files.vm.button_fileCancel_keyPressed(event));
+		fileSaveOK.disableProperty().bind(Bindings.not(App.files.vm.confirmingSaveProperty()));
+		fileSaveOK.setOnAction(event -> App.files.vm.button_fileSaveOK_clicked(event));
+		fileSaveOK.setOnKeyPressed(event -> App.files.vm.button_fileSaveOK_keyPressed(event));
+		openInBrowser.disableProperty().bind(Bindings.not(App.urls.vm.existsProperty()));
+		openInBrowser.setOnAction(event -> App.urls.vm.button_openInBrowser_clicked(event));
+		openInBrowser.setOnKeyPressed(event -> App.urls.vm.button_openInBrowser_keyPressed(event));
+		urlSearch.setOnAction(event -> App.urls.vm.button_urlSearch_clicked(event));
+		urlSearch.setOnKeyPressed(event -> App.urls.vm.button_urlSearch_keyPressed(event));
 		urlCancel.disableProperty().bind(getUrlCancelDisableBinding());
-		urlCancel.setOnAction(event -> App.urls.mv.button_urlCancel_clicked(event));
-		urlCancel.setOnKeyPressed(event -> App.urls.mv.button_urlCancel_keyPressed(event));
+		urlCancel.setOnAction(event -> App.urls.vm.button_urlCancel_clicked(event));
+		urlCancel.setOnKeyPressed(event -> App.urls.vm.button_urlCancel_keyPressed(event));
 		urlDelete.disableProperty().bind(getUrlDeleteDisableBinding());
-		urlDelete.setOnAction(event -> App.urls.mv.button_urlDelete_clicked(event));
-		urlDelete.setOnKeyPressed(event -> App.urls.mv.button_urlDelete_keyPressed(event));
-		urlDeleteOK.disableProperty().bind(Bindings.not(App.urls.mv.deleteRequestedProperty()));
-		urlDeleteOK.setOnAction(event -> App.urls.mv.button_urlDeleteOK_clicked(event));
-		urlDeleteOK.setOnKeyPressed(event -> App.urls.mv.button_urlDeleteOK_keyPressed(event));
-		urlCreateOK.disableProperty().bind(Bindings.not(App.urls.mv.urlModifiedProperty()));
-		urlCreateOK.setOnAction(event -> App.urls.mv.button_urlCreateOK_clicked(event));
-		urlCreateOK.setOnKeyPressed(event -> App.urls.mv.button_urlCreateOK_keyPressed(event));
+		urlDelete.setOnAction(event -> App.urls.vm.button_urlDelete_clicked(event));
+		urlDelete.setOnKeyPressed(event -> App.urls.vm.button_urlDelete_keyPressed(event));
+		urlDeleteOK.disableProperty().bind(Bindings.not(App.urls.vm.deleteRequestedProperty()));
+		urlDeleteOK.setOnAction(event -> App.urls.vm.button_urlDeleteOK_clicked(event));
+		urlDeleteOK.setOnKeyPressed(event -> App.urls.vm.button_urlDeleteOK_keyPressed(event));
+		urlCreateOK.disableProperty().bind(Bindings.not(App.urls.vm.urlModifiedProperty()));
+		urlCreateOK.setOnAction(event -> App.urls.vm.button_urlCreateOK_clicked(event));
+		urlCreateOK.setOnKeyPressed(event -> App.urls.vm.button_urlCreateOK_keyPressed(event));
 		urlEditOK.disableProperty().bind(getEditOKDisableBinding());
-		urlEditOK.setOnAction(event -> App.urls.mv.button_urlEditOK_clicked(event));
-		urlEditOK.setOnKeyPressed(event -> App.urls.mv.button_urlEditOK_keyPressed(event));
+		urlEditOK.setOnAction(event -> App.urls.vm.button_urlEditOK_clicked(event));
+		urlEditOK.setOnKeyPressed(event -> App.urls.vm.button_urlEditOK_keyPressed(event));
 	}
 
 	private ObservableValue<? extends Boolean> getUrlCancelDisableBinding ( ) {
 		BooleanBinding binding;
 
-		binding = Bindings.or(App.urls.mv.urlModifiedProperty(),App.urls.mv.tagsModifiedProperty());
-		binding = Bindings.or(binding,App.urls.mv.deleteRequestedProperty());
+		binding = Bindings.or(App.urls.vm.urlModifiedProperty(),App.urls.vm.tagsModifiedProperty());
+		binding = Bindings.or(binding,App.urls.vm.deleteRequestedProperty());
 		binding = Bindings.not(binding);
 
 		return binding;
@@ -146,10 +146,10 @@ public final class Buttons {
 	private ObservableValue<? extends Boolean> getUrlDeleteDisableBinding ( ) {
 		BooleanBinding binding;
 
-		binding = Bindings.not(App.urls.mv.existsProperty());
-		binding = Bindings.or(binding,App.urls.mv.deleteRequestedProperty());
-		binding = Bindings.or(binding,App.urls.mv.urlModifiedProperty());
-		binding = Bindings.or(binding,App.urls.mv.tagsModifiedProperty());
+		binding = Bindings.not(App.urls.vm.existsProperty());
+		binding = Bindings.or(binding,App.urls.vm.deleteRequestedProperty());
+		binding = Bindings.or(binding,App.urls.vm.urlModifiedProperty());
+		binding = Bindings.or(binding,App.urls.vm.tagsModifiedProperty());
 
 		return binding;
 	}
@@ -157,8 +157,8 @@ public final class Buttons {
 	private ObservableValue<? extends Boolean> getEditOKDisableBinding ( ) {
 		BooleanBinding binding;
 
-		binding = Bindings.not(App.urls.mv.urlModifiedProperty());
-		binding = Bindings.and(binding,App.urls.mv.tagsModifiedProperty());
+		binding = Bindings.not(App.urls.vm.urlModifiedProperty());
+		binding = Bindings.and(binding,App.urls.vm.tagsModifiedProperty());
 		binding = Bindings.not(binding);
 
 		return binding;

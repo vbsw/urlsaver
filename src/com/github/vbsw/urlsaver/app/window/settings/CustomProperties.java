@@ -27,8 +27,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.github.vbsw.urlsaver.JarPath;
 import com.github.vbsw.urlsaver.resources.Resources;
+import com.github.vbsw.urlsaver.utility.Jar;
 
 
 /**
@@ -39,7 +39,7 @@ final class CustomProperties extends DefaultProperties {
 
 	CustomProperties ( ) {
 		final String FILE_NAME = Resources.CUSTOM_PROPERTIES_FILE_PATH;
-		final Path filePath = Paths.get(JarPath.get().toString(),FILE_NAME);
+		final Path filePath = Paths.get(Jar.getPathToJar().toString(),FILE_NAME);
 
 		try ( final InputStream stream = Files.newInputStream(filePath) ) {
 			load(stream);

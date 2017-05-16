@@ -25,7 +25,7 @@ package com.github.vbsw.urlsaver.app.window.urls;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.github.vbsw.urlsaver.SortedUniqueStringList;
+import com.github.vbsw.urlsaver.utility.SortedUniqueStringList;
 
 
 /**

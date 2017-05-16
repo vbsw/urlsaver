@@ -19,7 +19,7 @@
  */
 
 
-package com.github.vbsw.urlsaver;
+package com.github.vbsw.urlsaver.utility;
 
 
 import java.util.ArrayList;

@@ -25,9 +25,9 @@ package com.github.vbsw.urlsaver.app.window.settings;
 import java.io.InputStream;
 import java.util.Properties;
 
-import com.github.vbsw.urlsaver.JarPath;
-import com.github.vbsw.urlsaver.Parser;
 import com.github.vbsw.urlsaver.resources.Resources;
+import com.github.vbsw.urlsaver.utility.Jar;
+import com.github.vbsw.urlsaver.utility.Parser;
 
 
 /**
@@ -39,7 +39,7 @@ class DefaultProperties extends Properties {
 	DefaultProperties ( ) {
 		final String FILE_NAME = Resources.DEFAULT_PROPERTIES_FILE_PATH;
 
-		try ( final InputStream stream = JarPath.getStream(FILE_NAME) ) {
+		try ( final InputStream stream = Jar.getResourceAsStream(FILE_NAME) ) {
 			load(stream);
 		} catch ( final Exception e ) {
 			e.printStackTrace();

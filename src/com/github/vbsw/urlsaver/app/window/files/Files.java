@@ -25,11 +25,11 @@ package com.github.vbsw.urlsaver.app.window.files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-import com.github.vbsw.urlsaver.JarPath;
-import com.github.vbsw.urlsaver.SortedUniqueStringList;
 import com.github.vbsw.urlsaver.app.App;
 import com.github.vbsw.urlsaver.app.window.urls.UrlsData;
 import com.github.vbsw.urlsaver.app.window.urls.UrlsViewData;
+import com.github.vbsw.urlsaver.utility.Jar;
+import com.github.vbsw.urlsaver.utility.SortedUniqueStringList;
 
 
 /**
@@ -41,11 +41,11 @@ public class Files {
 
 	private boolean autoSelectRequested;
 
-	public final FilesModelView mv = new FilesModelView();
+	public final FilesViewModel vm = new FilesViewModel();
 
 	public void initialize ( ) {
 		final String fileExtension = App.settings.getUrlsFileExtension();
-		final ArrayList<Path> filePaths = JarPath.getPaths(fileExtension);
+		final ArrayList<Path> filePaths = Jar.getFilePaths(fileExtension);
 		final String defaultFileName = App.settings.getUrlsFileSelect();
 
 		data.initialize(filePaths);
@@ -57,7 +57,7 @@ public class Files {
 		final int dataIndex = data.getIndex(filePath);
 
 		if ( dataIndex >= 0 ) {
-			final UrlsViewData urlsViewData = data.urlsViewData.get(dataIndex);
+			final UrlsViewData urlsViewData = getUrlsViewData(dataIndex);
 
 			urlsViewData.clear();
 			data.urlsData.set(dataIndex,urlsData);
@@ -92,25 +92,19 @@ public class Files {
 		final String filePathString;
 		final UrlsData urlsData;
 		final UrlsViewData urlsViewData;
-		final boolean dirty;
 
 		if ( fileDataIndex >= 0 ) {
 			filePathString = selectedFilePath.toString();
 			urlsData = getUrlsData(fileDataIndex);
 			urlsViewData = getUrlsViewData(fileDataIndex);
-			dirty = data.dirtyFlags.get(fileDataIndex);
 
 		} else {
 			filePathString = ""; //$NON-NLS-1$
 			urlsData = null;
 			urlsViewData = null;
-			dirty = false;
 		}
 		App.scene.tf.fileName.setText(filePathString);
 		App.urls.setData(urlsData,urlsViewData);
-		mv.selectedFileDirty.set(dirty);
-		mv.selected.set(fileDataIndex >= 0);
-		mv.confirmingSave.set(false);
 	}
 
 	public int getDataIndex ( final Path filePath ) {
@@ -225,13 +219,10 @@ public class Files {
 		final int fileIndex = getSelectedFileIndex();
 
 		data.save(fileIndex);
-		mv.selectedFileDirty.setValue(false);
-		mv.confirmingSave.setValue(false);
-		App.window.updateTitle();
 	}
 
 	public void saveSelected ( ) {
-		mv.confirmingSave.setValue(true);
+		vm.confirmingSave.setValue(true);
 	}
 
 	public void setDirty ( final int index ) {
@@ -239,7 +230,7 @@ public class Files {
 
 		if ( getSelectedFileIndex() == index ) {
 			App.window.updateTitle();
-			mv.selectedFileDirty.setValue(true);
+			vm.selectedFileDirty.setValue(true);
 		}
 	}
 
@@ -255,7 +246,7 @@ public class Files {
 	}
 
 	public void cancel ( ) {
-		mv.confirmingSave.setValue(false);
+		vm.confirmingSave.setValue(false);
 		App.scene.lv.files.requestFocus();
 	}
 

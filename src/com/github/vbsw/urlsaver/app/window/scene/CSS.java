@@ -27,8 +27,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.github.vbsw.urlsaver.JarPath;
 import com.github.vbsw.urlsaver.resources.Resources;
+import com.github.vbsw.urlsaver.utility.Jar;
 
 
 /**
@@ -63,7 +63,7 @@ public final class CSS {
 	}
 
 	private String getCustomStylesheetURL ( ) {
-		final Path externalCSSPath = Paths.get(JarPath.get().toString(),Resources.CUSTOM_CSS_FILE_PATH);
+		final Path externalCSSPath = Paths.get(Jar.getPathToJar().toString(),Resources.CUSTOM_CSS_FILE_PATH);
 
 		if ( Files.exists(externalCSSPath) ) {
 			try {

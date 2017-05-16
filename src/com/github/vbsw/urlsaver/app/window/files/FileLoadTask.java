@@ -26,9 +26,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import com.github.vbsw.urlsaver.Parser;
 import com.github.vbsw.urlsaver.app.window.urls.UrlsData;
 import com.github.vbsw.urlsaver.resources.Resources;
+import com.github.vbsw.urlsaver.utility.Parser;
 
 import javafx.concurrent.Task;
 
