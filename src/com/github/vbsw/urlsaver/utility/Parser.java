@@ -35,6 +35,7 @@ public final class Parser {
 	public static boolean isWhiteSpace ( final String string ) {
 		for ( int i = 0; i < string.length(); i += 1 ) {
 			final char character = string.charAt(i);
+
 			if ( isWhiteSpace(character) == false ) {
 				return false;
 			}
@@ -45,14 +46,30 @@ public final class Parser {
 	public static String getStringTillNewLine ( final byte[] bytes, final int offset, final Charset encoding ) {
 		final int stringLength = Parser.getLengthTillNewLine(bytes,offset);
 		final String str = new String(bytes,offset,stringLength,encoding);
+
 		return str;
 	}
 
 	public static int getLengthTillNewLine ( final byte[] bytes, final int offset ) {
 		int currIndex;
+
 		for ( currIndex = offset; currIndex < bytes.length; currIndex += 1 ) {
 			final byte byteChar = bytes[currIndex];
+
 			if ( Parser.isNewLine(byteChar) ) {
+				return currIndex - offset;
+			}
+		}
+		return currIndex - offset;
+	}
+
+	public static int getLengthTillWhiteSpace ( final byte[] bytes, final int offset ) {
+		int currIndex;
+
+		for ( currIndex = offset; currIndex < bytes.length; currIndex += 1 ) {
+			final byte byteChar = bytes[currIndex];
+
+			if ( Parser.isWhiteSpace(byteChar) ) {
 				return currIndex - offset;
 			}
 		}

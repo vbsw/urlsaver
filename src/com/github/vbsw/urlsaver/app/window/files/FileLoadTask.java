@@ -46,33 +46,19 @@ final class FileLoadTask extends Task<UrlsData> {
 
 	@Override
 	protected UrlsData call ( ) throws Exception {
-		updateProgress(0,100);
+		super.updateProgress(0,100);
 
-		final byte[] bytes = readFile(urlsFilePath);
+		final UrlsData urlsData = getUrlsDataFromFile(urlsFilePath);
+
+		return urlsData;
+	}
+
+	private UrlsData getUrlsDataFromFile ( final Path path ) {
+		final byte[] bytes = getBytesFromFile(path);
 
 		if ( bytes != null ) {
-			final UrlsData urlsData = new UrlsData();
+			final UrlsData urlsData = getUrlsDataFromBytes(bytes);
 
-			if ( bytes.length > 0 ) {
-				int offset = 0;
-				int progressPrev = 0;
-				int progressCurr = 0;
-
-				while ( (offset < bytes.length) && (isCancelled() == false) ) {
-					offset = Parser.skipWhiteSpace(bytes,offset);
-					offset = readValues(urlsData,bytes,offset);
-					progressCurr = offset * 100 / bytes.length;
-
-					if ( progressCurr > progressPrev ) {
-						progressPrev = progressCurr;
-
-						updateProgress(progressCurr,100);
-					}
-				}
-
-			} else {
-				updateProgress(100,100);
-			}
 			return urlsData;
 
 		} else {
@@ -80,52 +66,100 @@ final class FileLoadTask extends Task<UrlsData> {
 		}
 	}
 
-	private byte[] readFile ( final Path path ) {
+	private UrlsData getUrlsDataFromBytes ( final byte[] bytes ) {
+		final UrlsData urlsData = new UrlsData();
+
+		if ( bytes.length > 0 ) {
+			int offset = 0;
+			int progress = 0;
+
+			while ( (offset < bytes.length) && (isCancelled() == false) ) {
+				offset = Parser.skipWhiteSpace(bytes,offset);
+				offset = parseUrlAndTags(urlsData,bytes,offset);
+				progress = updateProgressIfNecessary(offset,bytes.length,progress);
+			}
+
+		} else {
+			super.updateProgress(100,100);
+		}
+		return urlsData;
+	}
+
+	private int updateProgressIfNecessary ( final int bytesRead, final int bytesTotal, final int progress ) {
+		final int progressNew = bytesRead * 100 / bytesTotal;
+
+		if ( progressNew > progress ) {
+			super.updateProgress(progressNew,100);
+
+			return progressNew;
+
+		} else {
+			return progress;
+		}
+	}
+
+	private byte[] getBytesFromFile ( final Path path ) {
 		try {
 			final byte[] bytes = Files.readAllBytes(path);
+
 			return bytes;
 
 		} catch ( IOException e ) {
 			e.printStackTrace();
+
 			return null;
 		}
 	}
 
-	private int readValues ( final UrlsData urlsData, final byte[] bytes, final int offset ) {
+	private int parseUrlAndTags ( final UrlsData urlsData, final byte[] bytes, final int offset ) {
+		final int insertedUrlIndex = parseUrl(urlsData,bytes,offset);
+		final int offsetNew = parseTags(urlsData,bytes,offset,insertedUrlIndex);
+
+		return offsetNew;
+	}
+
+	private int parseUrl ( final UrlsData urlsData, final byte[] bytes, final int offset ) {
 		final int wordLength = Parser.getLengthTillNewLine(bytes,offset);
-		int currIndex = offset + wordLength;
 
 		if ( wordLength > 0 ) {
 			final String url = new String(bytes,offset,wordLength,Resources.ENCODING);
 			final int urlIndex = urlsData.addUrl(url);
 
-			currIndex = Parser.skipWhiteSpace(bytes,currIndex);
-			currIndex = readTags(urlsData,urlIndex,bytes,currIndex);
+			return urlIndex;
+
+		} else {
+			return -1;
 		}
-		return currIndex;
 	}
 
-	private int readTags ( final UrlsData urlsData, final int urlIndex, final byte[] bytes, int offset ) {
-		int currIndex;
+	private int parseTags ( final UrlsData urlsData, final byte[] bytes, final int offset, final int insertedUrlIndex ) {
+		if ( insertedUrlIndex >= 0 ) {
+			int offsetNew = offset + urlsData.urls.get(insertedUrlIndex).length();
+			offsetNew = parseOneTag(urlsData,bytes,offsetNew,insertedUrlIndex);
 
-		for ( currIndex = offset; currIndex < bytes.length; currIndex += 1 ) {
-			final byte byteChar = bytes[currIndex];
-
-			if ( Parser.isWhiteSpace(byteChar) ) {
-				final int tagLength = currIndex - offset;
-
-				if ( tagLength > 0 ) {
-					final String tag = new String(bytes,offset,tagLength,Resources.ENCODING);
-					urlsData.addTagToUrl(urlIndex,tag);
-				}
-				offset = currIndex + 1;
-
-				if ( Parser.isNewLine(byteChar) ) {
-					return currIndex;
-				}
+			while ( (offsetNew < bytes.length) && (Parser.isNewLine(bytes[offsetNew]) == false) ) {
+				offsetNew = parseOneTag(urlsData,bytes,offsetNew,insertedUrlIndex);
 			}
+			return offsetNew;
+
+		} else {
+			return bytes.length;
 		}
-		return currIndex;
+	}
+
+	private int parseOneTag ( final UrlsData urlsData, final byte[] bytes, final int offset, final int insertedUrlIndex ) {
+		final int offsetTag = Parser.skipWhiteSpace(bytes,offset);
+		final int tagLength = Parser.getLengthTillWhiteSpace(bytes,offsetTag);
+		final int offsetNew;
+
+		if ( tagLength > 0 ) {
+			final String tag = new String(bytes,offsetTag,tagLength,Resources.ENCODING);
+
+			urlsData.addTagToUrl(insertedUrlIndex,tag);
+		}
+		offsetNew = offsetTag + tagLength;
+
+		return offsetNew;
 	}
 
 }
