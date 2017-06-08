@@ -69,7 +69,7 @@
                      </VBox.margin>
                   </HBox>
                   <TextField fx:id="url_tf" promptText="url" />
-                  <TextArea fx:id="tags_ta" prefHeight="50.0" prefWidth="200.0" promptText="tags" wrapText="true" />
+                  <TextArea fx:id="tags_ta" prefHeight="50.0" prefWidth="200.0" promptText="keywords" wrapText="true" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
@@ -168,23 +168,19 @@
                         </Label>
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Version 0.3.0" />
                         <Label maxWidth="1.7976931348623157E308" text="  " />
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="It's a tool to manage URLs by tags/keywords." />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="URL Saver is a tool to manage URLs by keywords." />
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Source code is on &lt;https://github.com/vbsw/urlsaver&gt;." />
                         <Label maxWidth="1.7976931348623157E308" text="  " />
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Copyright 2017, Vitali Baumtrok (vbsw@mailbox.org)." />
                         <Label maxWidth="1.7976931348623157E308" text="  " />
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="URL Saver is free software: you can redistribute it and/or modify" />
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="it under the terms of the GNU General Public License as published by" />
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="the Free Software Foundation, either version 3 of the License, or" />
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="17.0" text="(at your option) any later version." />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="URL Saver is distributed under the terms of the" />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Boost Software License, version 1.0." />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="(See accompanying file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)" />
                         <Label maxWidth="1.7976931348623157E308" text="  " />
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="URL Saver is distributed in the hope that it will be useful," />
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="but WITHOUT ANY WARRANTY; without even the implied warranty of" />
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the" />
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="GNU General Public License for more details." />
-                        <Label maxWidth="1.7976931348623157E308" text="  " />
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="You should have received a copy of the GNU General Public License" />
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="along with URL Saver.  If not, see &lt;http://www.gnu.org/licenses/&gt;." />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="but WITHOUT ANY WARRANTY;" />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE." />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="See the Boost Software License for more details." />
                         <Label maxWidth="1.7976931348623157E308" text="  " />
                         <Label maxWidth="1.7976931348623157E308" text="  " />
                         <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="5.0">

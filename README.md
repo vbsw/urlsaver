@@ -4,23 +4,14 @@
 URL Saver is a program to manage URLs by tags/keywords.
 URL Saver is published at <https://github.com/vbsw/urlsaver>.
 
-Current version is 0.2.1.
+Current version is 0.3.0.
 
 ## Copyright
 Copyright 2017, Vitali Baumtrok (vbsw@mailbox.org).
 
-URL Saver is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+URL Saver is distributed under the terms of the Boost Software License, version 1.0. (See accompanying file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-URL Saver is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with URL Saver.  If not, see <http://www.gnu.org/licenses/>.
+URL Saver is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Boost Software License for more details.
 
 ## Compiling
 Install [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html), [Git](https://git-scm.com) and [Eclipse](https://www.eclipse.org).
