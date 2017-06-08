@@ -1,7 +1,7 @@
 # URL Saver
 
 ## About
-URL Saver is a program to manage URLs by tags/keywords.
+URL Saver is a program to manage URLs by keywords.
 URL Saver is published at <https://github.com/vbsw/urlsaver>.
 
 Current version is 0.3.0.
@@ -28,7 +28,7 @@ When starting URL Saver all URL files with the extension "urls.txt" are read.
 These files must be in the same directory as the jar file.
 
 A valid URL file consists of pairs of lines. The first line is the URL, the second line
-are the tags. Tags are separated by white space (no new line between tags).
+are the keywords. Keywords are separated by white space (no new line between keywords).
 Example URL file:
 
 	https://vivaldi.com
