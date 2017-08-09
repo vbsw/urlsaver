@@ -49,7 +49,7 @@ public final class CSS {
 	}
 
 	private String getCustomStylesheetURL ( ) {
-		final Path externalCSSPath = Paths.get(Jar.getPathToJar().toString(),Resources.CUSTOM_CSS_FILE_PATH);
+		final Path externalCSSPath = Paths.get(Jar.getPath().toString(),Resources.CUSTOM_CSS_FILE_PATH);
 
 		if ( Files.exists(externalCSSPath) ) {
 			try {

@@ -8,10 +8,16 @@
 package com.github.vbsw.urlsaver.app.window.settings;
 
 
+import com.github.vbsw.urlsaver.app.App;
+import com.github.vbsw.urlsaver.utility.FormattedTime;
+
+
 /**
  * @author Vitali Baumtrok
  */
 public final class Settings {
+
+	private boolean customLoaded;
 
 	private String windowTitle;
 	private String customWindowTitle;
@@ -45,6 +51,8 @@ public final class Settings {
 	private int customSearchByPrefix;
 	private int defaultSearchByPrefix;
 
+	public final SettingsViewModel vm = new SettingsViewModel();
+
 	public Settings ( ) {
 		final DefaultProperties defaultProperties = new DefaultProperties();
 
@@ -64,6 +72,7 @@ public final class Settings {
 	public void loadCustomValues ( ) {
 		final CustomProperties properties = new CustomProperties();
 
+		customLoaded = properties.isLoaded();
 		customWindowTitle = properties.getWindowTitle();
 		customWindowWidth = properties.getWindowWidth();
 		customWindowHeight = properties.getWindowHeight();
@@ -93,6 +102,10 @@ public final class Settings {
 		autoloadAll = customAutoloadAll = defaultAutoloadAll;
 		fileExtension = customFileExtension = defaultFileExtension;
 		fileSelect = customFileSelect = defaultFileSelect;
+	}
+
+	public boolean isCustomLoaded ( ) {
+		return customLoaded;
 	}
 
 	public String getWindowTitle ( ) {
@@ -253,6 +266,41 @@ public final class Settings {
 
 	public boolean isCustomSearchByPrefixAvailable ( ) {
 		return customSearchByPrefix >= 0;
+	}
+
+	public void updateView ( ) {
+		App.scene.tf.title.setText(getCustomWindowTitle());
+		App.scene.tf.width.setText(Integer.toString((int) getCustomWindowWidth()));
+		App.scene.tf.height.setText(Integer.toString((int) getCustomWindowHeight()));
+		App.scene.tf.fileExtension.setText(getCustomUrlsFileExtension());
+		App.scene.tf.defaultFile.setText(getCustomUrlsFileSelect());
+		App.scene.cb.maximize.setSelected(isCustomWindowMaximized());
+		App.scene.cb.loadAtStart.setSelected(isCustomAutoloadAll());
+		App.scene.cb.byPrefix.setSelected(isCustomSearchByPrefix());
+
+		setFieldsDisabled(!customLoaded);
+	}
+
+	public void setFieldsDisabled ( final boolean disabled ) {
+		App.scene.tf.title.setDisable(disabled);
+		App.scene.tf.width.setDisable(disabled);
+		App.scene.tf.height.setDisable(disabled);
+		App.scene.tf.fileExtension.setDisable(disabled);
+		App.scene.tf.defaultFile.setDisable(disabled);
+		App.scene.cb.maximize.setDisable(disabled);
+		App.scene.cb.loadAtStart.setDisable(disabled);
+		App.scene.cb.byPrefix.setDisable(disabled);
+	}
+
+	public void log ( final String message ) {
+		final String timeStr = FormattedTime.get();
+
+		if ( App.scene.ta.log.getText().length() > 0 ) {
+			App.scene.ta.log.appendText("\n");
+		}
+		App.scene.ta.log.appendText(timeStr);
+		App.scene.ta.log.appendText(" ");
+		App.scene.ta.log.appendText(message);
 	}
 
 }

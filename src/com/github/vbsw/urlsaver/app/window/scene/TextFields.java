@@ -23,15 +23,30 @@ public final class TextFields {
 	public final TextField fileName;
 	public final TextField urlSearch;
 	public final TextField url;
+	public final TextField title;
+	public final TextField width;
+	public final TextField height;
+	public final TextField fileExtension;
+	public final TextField defaultFile;
 
 	TextFields ( final Parent root ) {
-		final String fileNameTextFieldSelector = "#file_name_tf"; //$NON-NLS-1$
-		final String urlSearchTextFieldSelector = "#url_search_tf"; //$NON-NLS-1$
-		final String urlTextFieldSelector = "#url_tf"; //$NON-NLS-1$
+		final String fileNameSelector = "#file_name_tf"; //$NON-NLS-1$
+		final String urlSearchSelector = "#url_search_tf"; //$NON-NLS-1$
+		final String urldSelector = "#url_tf"; //$NON-NLS-1$
+		final String titleSelector = "#settings_title_tf"; //$NON-NLS-1$
+		final String widthSelector = "#settings_width_tf"; //$NON-NLS-1$
+		final String heightSelector = "#settings_height_tf"; //$NON-NLS-1$
+		final String fileExtensionSelector = "#settings_file_extension_tf"; //$NON-NLS-1$
+		final String defaultFileSelector = "#settings_default_file_tf"; //$NON-NLS-1$
 
-		fileName = (TextField) root.lookup(fileNameTextFieldSelector);
-		urlSearch = (TextField) root.lookup(urlSearchTextFieldSelector);
-		url = (TextField) root.lookup(urlTextFieldSelector);
+		fileName = (TextField) root.lookup(fileNameSelector);
+		urlSearch = (TextField) root.lookup(urlSearchSelector);
+		url = (TextField) root.lookup(urldSelector);
+		title = (TextField) root.lookup(titleSelector);
+		width = (TextField) root.lookup(widthSelector);
+		height = (TextField) root.lookup(heightSelector);
+		fileExtension = (TextField) root.lookup(fileExtensionSelector);
+		defaultFile = (TextField) root.lookup(defaultFileSelector);
 	}
 
 	public void configure ( ) {

@@ -3,6 +3,6 @@ window.width=720
 window.height=480
 window.maximized=false
 urls.file.extension=urls.txt
-urls.file.select=all.urls.txt
+urls.file.select=urls.txt
 autoload.all=false
 search.by.prefix=true

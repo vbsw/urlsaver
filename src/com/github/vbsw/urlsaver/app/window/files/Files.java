@@ -31,10 +31,13 @@ public class Files {
 
 	public void initialize ( ) {
 		final String fileExtension = App.settings.getUrlsFileExtension();
-		final ArrayList<Path> filePaths = Jar.getFilePaths(fileExtension);
-		final String defaultFileName = App.settings.getUrlsFileSelect();
+		final ArrayList<Path> filePaths = Jar.getFiles(fileExtension);
 
 		data.initialize(filePaths);
+	}
+
+	public void resetAutoSelectRequest ( ) {
+		final String defaultFileName = App.settings.getUrlsFileSelect();
 
 		autoSelectRequested = (data.getIndexByFileName(defaultFileName) >= 0);
 	}
@@ -47,7 +50,9 @@ public class Files {
 
 			urlsViewData.clear();
 			data.urlsData.set(dataIndex,urlsData);
+			data.dirtyFlags.set(dataIndex,false);
 			App.urls.setData(urlsData,urlsViewData);
+			App.window.updateTitle();
 
 			if ( autoSelectRequested ) {
 				final String defaultFileName = App.settings.getUrlsFileSelect();

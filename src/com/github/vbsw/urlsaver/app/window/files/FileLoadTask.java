@@ -98,17 +98,17 @@ final class FileLoadTask extends Task<UrlsData> {
 	}
 
 	private int parseUrlAndTags ( final UrlsData urlsData, final byte[] bytes, final int offset ) {
-		final int insertedUrlIndex = parseUrl(urlsData,bytes,offset);
-		final int offsetNew = parseTags(urlsData,bytes,offset,insertedUrlIndex);
+		final int wordLength = Parser.getLengthTillNewLine(bytes,offset);
+		final int insertedUrlIndex = parseUrl(urlsData,bytes,offset,wordLength);
+		final int nextLineOffset = offset + wordLength;
+		final int newOffset = parseTags(urlsData,bytes,nextLineOffset,insertedUrlIndex);
 
-		return offsetNew;
+		return newOffset;
 	}
 
-	private int parseUrl ( final UrlsData urlsData, final byte[] bytes, final int offset ) {
-		final int wordLength = Parser.getLengthTillNewLine(bytes,offset);
-
-		if ( wordLength > 0 ) {
-			final String url = new String(bytes,offset,wordLength,Resources.ENCODING);
+	private int parseUrl ( final UrlsData urlsData, final byte[] bytes, final int offset, final int urlLength ) {
+		if ( urlLength > 0 ) {
+			final String url = new String(bytes,offset,urlLength,Resources.ENCODING);
 			final int urlIndex = urlsData.addUrl(url);
 
 			return urlIndex;
@@ -120,13 +120,12 @@ final class FileLoadTask extends Task<UrlsData> {
 
 	private int parseTags ( final UrlsData urlsData, final byte[] bytes, final int offset, final int insertedUrlIndex ) {
 		if ( insertedUrlIndex >= 0 ) {
-			int offsetNew = offset + urlsData.urls.get(insertedUrlIndex).length();
-			offsetNew = parseOneTag(urlsData,bytes,offsetNew,insertedUrlIndex);
+			int newOffset = parseOneTag(urlsData,bytes,offset,insertedUrlIndex);
 
-			while ( (offsetNew < bytes.length) && (Parser.isNewLine(bytes[offsetNew]) == false) ) {
-				offsetNew = parseOneTag(urlsData,bytes,offsetNew,insertedUrlIndex);
+			while ( (newOffset < bytes.length) && (Parser.isNewLine(bytes[newOffset]) == false) ) {
+				newOffset = parseOneTag(urlsData,bytes,newOffset,insertedUrlIndex);
 			}
-			return offsetNew;
+			return newOffset;
 
 		} else {
 			return bytes.length;
@@ -134,18 +133,18 @@ final class FileLoadTask extends Task<UrlsData> {
 	}
 
 	private int parseOneTag ( final UrlsData urlsData, final byte[] bytes, final int offset, final int insertedUrlIndex ) {
-		final int offsetTag = Parser.skipWhiteSpace(bytes,offset);
-		final int tagLength = Parser.getLengthTillWhiteSpace(bytes,offsetTag);
-		final int offsetNew;
+		final int tagOffset = Parser.skipWhiteSpace(bytes,offset);
+		final int tagLength = Parser.getLengthTillWhiteSpace(bytes,tagOffset);
+		final int newOffset;
 
 		if ( tagLength > 0 ) {
-			final String tag = new String(bytes,offsetTag,tagLength,Resources.ENCODING);
+			final String tag = new String(bytes,tagOffset,tagLength,Resources.ENCODING);
 
 			urlsData.addTagToUrl(insertedUrlIndex,tag);
 		}
-		offsetNew = offsetTag + tagLength;
+		newOffset = tagOffset + tagLength;
 
-		return offsetNew;
+		return newOffset;
 	}
 
 }

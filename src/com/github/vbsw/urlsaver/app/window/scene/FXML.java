@@ -46,7 +46,7 @@ public final class FXML {
 	}
 
 	private static Parent loadCustomFXML ( ) {
-		final Path externalFXMLPath = Paths.get(Jar.getPathToJar().toString(),Resources.CUSTOM_FXML_FILE_PATH);
+		final Path externalFXMLPath = Paths.get(Jar.getPath().toString(),Resources.CUSTOM_FXML_FILE_PATH);
 
 		if ( Files.exists(externalFXMLPath) ) {
 

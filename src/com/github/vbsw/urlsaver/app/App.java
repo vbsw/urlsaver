@@ -64,8 +64,10 @@ public final class App extends Application {
 		primaryStage.setMaximized(App.settings.isWindowMaximized());
 		primaryStage.show();
 
+		App.settings.updateView();
 		App.window.updateTitle();
 		App.window.setDecorationSize(App.scene.getWidth(),App.scene.getHeight());
+		App.files.resetAutoSelectRequest();
 		App.files.selectDefault();
 		App.files.processAutoLoad();
 	}

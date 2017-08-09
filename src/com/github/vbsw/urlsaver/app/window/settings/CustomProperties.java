@@ -11,7 +11,6 @@ package com.github.vbsw.urlsaver.app.window.settings;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import com.github.vbsw.urlsaver.resources.Resources;
 import com.github.vbsw.urlsaver.utility.Jar;
@@ -23,14 +22,22 @@ import com.github.vbsw.urlsaver.utility.Jar;
 @SuppressWarnings ( "serial" )
 final class CustomProperties extends DefaultProperties {
 
+	private boolean loaded = true;
+
 	CustomProperties ( ) {
-		final String FILE_NAME = Resources.CUSTOM_PROPERTIES_FILE_PATH;
-		final Path filePath = Paths.get(Jar.getPathToJar().toString(),FILE_NAME);
+		final String fileName = Resources.CUSTOM_SETTINGS_FILE_PATH;
+		final Path filePath = Jar.getPath().resolve(fileName);
 
 		try ( final InputStream stream = Files.newInputStream(filePath) ) {
 			load(stream);
+
 		} catch ( final Exception e ) {
+			loaded = false;
 		}
+	}
+
+	public boolean isLoaded ( ) {
+		return loaded;
 	}
 
 }

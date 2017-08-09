@@ -74,4 +74,12 @@ public class Window {
 		}
 	}
 
+	public boolean isMaximized ( ) {
+		return stage.isMaximized();
+	}
+
+	public void setMaximized ( final boolean maximized ) {
+		stage.setMaximized(maximized);
+	}
+
 }

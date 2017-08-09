@@ -28,6 +28,7 @@ public final class Scene extends javafx.scene.Scene {
 	public TopTabs topTab;
 	public TextAreas ta;
 	public TextFields tf;
+	public CheckBoxes cb;
 
 	public Scene ( ) {
 		super(new AnchorPane(),App.settings.getWindowWidth(),App.settings.getWindowHeight());
@@ -41,6 +42,7 @@ public final class Scene extends javafx.scene.Scene {
 		topTab = new TopTabs(fxml.root,tp);
 		ta = new TextAreas(fxml.root);
 		tf = new TextFields(fxml.root);
+		cb = new CheckBoxes(fxml.root);
 
 		setRoot(fxml.root);
 		btn.configure();
@@ -49,6 +51,7 @@ public final class Scene extends javafx.scene.Scene {
 		topTab.configure();
 		ta.configure();
 		tf.configure();
+		cb.configure();
 	}
 
 	public void loadCSS ( ) {

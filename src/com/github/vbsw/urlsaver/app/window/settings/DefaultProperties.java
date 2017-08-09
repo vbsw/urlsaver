@@ -23,10 +23,11 @@ import com.github.vbsw.urlsaver.utility.Parser;
 class DefaultProperties extends Properties {
 
 	DefaultProperties ( ) {
-		final String FILE_NAME = Resources.DEFAULT_PROPERTIES_FILE_PATH;
+		final String fileName = Resources.DEFAULT_PROPERTIES_FILE_PATH;
 
-		try ( final InputStream stream = Jar.getResourceAsStream(FILE_NAME) ) {
+		try ( final InputStream stream = Jar.getResourceAsStream(fileName) ) {
 			load(stream);
+
 		} catch ( final Exception e ) {
 			e.printStackTrace();
 		}

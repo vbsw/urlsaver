@@ -28,7 +28,7 @@ public final class Jar {
 	public static final String BIN_FOLDER = "/bin"; //$NON-NLS-1$
 	public static final int INITIAL_ARRAY_CAPACITY = 10;
 
-	public static Path getPathToJar ( ) {
+	public static Path getPath ( ) {
 		return getPathToJar(Jar.class);
 	}
 
@@ -80,8 +80,8 @@ public final class Jar {
 		}
 	}
 
-	public static ArrayList<Path> getFilePaths ( final String... extensions ) {
-		final Path dir = Jar.getPathToJar();
+	public static ArrayList<Path> getFiles ( final String... extensions ) {
+		final Path dir = Jar.getPath();
 		final ArrayList<Path> paths = new ArrayList<Path>(INITIAL_ARRAY_CAPACITY);
 
 		try ( final DirectoryStream<Path> filePathsStream = Files.newDirectoryStream(dir) ) {

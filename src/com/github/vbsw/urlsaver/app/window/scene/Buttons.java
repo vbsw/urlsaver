@@ -13,8 +13,11 @@ import com.github.vbsw.urlsaver.app.App;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 
 
 /**
@@ -37,6 +40,7 @@ public final class Buttons {
 	public final Button urlDeleteOK;
 	public final Button urlCreateOK;
 	public final Button urlEditOK;
+	public final MenuButton reloadSettingsFile;
 
 	Buttons ( final Parent root ) {
 		final String quitAppBtnSelector = "#quit_app_btn"; //$NON-NLS-1$
@@ -54,6 +58,7 @@ public final class Buttons {
 		final String urlsDeleteOKBtnSelector = "#url_delete_ok_btn"; //$NON-NLS-1$
 		final String urlsCreateOKBtnSelector = "#url_create_ok_btn"; //$NON-NLS-1$
 		final String urlsEditOKBtnSelector = "#url_edit_ok_btn"; //$NON-NLS-1$
+		final String reloadSettingsFileBtnSelector = "#reload_settings_file_btn"; //$NON-NLS-1$
 
 		quitApp = (Button) root.lookup(quitAppBtnSelector);
 		quitAppSave = (Button) root.lookup(quitAppSaveBtnSelector);
@@ -70,6 +75,7 @@ public final class Buttons {
 		urlDeleteOK = (Button) root.lookup(urlsDeleteOKBtnSelector);
 		urlCreateOK = (Button) root.lookup(urlsCreateOKBtnSelector);
 		urlEditOK = (Button) root.lookup(urlsEditOKBtnSelector);
+		reloadSettingsFile = (MenuButton) root.lookup(reloadSettingsFileBtnSelector);
 	}
 
 	void configure ( ) {
@@ -117,6 +123,30 @@ public final class Buttons {
 		urlEditOK.disableProperty().bind(getEditOKDisableBinding());
 		urlEditOK.setOnAction(event -> App.urls.vm.button_urlEditOK_clicked(event));
 		urlEditOK.setOnKeyPressed(event -> App.urls.vm.button_urlEditOK_keyPressed(event));
+		setCallbacks_reloadSettingsFile();
+	}
+
+	private void setCallbacks_reloadSettingsFile ( ) {
+		final ObservableList<MenuItem> items = reloadSettingsFile.getItems();
+		final String settingsBtnSelector = "reload_settings_file_btn"; //$NON-NLS-1$
+		final String cssBtnSelector = "reload_css_file_btn"; //$NON-NLS-1$
+		final String fxmlBtnSelector = "reload_fxml_file_btn"; //$NON-NLS-1$
+
+		for ( final MenuItem item: items ) {
+			final String id = item.getId();
+
+			if ( id != null ) {
+				if ( id.equals(settingsBtnSelector) ) {
+					item.setOnAction(event -> App.settings.vm.button_reloadSettingsFile_clicked(event));
+
+				} else if ( id.equals(cssBtnSelector) ) {
+					item.setOnAction(event -> App.settings.vm.button_reloadCSSFile_clicked(event));
+
+				} else if ( id.equals(fxmlBtnSelector) ) {
+					item.setOnAction(event -> App.settings.vm.button_reloadFXMLFile_clicked(event));
+				}
+			}
+		}
 	}
 
 	private ObservableValue<? extends Boolean> getUrlCancelDisableBinding ( ) {

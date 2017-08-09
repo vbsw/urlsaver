@@ -21,11 +21,14 @@ import javafx.scene.control.TextArea;
 public final class TextAreas {
 
 	public final TextArea tags;
+	public final TextArea log;
 
 	TextAreas ( final Parent root ) {
 		final String tagsTextAreaSelector = "#tags_ta"; //$NON-NLS-1$
+		final String logTextAreaSelector = "#log_ta"; //$NON-NLS-1$
 
 		tags = (TextArea) root.lookup(tagsTextAreaSelector);
+		log = (TextArea) root.lookup(logTextAreaSelector);
 	}
 
 	public void configure ( ) {

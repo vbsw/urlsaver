@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<TabPane fx:id="top_tab_pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="720.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+<TabPane fx:id="top_tab_pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="720.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
   <tabs>
     <Tab fx:id="files_tab" text="Files">
          <content>
@@ -97,26 +97,26 @@
                     </rowConstraints>
                      <children>
                         <Label text="title" GridPane.rowIndex="1" />
-                        <TextField maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="1" />
+                        <TextField fx:id="settings_title_tf" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="1" />
                         <Label text="width" GridPane.rowIndex="2" />
                         <Label text="height" GridPane.rowIndex="3" />
-                        <TextField maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TextField maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextField fx:id="settings_width_tf" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="settings_height_tf" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label text="window">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <CheckBox mnemonicParsing="false" text="maximize at startup" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <CheckBox fx:id="settings_maximize_cb" mnemonicParsing="false" text="maximize at startup" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <Label text="URLs" GridPane.columnIndex="3">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <TextField maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                        <TextField maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                        <CheckBox mnemonicParsing="false" text="load all files at startup" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                        <CheckBox mnemonicParsing="false" text="search URLs by prefix" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                        <TextField fx:id="settings_file_extension_tf" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                        <TextField fx:id="settings_default_file_tf" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                        <CheckBox fx:id="settings_load_at_start_cb" mnemonicParsing="false" text="load all files at startup" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                        <CheckBox fx:id="settings_by_prefix_cb" mnemonicParsing="false" text="search URLs by prefix" GridPane.columnIndex="4" GridPane.rowIndex="4" />
                         <Label text="file extension" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                         <Label text="default file" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                      </children>
@@ -127,16 +127,16 @@
                   <AnchorPane prefHeight="47.0" prefWidth="710.0" VBox.vgrow="ALWAYS" />
                   <HBox prefHeight="17.0" prefWidth="720.0" spacing="5.0">
                      <children>
-                        <MenuButton mnemonicParsing="false" text="Reload File">
+                        <MenuButton fx:id="reload_settings_file_btn" mnemonicParsing="false" text="Reload File">
                           <items>
-                            <MenuItem mnemonicParsing="false" text="urlsaver.properties" />
-                            <MenuItem mnemonicParsing="false" text="urlsaver.css" />
-                              <MenuItem mnemonicParsing="false" text="urlsaver.fxml" />
+                            <MenuItem fx:id="reload_settings_file_btn" mnemonicParsing="false" text="urlsaver.settings" />
+                            <MenuItem fx:id="reload_css_file_btn" mnemonicParsing="false" text="urlsaver.css" />
+                              <MenuItem fx:id="reload_fxml_file_btn" mnemonicParsing="false" text="urlsaver.fxml" />
                           </items>
                         </MenuButton>
                         <AnchorPane HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" text="Cancel" />
-                        <Button mnemonicParsing="false" text="Save Settings" />
+                        <Button disable="true" mnemonicParsing="false" text="Cancel" />
+                        <Button disable="true" mnemonicParsing="false" text="Save Settings" />
                         <MenuButton mnemonicParsing="false" text="Create File">
                           <items>
                             <MenuItem mnemonicParsing="false" text="urlsaver.properties" />
@@ -144,10 +144,10 @@
                               <MenuItem mnemonicParsing="false" text="urlsaver.fxml" />
                           </items>
                         </MenuButton>
-                        <Button mnemonicParsing="false" text="Overwrite, OK" />
+                        <Button disable="true" mnemonicParsing="false" text="Overwrite, OK" />
                      </children>
                   </HBox>
-                  <TextArea fx:id="log_ta" editable="false" prefHeight="70.0" prefWidth="200.0" promptText="log" wrapText="true" VBox.vgrow="NEVER" />
+                  <TextArea fx:id="log_ta" editable="false" prefHeight="150.0" prefWidth="200.0" promptText="log" wrapText="true" VBox.vgrow="NEVER" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
