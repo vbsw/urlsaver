@@ -135,16 +135,16 @@
                           </items>
                         </MenuButton>
                         <AnchorPane HBox.hgrow="ALWAYS" />
-                        <Button disable="true" mnemonicParsing="false" text="Cancel" />
+                        <Button fx:id="settings_cancel_btn" disable="true" mnemonicParsing="false" text="Cancel" />
                         <Button disable="true" mnemonicParsing="false" text="Save Settings" />
-                        <MenuButton mnemonicParsing="false" text="Create File">
+                        <MenuButton fx:id="create_settings_file_btn" mnemonicParsing="false" text="Create File">
                           <items>
-                            <MenuItem mnemonicParsing="false" text="urlsaver.properties" />
-                            <MenuItem mnemonicParsing="false" text="urlsaver.css" />
-                              <MenuItem mnemonicParsing="false" text="urlsaver.fxml" />
+                            <MenuItem fx:id="create_settings_file_btn" mnemonicParsing="false" text="urlsaver.settings" />
+                            <MenuItem fx:id="create_css_file_btn" mnemonicParsing="false" text="urlsaver.css" />
+                              <MenuItem fx:id="create_fxml_file_btn" mnemonicParsing="false" text="urlsaver.fxml" />
                           </items>
                         </MenuButton>
-                        <Button disable="true" mnemonicParsing="false" text="Overwrite, OK" />
+                        <Button fx:id="create_settings_file_ok_btn" disable="true" mnemonicParsing="false" text="Overwrite, OK" />
                      </children>
                   </HBox>
                   <TextArea fx:id="log_ta" editable="false" prefHeight="150.0" prefWidth="200.0" promptText="log" wrapText="true" VBox.vgrow="NEVER" />
@@ -169,7 +169,7 @@
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Version 0.3.0" />
                         <Label maxWidth="1.7976931348623157E308" text="  " />
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="URL Saver is a tool to manage URLs by keywords." />
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Source code is on &lt;https://github.com/vbsw/urlsaver&gt;." />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Source code is on https://github.com/vbsw/urlsaver." />
                         <Label maxWidth="1.7976931348623157E308" text="  " />
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Copyright 2017, Vitali Baumtrok (vbsw@mailbox.org)." />
                         <Label maxWidth="1.7976931348623157E308" text="  " />

@@ -292,7 +292,15 @@ public final class Settings {
 		App.scene.cb.byPrefix.setDisable(disabled);
 	}
 
-	public void log ( final String message ) {
+	public void logSuccess ( final String message ) {
+		log("Success: ",message);
+	}
+
+	public void logFailure ( final String message ) {
+		log("Failure: ",message);
+	}
+
+	private void log ( final String prefix, final String message ) {
 		final String timeStr = FormattedTime.get();
 
 		if ( App.scene.ta.log.getText().length() > 0 ) {
@@ -300,6 +308,7 @@ public final class Settings {
 		}
 		App.scene.ta.log.appendText(timeStr);
 		App.scene.ta.log.appendText(" ");
+		App.scene.ta.log.appendText(prefix);
 		App.scene.ta.log.appendText(message);
 	}
 

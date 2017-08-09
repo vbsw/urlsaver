@@ -26,7 +26,6 @@ import javafx.scene.input.MouseEvent;
  * @author Vitali Baumtrok
  */
 public class FilesViewModel {
-
 	final SimpleBooleanProperty selectedFileDirty = new SimpleBooleanProperty();
 	final SimpleBooleanProperty confirmingSave = new SimpleBooleanProperty();
 	final SimpleBooleanProperty selected = new SimpleBooleanProperty();

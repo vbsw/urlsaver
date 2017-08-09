@@ -41,6 +41,9 @@ public final class Buttons {
 	public final Button urlCreateOK;
 	public final Button urlEditOK;
 	public final MenuButton reloadSettingsFile;
+	public final MenuButton createSettingsFile;
+	public final Button createSettingsFileOK;
+	public final Button settingsCancel;
 
 	Buttons ( final Parent root ) {
 		final String quitAppBtnSelector = "#quit_app_btn"; //$NON-NLS-1$
@@ -59,6 +62,9 @@ public final class Buttons {
 		final String urlsCreateOKBtnSelector = "#url_create_ok_btn"; //$NON-NLS-1$
 		final String urlsEditOKBtnSelector = "#url_edit_ok_btn"; //$NON-NLS-1$
 		final String reloadSettingsFileBtnSelector = "#reload_settings_file_btn"; //$NON-NLS-1$
+		final String createSettingsFileBtnSelector = "#create_settings_file_btn"; //$NON-NLS-1$
+		final String createSettingsFileOKBtnSelector = "#create_settings_file_ok_btn"; //$NON-NLS-1$
+		final String settingsCancelBtnSelector = "#settings_cancel_btn"; //$NON-NLS-1$
 
 		quitApp = (Button) root.lookup(quitAppBtnSelector);
 		quitAppSave = (Button) root.lookup(quitAppSaveBtnSelector);
@@ -76,6 +82,9 @@ public final class Buttons {
 		urlCreateOK = (Button) root.lookup(urlsCreateOKBtnSelector);
 		urlEditOK = (Button) root.lookup(urlsEditOKBtnSelector);
 		reloadSettingsFile = (MenuButton) root.lookup(reloadSettingsFileBtnSelector);
+		createSettingsFile = (MenuButton) root.lookup(createSettingsFileBtnSelector);
+		createSettingsFileOK = (Button) root.lookup(createSettingsFileOKBtnSelector);
+		settingsCancel = (Button) root.lookup(settingsCancelBtnSelector);
 	}
 
 	void configure ( ) {
@@ -123,7 +132,13 @@ public final class Buttons {
 		urlEditOK.disableProperty().bind(getEditOKDisableBinding());
 		urlEditOK.setOnAction(event -> App.urls.vm.button_urlEditOK_clicked(event));
 		urlEditOK.setOnKeyPressed(event -> App.urls.vm.button_urlEditOK_keyPressed(event));
+		createSettingsFile.disableProperty().bind(getCreateSettingsFileDisableBinding());
 		setCallbacks_reloadSettingsFile();
+		setCallbacks_createSettingsFile();
+		createSettingsFileOK.disableProperty().bind(getCreateSettingsFileDisableBinding().not());
+		createSettingsFileOK.setOnAction(event -> App.settings.vm.button_createSettingsFileOK_clicked(event));
+		settingsCancel.disableProperty().bind(getCreateSettingsCancelBinding());
+		settingsCancel.setOnAction(event -> App.settings.vm.button_settingsCancel_clicked(event));
 	}
 
 	private void setCallbacks_reloadSettingsFile ( ) {
@@ -144,6 +159,29 @@ public final class Buttons {
 
 				} else if ( id.equals(fxmlBtnSelector) ) {
 					item.setOnAction(event -> App.settings.vm.button_reloadFXMLFile_clicked(event));
+				}
+			}
+		}
+	}
+
+	private void setCallbacks_createSettingsFile ( ) {
+		final ObservableList<MenuItem> items = createSettingsFile.getItems();
+		final String settingsBtnSelector = "create_settings_file_btn"; //$NON-NLS-1$
+		final String cssBtnSelector = "create_css_file_btn"; //$NON-NLS-1$
+		final String fxmlBtnSelector = "create_fxml_file_btn"; //$NON-NLS-1$
+
+		for ( final MenuItem item: items ) {
+			final String id = item.getId();
+
+			if ( id != null ) {
+				if ( id.equals(settingsBtnSelector) ) {
+					item.setOnAction(event -> App.settings.vm.button_createSettingsFile_clicked(event));
+
+				} else if ( id.equals(cssBtnSelector) ) {
+					item.setOnAction(event -> App.settings.vm.button_createCSSFile_clicked(event));
+
+				} else if ( id.equals(fxmlBtnSelector) ) {
+					item.setOnAction(event -> App.settings.vm.button_createFXMLFile_clicked(event));
 				}
 			}
 		}
@@ -175,6 +213,24 @@ public final class Buttons {
 
 		binding = Bindings.not(App.urls.vm.urlModifiedProperty());
 		binding = Bindings.and(binding,App.urls.vm.tagsModifiedProperty());
+		binding = Bindings.not(binding);
+
+		return binding;
+	}
+
+	private BooleanBinding getCreateSettingsFileDisableBinding ( ) {
+		BooleanBinding binding;
+
+		binding = Bindings.or(App.settings.vm.confirmingCreateSettingsProperty(),App.settings.vm.confirmingCreateCSSProperty());
+		binding = Bindings.or(binding,App.settings.vm.confirmingCreateFXMLProperty());
+
+		return binding;
+	}
+
+	private ObservableValue<? extends Boolean> getCreateSettingsCancelBinding ( ) {
+		BooleanBinding binding;
+
+		binding = Bindings.or(getCreateSettingsFileDisableBinding(),App.settings.vm.settingsModifiedProperty());
 		binding = Bindings.not(binding);
 
 		return binding;

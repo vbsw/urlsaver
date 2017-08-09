@@ -25,7 +25,7 @@ public final class Resources {
 	public static final String CUSTOM_FXML_FILE_PATH = "urlsaver.fxml"; //$NON-NLS-1$
 	public static final String DEFAULT_FXML_FILE_PATH = "com/github/vbsw/urlsaver/resources/default.fxml"; //$NON-NLS-1$
 
-	public static final String DEFAULT_PROPERTIES_FILE_PATH = "com/github/vbsw/urlsaver/resources/default.settings"; //$NON-NLS-1$
+	public static final String DEFAULT_SETTINGS_FILE_PATH = "com/github/vbsw/urlsaver/resources/default.settings"; //$NON-NLS-1$
 	public static final String CUSTOM_SETTINGS_FILE_PATH = "urlsaver.settings"; //$NON-NLS-1$
 
 }
