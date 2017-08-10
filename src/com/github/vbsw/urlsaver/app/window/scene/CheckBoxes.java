@@ -8,6 +8,9 @@
 package com.github.vbsw.urlsaver.app.window.scene;
 
 
+import com.github.vbsw.urlsaver.app.App;
+
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 
@@ -32,6 +35,9 @@ public class CheckBoxes {
 	}
 
 	public void configure ( ) {
+		maximize.selectedProperty().addListener( ( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) -> App.settings.vm.textField_maximize_changed(observable,oldValue,newValue));
+		loadAtStart.selectedProperty().addListener( ( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) -> App.settings.vm.textField_loadAtStart_changed(observable,oldValue,newValue));
+		byPrefix.selectedProperty().addListener( ( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) -> App.settings.vm.textField_byPrefix_changed(observable,oldValue,newValue));
 	}
 
 }

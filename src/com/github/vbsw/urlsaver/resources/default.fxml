@@ -136,7 +136,7 @@
                         </MenuButton>
                         <AnchorPane HBox.hgrow="ALWAYS" />
                         <Button fx:id="settings_cancel_btn" disable="true" mnemonicParsing="false" text="Cancel" />
-                        <Button disable="true" mnemonicParsing="false" text="Save Settings" />
+                        <Button fx:id="save_settings_btn" disable="true" mnemonicParsing="false" text="Save Settings" />
                         <MenuButton fx:id="create_settings_file_btn" mnemonicParsing="false" text="Create File">
                           <items>
                             <MenuItem fx:id="create_settings_file_btn" mnemonicParsing="false" text="urlsaver.settings" />

@@ -53,6 +53,11 @@ public final class TextFields {
 		urlSearch.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> App.urls.vm.textField_urlSearch_changed(observable,oldValue,newValue));
 		urlSearch.setOnAction(event -> App.urls.vm.textField_urlSearch_enterPressed(event));
 		url.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> App.urls.vm.textField_url_changed(observable,oldValue,newValue));
+		title.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> App.settings.vm.textField_title_changed(observable,oldValue,newValue));
+		width.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> App.settings.vm.textField_width_changed(observable,oldValue,newValue));
+		height.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> App.settings.vm.textField_height_changed(observable,oldValue,newValue));
+		fileExtension.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> App.settings.vm.textField_fileExtension_changed(observable,oldValue,newValue));
+		defaultFile.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> App.settings.vm.textField_defaultFile_changed(observable,oldValue,newValue));
 	}
 
 }

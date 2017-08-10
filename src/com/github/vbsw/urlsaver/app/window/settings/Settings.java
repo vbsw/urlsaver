@@ -8,8 +8,14 @@
 package com.github.vbsw.urlsaver.app.window.settings;
 
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import com.github.vbsw.urlsaver.app.App;
+import com.github.vbsw.urlsaver.resources.Resources;
 import com.github.vbsw.urlsaver.utility.FormattedTime;
+import com.github.vbsw.urlsaver.utility.Jar;
 
 
 /**
@@ -161,7 +167,7 @@ public final class Settings {
 	}
 
 	public void setCustomWindowHeight ( final double windowHeight ) {
-		customWindowWidth = windowHeight;
+		customWindowHeight = windowHeight;
 	}
 
 	public boolean isCustomWindowHeightAvailable ( ) {
@@ -176,7 +182,7 @@ public final class Settings {
 		return customWindowMaximized > 0;
 	}
 
-	public void isWindowMaximized ( final boolean windowMaximized ) {
+	public void setWindowMaximized ( final boolean windowMaximized ) {
 		this.windowMaximized = windowMaximized ? 1 : 0;
 	}
 
@@ -298,6 +304,50 @@ public final class Settings {
 
 	public void logFailure ( final String message ) {
 		log("Failure: ",message);
+	}
+
+	public boolean saveCustom ( ) {
+		final StringBuilder stringBuilder = new StringBuilder(400);
+		final String newLine = "\r\n";
+
+		stringBuilder.append("window.title=");
+		stringBuilder.append(customWindowTitle);
+		stringBuilder.append(newLine);
+		stringBuilder.append("window.width=");
+		stringBuilder.append(Integer.toString((int) customWindowWidth));
+		stringBuilder.append(newLine);
+		stringBuilder.append("window.height=");
+		stringBuilder.append(Integer.toString((int) customWindowHeight));
+		stringBuilder.append(newLine);
+		stringBuilder.append("window.maximized=");
+		stringBuilder.append(Boolean.toString(customWindowMaximized == 1));
+		stringBuilder.append(newLine);
+		stringBuilder.append("urls.file.extension=");
+		stringBuilder.append(customFileExtension);
+		stringBuilder.append(newLine);
+		stringBuilder.append("urls.file.select=");
+		stringBuilder.append(customFileSelect);
+		stringBuilder.append(newLine);
+		stringBuilder.append("autoload.all=");
+		stringBuilder.append(Boolean.toString(customAutoloadAll == 1));
+		stringBuilder.append(newLine);
+		stringBuilder.append("search.by.prefix=");
+		stringBuilder.append(Boolean.toString(customSearchByPrefix == 1));
+		stringBuilder.append(newLine);
+
+		try {
+			final byte[] bytes = stringBuilder.toString().getBytes(Resources.ENCODING);
+			final Path path = Jar.getPath().resolve(Resources.CUSTOM_SETTINGS_FILE_PATH);
+
+			Files.write(path,bytes);
+
+			return true;
+
+		} catch ( final IOException e ) {
+			e.printStackTrace();
+
+			return false;
+		}
 	}
 
 	private void log ( final String prefix, final String message ) {

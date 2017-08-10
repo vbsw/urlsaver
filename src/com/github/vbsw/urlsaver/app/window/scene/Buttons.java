@@ -44,6 +44,7 @@ public final class Buttons {
 	public final MenuButton createSettingsFile;
 	public final Button createSettingsFileOK;
 	public final Button settingsCancel;
+	public final Button saveSettings;
 
 	Buttons ( final Parent root ) {
 		final String quitAppBtnSelector = "#quit_app_btn"; //$NON-NLS-1$
@@ -65,6 +66,7 @@ public final class Buttons {
 		final String createSettingsFileBtnSelector = "#create_settings_file_btn"; //$NON-NLS-1$
 		final String createSettingsFileOKBtnSelector = "#create_settings_file_ok_btn"; //$NON-NLS-1$
 		final String settingsCancelBtnSelector = "#settings_cancel_btn"; //$NON-NLS-1$
+		final String saveSettingsBtnSelector = "#save_settings_btn"; //$NON-NLS-1$
 
 		quitApp = (Button) root.lookup(quitAppBtnSelector);
 		quitAppSave = (Button) root.lookup(quitAppSaveBtnSelector);
@@ -85,6 +87,7 @@ public final class Buttons {
 		createSettingsFile = (MenuButton) root.lookup(createSettingsFileBtnSelector);
 		createSettingsFileOK = (Button) root.lookup(createSettingsFileOKBtnSelector);
 		settingsCancel = (Button) root.lookup(settingsCancelBtnSelector);
+		saveSettings = (Button) root.lookup(saveSettingsBtnSelector);
 	}
 
 	void configure ( ) {
@@ -139,6 +142,8 @@ public final class Buttons {
 		createSettingsFileOK.setOnAction(event -> App.settings.vm.button_createSettingsFileOK_clicked(event));
 		settingsCancel.disableProperty().bind(getCreateSettingsCancelBinding());
 		settingsCancel.setOnAction(event -> App.settings.vm.button_settingsCancel_clicked(event));
+		saveSettings.disableProperty().bind(getSettingsChangedBinding().not());
+		saveSettings.setOnAction(event -> App.settings.vm.button_saveSettings_clicked(event));
 	}
 
 	private void setCallbacks_reloadSettingsFile ( ) {
@@ -232,6 +237,20 @@ public final class Buttons {
 
 		binding = Bindings.or(getCreateSettingsFileDisableBinding(),App.settings.vm.settingsModifiedProperty());
 		binding = Bindings.not(binding);
+
+		return binding;
+	}
+
+	private BooleanBinding getSettingsChangedBinding ( ) {
+		BooleanBinding binding;
+
+		binding = Bindings.or(App.settings.vm.titleChangedProperty(),App.settings.vm.widthChangedProperty());
+		binding = Bindings.or(binding,App.settings.vm.heightChangedProperty());
+		binding = Bindings.or(binding,App.settings.vm.fileExtensionChangedProperty());
+		binding = Bindings.or(binding,App.settings.vm.defaultFileChangedProperty());
+		binding = Bindings.or(binding,App.settings.vm.maximizeChangedProperty());
+		binding = Bindings.or(binding,App.settings.vm.loadAtStartChangedProperty());
+		binding = Bindings.or(binding,App.settings.vm.byPrefixChangedProperty());
 
 		return binding;
 	}
