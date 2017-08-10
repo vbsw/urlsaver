@@ -14,11 +14,16 @@ import java.nio.file.Path;
 import com.github.vbsw.urlsaver.app.App;
 import com.github.vbsw.urlsaver.resources.Resources;
 import com.github.vbsw.urlsaver.utility.Jar;
+import com.github.vbsw.urlsaver.utility.Parser;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextField;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 
 /**
@@ -179,27 +184,27 @@ public class SettingsViewModel {
 		final boolean titlesEqual = App.settings.getWindowTitle().equals(newValue);
 
 		App.settings.setCustomWindowTitle(newValue);
-
+		setFontWeight(App.scene.tf.title,!titlesEqual);
 		titleChanged.set(!titlesEqual);
 	}
 
 	public void textField_width_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final int width = (int) App.settings.getWindowWidth();
 		final boolean widthsEqual = Integer.toString(width).equals(newValue);
-		final int newWidth = Integer.parseInt(newValue);
+		final int newWidth = Parser.toInt(newValue);
 
 		App.settings.setCustomWindowWidth(newWidth);
-
+		setFontWeight(App.scene.tf.width,!widthsEqual);
 		widthChanged.set(!widthsEqual);
 	}
 
 	public void textField_height_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final int height = (int) App.settings.getWindowHeight();
 		final boolean heightsEqual = Integer.toString(height).equals(newValue);
-		final int newHeight = Integer.parseInt(newValue);
+		final int newHeight = Parser.toInt(newValue);
 
 		App.settings.setCustomWindowHeight(newHeight);
-
+		setFontWeight(App.scene.tf.height,!heightsEqual);
 		heightChanged.set(!heightsEqual);
 	}
 
@@ -207,7 +212,7 @@ public class SettingsViewModel {
 		final boolean fileExtensionEqual = App.settings.getUrlsFileExtension().equals(newValue);
 
 		App.settings.setCustomUrlsFileExtension(newValue);
-
+		setFontWeight(App.scene.tf.fileExtension,!fileExtensionEqual);
 		fileExtensionChanged.set(!fileExtensionEqual);
 	}
 
@@ -215,7 +220,7 @@ public class SettingsViewModel {
 		final boolean defaultFilesEqual = App.settings.getUrlsFileSelect().equals(newValue);
 
 		App.settings.setCustomUrlsFileSelect(newValue);
-
+		setFontWeight(App.scene.tf.defaultFile,!defaultFilesEqual);
 		defaultFileChanged.set(!defaultFilesEqual);
 	}
 
@@ -223,7 +228,7 @@ public class SettingsViewModel {
 		final boolean maximizesEqual = App.settings.isWindowMaximized() == newValue;
 
 		App.settings.setCustomWindowMaximized(newValue);
-
+		setFontWeight(App.scene.cb.maximize,!maximizesEqual);
 		maximizeChanged.set(!maximizesEqual);
 	}
 
@@ -231,7 +236,7 @@ public class SettingsViewModel {
 		final boolean loadAtStartsEqual = App.settings.isAutoloadAll() == newValue;
 
 		App.settings.setCustomAutoloadAll(newValue);
-
+		setFontWeight(App.scene.cb.loadAtStart,!loadAtStartsEqual);
 		maximizeChanged.set(!loadAtStartsEqual);
 	}
 
@@ -239,7 +244,7 @@ public class SettingsViewModel {
 		final boolean byPrefixsEqual = App.settings.isSearchByPrefix() == newValue;
 
 		App.settings.setCustomSearchByPrefix(newValue);
-
+		setFontWeight(App.scene.cb.byPrefix,!byPrefixsEqual);
 		maximizeChanged.set(!byPrefixsEqual);
 	}
 
@@ -256,6 +261,14 @@ public class SettingsViewModel {
 			maximizeChanged.set(false);
 			loadAtStartChanged.set(false);
 			byPrefixChanged.set(false);
+			setFontWeight(App.scene.tf.title,false);
+			setFontWeight(App.scene.tf.width,false);
+			setFontWeight(App.scene.tf.height,false);
+			setFontWeight(App.scene.tf.fileExtension,false);
+			setFontWeight(App.scene.tf.defaultFile,false);
+			setFontWeight(App.scene.cb.maximize,false);
+			setFontWeight(App.scene.cb.loadAtStart,false);
+			setFontWeight(App.scene.cb.byPrefix,false);
 			App.settings.logSuccess("file saved (" + Resources.CUSTOM_SETTINGS_FILE_PATH + ")");
 			App.scene.ta.log.requestFocus();
 
@@ -263,7 +276,25 @@ public class SettingsViewModel {
 			App.settings.logFailure("file not saved (" + Resources.CUSTOM_SETTINGS_FILE_PATH + ")");
 			App.scene.ta.log.requestFocus();
 		}
+	}
 
+	private void setFontWeight ( final TextField textField, final boolean bold ) {
+		final Font font = App.scene.tf.width.getFont();
+		final FontWeight fontWeight = bold ? FontWeight.BOLD : FontWeight.NORMAL;
+		final Font newFont = Font.font(font.getFamily(),fontWeight,font.getSize());
+
+		textField.setFont(newFont);
+	}
+
+	private void setFontWeight ( final CheckBox checkBox, final boolean bold ) {
+		final String newStyle;
+
+		if ( bold ) {
+			newStyle = "-fx-font-weight:bold;";
+		} else {
+			newStyle = "-fx-font-weight:normal;";
+		}
+		checkBox.setStyle(newStyle);
 	}
 
 }

@@ -156,4 +156,13 @@ public final class Parser {
 		}
 	}
 
+	public static int toInt ( final String intString ) {
+		try {
+			return Integer.parseInt(intString);
+
+		} catch ( final NumberFormatException e ) {
+			return 0;
+		}
+	}
+
 }
