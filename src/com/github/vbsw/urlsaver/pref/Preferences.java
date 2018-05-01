@@ -1,8 +1,9 @@
-
-//    Copyright 2018, Vitali Baumtrok (vbsw@mailbox.org).
-// Distributed under the Boost Software License, Version 1.0.
-//     (See accompanying file BSL-1.0.txt or copy at
-//        http://www.boost.org/LICENSE_1_0.txt)
+/*
+ *    Copyright 2018, Vitali Baumtrok (vbsw@mailbox.org).
+ * Distributed under the Boost Software License, Version 1.0.
+ *      (See accompanying file LICENSE or copy at
+ *        http://www.boost.org/LICENSE_1_0.txt)
+ */
 
 
 package com.github.vbsw.urlsaver.pref;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Properties;
 
 import com.github.vbsw.urlsaver.JarFile;
+import com.github.vbsw.urlsaver.Parser;
 import com.github.vbsw.urlsaver.args.ArgumentsConfig;
 import com.github.vbsw.urlsaver.args.ArgumentsParser;
 import com.github.vbsw.urlsaver.resources.ResourcesConfig;
@@ -211,7 +213,7 @@ public class Preferences {
 		if ( args.size() > 0 ) {
 			final String arg = args.get(0);
 			final String pathStrBare = ArgumentsParser.getValue(arg,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR);
-			final String pathStr = ArgumentsParser.trim(pathStrBare);
+			final String pathStr = Parser.trim(pathStrBare);
 			if ( pathStr.length() > 0 ) {
 				final Path path = Paths.get(pathStr);
 				final Path dir = path.getParent();

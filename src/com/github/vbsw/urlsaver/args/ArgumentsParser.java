@@ -1,9 +1,9 @@
-
-//    Copyright 2018, Vitali Baumtrok (vbsw@mailbox.org).
-// Distributed under the Boost Software License, Version 1.0.
-//     (See accompanying file BSL-1.0.txt or copy at
-//        http://www.boost.org/LICENSE_1_0.txt)
-
+/*
+ *    Copyright 2018, Vitali Baumtrok (vbsw@mailbox.org).
+ * Distributed under the Boost Software License, Version 1.0.
+ *      (See accompanying file LICENSE or copy at
+ *        http://www.boost.org/LICENSE_1_0.txt)
+ */
 
 package com.github.vbsw.urlsaver.args;
 
@@ -34,18 +34,6 @@ public class ArgumentsParser {
 		return "";
 	}
 
-	public static String trim ( final String str ) {
-		final int beginIndex = ArgumentsParser.seekContent(str,0,str.length());
-		if ( beginIndex < str.length() ) {
-			final int endIndex = ArgumentsParser.seekContentReverse(str,str.length(),beginIndex);
-			if ( str.length() == endIndex - beginIndex )
-				return str;
-			else
-				return str.substring(beginIndex,endIndex);
-		}
-		return "";
-	}
-
 	public static int getWordOffset ( final String arg ) {
 		if ( arg.length() > 0 )
 			if ( arg.charAt(0) == '-' )
@@ -54,30 +42,6 @@ public class ArgumentsParser {
 				else
 					return 1;
 		return 0;
-	}
-
-	private static int seekContent ( final String str, final int fromLeft, final int toRight ) {
-		if ( fromLeft < toRight ) {
-			for ( int i = fromLeft; i < toRight; i += 1 )
-				if ( !ArgumentsParser.isWhitespace(str.charAt(i)) )
-					return i;
-			return toRight;
-		}
-		return fromLeft;
-	}
-
-	private static int seekContentReverse ( final String str, final int fromRight, final int toLeft ) {
-		if ( fromRight > toLeft ) {
-			for ( int i = fromRight - 1; i >= toLeft; i -= 1 )
-				if ( !isWhitespace(str.charAt(i)) )
-					return i + 1;
-			return toLeft;
-		}
-		return fromRight;
-	}
-
-	private static boolean isWhitespace ( final char character ) {
-		return character >= 0 && character <= 32;
 	}
 
 	private static boolean isMatch ( final String arg, final int offset, final String word ) {
