@@ -38,6 +38,20 @@ Example URL file:
 	https://www.eclipse.org
 	eclipse ide java compiler debugger
 
+## Using Git
+Get the master branch and all refs of this project:
+
+	$ git clone https://github.com/vbsw/semver.git
+
+See local and remote branches:
+
+	$ git branch -a
+
+Checkout other branches than master, for example the development branch:
+
+	$ git branch development origin/development
+	$ git checkout development
+
 ## References
 - <https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>
 - <https://www.eclipse.org>
