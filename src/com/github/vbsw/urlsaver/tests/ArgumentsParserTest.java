@@ -5,7 +5,7 @@
 //        http://www.boost.org/LICENSE_1_0.txt)
 
 
-package com.github.vbsw.urlsaver.test;
+package com.github.vbsw.urlsaver.tests;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
