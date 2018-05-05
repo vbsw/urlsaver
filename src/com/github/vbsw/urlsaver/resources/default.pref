@@ -4,5 +4,5 @@ window.height=480
 window.maximized=false
 urls.file.extension=urls.txt
 urls.file.select=urls.txt
-autoload.all=false
-search.by.prefix=true
+urls.file.autoload.all=true
+search.byprefix=true

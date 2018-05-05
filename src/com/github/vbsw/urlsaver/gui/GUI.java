@@ -35,6 +35,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 
 /**
@@ -42,13 +43,13 @@ import javafx.scene.layout.AnchorPane;
  */
 public class GUI {
 
-	public static final Buttons btn = new Buttons();
-	public static final CheckBoxes cb = new CheckBoxes();
-	public static final ListViews lv = new ListViews();
-	public static final TabPanes tp = new TabPanes();
-	public static final TextAreas ta = new TextAreas();
-	public static final TextFields tf = new TextFields();
-	public static final TopTabs tt = new TopTabs();
+	public static final Buttons buttons = new Buttons();
+	public static final CheckBoxes checkBoxes = new CheckBoxes();
+	public static final ListViews listViews = new ListViews();
+	public static final TabPanes tabPanes = new TabPanes();
+	public static final TextAreas textAreas = new TextAreas();
+	public static final TextFields textFields = new TextFields();
+	public static final TopTabs topTabs = new TopTabs();
 
 	public static Scene scene;
 	public static CSS css;
@@ -86,131 +87,136 @@ public class GUI {
 
 	@SuppressWarnings ( "unchecked" )
 	public static void setElements ( final Parent root ) {
-		btn.quitApp = (Button) root.lookup("#quit_app_btn");
-		btn.quitAppSave = (Button) root.lookup("#quit_app_save_btn");
-		btn.quitAppOK = (Button) root.lookup("#quit_app_ok_btn");
-		btn.reloadFile = (Button) root.lookup("#reload_file_btn");
-		btn.reloadAllFiles = (Button) root.lookup("#reload_all_files_btn");
-		btn.fileSave = (Button) root.lookup("#file_save_btn");
-		btn.fileCancel = (Button) root.lookup("#file_cancel_btn");
-		btn.fileSaveOK = (Button) root.lookup("#file_save_ok_btn");
-		btn.openInBrowser = (Button) root.lookup("#open_in_browser_btn");
-		btn.urlSearch = (Button) root.lookup("#url_search_btn");
-		btn.urlCancel = (Button) root.lookup("#url_cancel_btn");
-		btn.urlDelete = (Button) root.lookup("#url_delete_btn");
-		btn.urlDeleteOK = (Button) root.lookup("#url_delete_ok_btn");
-		btn.urlCreateOK = (Button) root.lookup("#url_create_ok_btn");
-		btn.urlEditOK = (Button) root.lookup("#url_edit_ok_btn");
-		btn.reloadSettingsFile = (MenuButton) root.lookup("#reload_settings_file_btn");
-		btn.createSettingsFile = (MenuButton) root.lookup("#create_settings_file_btn");
-		btn.createSettingsFileOK = (Button) root.lookup("#create_settings_file_ok_btn");
-		btn.settingsCancel = (Button) root.lookup("#settings_cancel_btn");
-		btn.saveSettings = (Button) root.lookup("#save_settings_btn");
+		buttons.quitApp = (Button) root.lookup("#quit_app_btn");
+		buttons.quitAppSave = (Button) root.lookup("#quit_app_save_btn");
+		buttons.quitAppOK = (Button) root.lookup("#quit_app_ok_btn");
+		buttons.reloadFile = (Button) root.lookup("#reload_file_btn");
+		buttons.reloadAllFiles = (Button) root.lookup("#reload_all_files_btn");
+		buttons.fileSave = (Button) root.lookup("#file_save_btn");
+		buttons.fileCancel = (Button) root.lookup("#file_cancel_btn");
+		buttons.fileSaveOK = (Button) root.lookup("#file_save_ok_btn");
+		buttons.openInBrowser = (Button) root.lookup("#open_in_browser_btn");
+		buttons.urlSearch = (Button) root.lookup("#url_search_btn");
+		buttons.urlCancel = (Button) root.lookup("#url_cancel_btn");
+		buttons.urlDelete = (Button) root.lookup("#url_delete_btn");
+		buttons.urlDeleteOK = (Button) root.lookup("#url_delete_ok_btn");
+		buttons.urlCreateOK = (Button) root.lookup("#url_create_ok_btn");
+		buttons.urlEditOK = (Button) root.lookup("#url_edit_ok_btn");
+		buttons.reloadSettingsFile = (MenuButton) root.lookup("#reload_settings_file_btn");
+		buttons.createSettingsFile = (MenuButton) root.lookup("#create_settings_file_btn");
+		buttons.createSettingsFileOK = (Button) root.lookup("#create_settings_file_ok_btn");
+		buttons.settingsCancel = (Button) root.lookup("#settings_cancel_btn");
+		buttons.saveSettings = (Button) root.lookup("#save_settings_btn");
 
-		cb.maximize = (CheckBox) root.lookup("#settings_maximize_cb");
-		cb.loadAtStart = (CheckBox) root.lookup("#settings_load_at_start_cb");
-		cb.byPrefix = (CheckBox) root.lookup("#settings_by_prefix_cb");
+		checkBoxes.maximize = (CheckBox) root.lookup("#settings_maximize_cb");
+		checkBoxes.loadAtStart = (CheckBox) root.lookup("#settings_load_at_start_cb");
+		checkBoxes.byPrefix = (CheckBox) root.lookup("#settings_by_prefix_cb");
 
-		lv.files = (ListView<Path>) root.lookup("#file_list_view");
-		lv.urls = (ListView<String>) root.lookup("#url_list_view");
+		listViews.files = (ListView<Path>) root.lookup("#file_list_view");
+		listViews.urls = (ListView<String>) root.lookup("#url_list_view");
 
-		tp.top = (TabPane) root.lookup("#top_tab_pane");
+		tabPanes.top = (TabPane) root.lookup("#top_tab_pane");
 
-		ta.tags = (TextArea) root.lookup("#tags_ta");
-		ta.log = (TextArea) root.lookup("#log_ta");
+		textAreas.tags = (TextArea) root.lookup("#tags_ta");
+		textAreas.log = (TextArea) root.lookup("#log_ta");
 
-		tf.fileName = (TextField) root.lookup("#file_name_tf");
-		tf.urlSearch = (TextField) root.lookup("#url_search_tf");
-		tf.url = (TextField) root.lookup("#url_tf");
-		tf.title = (TextField) root.lookup("#settings_title_tf");
-		tf.width = (TextField) root.lookup("#settings_width_tf");
-		tf.height = (TextField) root.lookup("#settings_height_tf");
-		tf.fileExtension = (TextField) root.lookup("#settings_file_extension_tf");
-		tf.defaultFile = (TextField) root.lookup("#settings_default_file_tf");
+		textFields.fileName = (TextField) root.lookup("#file_name_tf");
+		textFields.urlSearch = (TextField) root.lookup("#url_search_tf");
+		textFields.url = (TextField) root.lookup("#url_tf");
+		textFields.title = (TextField) root.lookup("#settings_title_tf");
+		textFields.width = (TextField) root.lookup("#settings_width_tf");
+		textFields.height = (TextField) root.lookup("#settings_height_tf");
+		textFields.fileExtension = (TextField) root.lookup("#settings_file_extension_tf");
+		textFields.defaultFile = (TextField) root.lookup("#settings_default_file_tf");
 
-		tt.files = getTab(tp.top,"files_tab");
-		tt.urls = getTab(tp.top,"urls_tab");
-		tt.about = getTab(tp.top,"about_tab");
-		tt.settings = getTab(tp.top,"settings_tab");
+		topTabs.files = getTab(tabPanes.top,"files_tab");
+		topTabs.urls = getTab(tabPanes.top,"urls_tab");
+		topTabs.about = getTab(tabPanes.top,"about_tab");
+		topTabs.settings = getTab(tabPanes.top,"settings_tab");
 	}
 
 	public static void buildElements ( ) {
-		btn.quitApp.disableProperty().bind(Properties.confirmQuitAppProperty());
-		btn.quitApp.setOnAction(event -> Callbacks.button_quitApp_clicked(event));
-		btn.quitApp.setOnKeyPressed(event -> Callbacks.button_quitApp_keyPressed(event));
-		btn.quitAppSave.disableProperty().bind(Bindings.not(Properties.confirmQuitAppProperty()));
-		btn.quitAppSave.setOnAction(event -> Callbacks.button_quitAppSave_clicked(event));
-		btn.quitAppSave.setOnKeyPressed(event -> Callbacks.button_quitAppSave_keyPressed(event));
-		btn.quitAppOK.disableProperty().bind(Bindings.not(Properties.confirmQuitAppProperty()));
-		btn.quitAppOK.setOnAction(event -> Callbacks.button_quitAppOK_clicked(event));
-		btn.quitAppOK.setOnKeyPressed(event -> Callbacks.button_quitAppOK_keyPressed(event));
-		btn.reloadFile.disableProperty().bind(Bindings.or(Bindings.not(Properties.selectedProperty()),Properties.confirmingSaveProperty()));
-		btn.reloadFile.setOnAction(event -> Callbacks.button_reloadFile_clicked(event));
-		btn.reloadFile.setOnKeyPressed(event -> Callbacks.button_reloadFile_keyPressed(event));
-		btn.reloadAllFiles.disableProperty().bind(Bindings.or(Bindings.not(Properties.selectedProperty()),Properties.confirmingSaveProperty()));
-		btn.reloadAllFiles.setOnAction(event -> Callbacks.button_reloadAllFiles_clicked(event));
-		btn.reloadAllFiles.setOnKeyPressed(event -> Callbacks.button_reloadAllFiles_keyPressed(event));
-		btn.fileSave.disableProperty().bind(Bindings.or(Bindings.not(Properties.selectedFileDirtyProperty()),Properties.confirmingSaveProperty()));
-		btn.fileSave.setOnAction(event -> Callbacks.button_fileSave_clicked(event));
-		btn.fileSave.setOnKeyPressed(event -> Callbacks.button_fileSave_keyPressed(event));
-		btn.fileCancel.disableProperty().bind(Bindings.not(Properties.confirmingSaveProperty()));
-		btn.fileCancel.setOnAction(event -> Callbacks.button_fileCancel_clicked(event));
-		btn.fileCancel.setOnKeyPressed(event -> Callbacks.button_fileCancel_keyPressed(event));
-		btn.fileSaveOK.disableProperty().bind(Bindings.not(Properties.confirmingSaveProperty()));
-		btn.fileSaveOK.setOnAction(event -> Callbacks.button_fileSaveOK_clicked(event));
-		btn.fileSaveOK.setOnKeyPressed(event -> Callbacks.button_fileSaveOK_keyPressed(event));
-		btn.openInBrowser.disableProperty().bind(Bindings.not(Properties.existsProperty()));
-		btn.openInBrowser.setOnAction(event -> Callbacks.button_openInBrowser_clicked(event));
-		btn.openInBrowser.setOnKeyPressed(event -> Callbacks.button_openInBrowser_keyPressed(event));
-		btn.urlSearch.setOnAction(event -> Callbacks.button_urlSearch_clicked(event));
-		btn.urlSearch.setOnKeyPressed(event -> Callbacks.button_urlSearch_keyPressed(event));
-		btn.urlCancel.disableProperty().bind(getUrlCancelDisableBinding());
-		btn.urlCancel.setOnAction(event -> Callbacks.button_urlCancel_clicked(event));
-		btn.urlCancel.setOnKeyPressed(event -> Callbacks.button_urlCancel_keyPressed(event));
-		btn.urlDelete.disableProperty().bind(getUrlDeleteDisableBinding());
-		btn.urlDelete.setOnAction(event -> Callbacks.button_urlDelete_clicked(event));
-		btn.urlDelete.setOnKeyPressed(event -> Callbacks.button_urlDelete_keyPressed(event));
-		btn.urlDeleteOK.disableProperty().bind(Bindings.not(Properties.urlDeleteRequestedProperty()));
-		btn.urlDeleteOK.setOnAction(event -> Callbacks.button_urlDeleteOK_clicked(event));
-		btn.urlDeleteOK.setOnKeyPressed(event -> Callbacks.button_urlDeleteOK_keyPressed(event));
-		btn.urlCreateOK.disableProperty().bind(Bindings.not(Properties.urlModifiedProperty()));
-		btn.urlCreateOK.setOnAction(event -> Callbacks.button_urlCreateOK_clicked(event));
-		btn.urlCreateOK.setOnKeyPressed(event -> Callbacks.button_urlCreateOK_keyPressed(event));
-		btn.urlEditOK.disableProperty().bind(getEditOKDisableBinding());
-		btn.urlEditOK.setOnAction(event -> Callbacks.button_urlEditOK_clicked(event));
-		btn.urlEditOK.setOnKeyPressed(event -> Callbacks.button_urlEditOK_keyPressed(event));
-		btn.createSettingsFile.disableProperty().bind(getCreateSettingsFileDisableBinding());
+		buttons.quitApp.disableProperty().bind(Properties.confirmQuitAppProperty());
+		buttons.quitApp.setOnAction(event -> Callbacks.button_quitApp_clicked(event));
+		buttons.quitApp.setOnKeyPressed(event -> Callbacks.button_quitApp_keyPressed(event));
+		buttons.quitAppSave.disableProperty().bind(Bindings.not(Properties.confirmQuitAppProperty()));
+		buttons.quitAppSave.setOnAction(event -> Callbacks.button_quitAppSave_clicked(event));
+		buttons.quitAppSave.setOnKeyPressed(event -> Callbacks.button_quitAppSave_keyPressed(event));
+		buttons.quitAppOK.disableProperty().bind(Bindings.not(Properties.confirmQuitAppProperty()));
+		buttons.quitAppOK.setOnAction(event -> Callbacks.button_quitAppOK_clicked(event));
+		buttons.quitAppOK.setOnKeyPressed(event -> Callbacks.button_quitAppOK_keyPressed(event));
+		buttons.reloadFile.disableProperty().bind(Bindings.or(Bindings.not(Properties.selectedProperty()),Properties.confirmingSaveProperty()));
+		buttons.reloadFile.setOnAction(event -> Callbacks.button_reloadFile_clicked(event));
+		buttons.reloadFile.setOnKeyPressed(event -> Callbacks.button_reloadFile_keyPressed(event));
+		buttons.reloadAllFiles.disableProperty().bind(Bindings.or(Bindings.not(Properties.selectedProperty()),Properties.confirmingSaveProperty()));
+		buttons.reloadAllFiles.setOnAction(event -> Callbacks.button_reloadAllFiles_clicked(event));
+		buttons.reloadAllFiles.setOnKeyPressed(event -> Callbacks.button_reloadAllFiles_keyPressed(event));
+		buttons.fileSave.disableProperty().bind(Bindings.or(Bindings.not(Properties.selectedFileDirtyProperty()),Properties.confirmingSaveProperty()));
+		buttons.fileSave.setOnAction(event -> Callbacks.button_fileSave_clicked(event));
+		buttons.fileSave.setOnKeyPressed(event -> Callbacks.button_fileSave_keyPressed(event));
+		buttons.fileCancel.disableProperty().bind(Bindings.not(Properties.confirmingSaveProperty()));
+		buttons.fileCancel.setOnAction(event -> Callbacks.button_fileCancel_clicked(event));
+		buttons.fileCancel.setOnKeyPressed(event -> Callbacks.button_fileCancel_keyPressed(event));
+		buttons.fileSaveOK.disableProperty().bind(Bindings.not(Properties.confirmingSaveProperty()));
+		buttons.fileSaveOK.setOnAction(event -> Callbacks.button_fileSaveOK_clicked(event));
+		buttons.fileSaveOK.setOnKeyPressed(event -> Callbacks.button_fileSaveOK_keyPressed(event));
+		buttons.openInBrowser.disableProperty().bind(Bindings.not(Properties.existsProperty()));
+		buttons.openInBrowser.setOnAction(event -> Callbacks.button_openInBrowser_clicked(event));
+		buttons.openInBrowser.setOnKeyPressed(event -> Callbacks.button_openInBrowser_keyPressed(event));
+		buttons.urlSearch.setOnAction(event -> Callbacks.button_urlSearch_clicked(event));
+		buttons.urlSearch.setOnKeyPressed(event -> Callbacks.button_urlSearch_keyPressed(event));
+		buttons.urlCancel.disableProperty().bind(getUrlCancelDisableBinding());
+		buttons.urlCancel.setOnAction(event -> Callbacks.button_urlCancel_clicked(event));
+		buttons.urlCancel.setOnKeyPressed(event -> Callbacks.button_urlCancel_keyPressed(event));
+		buttons.urlDelete.disableProperty().bind(getUrlDeleteDisableBinding());
+		buttons.urlDelete.setOnAction(event -> Callbacks.button_urlDelete_clicked(event));
+		buttons.urlDelete.setOnKeyPressed(event -> Callbacks.button_urlDelete_keyPressed(event));
+		buttons.urlDeleteOK.disableProperty().bind(Bindings.not(Properties.urlDeleteRequestedProperty()));
+		buttons.urlDeleteOK.setOnAction(event -> Callbacks.button_urlDeleteOK_clicked(event));
+		buttons.urlDeleteOK.setOnKeyPressed(event -> Callbacks.button_urlDeleteOK_keyPressed(event));
+		buttons.urlCreateOK.disableProperty().bind(Bindings.not(Properties.urlModifiedProperty()));
+		buttons.urlCreateOK.setOnAction(event -> Callbacks.button_urlCreateOK_clicked(event));
+		buttons.urlCreateOK.setOnKeyPressed(event -> Callbacks.button_urlCreateOK_keyPressed(event));
+		buttons.urlEditOK.disableProperty().bind(getEditOKDisableBinding());
+		buttons.urlEditOK.setOnAction(event -> Callbacks.button_urlEditOK_clicked(event));
+		buttons.urlEditOK.setOnKeyPressed(event -> Callbacks.button_urlEditOK_keyPressed(event));
+		buttons.createSettingsFile.disableProperty().bind(getCreateSettingsFileDisableBinding());
 		setCallbacks_reloadSettingsFile();
 		setCallbacks_createSettingsFile();
-		btn.createSettingsFileOK.disableProperty().bind(getCreateSettingsFileDisableBinding().not());
-		btn.createSettingsFileOK.setOnAction(event -> Callbacks.button_createSettingsFileOK_clicked(event));
-		btn.settingsCancel.disableProperty().bind(getCreateSettingsCancelBinding());
-		btn.settingsCancel.setOnAction(event -> Callbacks.button_settingsCancel_clicked(event));
-		btn.saveSettings.disableProperty().bind(getSettingsChangedBinding().not());
-		btn.saveSettings.setOnAction(event -> Callbacks.button_saveSettings_clicked(event));
+		buttons.createSettingsFileOK.disableProperty().bind(getCreateSettingsFileDisableBinding().not());
+		buttons.createSettingsFileOK.setOnAction(event -> Callbacks.button_createSettingsFileOK_clicked(event));
+		buttons.settingsCancel.disableProperty().bind(getCreateSettingsCancelBinding());
+		buttons.settingsCancel.setOnAction(event -> Callbacks.button_settingsCancel_clicked(event));
+		buttons.saveSettings.disableProperty().bind(getSettingsChangedBinding().not());
+		buttons.saveSettings.setOnAction(event -> Callbacks.button_saveSettings_clicked(event));
 
-		lv.files.setCellFactory( ( ListView<Path> param ) -> Factories.filesCellFactory(param));
-		lv.files.getSelectionModel().selectedItemProperty().addListener( ( ObservableValue<? extends Path> observable, Path oldValue, Path newValue ) -> Callbacks.filesListViewItem_selected(observable,oldValue,newValue));
-		lv.files.setOnKeyPressed(event -> Callbacks.filesListView_keyPressed(event));
-		lv.urls.getSelectionModel().selectedItemProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> Callbacks.urlsListViewItem_selected(observable,oldValue,newValue));
-		lv.urls.setCellFactory( ( ListView<String> param ) -> Factories.urlsCellFactory(param));
-		lv.urls.setOnKeyPressed(event -> Callbacks.urlsListView_keyPressed(event));
+		listViews.files.setCellFactory( ( ListView<Path> param ) -> Factories.filesCellFactory(param));
+		listViews.files.getSelectionModel().selectedItemProperty().addListener( ( ObservableValue<? extends Path> observable, Path oldValue, Path newValue ) -> Callbacks.filePathListViewItem_selected(observable,oldValue,newValue));
+		listViews.files.setOnKeyPressed(event -> Callbacks.filePathListView_keyPressed(event));
+		listViews.urls.getSelectionModel().selectedItemProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> Callbacks.urlsListViewItem_selected(observable,oldValue,newValue));
+		listViews.urls.setCellFactory( ( ListView<String> param ) -> Factories.urlsCellFactory(param));
+		listViews.urls.setOnKeyPressed(event -> Callbacks.urlsListView_keyPressed(event));
 
-		tp.top.getSelectionModel().selectedItemProperty().addListener( ( ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue ) -> Callbacks.topTab_selected(observable,oldValue,newValue));
+		tabPanes.top.getSelectionModel().selectedItemProperty().addListener( ( ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue ) -> Callbacks.topTab_selected(observable,oldValue,newValue));
 
-		ta.tags.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> Callbacks.textField_tags_changed(observable,oldValue,newValue));
+		textAreas.tags.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> Callbacks.textField_tags_changed(observable,oldValue,newValue));
 
-		tf.urlSearch.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> Callbacks.textField_urlSearch_changed(observable,oldValue,newValue));
-		tf.urlSearch.setOnAction(event -> Callbacks.textField_urlSearch_enterPressed(event));
-		tf.url.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> Callbacks.textField_url_changed(observable,oldValue,newValue));
-		tf.title.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> Callbacks.textField_title_changed(observable,oldValue,newValue));
-		tf.width.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> Callbacks.textField_width_changed(observable,oldValue,newValue));
-		tf.height.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> Callbacks.textField_height_changed(observable,oldValue,newValue));
-		tf.fileExtension.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> Callbacks.textField_fileExtension_changed(observable,oldValue,newValue));
-		tf.defaultFile.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> Callbacks.textField_defaultFile_changed(observable,oldValue,newValue));
+		textFields.urlSearch.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> Callbacks.textField_urlSearch_changed(observable,oldValue,newValue));
+		textFields.urlSearch.setOnAction(event -> Callbacks.textField_urlSearch_enterPressed(event));
+		textFields.url.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> Callbacks.textField_url_changed(observable,oldValue,newValue));
+		textFields.title.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> Callbacks.textField_title_changed(observable,oldValue,newValue));
+		textFields.width.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> Callbacks.textField_width_changed(observable,oldValue,newValue));
+		textFields.height.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> Callbacks.textField_height_changed(observable,oldValue,newValue));
+		textFields.fileExtension.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> Callbacks.textField_fileExtension_changed(observable,oldValue,newValue));
+		textFields.defaultFile.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> Callbacks.textField_defaultFile_changed(observable,oldValue,newValue));
 
-		tt.urls.disableProperty().bind(Bindings.not(Properties.availableProperty()));
-		tt.urls.selectedProperty().addListener( ( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) -> Callbacks.topTab_urls_selected(observable,oldValue,newValue));
+		topTabs.urls.disableProperty().bind(Bindings.not(Properties.availableProperty()));
+		topTabs.urls.selectedProperty().addListener( ( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) -> Callbacks.topTab_urls_selected(observable,oldValue,newValue));
+	}
+
+	public static void setWindowTitle ( final String title ) {
+		final Stage stage = (Stage) GUI.scene.getWindow();
+		stage.setTitle(title);
 	}
 
 	private static BooleanExpression getSettingsChangedBinding ( ) {
@@ -233,7 +239,7 @@ public class GUI {
 	}
 
 	private static void setCallbacks_reloadSettingsFile ( ) {
-		final ObservableList<MenuItem> items = btn.reloadSettingsFile.getItems();
+		final ObservableList<MenuItem> items = buttons.reloadSettingsFile.getItems();
 		final String settingsBtnSelector = "reload_settings_file_btn";
 		final String cssBtnSelector = "reload_css_file_btn";
 		final String fxmlBtnSelector = "reload_fxml_file_btn";
@@ -256,7 +262,7 @@ public class GUI {
 	}
 
 	private static void setCallbacks_createSettingsFile ( ) {
-		final ObservableList<MenuItem> items = btn.createSettingsFile.getItems();
+		final ObservableList<MenuItem> items = buttons.createSettingsFile.getItems();
 		final String settingsBtnSelector = "create_settings_file_btn"; //$NON-NLS-1$
 		final String cssBtnSelector = "create_css_file_btn"; //$NON-NLS-1$
 		final String fxmlBtnSelector = "create_fxml_file_btn"; //$NON-NLS-1$

@@ -5,6 +5,7 @@
  *        http://www.boost.org/LICENSE_1_0.txt)
  */
 
+
 package com.github.vbsw.urlsaver.db;
 
 
@@ -13,12 +14,11 @@ package com.github.vbsw.urlsaver.db;
  */
 public class DB {
 
-	public static void initialize ( ) {
-		// TODO Auto-generated method stub
-	}
-
 	public static boolean isSaved ( ) {
-		// TODO Auto-generated method stub
+		final int limit = DBFiles.getPaths().size();
+		for ( int i = 0; i < limit; i += 1 )
+			if ( DBFiles.isDirty(i) )
+				return false;
 		return true;
 	}
 

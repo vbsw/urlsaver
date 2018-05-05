@@ -30,13 +30,15 @@ public class App extends Application {
 	public void start ( Stage primaryStage ) throws Exception {
 		Preferences.initialize(getParameters().getRaw());
 		GUI.initialize();
-		DB.initialize();
-		FilesLogic.reloadAllFiles();
+		FilesLogic.refreshFilesList();
 
 		primaryStage.setOnCloseRequest(event -> WindowCallbacks.onCloseRequest(event));
 		primaryStage.setScene(GUI.scene);
 		primaryStage.setMaximized(Preferences.getWindowMaximized().getSavedValue());
 		primaryStage.show();
+
+		FilesLogic.loadInitialFiles();
+		FilesLogic.selectDefaultFile();
 	}
 
 	public static void quit ( ) {

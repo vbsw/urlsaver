@@ -19,6 +19,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 
 
 /**
@@ -103,7 +104,7 @@ public class Callbacks {
 		FilesLogic.confirmSaveSelectedFile();
 		Properties.selectedFileDirty.setValue(false);
 		Properties.confirmingSave.setValue(false);
-		WindowLogic.updateTitle();
+		WindowLogic.refreshTitle();
 	}
 
 	public static void button_fileSaveOK_keyPressed ( final KeyEvent event ) {
@@ -112,7 +113,7 @@ public class Callbacks {
 			FilesLogic.confirmSaveSelectedFile();
 			Properties.selectedFileDirty.setValue(false);
 			Properties.confirmingSave.setValue(false);
-			WindowLogic.updateTitle();
+			WindowLogic.refreshTitle();
 		}
 	}
 
@@ -160,14 +161,14 @@ public class Callbacks {
 
 	public static void button_urlDelete_clicked ( final ActionEvent event ) {
 		Properties.urlDeleteRequested.set(true);
-		GUI.btn.urlCancel.requestFocus();
+		GUI.buttons.urlCancel.requestFocus();
 	}
 
 	public static void button_urlDelete_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
 			Properties.urlDeleteRequested.set(true);
-			GUI.btn.urlCancel.requestFocus();
+			GUI.buttons.urlCancel.requestFocus();
 		}
 	}
 
@@ -226,16 +227,31 @@ public class Callbacks {
 		// TODO Auto-generated method stub
 	}
 
-	public static void filesListViewItem_selected ( ObservableValue<? extends Path> observable, Path oldValue, Path newValue ) {
-		// TODO Auto-generated method stub
+	public static void filePathListView_keyPressed ( final KeyEvent event ) {
+		final KeyCode keyCode = event.getCode();
+		if ( keyCode == KeyCode.ENTER ) {
+			event.consume();
+			/* TODO
+			if ( App.scene.topTab.urls.isDisable() == false ) {
+				App.scene.tp.top.getSelectionModel().select(App.scene.topTab.urls);
+				App.scene.tf.urlSearch.requestFocus();
+			}
+			*/
+		}
 	}
 
-	public static void filesListView_keyPressed ( final KeyEvent event ) {
-		// TODO Auto-generated method stub
+	public static void filePathListViewItem_clicked ( final MouseEvent event ) {
+		if ( event.getClickCount() == 2 )
+			FilesLogic.processFileSelection();
+	}
+
+	public static void filePathListViewItem_selected ( ObservableValue<? extends Path> observable, Path oldValue, Path newValue ) {
+		FilesLogic.processFileSelection();
+		WindowLogic.refreshTitle();
 	}
 
 	public static void urlsListViewItem_selected ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
-		// TODO Auto-generated method stub
+		// TODO
 	}
 
 	public static void urlsListView_keyPressed ( final KeyEvent event ) {

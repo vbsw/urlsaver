@@ -8,12 +8,6 @@
 
 package com.github.vbsw.urlsaver.logic;
 
-
-import com.github.vbsw.urlsaver.App;
-import com.github.vbsw.urlsaver.Parser;
-import com.github.vbsw.urlsaver.gui.GUI;
-
-
 /**
  * @author Vitali Baumtrok
  */

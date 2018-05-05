@@ -73,25 +73,25 @@ public class PropertiesReader {
 		return value;
 	}
 
-	public static String getURLsFileMain ( final Properties properties ) {
-		final String defaultValue = "<urls.file.main>";
-		final String value = PropertiesReader.getURLsFileMain(properties,defaultValue);
+	public static String getURLsFileSelect ( final Properties properties ) {
+		final String defaultValue = "<urls.file.select>";
+		final String value = PropertiesReader.getURLsFileSelect(properties,defaultValue);
 		return value;
 	}
 
-	public static String getURLsFileMain ( final Properties properties, final String defaultValue ) {
-		final String key = "urls.file.main";
+	public static String getURLsFileSelect ( final Properties properties, final String defaultValue ) {
+		final String key = "urls.file.select";
 		final String value = PropertiesReader.getPropertyValue(properties,key,defaultValue);
 		return value;
 	}
 
-	public static boolean getURLsFileAutoLoad ( final Properties properties ) {
-		final boolean value = PropertiesReader.getURLsFileAutoLoad(properties,false);
+	public static boolean getURLsFileAutoLoadAll ( final Properties properties ) {
+		final boolean value = PropertiesReader.getURLsFileAutoLoadAll(properties,false);
 		return value;
 	}
 
-	public static boolean getURLsFileAutoLoad ( final Properties properties, final boolean defaultValue ) {
-		final String key = "urls.file.autoload";
+	public static boolean getURLsFileAutoLoadAll ( final Properties properties, final boolean defaultValue ) {
+		final String key = "urls.file.autoload.all";
 		final boolean value = PropertiesReader.getPropertyValue(properties,key,defaultValue);
 		return value;
 	}

@@ -34,8 +34,8 @@ public class Preferences {
 	private static final PreferencesIntValue windowHeight = new PreferencesIntValue();
 	private static final PreferencesBooleanValue windowMaximized = new PreferencesBooleanValue();
 	private static final PreferencesStringValue urlsFileExtension = new PreferencesStringValue();
-	private static final PreferencesStringValue urlsFileMain = new PreferencesStringValue();
-	private static final PreferencesBooleanValue urlsFileAutoLoad = new PreferencesBooleanValue();
+	private static final PreferencesStringValue urlsFileSelect = new PreferencesStringValue();
+	private static final PreferencesBooleanValue urlsFileAutoLoadAll = new PreferencesBooleanValue();
 	private static final PreferencesBooleanValue searchByPrefix = new PreferencesBooleanValue();
 	private static final PreferencesPathValue preferencesPath = new PreferencesPathValue();
 	private static final PreferencesPathValue fxmlPath = new PreferencesPathValue();
@@ -84,12 +84,12 @@ public class Preferences {
 		return urlsFileExtension;
 	}
 
-	public static PreferencesStringValue getURLsFileMain ( ) {
-		return urlsFileMain;
+	public static PreferencesStringValue getURLsFileSelect ( ) {
+		return urlsFileSelect;
 	}
 
-	public static PreferencesBooleanValue getURLsFileAutoload ( ) {
-		return urlsFileAutoLoad;
+	public static PreferencesBooleanValue getURLsFileAutoloadAll ( ) {
+		return urlsFileAutoLoadAll;
 	}
 
 	public static PreferencesBooleanValue getSearchByPrefix ( ) {
@@ -159,8 +159,8 @@ public class Preferences {
 			windowHeight.setDefaultValue(PropertiesReader.getWindowHeight(properties));
 			windowMaximized.setDefaultValue(PropertiesReader.getWindowMaximized(properties));
 			urlsFileExtension.setDefaultValue(PropertiesReader.getURLsFileExtension(properties));
-			urlsFileMain.setDefaultValue(PropertiesReader.getURLsFileMain(properties));
-			urlsFileAutoLoad.setDefaultValue(PropertiesReader.getURLsFileAutoLoad(properties));
+			urlsFileSelect.setDefaultValue(PropertiesReader.getURLsFileSelect(properties));
+			urlsFileAutoLoadAll.setDefaultValue(PropertiesReader.getURLsFileAutoLoadAll(properties));
 			searchByPrefix.setDefaultValue(PropertiesReader.getSearchByPrefix(properties));
 
 		} catch ( final Exception e ) {
@@ -180,8 +180,8 @@ public class Preferences {
 				windowHeight.setCustomValue(PropertiesReader.getWindowHeight(properties,windowHeight.getDefaultValue()));
 				windowMaximized.setCustomValue(PropertiesReader.getWindowMaximized(properties,windowMaximized.getDefaultValue()));
 				urlsFileExtension.setCustomValue(PropertiesReader.getURLsFileExtension(properties,urlsFileExtension.getDefaultValue()));
-				urlsFileMain.setCustomValue(PropertiesReader.getURLsFileMain(properties,urlsFileMain.getDefaultValue()));
-				urlsFileAutoLoad.setCustomValue(PropertiesReader.getURLsFileAutoLoad(properties,urlsFileAutoLoad.getDefaultValue()));
+				urlsFileSelect.setCustomValue(PropertiesReader.getURLsFileSelect(properties,urlsFileSelect.getDefaultValue()));
+				urlsFileAutoLoadAll.setCustomValue(PropertiesReader.getURLsFileAutoLoadAll(properties,urlsFileAutoLoadAll.getDefaultValue()));
 				searchByPrefix.setCustomValue(PropertiesReader.getSearchByPrefix(properties,searchByPrefix.getDefaultValue()));
 				Preferences.resetSavedValuesToCustom();
 				customPreferencesLoaded = true;
@@ -193,17 +193,25 @@ public class Preferences {
 	}
 
 	public static void resetCustomValuesToDefault ( ) {
+		windowTitle.resetCustomValueToDefault();
 		windowWidth.resetCustomValueToDefault();
 		windowHeight.resetCustomValueToDefault();
-		windowTitle.resetCustomValueToDefault();
+		windowMaximized.resetCustomValueToDefault();
 		urlsFileExtension.resetCustomValueToDefault();
+		urlsFileSelect.resetCustomValueToDefault();
+		urlsFileAutoLoadAll.resetCustomValueToDefault();
+		searchByPrefix.resetCustomValueToDefault();
 	}
 
 	public static void resetSavedValuesToCustom ( ) {
+		windowTitle.resetSavedValueToCustom();
 		windowWidth.resetSavedValueToCustom();
 		windowHeight.resetSavedValueToCustom();
-		windowTitle.resetSavedValueToCustom();
+		windowMaximized.resetSavedValueToCustom();
 		urlsFileExtension.resetSavedValueToCustom();
+		urlsFileSelect.resetSavedValueToCustom();
+		urlsFileAutoLoadAll.resetSavedValueToCustom();
+		searchByPrefix.resetSavedValueToCustom();
 	}
 
 	public static void saveValues ( ) {
@@ -225,11 +233,11 @@ public class Preferences {
 		stringBuilder.append("urls.file.extension=");
 		stringBuilder.append(urlsFileExtension.getCustomValue());
 		stringBuilder.append(newLine);
-		stringBuilder.append("urls.file.main=");
-		stringBuilder.append(urlsFileMain.getCustomValue());
+		stringBuilder.append("urls.file.select=");
+		stringBuilder.append(urlsFileSelect.getCustomValue());
 		stringBuilder.append(newLine);
-		stringBuilder.append("autoload.all=");
-		stringBuilder.append(Boolean.toString(urlsFileAutoLoad.getCustomValue()));
+		stringBuilder.append("urls.file.autoload.all=");
+		stringBuilder.append(Boolean.toString(urlsFileAutoLoadAll.getCustomValue()));
 		stringBuilder.append(newLine);
 		stringBuilder.append("search.byprefix=");
 		stringBuilder.append(Boolean.toString(searchByPrefix.getCustomValue()));
@@ -301,12 +309,12 @@ public class Preferences {
 	}
 
 	private static Path extractCustomFXMLPath ( final List<String> args ) {
-		// TODO: extractCustomFXMLPath
+		// not available, yet
 		return null;
 	}
 
 	private static Path extractCustomCSSPath ( final List<String> args ) {
-		// TODO: extractCustomCSSPath
+		// not available, yet
 		return null;
 	}
 
