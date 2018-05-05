@@ -11,6 +11,7 @@ package com.github.vbsw.urlsaver;
 
 import com.github.vbsw.urlsaver.db.DB;
 import com.github.vbsw.urlsaver.gui.GUI;
+import com.github.vbsw.urlsaver.logic.FilesLogic;
 import com.github.vbsw.urlsaver.logic.WindowCallbacks;
 import com.github.vbsw.urlsaver.logic.WindowLogic;
 import com.github.vbsw.urlsaver.pref.Preferences;
@@ -30,6 +31,7 @@ public class App extends Application {
 		Preferences.initialize(getParameters().getRaw());
 		GUI.initialize();
 		DB.initialize();
+		FilesLogic.reloadAllFiles();
 
 		primaryStage.setOnCloseRequest(event -> WindowCallbacks.onCloseRequest(event));
 		primaryStage.setScene(GUI.scene);

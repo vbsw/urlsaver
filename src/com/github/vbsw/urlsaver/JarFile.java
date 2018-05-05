@@ -1,9 +1,10 @@
 /*
- *    Copyright 2017, Vitali Baumtrok (vbsw@mailbox.org).
+ * Copyright 2017, 2018, Vitali Baumtrok (vbsw@mailbox.org).
  * Distributed under the Boost Software License, Version 1.0.
  *      (See accompanying file LICENSE or copy at
  *        http://www.boost.org/LICENSE_1_0.txt)
  */
+
 
 package com.github.vbsw.urlsaver;
 
@@ -59,15 +60,27 @@ public final class JarFile {
 		}
 	}
 
-	public static InputStream getResourceAsStream ( final String pathInsideJar ) {
+	public static InputStream getStreamOfResource ( final String pathInsideJar ) {
 		final ClassLoader classLoader = JarFile.class.getClassLoader();
 		final InputStream stream = classLoader.getResourceAsStream(pathInsideJar);
 
 		return stream;
 	}
 
+	public static Path getPathToResource ( final String pathInsideJar ) {
+		final ClassLoader classLoader = JarFile.class.getClassLoader();
+		final URL url = classLoader.getResource(pathInsideJar);
+		try {
+			final URI uri = url.toURI();
+			final Path path = Paths.get(uri);
+			return path;
+		} catch ( URISyntaxException e ) {
+		}
+		return null;
+	}
+
 	public static void copyFromJarFile ( final String srcPathInsideJar, final Path dest ) {
-		try ( final InputStream srcInStream = JarFile.getResourceAsStream(srcPathInsideJar) ) {
+		try ( final InputStream srcInStream = JarFile.getStreamOfResource(srcPathInsideJar) ) {
 			Files.copy(srcInStream,dest,StandardCopyOption.REPLACE_EXISTING);
 
 		} catch ( final Exception e ) {

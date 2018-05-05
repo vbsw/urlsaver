@@ -12,9 +12,9 @@ package com.github.vbsw.urlsaver.gui;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import com.github.vbsw.urlsaver.JarFile;
+import com.github.vbsw.urlsaver.pref.Preferences;
 import com.github.vbsw.urlsaver.resources.ResourcesConfig;
 
 import javafx.fxml.FXMLLoader;
@@ -26,22 +26,20 @@ import javafx.scene.Parent;
  */
 public class FXMLReader {
 
-	public static boolean customFXMLRead;
-
 	public static Parent getRoot ( ) {
 		Parent root = FXMLReader.getCustomRoot();
 		if ( root == null ) {
 			root = FXMLReader.getDefaultRoot();
-			customFXMLRead = false;
+			Preferences.setCustomFXMLLoaded(false);
 		} else {
-			customFXMLRead = true;
+			Preferences.setCustomFXMLLoaded(true);
 		}
 		return root;
 	}
 
 	private static Parent getCustomRoot ( ) {
-		final Path externalFXMLPath = Paths.get(JarFile.getPath().toString(),ResourcesConfig.CUSTOM_FXML_FILE_PATH);
-		if ( Files.exists(externalFXMLPath) ) {
+		if ( Preferences.isCustomFXMLFileAvailable() ) {
+			final Path externalFXMLPath = Preferences.getFXMLPath().getCustomValue();
 			try ( final InputStream stream = Files.newInputStream(externalFXMLPath) ) {
 				final FXMLLoader fxmlLoader = new FXMLLoader();
 				final Parent fxml = fxmlLoader.load(stream);
@@ -53,7 +51,7 @@ public class FXMLReader {
 	}
 
 	private static Parent getDefaultRoot ( ) {
-		try ( InputStream stream = JarFile.getResourceAsStream(ResourcesConfig.DEFAULT_FXML_FILE_PATH) ) {
+		try ( InputStream stream = JarFile.getStreamOfResource(ResourcesConfig.DEFAULT_FXML_FILE_PATH) ) {
 			final FXMLLoader fxmlLoader = new FXMLLoader();
 			final Parent fxml = fxmlLoader.load(stream);
 			return fxml;

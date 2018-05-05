@@ -57,15 +57,31 @@ public class GUI {
 		final int windowWidth = Preferences.getWindowWidth().getSavedValue();
 		final int windowHeight = Preferences.getWindowHeight().getSavedValue();
 		final Parent rootStub = new AnchorPane();
+
 		scene = new Scene(rootStub,windowWidth,windowHeight);
-		reload();
+
+		reloadFXML();
+		reloadCSS();
 	}
 
-	public static void reload ( ) {
+	public static void reloadFXML ( ) {
 		final Parent root = FXMLReader.getRoot();
 		GUI.setElements(root);
 		GUI.buildElements();
 		scene.setRoot(root);
+	}
+
+	public static void reloadCSS ( ) {
+		final String cssURI;
+		if ( Preferences.isCustomCSSFileAvailable() ) {
+			cssURI = Preferences.getCSSPath().getCustomValue().toUri().toString();
+			Preferences.setCustomCSSLoaded(true);
+		} else {
+			cssURI = Preferences.getCSSPath().getDefaultValue().toUri().toString();
+			Preferences.setCustomCSSLoaded(false);
+		}
+		GUI.scene.getStylesheets().clear();
+		GUI.scene.getStylesheets().add(cssURI);
 	}
 
 	@SuppressWarnings ( "unchecked" )
