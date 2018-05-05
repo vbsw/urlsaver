@@ -5,21 +5,17 @@
  *        http://www.boost.org/LICENSE_1_0.txt)
  */
 
-package com.github.vbsw.urlsaver.db;
+
+package com.github.vbsw.urlsaver.logic;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public class DB {
+public class WebBrowserLogic {
 
-	public static void initialize ( ) {
+	public static void openTypedUrl ( ) {
 		// TODO Auto-generated method stub
-	}
-
-	public static boolean isSaved ( ) {
-		// TODO Auto-generated method stub
-		return true;
 	}
 
 }

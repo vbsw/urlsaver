@@ -5,21 +5,23 @@
  *        http://www.boost.org/LICENSE_1_0.txt)
  */
 
-package com.github.vbsw.urlsaver.db;
+
+package com.github.vbsw.urlsaver.logic;
+
+
+import com.github.vbsw.urlsaver.App;
+
+import javafx.stage.WindowEvent;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public class DB {
+public class WindowCallbacks {
 
-	public static void initialize ( ) {
-		// TODO Auto-generated method stub
-	}
-
-	public static boolean isSaved ( ) {
-		// TODO Auto-generated method stub
-		return true;
+	public static void onCloseRequest ( final WindowEvent event ) {
+		event.consume();
+		App.quit();
 	}
 
 }

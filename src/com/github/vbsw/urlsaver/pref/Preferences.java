@@ -42,7 +42,7 @@ public class Preferences {
 	private static Path preferencesPath;
 
 	public static void initialize ( final List<String> args ) {
-		setCustomPreferencesPath(args);
+		Preferences.preferencesPath = getCustomPreferencesPath(args);
 		Preferences.loadDefaultValues();
 		Preferences.loadCustomValues();
 		if ( !Preferences.isCustomValuesLoaded() ) {
@@ -201,12 +201,12 @@ public class Preferences {
 		}
 	}
 
-	private static void setCustomPreferencesPath ( final List<String> args ) {
+	private static Path getCustomPreferencesPath ( final List<String> args ) {
 		final Path customPath = extractCustomPreferencesPath(args);
 		if ( customPath == null )
-			Preferences.preferencesPath = JarFile.getPath().resolve(ResourcesConfig.CUSTOM_PREFERENCES_FILE_PATH);
+			return JarFile.getPath().resolve(ResourcesConfig.CUSTOM_PREFERENCES_FILE_PATH);
 		else
-			Preferences.preferencesPath = customPath;
+			return customPath;
 	}
 
 	private static Path extractCustomPreferencesPath ( final List<String> args ) {
@@ -220,7 +220,7 @@ public class Preferences {
 				if ( dir != null && Files.exists(dir) )
 					return path;
 				else
-					System.out.println("error: preferences path does not exist");
+					System.out.println("warning: preferences path does not exist");
 			}
 		}
 		return null;
