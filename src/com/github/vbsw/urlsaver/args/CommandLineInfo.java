@@ -48,7 +48,7 @@ public class CommandLineInfo {
 	}
 
 	private static void printCopyright ( ) {
-		System.out.println("Copyright 2018, Vitali Baumtrok (vbsw@mailbox.org).");
+		System.out.println("Copyright 2017, 2018, Vitali Baumtrok (vbsw@mailbox.org).");
 		System.out.println("Distributed under the Boost Software License, Version 1.0.");
 	}
 

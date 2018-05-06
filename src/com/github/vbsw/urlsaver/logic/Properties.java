@@ -32,7 +32,7 @@ public class Properties {
 	protected static final SimpleBooleanProperty confirmingCreatePreferences = new SimpleBooleanProperty();
 	protected static final SimpleBooleanProperty confirmingCreateCSS = new SimpleBooleanProperty();
 	protected static final SimpleBooleanProperty confirmingCreateFXML = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty propertiesModified = new SimpleBooleanProperty();
+	protected static final SimpleBooleanProperty preferencesModified = new SimpleBooleanProperty();
 	protected static final SimpleBooleanProperty titleChanged = new SimpleBooleanProperty();
 	protected static final SimpleBooleanProperty widthChanged = new SimpleBooleanProperty();
 	protected static final SimpleBooleanProperty heightChanged = new SimpleBooleanProperty();
@@ -90,8 +90,8 @@ public class Properties {
 		return confirmingCreateFXML;
 	}
 
-	public static SimpleBooleanProperty propertiesModifiedProperty ( ) {
-		return propertiesModified;
+	public static SimpleBooleanProperty preferencesModifiedProperty ( ) {
+		return preferencesModified;
 	}
 
 	public static SimpleBooleanProperty titleChangedProperty ( ) {

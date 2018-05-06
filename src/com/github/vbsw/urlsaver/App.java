@@ -12,6 +12,7 @@ package com.github.vbsw.urlsaver;
 import com.github.vbsw.urlsaver.db.DB;
 import com.github.vbsw.urlsaver.gui.GUI;
 import com.github.vbsw.urlsaver.logic.FilesLogic;
+import com.github.vbsw.urlsaver.logic.PreferencesLogic;
 import com.github.vbsw.urlsaver.logic.WindowCallbacks;
 import com.github.vbsw.urlsaver.logic.WindowLogic;
 import com.github.vbsw.urlsaver.pref.Preferences;
@@ -27,7 +28,7 @@ import javafx.stage.Stage;
 public class App extends Application {
 
 	@Override
-	public void start ( Stage primaryStage ) throws Exception {
+	public void start ( final Stage primaryStage ) throws Exception {
 		Preferences.initialize(getParameters().getRaw());
 		GUI.initialize();
 		FilesLogic.refreshFilesList();
@@ -37,6 +38,7 @@ public class App extends Application {
 		primaryStage.setMaximized(Preferences.getWindowMaximized().getSavedValue());
 		primaryStage.show();
 
+		PreferencesLogic.refreshView();
 		FilesLogic.loadInitialFiles();
 		FilesLogic.selectDefaultFile();
 	}

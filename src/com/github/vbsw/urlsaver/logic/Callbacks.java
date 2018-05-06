@@ -12,8 +12,14 @@ package com.github.vbsw.urlsaver.logic;
 import java.nio.file.Path;
 
 import com.github.vbsw.urlsaver.App;
+import com.github.vbsw.urlsaver.Parser;
+import com.github.vbsw.urlsaver.db.DBFiles;
+import com.github.vbsw.urlsaver.gui.Buttons;
 import com.github.vbsw.urlsaver.gui.GUI;
+import com.github.vbsw.urlsaver.gui.Logger;
+import com.github.vbsw.urlsaver.pref.Preferences;
 
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Tab;
@@ -161,14 +167,14 @@ public class Callbacks {
 
 	public static void button_urlDelete_clicked ( final ActionEvent event ) {
 		Properties.urlDeleteRequested.set(true);
-		GUI.buttons.urlCancel.requestFocus();
+		Buttons.urlCancel.control.requestFocus();
 	}
 
 	public static void button_urlDelete_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
 			Properties.urlDeleteRequested.set(true);
-			GUI.buttons.urlCancel.requestFocus();
+			Buttons.urlCancel.control.requestFocus();
 		}
 	}
 
@@ -215,28 +221,63 @@ public class Callbacks {
 		}
 	}
 
-	public static void button_createSettingsFileOK_clicked ( final ActionEvent event ) {
-		// TODO Auto-generated method stub
+	public static void button_createPreferencesFileOK_clicked ( final ActionEvent event ) {
+		if ( Properties.confirmingCreatePreferencesProperty().get() )
+			PreferencesLogic.overwritePreferencesFile();
+		else if ( Properties.confirmingCreateCSSProperty().get() )
+			PreferencesLogic.overwriteCSSFile();
+		else if ( Properties.confirmingCreateFXMLProperty().get() )
+			PreferencesLogic.overwriteFXMLFile();
 	}
 
 	public static void button_settingsCancel_clicked ( final ActionEvent event ) {
-		// TODO Auto-generated method stub
+		Properties.confirmingCreatePreferencesProperty().set(false);
+		Properties.confirmingCreateCSSProperty().set(false);
+		Properties.confirmingCreateFXMLProperty().set(false);
 	}
 
-	public static void button_saveSettings_clicked ( final ActionEvent event ) {
-		// TODO Auto-generated method stub
+	public static void button_savePreferences_clicked ( final ActionEvent event ) {
+		final String fileName = Preferences.getPreferencesPath().getSavedValue().getFileName().toString();
+		Preferences.savePreferences();
+
+		if ( Preferences.isCustomPreferencesSaved() ) {
+			Preferences.resetSavedValuesToModified();
+			Properties.titleChangedProperty().set(false);
+			Properties.widthChangedProperty().set(false);
+			Properties.heightChangedProperty().set(false);
+			Properties.fileExtensionChangedProperty().set(false);
+			Properties.defaultFileChangedProperty().set(false);
+			Properties.maximizeChangedProperty().set(false);
+			Properties.loadAtStartChangedProperty().set(false);
+			Properties.byPrefixChangedProperty().set(false);
+			GUI.setFontWeight(GUI.textFields.title,false);
+			GUI.setFontWeight(GUI.textFields.width,false);
+			GUI.setFontWeight(GUI.textFields.height,false);
+			GUI.setFontWeight(GUI.textFields.fileExtension,false);
+			GUI.setFontWeight(GUI.textFields.defaultFile,false);
+			GUI.setFontWeight(GUI.checkBoxes.maximize,false);
+			GUI.setFontWeight(GUI.checkBoxes.loadAtStart,false);
+			GUI.setFontWeight(GUI.checkBoxes.byPrefix,false);
+			Logger.logSuccess("file saved (" + fileName + ")");
+			GUI.textAreas.log.requestFocus();
+		} else {
+			Logger.logFailure("file not saved (" + fileName + ")");
+			GUI.textAreas.log.requestFocus();
+		}
 	}
 
 	public static void filePathListView_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
 			event.consume();
-			/* TODO
-			if ( App.scene.topTab.urls.isDisable() == false ) {
-				App.scene.tp.top.getSelectionModel().select(App.scene.topTab.urls);
-				App.scene.tf.urlSearch.requestFocus();
-			}
-			*/
+			/*
+			 * TODO
+			 * if ( App.scene.topTab.urls.isDisable() == false ) {
+			 * App.scene.tp.top.getSelectionModel().select(App.scene.topTab.urls
+			 * );
+			 * App.scene.tf.urlSearch.requestFocus();
+			 * }
+			 */
 		}
 	}
 
@@ -279,11 +320,26 @@ public class Callbacks {
 	}
 
 	public static void textField_title_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
-		// TODO Auto-generated method stub
+		final String trimmedValue = Parser.trim(newValue);
+		final boolean titlesEqual = Preferences.getWindowTitle().getSavedValue().equals(trimmedValue);
+		Preferences.getWindowTitle().setModifiedValue(newValue);
+		GUI.setFontWeight(GUI.textFields.title,!titlesEqual);
+		Properties.titleChangedProperty().set(!titlesEqual);
+		Properties.preferencesModifiedProperty().set(!titlesEqual);
 	}
 
 	public static void textField_width_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
-		// TODO Auto-generated method stub
+		boolean valueChanged = false;
+		try {
+			final String trimmedValue = Parser.trim(newValue);
+			final int parsedValue = Integer.parseInt(trimmedValue);
+			valueChanged = parsedValue != Preferences.getWindowWidth().getModifiedValue();
+			Preferences.getWindowWidth().setModifiedValue(parsedValue);
+		} catch ( final NumberFormatException e ) {
+			Preferences.getWindowWidth().resetModifiedValueToSaved();
+		}
+		Properties.widthChangedProperty().set(valueChanged);
+		GUI.setFontWeight(GUI.textFields.width,valueChanged);
 	}
 
 	public static void textField_height_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
@@ -302,49 +358,43 @@ public class Callbacks {
 		// TODO Auto-generated method stub
 	}
 
-	public static void button_reloadSettingsFile_clicked ( final ActionEvent event ) {
-		/*
-		App.settings.loadCustomValues();
-		App.settings.setAllToCustom();
-		App.settings.updateView();
-
-		// App.files.initialize();
-		// App.scene.lv.files.getItems().clear();
-		// App.scene.lv.files.getItems().addAll(App.files.getPaths());
-		// App.files.selectDefault();
-		// App.files.processAutoLoad();
-		// App.scene.tp.top.getSelectionModel().select(App.scene.topTab.settings);
-
-		WindowLogic.updateTitle();
-
-		if ( App.window.isMaximized() != Preferences.getWindowMaximized().getCustomValue() ) {
-			App.window.setMaximized(App.settings.isCustomWindowMaximized());
-
-		} else {
-			App.window.setSize(App.settings.getCustomWindowWidth(),App.settings.getCustomWindowHeight());
-		}
-		*/
+	public static void button_reloadPreferencesFile_clicked ( final ActionEvent event ) {
+		Preferences.loadCustomPreferences();
+		PreferencesLogic.refreshView();
+		WindowLogic.refreshTitle();
 	}
 
 	public static void button_reloadCSSFile_clicked ( final ActionEvent event ) {
-//		App.scene.loadCSS();
+		GUI.reloadCSS();
 	}
 
 	public static void button_reloadFXMLFile_clicked ( final ActionEvent event ) {
-//		App.scene.loadFXML();
-//		App.scene.tp.top.getSelectionModel().select(App.scene.topTab.settings);
+		final String logBackup = GUI.textAreas.log.getText();
+		final int selectedIndex = GUI.listViews.files.getSelectionModel().getSelectedIndex();
+		GUI.reloadFXML();
+		PreferencesLogic.refreshView();
+		WindowLogic.selectPreferencesTab();
+		GUI.textAreas.log.setText(logBackup);
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run ( ) {
+				Buttons.reloadPreferencesFile.control.requestFocus();
+			}
+		});
+		GUI.listViews.files.getItems().addAll(DBFiles.getPaths());
+		GUI.listViews.files.getSelectionModel().select(selectedIndex);
 	}
 
-	public static void button_createSettingsFile_clicked ( final ActionEvent event ) {
-//		createFile(ResourcesConfig.DEFAULT_SETTINGS_FILE_PATH,ResourcesConfig.CUSTOM_SETTINGS_FILE_PATH,confirmingCreateSettings);
+	public static void button_createPreferencesFile_clicked ( final ActionEvent event ) {
+		PreferencesLogic.createPreferencesFile();
 	}
 
 	public static void button_createCSSFile_clicked ( final ActionEvent event ) {
-//		createFile(ResourcesConfig.DEFAULT_CSS_FILE_PATH,ResourcesConfig.CUSTOM_CSS_FILE_PATH,confirmingCreateCSS);
+		PreferencesLogic.createCSSFile();
 	}
 
 	public static void button_createFXMLFile_clicked ( final ActionEvent event ) {
-//		createFile(ResourcesConfig.DEFAULT_FXML_FILE_PATH,ResourcesConfig.CUSTOM_FXML_FILE_PATH,confirmingCreateFXML);
+		PreferencesLogic.createFXMLFile();
 	}
 
 }

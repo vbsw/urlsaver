@@ -79,10 +79,9 @@ public final class JarFile {
 		return null;
 	}
 
-	public static void copyFromJarFile ( final String srcPathInsideJar, final Path dest ) {
+	public static void copyResource ( final String srcPathInsideJar, final Path dest ) {
 		try ( final InputStream srcInStream = JarFile.getStreamOfResource(srcPathInsideJar) ) {
 			Files.copy(srcInStream,dest,StandardCopyOption.REPLACE_EXISTING);
-
 		} catch ( final Exception e ) {
 			e.printStackTrace();
 		}

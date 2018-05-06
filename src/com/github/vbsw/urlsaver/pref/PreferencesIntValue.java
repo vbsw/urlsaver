@@ -1,5 +1,5 @@
 /*
- *    Copyright 2017, Vitali Baumtrok (vbsw@mailbox.org).
+ *    Copyright 2018, Vitali Baumtrok (vbsw@mailbox.org).
  * Distributed under the Boost Software License, Version 1.0.
  *      (See accompanying file LICENSE or copy at
  *        http://www.boost.org/LICENSE_1_0.txt)
@@ -15,7 +15,7 @@ public class PreferencesIntValue {
 
 	private int defaultValue;
 	private int savedValue;
-	private int customValue;
+	private int modifiedValue;
 
 	public int getDefaultValue ( ) {
 		return defaultValue;
@@ -33,28 +33,28 @@ public class PreferencesIntValue {
 		this.savedValue = savedValue;
 	}
 
-	public int getCustomValue ( ) {
-		return customValue;
+	public int getModifiedValue ( ) {
+		return modifiedValue;
 	}
 
-	public void setCustomValue ( final int customValue ) {
-		this.customValue = customValue;
+	public void setModifiedValue ( final int modifiedValue ) {
+		this.modifiedValue = modifiedValue;
 	}
 
 	public boolean isSaved ( ) {
-		return savedValue == customValue;
+		return savedValue == modifiedValue;
 	}
 
-	protected void resetCustomValueToDefault ( ) {
-		customValue = defaultValue;
+	public void resetModifiedValueToSaved ( ) {
+		modifiedValue = savedValue;
 	}
 
-	protected void resetSavedValueToDefault ( ) {
+	public void resetSavedValueToDefault ( ) {
 		savedValue = defaultValue;
 	}
 
-	protected void resetSavedValueToCustom ( ) {
-		savedValue = customValue;
+	public void resetSavedValueToModified ( ) {
+		savedValue = modifiedValue;
 	}
 
 }

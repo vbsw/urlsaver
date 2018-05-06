@@ -24,14 +24,14 @@ import com.github.vbsw.urlsaver.pref.Preferences;
 public class FilesLogic {
 
 	public static void refreshFilesList ( ) {
-		final String fileExtension = Preferences.getURLsFileExtension().getCustomValue();
+		final String fileExtension = Preferences.getURLsFileExtension().getSavedValue();
 		final ArrayList<Path> filePaths = JarFile.getFilePaths(fileExtension);
 		final ArrayList<Path> filePathsSorted = DBFiles.getSortedPaths(filePaths);
 		final ArrayList<String> fileLabels = FilesLogic.getInitialFileLabels(filePathsSorted);
 
 		DBFiles.setPathList(filePaths);
 		DBFiles.setLabelList(fileLabels);
-
+		
 		GUI.listViews.files.getItems().addAll(DBFiles.getPaths());
 	}
 
@@ -60,7 +60,7 @@ public class FilesLogic {
 	}
 
 	public static void loadInitialFiles ( ) {
-		if ( Preferences.getURLsFileAutoloadAll().getCustomValue() )
+		if ( Preferences.getURLsFileAutoloadAll().getModifiedValue() )
 			FilesLogic.reloadAllFiles();
 	}
 
@@ -85,7 +85,7 @@ public class FilesLogic {
 	}
 
 	public static void selectDefaultFile ( ) {
-		final String fileToSelect = Preferences.getURLsFileSelect().getCustomValue();
+		final String fileToSelect = Preferences.getURLsFileSelect().getModifiedValue();
 		final int pathIndex = DBFiles.getIndexByFileName(fileToSelect);
 		if ( pathIndex >= 0 ) {
 			GUI.listViews.files.requestFocus();

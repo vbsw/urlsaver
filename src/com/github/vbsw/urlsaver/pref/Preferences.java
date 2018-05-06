@@ -57,11 +57,6 @@ public class Preferences {
 		Preferences.loadCustomFXMLPath(args);
 		Preferences.loadCustomCSSPath(args);
 		Preferences.loadCustomPreferences();
-
-		if ( !Preferences.isCustomPreferencesLoaded() ) {
-			Preferences.resetCustomValuesToDefault();
-			Preferences.resetSavedValuesToCustom();
-		}
 	}
 
 	public static PreferencesStringValue getWindowTitle ( ) {
@@ -133,19 +128,19 @@ public class Preferences {
 	}
 
 	public static boolean isCustomPreferencesFileAvailable ( ) {
-		final Path filePath = getPreferencesPath().getCustomValue();
+		final Path filePath = Preferences.getPreferencesPath().getSavedValue();
 		final boolean available = filePath != null && Files.exists(filePath);
 		return available;
 	}
 
 	public static boolean isCustomFXMLFileAvailable ( ) {
-		final Path filePath = getFXMLPath().getCustomValue();
+		final Path filePath = Preferences.getFXMLPath().getSavedValue();
 		final boolean available = filePath != null && Files.exists(filePath);
 		return available;
 	}
 
 	public static boolean isCustomCSSFileAvailable ( ) {
-		final Path filePath = getCSSPath().getCustomValue();
+		final Path filePath = Preferences.getCSSPath().getSavedValue();
 		final boolean available = filePath != null && Files.exists(filePath);
 		return available;
 	}
@@ -172,75 +167,87 @@ public class Preferences {
 		customPreferencesLoaded = false;
 
 		if ( Preferences.isCustomPreferencesFileAvailable() ) {
-			try ( final InputStream stream = Files.newInputStream(Preferences.getPreferencesPath().getCustomValue()) ) {
+			try ( final InputStream stream = Files.newInputStream(Preferences.getPreferencesPath().getSavedValue()) ) {
 				final Properties properties = new Properties();
 				properties.load(stream);
-				windowTitle.setCustomValue(PropertiesReader.getWindowTitle(properties,windowTitle.getDefaultValue()));
-				windowWidth.setCustomValue(PropertiesReader.getWindowWidth(properties,windowWidth.getDefaultValue()));
-				windowHeight.setCustomValue(PropertiesReader.getWindowHeight(properties,windowHeight.getDefaultValue()));
-				windowMaximized.setCustomValue(PropertiesReader.getWindowMaximized(properties,windowMaximized.getDefaultValue()));
-				urlsFileExtension.setCustomValue(PropertiesReader.getURLsFileExtension(properties,urlsFileExtension.getDefaultValue()));
-				urlsFileSelect.setCustomValue(PropertiesReader.getURLsFileSelect(properties,urlsFileSelect.getDefaultValue()));
-				urlsFileAutoLoadAll.setCustomValue(PropertiesReader.getURLsFileAutoLoadAll(properties,urlsFileAutoLoadAll.getDefaultValue()));
-				searchByPrefix.setCustomValue(PropertiesReader.getSearchByPrefix(properties,searchByPrefix.getDefaultValue()));
-				Preferences.resetSavedValuesToCustom();
+				getWindowTitle().setSavedValue(PropertiesReader.getWindowTitle(properties,windowTitle.getDefaultValue()));
+				getWindowWidth().setSavedValue(PropertiesReader.getWindowWidth(properties,windowWidth.getDefaultValue()));
+				getWindowHeight().setSavedValue(PropertiesReader.getWindowHeight(properties,windowHeight.getDefaultValue()));
+				getWindowMaximized().setSavedValue(PropertiesReader.getWindowMaximized(properties,windowMaximized.getDefaultValue()));
+				getURLsFileExtension().setSavedValue(PropertiesReader.getURLsFileExtension(properties,urlsFileExtension.getDefaultValue()));
+				getURLsFileSelect().setSavedValue(PropertiesReader.getURLsFileSelect(properties,urlsFileSelect.getDefaultValue()));
+				getURLsFileAutoloadAll().setSavedValue(PropertiesReader.getURLsFileAutoLoadAll(properties,urlsFileAutoLoadAll.getDefaultValue()));
+				getSearchByPrefix().setSavedValue(PropertiesReader.getSearchByPrefix(properties,searchByPrefix.getDefaultValue()));
 				customPreferencesLoaded = true;
-
 			} catch ( final Exception e ) {
 				e.printStackTrace();
 			}
 		}
+		if ( !Preferences.isCustomPreferencesLoaded() )
+			Preferences.resetSavedValuesToDefault();
+		Preferences.resetModifiedValuesToSaved();
 	}
 
-	public static void resetCustomValuesToDefault ( ) {
-		windowTitle.resetCustomValueToDefault();
-		windowWidth.resetCustomValueToDefault();
-		windowHeight.resetCustomValueToDefault();
-		windowMaximized.resetCustomValueToDefault();
-		urlsFileExtension.resetCustomValueToDefault();
-		urlsFileSelect.resetCustomValueToDefault();
-		urlsFileAutoLoadAll.resetCustomValueToDefault();
-		searchByPrefix.resetCustomValueToDefault();
+	public static void resetSavedValuesToDefault ( ) {
+		windowTitle.resetSavedValueToDefault();
+		windowWidth.resetSavedValueToDefault();
+		windowHeight.resetSavedValueToDefault();
+		windowMaximized.resetSavedValueToDefault();
+		urlsFileExtension.resetSavedValueToDefault();
+		urlsFileSelect.resetSavedValueToDefault();
+		urlsFileAutoLoadAll.resetSavedValueToDefault();
+		searchByPrefix.resetSavedValueToDefault();
 	}
 
-	public static void resetSavedValuesToCustom ( ) {
-		windowTitle.resetSavedValueToCustom();
-		windowWidth.resetSavedValueToCustom();
-		windowHeight.resetSavedValueToCustom();
-		windowMaximized.resetSavedValueToCustom();
-		urlsFileExtension.resetSavedValueToCustom();
-		urlsFileSelect.resetSavedValueToCustom();
-		urlsFileAutoLoadAll.resetSavedValueToCustom();
-		searchByPrefix.resetSavedValueToCustom();
+	public static void resetSavedValuesToModified ( ) {
+		windowTitle.resetSavedValueToModified();
+		windowWidth.resetSavedValueToModified();
+		windowHeight.resetSavedValueToModified();
+		windowMaximized.resetSavedValueToModified();
+		urlsFileExtension.resetSavedValueToModified();
+		urlsFileSelect.resetSavedValueToModified();
+		urlsFileAutoLoadAll.resetSavedValueToModified();
+		searchByPrefix.resetSavedValueToModified();
 	}
 
-	public static void saveValues ( ) {
+	public static void resetModifiedValuesToSaved ( ) {
+		windowTitle.resetModifiedValueToSaved();
+		windowWidth.resetModifiedValueToSaved();
+		windowHeight.resetModifiedValueToSaved();
+		windowMaximized.resetModifiedValueToSaved();
+		urlsFileExtension.resetModifiedValueToSaved();
+		urlsFileSelect.resetModifiedValueToSaved();
+		urlsFileAutoLoadAll.resetModifiedValueToSaved();
+		searchByPrefix.resetModifiedValueToSaved();
+	}
+
+	public static void savePreferences ( ) {
 		final StringBuilder stringBuilder = new StringBuilder(400);
 		final String newLine = System.lineSeparator();
 
 		stringBuilder.append("window.title=");
-		stringBuilder.append(windowTitle.getCustomValue());
+		stringBuilder.append(Parser.trim(windowTitle.getModifiedValue()));
 		stringBuilder.append(newLine);
 		stringBuilder.append("window.width=");
-		stringBuilder.append(Integer.toString(windowWidth.getCustomValue()));
+		stringBuilder.append(Integer.toString(windowWidth.getModifiedValue()));
 		stringBuilder.append(newLine);
 		stringBuilder.append("window.height=");
-		stringBuilder.append(Integer.toString(windowHeight.getCustomValue()));
+		stringBuilder.append(Integer.toString(windowHeight.getModifiedValue()));
 		stringBuilder.append(newLine);
 		stringBuilder.append("window.maximized=");
-		stringBuilder.append(Boolean.toString(windowMaximized.getCustomValue()));
+		stringBuilder.append(Boolean.toString(windowMaximized.getModifiedValue()));
 		stringBuilder.append(newLine);
 		stringBuilder.append("urls.file.extension=");
-		stringBuilder.append(urlsFileExtension.getCustomValue());
+		stringBuilder.append(Parser.trim(urlsFileExtension.getModifiedValue()));
 		stringBuilder.append(newLine);
 		stringBuilder.append("urls.file.select=");
-		stringBuilder.append(urlsFileSelect.getCustomValue());
+		stringBuilder.append(Parser.trim(urlsFileSelect.getModifiedValue()));
 		stringBuilder.append(newLine);
 		stringBuilder.append("urls.file.autoload.all=");
-		stringBuilder.append(Boolean.toString(urlsFileAutoLoadAll.getCustomValue()));
+		stringBuilder.append(Boolean.toString(urlsFileAutoLoadAll.getModifiedValue()));
 		stringBuilder.append(newLine);
 		stringBuilder.append("search.byprefix=");
-		stringBuilder.append(Boolean.toString(searchByPrefix.getCustomValue()));
+		stringBuilder.append(Boolean.toString(searchByPrefix.getModifiedValue()));
 		stringBuilder.append(newLine);
 
 		try {
@@ -274,21 +281,21 @@ public class Preferences {
 		Path customPath = extractCustomPreferencesPath(args);
 		if ( customPath == null )
 			customPath = JarFile.getPath().resolve(ResourcesConfig.CUSTOM_PREFERENCES_FILE_PATH);
-		preferencesPath.setCustomValue(customPath);
+		preferencesPath.setSavedValue(customPath);
 	}
 
 	private static void loadCustomFXMLPath ( final List<String> args ) {
 		Path customPath = extractCustomFXMLPath(args);
 		if ( customPath == null )
 			customPath = JarFile.getPath().resolve(ResourcesConfig.CUSTOM_FXML_FILE_PATH);
-		preferencesPath.setCustomValue(customPath);
+		fxmlPath.setSavedValue(customPath);
 	}
 
 	private static void loadCustomCSSPath ( final List<String> args ) {
 		Path customPath = extractCustomCSSPath(args);
 		if ( customPath == null )
 			customPath = JarFile.getPath().resolve(ResourcesConfig.CUSTOM_CSS_FILE_PATH);
-		preferencesPath.setCustomValue(customPath);
+		cssPath.setSavedValue(customPath);
 	}
 
 	private static Path extractCustomPreferencesPath ( final List<String> args ) {

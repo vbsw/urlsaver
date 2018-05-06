@@ -1,5 +1,5 @@
 /*
- *    Copyright 2017, Vitali Baumtrok (vbsw@mailbox.org).
+ *    Copyright 2018, Vitali Baumtrok (vbsw@mailbox.org).
  * Distributed under the Boost Software License, Version 1.0.
  *      (See accompanying file LICENSE or copy at
  *        http://www.boost.org/LICENSE_1_0.txt)
@@ -16,7 +16,7 @@ public class PreferencesPathValue {
 
 	private Path defaultValue;
 	private Path savedValue;
-	private Path customValue;
+	private Path modifiedValue;
 
 	public Path getDefaultValue ( ) {
 		return defaultValue;
@@ -34,28 +34,28 @@ public class PreferencesPathValue {
 		this.savedValue = savedValue;
 	}
 
-	public Path getCustomValue ( ) {
-		return customValue;
+	public Path getModifiedValue ( ) {
+		return modifiedValue;
 	}
 
-	public void setCustomValue ( final Path customValue ) {
-		this.customValue = customValue;
+	public void setModifiedValue ( final Path modifiedValue ) {
+		this.modifiedValue = modifiedValue;
 	}
 
 	public boolean isSaved ( ) {
-		return savedValue.equals(customValue);
+		return savedValue.equals(modifiedValue);
 	}
 
-	protected void resetCustomValueToDefault ( ) {
-		customValue = defaultValue;
+	public void resetModifiedValueToDefault ( ) {
+		modifiedValue = defaultValue;
 	}
 
-	protected void resetSavedValueToDefault ( ) {
+	public void resetSavedValueToDefault ( ) {
 		savedValue = defaultValue;
 	}
 
-	protected void resetSavedValueToCustom ( ) {
-		savedValue = customValue;
+	public void resetSavedValueToModified ( ) {
+		savedValue = modifiedValue;
 	}
 
 }

@@ -39,7 +39,7 @@ public class FXMLReader {
 
 	private static Parent getCustomRoot ( ) {
 		if ( Preferences.isCustomFXMLFileAvailable() ) {
-			final Path externalFXMLPath = Preferences.getFXMLPath().getCustomValue();
+			final Path externalFXMLPath = Preferences.getFXMLPath().getSavedValue();
 			try ( final InputStream stream = Files.newInputStream(externalFXMLPath) ) {
 				final FXMLLoader fxmlLoader = new FXMLLoader();
 				final Parent fxml = fxmlLoader.load(stream);
