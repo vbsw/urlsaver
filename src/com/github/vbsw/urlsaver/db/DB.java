@@ -9,10 +9,26 @@
 package com.github.vbsw.urlsaver.db;
 
 
+import java.nio.file.Path;
+import java.util.ArrayList;
+
+import com.github.vbsw.urlsaver.JarFile;
+import com.github.vbsw.urlsaver.pref.Preferences;
+
+
 /**
  * @author Vitali Baumtrok
  */
 public class DB {
+
+	public static void initialize ( ) {
+		final String fileExtension = Preferences.getURLsFileExtension().getSavedValue();
+		final ArrayList<Path> filePaths = JarFile.getFilePaths(fileExtension);
+		final ArrayList<Path> filePathsSorted = DBFiles.getSortedPaths(filePaths);
+		final ArrayList<String> fileLabels = DBFiles.getInitialLabels(filePathsSorted);
+		DBFiles.setPaths(filePaths);
+		DBFiles.setLabels(fileLabels);
+	}
 
 	public static boolean isSaved ( ) {
 		final int limit = DBFiles.getPaths().size();

@@ -11,12 +11,13 @@ package com.github.vbsw.urlsaver.gui;
 
 import com.github.vbsw.urlsaver.App;
 import com.github.vbsw.urlsaver.db.DBFiles;
-import com.github.vbsw.urlsaver.logic.FilesLogic;
-import com.github.vbsw.urlsaver.logic.PreferencesLogic;
-import com.github.vbsw.urlsaver.logic.URLsLogic;
-import com.github.vbsw.urlsaver.logic.WebBrowserLogic;
-import com.github.vbsw.urlsaver.logic.WindowLogic;
 import com.github.vbsw.urlsaver.pref.Preferences;
+import com.github.vbsw.urlsaver.worker.FilesLogic;
+import com.github.vbsw.urlsaver.worker.PreferencesLogic;
+import com.github.vbsw.urlsaver.worker.URLsLogic;
+import com.github.vbsw.urlsaver.worker.WebBrowserLogic;
+import com.github.vbsw.urlsaver.worker.WindowLogic;
+import com.github.vbsw.urlsaver.worker.Worker;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -126,13 +127,13 @@ public class Buttons {
 	}
 
 	private static void reloadAllFiles_clicked ( final ActionEvent event ) {
-		FilesLogic.reloadAllFiles();
+		Worker.reloadAllFiles();
 	}
 
 	private static void reloadAllFiles_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER )
-			FilesLogic.reloadAllFiles();
+			Worker.reloadAllFiles();
 	}
 
 	private static void fileSave_clicked ( final ActionEvent event ) {
@@ -284,7 +285,7 @@ public class Buttons {
 		Properties.confirmingCreateCSSProperty().set(false);
 		Properties.confirmingCreateFXMLProperty().set(false);
 		Preferences.resetModifiedValuesToSaved();
-		PreferencesLogic.refreshView();
+		GUI.refreshPreferencesView();
 	}
 
 	private static void savePreferences_clicked ( final ActionEvent event ) {
@@ -319,7 +320,7 @@ public class Buttons {
 
 	private static void reloadPreferencesFile_clicked ( final ActionEvent event ) {
 		Preferences.loadCustomPreferences();
-		PreferencesLogic.refreshView();
+		GUI.refreshPreferencesView();
 		WindowLogic.refreshTitle();
 	}
 
@@ -331,7 +332,7 @@ public class Buttons {
 		final String logBackup = TextAreas.log.control.getText();
 		final int selectedIndex = ListViews.files.control.getSelectionModel().getSelectedIndex();
 		GUI.reloadFXML();
-		PreferencesLogic.refreshView();
+		GUI.refreshPreferencesView();
 		WindowLogic.selectPreferencesTab();
 		TextAreas.log.control.setText(logBackup);
 		Platform.runLater(new Runnable() {

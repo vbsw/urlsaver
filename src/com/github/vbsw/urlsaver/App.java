@@ -11,11 +11,10 @@ package com.github.vbsw.urlsaver;
 
 import com.github.vbsw.urlsaver.db.DB;
 import com.github.vbsw.urlsaver.gui.GUI;
-import com.github.vbsw.urlsaver.logic.FilesLogic;
-import com.github.vbsw.urlsaver.logic.PreferencesLogic;
-import com.github.vbsw.urlsaver.logic.WindowCallbacks;
-import com.github.vbsw.urlsaver.logic.WindowLogic;
 import com.github.vbsw.urlsaver.pref.Preferences;
+import com.github.vbsw.urlsaver.worker.WindowCallbacks;
+import com.github.vbsw.urlsaver.worker.WindowLogic;
+import com.github.vbsw.urlsaver.worker.Worker;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -30,17 +29,17 @@ public class App extends Application {
 	@Override
 	public void start ( final Stage primaryStage ) throws Exception {
 		Preferences.initialize(getParameters().getRaw());
+		DB.initialize();
 		GUI.initialize();
-		FilesLogic.refreshFilesList();
 
 		primaryStage.setOnCloseRequest(event -> WindowCallbacks.onCloseRequest(event));
 		primaryStage.setScene(GUI.scene);
 		primaryStage.setMaximized(Preferences.getWindowMaximized().getSavedValue());
 		primaryStage.show();
 
-		PreferencesLogic.refreshView();
-		FilesLogic.loadInitialFiles();
-		FilesLogic.selectDefaultFile();
+		GUI.refreshPreferencesView();
+		GUI.selectDefaultFile();
+		Worker.initialize();
 	}
 
 	public static void quit ( ) {

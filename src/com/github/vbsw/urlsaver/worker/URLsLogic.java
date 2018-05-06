@@ -6,7 +6,7 @@
  */
 
 
-package com.github.vbsw.urlsaver.logic;
+package com.github.vbsw.urlsaver.worker;
 
 import com.github.vbsw.urlsaver.gui.Properties;
 

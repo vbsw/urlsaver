@@ -12,8 +12,8 @@ package com.github.vbsw.urlsaver.gui;
 import java.nio.file.Path;
 
 import com.github.vbsw.urlsaver.db.DBFiles;
-import com.github.vbsw.urlsaver.logic.FilesLogic;
-import com.github.vbsw.urlsaver.logic.WindowLogic;
+import com.github.vbsw.urlsaver.worker.FilesLogic;
+import com.github.vbsw.urlsaver.worker.WindowLogic;
 
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
@@ -89,6 +89,17 @@ public class ListViews {
 			control.setCellFactory( ( ListView<Path> param ) -> ListViews.filesCellFactory(param));
 			control.getSelectionModel().selectedItemProperty().addListener( ( ObservableValue<? extends Path> observable, Path oldValue, Path newValue ) -> ListViews.files_selected(observable,oldValue,newValue));
 			control.setOnKeyPressed(event -> ListViews.files_keyPressed(event));
+		}
+
+		public String getListLabel ( final Path filePath, final int percentLoaded ) {
+			final String listViewText;
+			if ( percentLoaded < 0 )
+				listViewText = filePath.toString() + "  0%";
+			else if ( percentLoaded < 100 )
+				listViewText = filePath.toString() + "  " + percentLoaded + "%";
+			else
+				listViewText = filePath.toString();
+			return listViewText;
 		}
 	}
 

@@ -6,22 +6,16 @@
  */
 
 
-package com.github.vbsw.urlsaver.logic;
-
-
-import com.github.vbsw.urlsaver.App;
-
-import javafx.stage.WindowEvent;
+package com.github.vbsw.urlsaver.worker;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public class WindowCallbacks {
+public class WebBrowserLogic {
 
-	public static void onCloseRequest ( final WindowEvent event ) {
-		event.consume();
-		App.quit();
+	public static void openTypedUrl ( ) {
+		// TODO Auto-generated method stub
 	}
 
 }

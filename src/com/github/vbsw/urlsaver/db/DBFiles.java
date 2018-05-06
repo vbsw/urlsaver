@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import com.github.vbsw.urlsaver.gui.ListViews;
+
 
 /**
  * @author Vitali Baumtrok
@@ -26,7 +28,7 @@ public class DBFiles {
 	private static final DynArrayOfString labes = new DynArrayOfString();
 	private static final DynArrayOfBoolean dirtyFlags = new DynArrayOfBoolean();
 
-	public static void setPathList ( final ArrayList<Path> paths ) {
+	public static void setPaths ( final ArrayList<Path> paths ) {
 		DBFiles.paths.clear();
 		DBFiles.fileNames.clear();
 		DBFiles.dirtyFlags.clear();
@@ -39,7 +41,7 @@ public class DBFiles {
 		}
 	}
 
-	public static void setLabelList ( final ArrayList<String> labels ) {
+	public static void setLabels ( final ArrayList<String> labels ) {
 		DBFiles.labes.clear();
 		for ( String label: labels )
 			DBFiles.labes.add(label);
@@ -91,6 +93,15 @@ public class DBFiles {
 
 	public static boolean isDirty ( final int index ) {
 		return dirtyFlags.values[index];
+	}
+
+	public static ArrayList<String> getInitialLabels ( final ArrayList<Path> filePaths ) {
+		final ArrayList<String> labels = new ArrayList<>(filePaths.size());
+		for ( Path filePath: filePaths ) {
+			final String label = ListViews.files.getListLabel(filePath,0);
+			labels.add(label);
+		}
+		return labels;
 	}
 
 	private static class PathComparator implements Comparator<Path> {

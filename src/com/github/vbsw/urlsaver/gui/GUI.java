@@ -11,7 +11,10 @@ package com.github.vbsw.urlsaver.gui;
 
 import javax.swing.text.html.CSS;
 
+import com.github.vbsw.urlsaver.db.DBFiles;
+import com.github.vbsw.urlsaver.gui.CheckBoxes.CustomCheckBox;
 import com.github.vbsw.urlsaver.pref.Preferences;
+import com.github.vbsw.urlsaver.pref.PreferencesBooleanValue;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -36,6 +39,7 @@ public class GUI {
 		scene = new Scene(rootStub,windowWidth,windowHeight);
 		reloadFXML();
 		reloadCSS();
+		ListViews.files.control.getItems().addAll(DBFiles.getPaths());
 	}
 
 	public static void reloadFXML ( ) {
@@ -65,6 +69,49 @@ public class GUI {
 	public static void setWindowTitle ( final String title ) {
 		final Stage stage = (Stage) GUI.scene.getWindow();
 		stage.setTitle(title);
+	}
+
+	public static void refreshPreferencesView ( ) {
+		final boolean disable = !Preferences.isCustomPreferencesLoaded();
+		TextFields.title.control.setText(Preferences.getWindowTitle().getModifiedValue());
+		TextFields.width.control.setText(Integer.toString((int) Preferences.getWindowWidth().getModifiedValue()));
+		TextFields.height.control.setText(Integer.toString((int) Preferences.getWindowHeight().getModifiedValue()));
+		TextFields.urlsFileExtension.control.setText(Preferences.getURLsFileExtension().getModifiedValue());
+		TextFields.urlsFileSelect.control.setText(Preferences.getURLsFileSelect().getModifiedValue());
+		refreshCheckBoxView(CheckBoxes.maximize,Preferences.getWindowMaximized());
+		refreshCheckBoxView(CheckBoxes.urlsFileAutoloadAll,Preferences.getURLsFileAutoloadAll());
+		refreshCheckBoxView(CheckBoxes.byPrefix,Preferences.getSearchByPrefix());
+		TextFields.title.control.setDisable(disable);
+		TextFields.width.control.setDisable(disable);
+		TextFields.height.control.setDisable(disable);
+		TextFields.urlsFileExtension.control.setDisable(disable);
+		TextFields.urlsFileSelect.control.setDisable(disable);
+		CheckBoxes.maximize.control.setDisable(disable);
+		CheckBoxes.urlsFileAutoloadAll.control.setDisable(disable);
+		CheckBoxes.byPrefix.control.setDisable(disable);
+	}
+
+	public static void selectDefaultFile ( ) {
+		final String fileToSelect = Preferences.getURLsFileSelect().getModifiedValue();
+		final int pathIndex = DBFiles.getIndexByFileName(fileToSelect);
+		if ( pathIndex >= 0 ) {
+			ListViews.files.control.requestFocus();
+			ListViews.files.control.getSelectionModel().select(pathIndex);
+		}
+	}
+
+	private static void refreshCheckBoxView ( final CustomCheckBox customCheckBox, final PreferencesBooleanValue preferencesValue ) {
+		if ( customCheckBox.control.isSelected() ) {
+			if ( !preferencesValue.getModifiedValue() )
+				customCheckBox.control.setSelected(preferencesValue.getModifiedValue());
+			else if (!preferencesValue.getSavedValue())
+				customCheckBox.setFontWeight(true);
+		} else {
+			if ( preferencesValue.getModifiedValue() )
+				customCheckBox.control.setSelected(preferencesValue.getModifiedValue());
+			else if (preferencesValue.getSavedValue())
+				customCheckBox.setFontWeight(true);
+		}
 	}
 
 }

@@ -6,18 +6,15 @@
  */
 
 
-package com.github.vbsw.urlsaver.logic;
+package com.github.vbsw.urlsaver.worker;
 
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 
-import com.github.vbsw.urlsaver.JarFile;
 import com.github.vbsw.urlsaver.db.DBFiles;
 import com.github.vbsw.urlsaver.gui.ListViews;
 import com.github.vbsw.urlsaver.gui.Properties;
 import com.github.vbsw.urlsaver.gui.TextFields;
-import com.github.vbsw.urlsaver.pref.Preferences;
 
 
 /**
@@ -25,27 +22,11 @@ import com.github.vbsw.urlsaver.pref.Preferences;
  */
 public class FilesLogic {
 
-	public static void refreshFilesList ( ) {
-		final String fileExtension = Preferences.getURLsFileExtension().getSavedValue();
-		final ArrayList<Path> filePaths = JarFile.getFilePaths(fileExtension);
-		final ArrayList<Path> filePathsSorted = DBFiles.getSortedPaths(filePaths);
-		final ArrayList<String> fileLabels = FilesLogic.getInitialFileLabels(filePathsSorted);
-
-		DBFiles.setPathList(filePaths);
-		DBFiles.setLabelList(fileLabels);
-
-		ListViews.files.control.getItems().addAll(DBFiles.getPaths());
-	}
-
 	public static void saveAllFiles ( ) {
 		// TODO Auto-generated method stub
 	}
 
 	public static void reloadSelectedFile ( ) {
-		// TODO Auto-generated method stub
-	}
-
-	public static void reloadAllFiles ( ) {
 		// TODO Auto-generated method stub
 	}
 
@@ -59,40 +40,6 @@ public class FilesLogic {
 
 	public static void confirmSaveSelectedFile ( ) {
 		// TODO Auto-generated method stub
-	}
-
-	public static void loadInitialFiles ( ) {
-		if ( Preferences.getURLsFileAutoloadAll().getModifiedValue() )
-			FilesLogic.reloadAllFiles();
-	}
-
-	private static ArrayList<String> getInitialFileLabels ( final ArrayList<Path> filePaths ) {
-		final ArrayList<String> labels = new ArrayList<>(filePaths.size());
-		for ( Path filePath: filePaths ) {
-			final String label = FilesLogic.getFilesListLabel(filePath,0);
-			labels.add(label);
-		}
-		return labels;
-	}
-
-	private static String getFilesListLabel ( final Path filePath, final int percentLoaded ) {
-		final String listViewText;
-		if ( percentLoaded < 0 )
-			listViewText = filePath.toString() + "  0%";
-		else if ( percentLoaded < 100 )
-			listViewText = filePath.toString() + "  " + percentLoaded + "%";
-		else
-			listViewText = filePath.toString();
-		return listViewText;
-	}
-
-	public static void selectDefaultFile ( ) {
-		final String fileToSelect = Preferences.getURLsFileSelect().getModifiedValue();
-		final int pathIndex = DBFiles.getIndexByFileName(fileToSelect);
-		if ( pathIndex >= 0 ) {
-			ListViews.files.control.requestFocus();
-			ListViews.files.control.getSelectionModel().select(pathIndex);
-		}
 	}
 
 	public static void processFileSelection ( ) {
@@ -125,7 +72,7 @@ public class FilesLogic {
 		//			dirty = false;
 		//		}
 		//		selectedFileDirty.set(dirty);
-		Properties.selectedProperty().set(dbPathIndex>=0);
+		Properties.selectedProperty().set(dbPathIndex >= 0);
 		Properties.confirmingSaveProperty().set(false);
 	}
 
