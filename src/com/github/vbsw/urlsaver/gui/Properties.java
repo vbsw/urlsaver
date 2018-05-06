@@ -35,8 +35,8 @@ public class Properties {
 	protected static final SimpleBooleanProperty titleChanged = new SimpleBooleanProperty();
 	protected static final SimpleBooleanProperty widthChanged = new SimpleBooleanProperty();
 	protected static final SimpleBooleanProperty heightChanged = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty fileExtensionChanged = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty defaultFileChanged = new SimpleBooleanProperty();
+	protected static final SimpleBooleanProperty urlsFileExtensionChanged = new SimpleBooleanProperty();
+	protected static final SimpleBooleanProperty urlsFileSelectChanged = new SimpleBooleanProperty();
 	protected static final SimpleBooleanProperty maximizeChanged = new SimpleBooleanProperty();
 	protected static final SimpleBooleanProperty loadAtStartChanged = new SimpleBooleanProperty();
 	protected static final SimpleBooleanProperty byPrefixChanged = new SimpleBooleanProperty();
@@ -105,12 +105,12 @@ public class Properties {
 		return heightChanged;
 	}
 
-	public static SimpleBooleanProperty fileExtensionChangedProperty ( ) {
-		return fileExtensionChanged;
+	public static SimpleBooleanProperty urlsFileExtensionChangedProperty ( ) {
+		return urlsFileExtensionChanged;
 	}
 
-	public static SimpleBooleanProperty defaultFileChangedProperty ( ) {
-		return defaultFileChanged;
+	public static SimpleBooleanProperty urlsFileSelectChangedProperty ( ) {
+		return urlsFileSelectChanged;
 	}
 
 	public static SimpleBooleanProperty maximizeChangedProperty ( ) {

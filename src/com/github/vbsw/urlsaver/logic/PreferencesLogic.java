@@ -15,10 +15,12 @@ import java.nio.file.Path;
 import com.github.vbsw.urlsaver.JarFile;
 import com.github.vbsw.urlsaver.gui.Buttons;
 import com.github.vbsw.urlsaver.gui.CheckBoxes;
+import com.github.vbsw.urlsaver.gui.CheckBoxes.CustomCheckBox;
 import com.github.vbsw.urlsaver.gui.Logger;
 import com.github.vbsw.urlsaver.gui.Properties;
 import com.github.vbsw.urlsaver.gui.TextFields;
 import com.github.vbsw.urlsaver.pref.Preferences;
+import com.github.vbsw.urlsaver.pref.PreferencesBooleanValue;
 import com.github.vbsw.urlsaver.resources.ResourcesConfig;
 
 import javafx.beans.property.BooleanProperty;
@@ -35,19 +37,18 @@ public class PreferencesLogic {
 		TextFields.title.control.setText(Preferences.getWindowTitle().getModifiedValue());
 		TextFields.width.control.setText(Integer.toString((int) Preferences.getWindowWidth().getModifiedValue()));
 		TextFields.height.control.setText(Integer.toString((int) Preferences.getWindowHeight().getModifiedValue()));
-		TextFields.fileExtension.control.setText(Preferences.getURLsFileExtension().getModifiedValue());
-		TextFields.defaultFile.control.setText(Preferences.getURLsFileSelect().getModifiedValue());
-		CheckBoxes.maximize.control.setSelected(Preferences.getWindowMaximized().getModifiedValue());
-		CheckBoxes.loadAtStart.control.setSelected(Preferences.getURLsFileAutoloadAll().getModifiedValue());
-		CheckBoxes.byPrefix.control.setSelected(Preferences.getSearchByPrefix().getModifiedValue());
-
+		TextFields.urlsFileExtension.control.setText(Preferences.getURLsFileExtension().getModifiedValue());
+		TextFields.urlsFileSelect.control.setText(Preferences.getURLsFileSelect().getModifiedValue());
+		refreshCheckBoxView(CheckBoxes.maximize,Preferences.getWindowMaximized());
+		refreshCheckBoxView(CheckBoxes.urlsFileAutoloadAll,Preferences.getURLsFileAutoloadAll());
+		refreshCheckBoxView(CheckBoxes.byPrefix,Preferences.getSearchByPrefix());
 		TextFields.title.control.setDisable(disable);
 		TextFields.width.control.setDisable(disable);
 		TextFields.height.control.setDisable(disable);
-		TextFields.fileExtension.control.setDisable(disable);
-		TextFields.defaultFile.control.setDisable(disable);
+		TextFields.urlsFileExtension.control.setDisable(disable);
+		TextFields.urlsFileSelect.control.setDisable(disable);
 		CheckBoxes.maximize.control.setDisable(disable);
-		CheckBoxes.loadAtStart.control.setDisable(disable);
+		CheckBoxes.urlsFileAutoloadAll.control.setDisable(disable);
 		CheckBoxes.byPrefix.control.setDisable(disable);
 	}
 
@@ -85,6 +86,20 @@ public class PreferencesLogic {
 		final SimpleBooleanProperty property = Properties.confirmingCreateFXMLProperty();
 		final Path destFilePath = Preferences.getFXMLPath().getSavedValue();
 		PreferencesLogic.overwriteFile(ResourcesConfig.DEFAULT_FXML_FILE_PATH,destFilePath,property);
+	}
+
+	private static void refreshCheckBoxView ( final CustomCheckBox customCheckBox, final PreferencesBooleanValue preferencesValue ) {
+		if ( customCheckBox.control.isSelected() ) {
+			if ( !preferencesValue.getModifiedValue() )
+				customCheckBox.control.setSelected(preferencesValue.getModifiedValue());
+			else if (!preferencesValue.getSavedValue())
+				customCheckBox.setFontWeight(true);
+		} else {
+			if ( preferencesValue.getModifiedValue() )
+				customCheckBox.control.setSelected(preferencesValue.getModifiedValue());
+			else if (preferencesValue.getSavedValue())
+				customCheckBox.setFontWeight(true);
+		}
 	}
 
 	private static void createFile ( final String srcFilePathStr, final Path destFilePath, final SimpleBooleanProperty property ) {

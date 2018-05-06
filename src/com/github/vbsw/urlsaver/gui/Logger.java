@@ -19,11 +19,11 @@ import java.time.format.DateTimeFormatter;
 public class Logger {
 
 	public static void logSuccess ( final String message ) {
-		Logger.log("Success: ",message);
+		Logger.log("",message);
 	}
 
 	public static void logFailure ( final String message ) {
-		Logger.log("Failure: ",message);
+		Logger.log("",message);
 	}
 
 	private static void log ( final String prefix, final String message ) {

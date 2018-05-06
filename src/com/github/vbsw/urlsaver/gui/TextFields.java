@@ -31,8 +31,8 @@ public class TextFields {
 	public static final Title title = new Title();
 	public static final Width width = new Width();
 	public static final Height height = new Height();
-	public static final FileExtension fileExtension = new FileExtension();
-	public static final DefaultFile defaultFile = new DefaultFile();
+	public static final FileExtension urlsFileExtension = new FileExtension();
+	public static final DefaultFile urlsFileSelect = new DefaultFile();
 
 	public static void build ( final Parent root ) {
 		fileName.build(root);
@@ -41,8 +41,8 @@ public class TextFields {
 		title.build(root);
 		width.build(root);
 		height.build(root);
-		fileExtension.build(root);
-		defaultFile.build(root);
+		urlsFileExtension.build(root);
+		urlsFileSelect.build(root);
 	}
 
 	public static void urlSearch_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
@@ -81,40 +81,45 @@ public class TextFields {
 	}
 
 	public static void width_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
-		boolean valueChanged = false;
-		try {
-			final String trimmedValue = Parser.trim(newValue);
-			final int parsedValue = Integer.parseInt(trimmedValue);
-			valueChanged = parsedValue != Preferences.getWindowWidth().getModifiedValue();
-			Preferences.getWindowWidth().setModifiedValue(parsedValue);
-		} catch ( final NumberFormatException e ) {
-			Preferences.getWindowWidth().resetModifiedValueToSaved();
+		final int parsedValueInt = Parser.toUnsignedInteger(newValue);
+		final String parsedValueStr = Integer.toString(parsedValueInt);
+		final boolean valueChanged = parsedValueInt != Preferences.getWindowWidth().getSavedValue();
+		if ( !parsedValueStr.equals(newValue) ) {
+			TextFields.width.control.setText(parsedValueStr);
+		} else {
+			Preferences.getWindowWidth().setModifiedValue(parsedValueInt);
+			Properties.widthChangedProperty().set(valueChanged);
+			TextFields.width.setFontWeight(valueChanged);
 		}
-		Properties.widthChangedProperty().set(valueChanged);
-		TextFields.width.setFontWeight(valueChanged);
 	}
 
 	public static void height_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
-		//		final int height = (int) App.settings.getWindowHeight();
-		//		final boolean heightsEqual = Integer.toString(height).equals(newValue);
-		//		final int newHeight = Parser.toInt(newValue);
-		//		App.settings.setCustomWindowHeight(newHeight);
-		//		setFontWeight(App.scene.tf.height,!heightsEqual);
-		//		heightChanged.set(!heightsEqual);
+		final int parsedValueInt = Parser.toUnsignedInteger(newValue);
+		final String parsedValueStr = Integer.toString(parsedValueInt);
+		final boolean valueChanged = parsedValueInt != Preferences.getWindowHeight().getSavedValue();
+		if ( !parsedValueStr.equals(newValue) ) {
+			TextFields.height.control.setText(parsedValueStr);
+		} else {
+			Preferences.getWindowHeight().setModifiedValue(parsedValueInt);
+			Properties.heightChangedProperty().set(valueChanged);
+			TextFields.height.setFontWeight(valueChanged);
+		}
 	}
 
-	public static void fileExtension_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
-		//		final boolean fileExtensionEqual = App.settings.getUrlsFileExtension().equals(newValue);
-		//		App.settings.setCustomUrlsFileExtension(newValue);
-		//		setFontWeight(App.scene.tf.fileExtension,!fileExtensionEqual);
-		//		fileExtensionChanged.set(!fileExtensionEqual);
+	public static void urlsFileExtension_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
+		final String trimmedValue = Parser.trim(newValue);
+		final boolean valueChanged = !trimmedValue.equals(Preferences.getURLsFileExtension().getSavedValue());
+		Preferences.getURLsFileExtension().setModifiedValue(trimmedValue);
+		Properties.urlsFileExtensionChangedProperty().set(valueChanged);
+		TextFields.urlsFileExtension.setFontWeight(valueChanged);
 	}
 
-	public static void defaultFile_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
-		//		final boolean defaultFilesEqual = App.settings.getUrlsFileSelect().equals(newValue);
-		//		App.settings.setCustomUrlsFileSelect(newValue);
-		//		setFontWeight(App.scene.tf.defaultFile,!defaultFilesEqual);
-		//		defaultFileChanged.set(!defaultFilesEqual);
+	public static void urlsFileSelect_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
+		final String trimmedValue = Parser.trim(newValue);
+		final boolean valueChanged = !trimmedValue.equals(Preferences.getURLsFileSelect().getSavedValue());
+		Preferences.getURLsFileSelect().setModifiedValue(trimmedValue);
+		Properties.urlsFileSelectChangedProperty().set(valueChanged);
+		TextFields.urlsFileSelect.setFontWeight(valueChanged);
 	}
 
 	public static class CustomTextField {
@@ -173,14 +178,14 @@ public class TextFields {
 	public static class FileExtension extends CustomTextField {
 		private void build ( final Parent root ) {
 			control = (TextField) root.lookup("#preferences_file_extension_tf");
-			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> TextFields.fileExtension_changed(observable,oldValue,newValue));
+			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> TextFields.urlsFileExtension_changed(observable,oldValue,newValue));
 		}
 	}
 
 	public static class DefaultFile extends CustomTextField {
 		private void build ( final Parent root ) {
 			control = (TextField) root.lookup("#preferences_default_file_tf");
-			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> TextFields.defaultFile_changed(observable,oldValue,newValue));
+			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> TextFields.urlsFileSelect_changed(observable,oldValue,newValue));
 		}
 	}
 

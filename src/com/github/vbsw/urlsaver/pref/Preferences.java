@@ -316,12 +316,12 @@ public class Preferences {
 	}
 
 	private static Path extractCustomFXMLPath ( final List<String> args ) {
-		// not available, yet
+		// not implemented, yet
 		return null;
 	}
 
 	private static Path extractCustomCSSPath ( final List<String> args ) {
-		// not available, yet
+		// not implemented, yet
 		return null;
 	}
 

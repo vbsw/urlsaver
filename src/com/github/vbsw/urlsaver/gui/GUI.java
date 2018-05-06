@@ -33,9 +33,7 @@ public class GUI {
 		final int windowWidth = Preferences.getWindowWidth().getSavedValue();
 		final int windowHeight = Preferences.getWindowHeight().getSavedValue();
 		final Parent rootStub = new AnchorPane();
-
 		scene = new Scene(rootStub,windowWidth,windowHeight);
-
 		reloadFXML();
 		reloadCSS();
 	}

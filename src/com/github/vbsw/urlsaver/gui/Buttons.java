@@ -53,11 +53,11 @@ public class Buttons {
 	public static final URLDeleteOK urlDeleteOK = new URLDeleteOK();
 	public static final URLCreateOK urlCreateOK = new URLCreateOK();
 	public static final URLEditOK urlEditOK = new URLEditOK();
-	public static final CreatePreferencesFileOK createPreferencesFileOK = new CreatePreferencesFileOK();
+	public static final PreferencesCreateOK preferencesCreateOK = new PreferencesCreateOK();
 	public static final PreferencesCancel preferencesCancel = new PreferencesCancel();
-	public static final SavePreferences savePreferences = new SavePreferences();
-	public static final ReloadPreferencesFile reloadPreferencesFile = new ReloadPreferencesFile();
-	public static final CreatePreferencesFile createPreferencesFile = new CreatePreferencesFile();
+	public static final PreferencesSave preferencesSave = new PreferencesSave();
+	public static final PreferencesReload preferencesReload = new PreferencesReload();
+	public static final PreferencesCreate preferencesCreate = new PreferencesCreate();
 
 	public static void build ( final Parent root ) {
 		quitApp.build(root);
@@ -75,11 +75,11 @@ public class Buttons {
 		urlDeleteOK.build(root);
 		urlCreateOK.build(root);
 		urlEditOK.build(root);
-		createPreferencesFileOK.build(root);
+		preferencesCreateOK.build(root);
 		preferencesCancel.build(root);
-		savePreferences.build(root);
-		reloadPreferencesFile.build(root);
-		createPreferencesFile.build(root);
+		preferencesSave.build(root);
+		preferencesReload.build(root);
+		preferencesCreate.build(root);
 	}
 
 	private static void quitApp_clicked ( final ActionEvent event ) {
@@ -279,10 +279,12 @@ public class Buttons {
 			PreferencesLogic.overwriteFXMLFile();
 	}
 
-	private static void settingsCancel_clicked ( final ActionEvent event ) {
+	private static void preferencesCancel_clicked ( final ActionEvent event ) {
 		Properties.confirmingCreatePreferencesProperty().set(false);
 		Properties.confirmingCreateCSSProperty().set(false);
 		Properties.confirmingCreateFXMLProperty().set(false);
+		Preferences.resetModifiedValuesToSaved();
+		PreferencesLogic.refreshView();
 	}
 
 	private static void savePreferences_clicked ( final ActionEvent event ) {
@@ -294,18 +296,18 @@ public class Buttons {
 			Properties.titleChangedProperty().set(false);
 			Properties.widthChangedProperty().set(false);
 			Properties.heightChangedProperty().set(false);
-			Properties.fileExtensionChangedProperty().set(false);
-			Properties.defaultFileChangedProperty().set(false);
+			Properties.urlsFileExtensionChangedProperty().set(false);
+			Properties.urlsFileSelectChangedProperty().set(false);
 			Properties.maximizeChangedProperty().set(false);
 			Properties.loadAtStartChangedProperty().set(false);
 			Properties.byPrefixChangedProperty().set(false);
 			TextFields.title.setFontWeight(false);
 			TextFields.width.setFontWeight(false);
 			TextFields.height.setFontWeight(false);
-			TextFields.fileExtension.setFontWeight(false);
-			TextFields.defaultFile.setFontWeight(false);
+			TextFields.urlsFileExtension.setFontWeight(false);
+			TextFields.urlsFileSelect.setFontWeight(false);
 			CheckBoxes.maximize.setFontWeight(false);
-			CheckBoxes.loadAtStart.setFontWeight(false);
+			CheckBoxes.urlsFileAutoloadAll.setFontWeight(false);
 			CheckBoxes.byPrefix.setFontWeight(false);
 			Logger.logSuccess("file saved (" + fileName + ")");
 			TextAreas.log.control.requestFocus();
@@ -335,7 +337,7 @@ public class Buttons {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run ( ) {
-				Buttons.reloadPreferencesFile.control.requestFocus();
+				Buttons.preferencesReload.control.requestFocus();
 			}
 		});
 		ListViews.files.control.getItems().addAll(DBFiles.getPaths());
@@ -354,7 +356,7 @@ public class Buttons {
 		PreferencesLogic.createFXMLFile();
 	}
 
-	private static BooleanBinding getCreateSettingsFileDisableBinding ( ) {
+	private static BooleanBinding getCreatePreferencesFileDisableBinding ( ) {
 		BooleanBinding binding;
 		binding = Bindings.or(Properties.confirmingCreatePreferencesProperty(),Properties.confirmingCreateCSSProperty());
 		binding = Bindings.or(binding,Properties.confirmingCreateFXMLProperty());
@@ -386,12 +388,12 @@ public class Buttons {
 		return binding;
 	}
 
-	private static BooleanExpression getSettingsChangedBinding ( ) {
+	private static BooleanExpression getPreferencesChangedBinding ( ) {
 		BooleanBinding binding;
 		binding = Bindings.or(Properties.titleChangedProperty(),Properties.widthChangedProperty());
 		binding = Bindings.or(binding,Properties.heightChangedProperty());
-		binding = Bindings.or(binding,Properties.fileExtensionChangedProperty());
-		binding = Bindings.or(binding,Properties.defaultFileChangedProperty());
+		binding = Bindings.or(binding,Properties.urlsFileExtensionChangedProperty());
+		binding = Bindings.or(binding,Properties.urlsFileSelectChangedProperty());
 		binding = Bindings.or(binding,Properties.maximizeChangedProperty());
 		binding = Bindings.or(binding,Properties.loadAtStartChangedProperty());
 		binding = Bindings.or(binding,Properties.byPrefixChangedProperty());
@@ -540,10 +542,10 @@ public class Buttons {
 		}
 	}
 
-	public static final class CreatePreferencesFileOK extends CustomButton {
+	public static final class PreferencesCreateOK extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#create_preferences_file_ok_btn");
-			control.disableProperty().bind(Buttons.getCreateSettingsFileDisableBinding().not());
+			control.disableProperty().bind(Buttons.getCreatePreferencesFileDisableBinding().not());
 			control.setOnAction(event -> Buttons.createPreferencesFileOK_clicked(event));
 		}
 	}
@@ -551,20 +553,20 @@ public class Buttons {
 	public static final class PreferencesCancel extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#preferences_cancel_btn");
-			control.disableProperty().bind(Bindings.not(getCreateSettingsFileDisableBinding()));
-			control.setOnAction(event -> Buttons.settingsCancel_clicked(event));
+			control.disableProperty().bind(Bindings.and(Bindings.not(getCreatePreferencesFileDisableBinding()),Buttons.getPreferencesChangedBinding().not()));
+			control.setOnAction(event -> Buttons.preferencesCancel_clicked(event));
 		}
 	}
 
-	public static final class SavePreferences extends CustomButton {
+	public static final class PreferencesSave extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#save_preferences_btn");
-			control.disableProperty().bind(Buttons.getSettingsChangedBinding().not());
+			control.disableProperty().bind(Buttons.getPreferencesChangedBinding().not());
 			control.setOnAction(event -> Buttons.savePreferences_clicked(event));
 		}
 	}
 
-	public static final class ReloadPreferencesFile extends CustomMenuButton {
+	public static final class PreferencesReload extends CustomMenuButton {
 		private void build ( final Parent root ) {
 			control = (MenuButton) root.lookup("#reload_preferences_file_btn");
 
@@ -586,10 +588,10 @@ public class Buttons {
 		}
 	}
 
-	public static final class CreatePreferencesFile extends CustomMenuButton {
+	public static final class PreferencesCreate extends CustomMenuButton {
 		private void build ( final Parent root ) {
 			control = (MenuButton) root.lookup("#create_preferences_file_btn");
-			control.disableProperty().bind(Bindings.or(Buttons.getCreateSettingsFileDisableBinding(),Buttons.getSettingsChangedBinding()));
+			control.disableProperty().bind(Bindings.or(Buttons.getCreatePreferencesFileDisableBinding(),Buttons.getPreferencesChangedBinding()));
 
 			final ObservableList<MenuItem> items = control.getItems();
 			final String preferencesBtnSelector = "create_preferences_file_menu";
