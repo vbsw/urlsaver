@@ -6,11 +6,10 @@
  */
 
 
-package com.github.vbsw.urlsaver.logic;
+package com.github.vbsw.urlsaver.gui;
 
 
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableBooleanValue;
 
 
 /**
@@ -18,7 +17,7 @@ import javafx.beans.value.ObservableBooleanValue;
  */
 public class Properties {
 
-	protected static final SimpleBooleanProperty confirmQuitApp = new SimpleBooleanProperty();
+	protected static final SimpleBooleanProperty confirmingQuitApp = new SimpleBooleanProperty();
 	protected static final SimpleBooleanProperty selected = new SimpleBooleanProperty();
 	protected static final SimpleBooleanProperty confirmingSave = new SimpleBooleanProperty();
 	protected static final SimpleBooleanProperty selectedFileDirty = new SimpleBooleanProperty();
@@ -42,39 +41,39 @@ public class Properties {
 	protected static final SimpleBooleanProperty loadAtStartChanged = new SimpleBooleanProperty();
 	protected static final SimpleBooleanProperty byPrefixChanged = new SimpleBooleanProperty();
 
-	public static ObservableBooleanValue confirmQuitAppProperty ( ) {
-		return confirmQuitApp;
+	public static SimpleBooleanProperty confirmingQuitAppProperty ( ) {
+		return confirmingQuitApp;
 	}
 
-	public static ObservableBooleanValue selectedProperty ( ) {
+	public static SimpleBooleanProperty selectedProperty ( ) {
 		return selected;
 	}
 
-	public static ObservableBooleanValue confirmingSaveProperty ( ) {
+	public static SimpleBooleanProperty confirmingSaveProperty ( ) {
 		return confirmingSave;
 	}
 
-	public static ObservableBooleanValue selectedFileDirtyProperty ( ) {
+	public static SimpleBooleanProperty selectedFileDirtyProperty ( ) {
 		return selectedFileDirty;
 	}
 
-	public static ObservableBooleanValue existsProperty ( ) {
+	public static SimpleBooleanProperty urlExistsProperty ( ) {
 		return urlExists;
 	}
 
-	public static ObservableBooleanValue urlDeleteRequestedProperty ( ) {
+	public static SimpleBooleanProperty urlDeleteRequestedProperty ( ) {
 		return urlDeleteRequested;
 	}
 
-	public static ObservableBooleanValue urlModifiedProperty ( ) {
+	public static SimpleBooleanProperty urlModifiedProperty ( ) {
 		return urlModified;
 	}
 
-	public static ObservableBooleanValue availableProperty ( ) {
+	public static SimpleBooleanProperty availableProperty ( ) {
 		return urlsAvailable;
 	}
 
-	public static ObservableBooleanValue urlTagsModifiedProperty ( ) {
+	public static SimpleBooleanProperty urlTagsModifiedProperty ( ) {
 		return urlTagsModified;
 	}
 

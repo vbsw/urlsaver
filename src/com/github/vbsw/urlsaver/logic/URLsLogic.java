@@ -8,6 +8,8 @@
 
 package com.github.vbsw.urlsaver.logic;
 
+import com.github.vbsw.urlsaver.gui.Properties;
+
 /**
  * @author Vitali Baumtrok
  */
@@ -65,7 +67,7 @@ public class URLsLogic {
 	}
 
 	public static void finalizeURLDelete ( ) {
-		Properties.urlDeleteRequested.set(false);
+		Properties.urlDeleteRequestedProperty().set(false);
 	}
 
 	public static String getSelectedUrl ( ) {
@@ -78,8 +80,8 @@ public class URLsLogic {
 	}
 
 	public static void finalizeURLCreate ( ) {
-		Properties.urlExists.set(true);
-		Properties.urlModified.set(false);
+		Properties.urlExistsProperty().set(true);
+		Properties.urlModifiedProperty().set(false);
 	}
 
 	public static void confirmEdit ( ) {

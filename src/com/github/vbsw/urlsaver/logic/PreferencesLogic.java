@@ -14,8 +14,10 @@ import java.nio.file.Path;
 
 import com.github.vbsw.urlsaver.JarFile;
 import com.github.vbsw.urlsaver.gui.Buttons;
-import com.github.vbsw.urlsaver.gui.GUI;
+import com.github.vbsw.urlsaver.gui.CheckBoxes;
 import com.github.vbsw.urlsaver.gui.Logger;
+import com.github.vbsw.urlsaver.gui.Properties;
+import com.github.vbsw.urlsaver.gui.TextFields;
 import com.github.vbsw.urlsaver.pref.Preferences;
 import com.github.vbsw.urlsaver.resources.ResourcesConfig;
 
@@ -30,23 +32,23 @@ public class PreferencesLogic {
 
 	public static void refreshView ( ) {
 		final boolean disable = !Preferences.isCustomPreferencesLoaded();
-		GUI.textFields.title.setText(Preferences.getWindowTitle().getModifiedValue());
-		GUI.textFields.width.setText(Integer.toString((int) Preferences.getWindowWidth().getModifiedValue()));
-		GUI.textFields.height.setText(Integer.toString((int) Preferences.getWindowHeight().getModifiedValue()));
-		GUI.textFields.fileExtension.setText(Preferences.getURLsFileExtension().getModifiedValue());
-		GUI.textFields.defaultFile.setText(Preferences.getURLsFileSelect().getModifiedValue());
-		GUI.checkBoxes.maximize.setSelected(Preferences.getWindowMaximized().getModifiedValue());
-		GUI.checkBoxes.loadAtStart.setSelected(Preferences.getURLsFileAutoloadAll().getModifiedValue());
-		GUI.checkBoxes.byPrefix.setSelected(Preferences.getSearchByPrefix().getModifiedValue());
+		TextFields.title.control.setText(Preferences.getWindowTitle().getModifiedValue());
+		TextFields.width.control.setText(Integer.toString((int) Preferences.getWindowWidth().getModifiedValue()));
+		TextFields.height.control.setText(Integer.toString((int) Preferences.getWindowHeight().getModifiedValue()));
+		TextFields.fileExtension.control.setText(Preferences.getURLsFileExtension().getModifiedValue());
+		TextFields.defaultFile.control.setText(Preferences.getURLsFileSelect().getModifiedValue());
+		CheckBoxes.maximize.control.setSelected(Preferences.getWindowMaximized().getModifiedValue());
+		CheckBoxes.loadAtStart.control.setSelected(Preferences.getURLsFileAutoloadAll().getModifiedValue());
+		CheckBoxes.byPrefix.control.setSelected(Preferences.getSearchByPrefix().getModifiedValue());
 
-		GUI.textFields.title.setDisable(disable);
-		GUI.textFields.width.setDisable(disable);
-		GUI.textFields.height.setDisable(disable);
-		GUI.textFields.fileExtension.setDisable(disable);
-		GUI.textFields.defaultFile.setDisable(disable);
-		GUI.checkBoxes.maximize.setDisable(disable);
-		GUI.checkBoxes.loadAtStart.setDisable(disable);
-		GUI.checkBoxes.byPrefix.setDisable(disable);
+		TextFields.title.control.setDisable(disable);
+		TextFields.width.control.setDisable(disable);
+		TextFields.height.control.setDisable(disable);
+		TextFields.fileExtension.control.setDisable(disable);
+		TextFields.defaultFile.control.setDisable(disable);
+		CheckBoxes.maximize.control.setDisable(disable);
+		CheckBoxes.loadAtStart.control.setDisable(disable);
+		CheckBoxes.byPrefix.control.setDisable(disable);
 	}
 
 	public static void createPreferencesFile ( ) {

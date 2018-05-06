@@ -13,6 +13,8 @@ import java.nio.file.Path;
 
 import com.github.vbsw.urlsaver.db.DBFiles;
 import com.github.vbsw.urlsaver.gui.GUI;
+import com.github.vbsw.urlsaver.gui.ListViews;
+import com.github.vbsw.urlsaver.gui.TabPanes;
 import com.github.vbsw.urlsaver.pref.Preferences;
 
 
@@ -35,7 +37,7 @@ public class WindowLogic {
 	}
 
 	public static void refreshTitle ( ) {
-		final Path filePath = GUI.listViews.files.getSelectionModel().getSelectedItem();
+		final Path filePath = ListViews.files.control.getSelectionModel().getSelectedItem();
 		final String windowTitleCustom = Preferences.getWindowTitle().getSavedValue();
 		final String windowTitle;
 
@@ -52,8 +54,8 @@ public class WindowLogic {
 	}
 
 	public static void selectPreferencesTab ( ) {
-		GUI.tabPanes.top.getSelectionModel().select(GUI.topTabs.preferences);
-		GUI.tabPanes.top.requestFocus();
+		TabPanes.top.control.getSelectionModel().select(TabPanes.top.preferences.control);
+		TabPanes.top.control.requestFocus();
 	}
 
 }

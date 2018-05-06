@@ -14,7 +14,8 @@ import java.util.ArrayList;
 
 import com.github.vbsw.urlsaver.JarFile;
 import com.github.vbsw.urlsaver.db.DBFiles;
-import com.github.vbsw.urlsaver.gui.GUI;
+import com.github.vbsw.urlsaver.gui.ListViews;
+import com.github.vbsw.urlsaver.gui.TextFields;
 import com.github.vbsw.urlsaver.pref.Preferences;
 
 
@@ -31,8 +32,8 @@ public class FilesLogic {
 
 		DBFiles.setPathList(filePaths);
 		DBFiles.setLabelList(fileLabels);
-		
-		GUI.listViews.files.getItems().addAll(DBFiles.getPaths());
+
+		ListViews.files.control.getItems().addAll(DBFiles.getPaths());
 	}
 
 	public static void saveAllFiles ( ) {
@@ -88,13 +89,13 @@ public class FilesLogic {
 		final String fileToSelect = Preferences.getURLsFileSelect().getModifiedValue();
 		final int pathIndex = DBFiles.getIndexByFileName(fileToSelect);
 		if ( pathIndex >= 0 ) {
-			GUI.listViews.files.requestFocus();
-			GUI.listViews.files.getSelectionModel().select(pathIndex);
+			ListViews.files.control.requestFocus();
+			ListViews.files.control.getSelectionModel().select(pathIndex);
 		}
 	}
 
 	public static void processFileSelection ( ) {
-		final Path selectedPath = GUI.listViews.files.getSelectionModel().getSelectedItem();
+		final Path selectedPath = ListViews.files.control.getSelectionModel().getSelectedItem();
 		final int dbPathIndex = DBFiles.getIndex(selectedPath);
 		final String pathString;
 		// TODO
@@ -111,7 +112,7 @@ public class FilesLogic {
 			//			urlsData = null;
 			//			urlsViewData = null;
 		}
-		GUI.textFields.fileName.setText(pathString);
+		TextFields.fileName.control.setText(pathString);
 		//		App.urls.setData(urlsData,urlsViewData);
 		//		final Path selectedFilePath = App.scene.lv.files.getSelectionModel().getSelectedItem();
 		//		final int fileDataIndex = App.files.getDataIndex(selectedFilePath);

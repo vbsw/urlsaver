@@ -28,12 +28,12 @@ public class Logger {
 
 	private static void log ( final String prefix, final String message ) {
 		final String timeStr = Logger.getDayTime();
-		if ( GUI.textAreas.log.getText().length() > 0 )
-			GUI.textAreas.log.appendText("\n");
-		GUI.textAreas.log.appendText(timeStr);
-		GUI.textAreas.log.appendText(" ");
-		GUI.textAreas.log.appendText(prefix);
-		GUI.textAreas.log.appendText(message);
+		if ( TextAreas.log.control.getText().length() > 0 )
+			TextAreas.log.control.appendText("\n");
+		TextAreas.log.control.appendText(timeStr);
+		TextAreas.log.control.appendText(" ");
+		TextAreas.log.control.appendText(prefix);
+		TextAreas.log.control.appendText(message);
 	}
 
 	private static String getDayTime ( ) {
