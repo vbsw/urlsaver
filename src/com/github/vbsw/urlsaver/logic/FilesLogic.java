@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import com.github.vbsw.urlsaver.JarFile;
 import com.github.vbsw.urlsaver.db.DBFiles;
 import com.github.vbsw.urlsaver.gui.ListViews;
+import com.github.vbsw.urlsaver.gui.Properties;
 import com.github.vbsw.urlsaver.gui.TextFields;
 import com.github.vbsw.urlsaver.pref.Preferences;
 
@@ -124,8 +125,8 @@ public class FilesLogic {
 		//			dirty = false;
 		//		}
 		//		selectedFileDirty.set(dirty);
-		//		selected.set(fileDataIndex >= 0);
-		//		confirmingSave.set(false);
+		Properties.selectedProperty().set(dbPathIndex>=0);
+		Properties.confirmingSaveProperty().set(false);
 	}
 
 }

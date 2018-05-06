@@ -446,7 +446,7 @@ public class Buttons {
 
 	public static final class ReloadAllFiles extends CustomButton {
 		private void build ( final Parent root ) {
-			control = (Button) root.lookup("#quit_app_btn");
+			control = (Button) root.lookup("#reload_all_files_btn");
 			control.disableProperty().bind(Bindings.or(Bindings.not(Properties.selectedProperty()),Properties.confirmingSaveProperty()));
 			control.setOnAction(event -> Buttons.reloadAllFiles_clicked(event));
 			control.setOnKeyPressed(event -> Buttons.reloadAllFiles_keyPressed(event));
