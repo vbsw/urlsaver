@@ -10,7 +10,7 @@ package com.github.vbsw.urlsaver.gui;
 
 
 import com.github.vbsw.urlsaver.App;
-import com.github.vbsw.urlsaver.db.DBFiles;
+import com.github.vbsw.urlsaver.db.DB;
 import com.github.vbsw.urlsaver.pref.Preferences;
 import com.github.vbsw.urlsaver.worker.FilesLogic;
 import com.github.vbsw.urlsaver.worker.PreferencesLogic;
@@ -341,7 +341,7 @@ public class Buttons {
 				Buttons.preferencesReload.control.requestFocus();
 			}
 		});
-		ListViews.files.control.getItems().addAll(DBFiles.getPaths());
+		ListViews.files.control.getItems().addAll(DB.getRecords());
 		ListViews.files.control.getSelectionModel().select(selectedIndex);
 	}
 

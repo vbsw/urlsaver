@@ -11,7 +11,8 @@ package com.github.vbsw.urlsaver.gui;
 
 import javax.swing.text.html.CSS;
 
-import com.github.vbsw.urlsaver.db.DBFiles;
+import com.github.vbsw.urlsaver.db.DB;
+import com.github.vbsw.urlsaver.db.DBRecord;
 import com.github.vbsw.urlsaver.gui.CheckBoxes.CustomCheckBox;
 import com.github.vbsw.urlsaver.pref.Preferences;
 import com.github.vbsw.urlsaver.pref.PreferencesBooleanValue;
@@ -39,7 +40,7 @@ public class GUI {
 		scene = new Scene(rootStub,windowWidth,windowHeight);
 		reloadFXML();
 		reloadCSS();
-		ListViews.files.control.getItems().addAll(DBFiles.getPaths());
+		ListViews.files.control.getItems().addAll(DB.getRecords());
 	}
 
 	public static void reloadFXML ( ) {
@@ -92,24 +93,35 @@ public class GUI {
 	}
 
 	public static void selectDefaultFile ( ) {
-		final String fileToSelect = Preferences.getURLsFileSelect().getModifiedValue();
-		final int pathIndex = DBFiles.getIndexByFileName(fileToSelect);
-		if ( pathIndex >= 0 ) {
+		final String urlsFileSelect = Preferences.getURLsFileSelect().getModifiedValue();
+		final DBRecord record = DB.getRecordByFileName(urlsFileSelect);
+		if ( record != null ) {
 			ListViews.files.control.requestFocus();
-			ListViews.files.control.getSelectionModel().select(pathIndex);
+			ListViews.files.control.getSelectionModel().select(record);
 		}
+	}
+
+	public static String getListLabel ( final DBRecord record, final int percentLoaded ) {
+		final String listViewText;
+		if ( percentLoaded < 0 )
+			listViewText = record.getPathAsString() + "  0%";
+		else if ( percentLoaded < 100 )
+			listViewText = record.getPathAsString() + "  " + percentLoaded + "%";
+		else
+			listViewText = record.getPathAsString();
+		return listViewText;
 	}
 
 	private static void refreshCheckBoxView ( final CustomCheckBox customCheckBox, final PreferencesBooleanValue preferencesValue ) {
 		if ( customCheckBox.control.isSelected() ) {
 			if ( !preferencesValue.getModifiedValue() )
 				customCheckBox.control.setSelected(preferencesValue.getModifiedValue());
-			else if (!preferencesValue.getSavedValue())
+			else if ( !preferencesValue.getSavedValue() )
 				customCheckBox.setFontWeight(true);
 		} else {
 			if ( preferencesValue.getModifiedValue() )
 				customCheckBox.control.setSelected(preferencesValue.getModifiedValue());
-			else if (preferencesValue.getSavedValue())
+			else if ( preferencesValue.getSavedValue() )
 				customCheckBox.setFontWeight(true);
 		}
 	}

@@ -9,9 +9,7 @@
 package com.github.vbsw.urlsaver.worker;
 
 
-import java.nio.file.Path;
-
-import com.github.vbsw.urlsaver.db.DBFiles;
+import com.github.vbsw.urlsaver.db.DBRecord;
 import com.github.vbsw.urlsaver.gui.ListViews;
 import com.github.vbsw.urlsaver.gui.Properties;
 import com.github.vbsw.urlsaver.gui.TextFields;
@@ -43,15 +41,14 @@ public class FilesLogic {
 	}
 
 	public static void processFileSelection ( ) {
-		final Path selectedPath = ListViews.files.control.getSelectionModel().getSelectedItem();
-		final int dbPathIndex = DBFiles.getIndex(selectedPath);
+		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
 		final String pathString;
 		// TODO
 		//		final UrlsData urlsData;
 		//		final UrlsViewData urlsViewData;
 
-		if ( dbPathIndex >= 0 ) {
-			pathString = selectedPath.toString();
+		if ( selectedRecord != null ) {
+			pathString = selectedRecord.getPathAsString();
 			//			urlsData = getUrlsData(dbPathIndex);
 			//			urlsViewData = getUrlsViewData(dbPathIndex);
 
@@ -72,7 +69,7 @@ public class FilesLogic {
 		//			dirty = false;
 		//		}
 		//		selectedFileDirty.set(dirty);
-		Properties.selectedProperty().set(dbPathIndex >= 0);
+		Properties.selectedProperty().set(selectedRecord != null);
 		Properties.confirmingSaveProperty().set(false);
 	}
 

@@ -9,9 +9,7 @@
 package com.github.vbsw.urlsaver.gui;
 
 
-import java.nio.file.Path;
-
-import com.github.vbsw.urlsaver.db.DBFiles;
+import com.github.vbsw.urlsaver.db.DBRecord;
 import com.github.vbsw.urlsaver.worker.FilesLogic;
 import com.github.vbsw.urlsaver.worker.WindowLogic;
 
@@ -52,7 +50,7 @@ public class ListViews {
 		}
 	}
 
-	private static void files_selected ( ObservableValue<? extends Path> observable, Path oldValue, Path newValue ) {
+	private static void files_selected ( ObservableValue<? extends DBRecord> observable, DBRecord oldValue, DBRecord newValue ) {
 		FilesLogic.processFileSelection();
 		WindowLogic.refreshTitle();
 	}
@@ -65,8 +63,8 @@ public class ListViews {
 		// TODO Auto-generated method stub
 	}
 
-	private static ListCell<Path> filesCellFactory ( ListView<Path> param ) {
-		final ListCell<Path> listCell = new FilePathListCell();
+	private static ListCell<DBRecord> filesCellFactory ( final ListView<DBRecord> param ) {
+		final ListCell<DBRecord> listCell = new FilePathListCell();
 		return listCell;
 	}
 
@@ -81,25 +79,14 @@ public class ListViews {
 	}
 
 	public static final class Files {
-		public ListView<Path> control;
+		public ListView<DBRecord> control;
 
 		@SuppressWarnings ( "unchecked" )
 		private void build ( final Parent root ) {
-			control = (ListView<Path>) root.lookup("#file_list_view");
-			control.setCellFactory( ( ListView<Path> param ) -> ListViews.filesCellFactory(param));
-			control.getSelectionModel().selectedItemProperty().addListener( ( ObservableValue<? extends Path> observable, Path oldValue, Path newValue ) -> ListViews.files_selected(observable,oldValue,newValue));
+			control = (ListView<DBRecord>) root.lookup("#file_list_view");
+			control.setCellFactory( ( ListView<DBRecord> param ) -> ListViews.filesCellFactory(param));
+			control.getSelectionModel().selectedItemProperty().addListener( ( ObservableValue<? extends DBRecord> observable, DBRecord oldValue, DBRecord newValue ) -> ListViews.files_selected(observable,oldValue,newValue));
 			control.setOnKeyPressed(event -> ListViews.files_keyPressed(event));
-		}
-
-		public String getListLabel ( final Path filePath, final int percentLoaded ) {
-			final String listViewText;
-			if ( percentLoaded < 0 )
-				listViewText = filePath.toString() + "  0%";
-			else if ( percentLoaded < 100 )
-				listViewText = filePath.toString() + "  " + percentLoaded + "%";
-			else
-				listViewText = filePath.toString();
-			return listViewText;
 		}
 	}
 
@@ -115,16 +102,15 @@ public class ListViews {
 		}
 	}
 
-	private static final class FilePathListCell extends ListCell<Path> {
+	private static final class FilePathListCell extends ListCell<DBRecord> {
 		@Override
-		protected void updateItem ( final Path item, final boolean empty ) {
+		protected void updateItem ( final DBRecord item, final boolean empty ) {
 			super.updateItem(item,empty);
 			if ( empty ) {
 				setText(null);
 				setOnMouseClicked(null);
 			} else {
-				final int listIndex = DBFiles.getIndex(item);
-				final String text = DBFiles.getLabel(listIndex);
+				final String text = item.getListLabel();
 				setText(text);
 				setOnMouseClicked(event -> ListViews.filePathListViewItem_clicked(event));
 			}
