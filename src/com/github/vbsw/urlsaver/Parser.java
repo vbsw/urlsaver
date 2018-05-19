@@ -51,10 +51,30 @@ public class Parser {
 		return fromLeft;
 	}
 
+	public static int seekContent ( final byte[] bytes, final int fromLeft, final int toRight ) {
+		if ( fromLeft < toRight ) {
+			for ( int i = fromLeft; i < toRight; i += 1 )
+				if ( !Parser.isWhitespace(bytes[i]) )
+					return i;
+			return toRight;
+		}
+		return fromLeft;
+	}
+
 	public static int seekContentReverse ( final String str, final int fromRight, final int toLeft ) {
 		if ( fromRight > toLeft ) {
 			for ( int i = fromRight - 1; i >= toLeft; i -= 1 )
 				if ( !isWhitespace(str.charAt(i)) )
+					return i + 1;
+			return toLeft;
+		}
+		return fromRight;
+	}
+
+	public static int seekContentReverse ( final byte[] bytes, final int fromRight, final int toLeft ) {
+		if ( fromRight > toLeft ) {
+			for ( int i = fromRight - 1; i >= toLeft; i -= 1 )
+				if ( !isWhitespace(bytes[i]) )
 					return i + 1;
 			return toLeft;
 		}
@@ -75,6 +95,16 @@ public class Parser {
 		if ( fromLeft < toRight ) {
 			for ( int i = fromLeft; i < toRight; i += 1 )
 				if ( Parser.isWhitespace(bytes[i]) )
+					return i;
+			return toRight;
+		}
+		return fromLeft;
+	}
+
+	public static int seekLineEnd ( final byte[] bytes, final int fromLeft, final int toRight ) {
+		if ( fromLeft < toRight ) {
+			for ( int i = fromLeft; i < toRight; i += 1 )
+				if ( bytes[i] == '\n' || bytes[i] == '\r' )
 					return i;
 			return toRight;
 		}

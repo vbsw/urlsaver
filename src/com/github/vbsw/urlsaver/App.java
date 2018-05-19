@@ -10,11 +10,12 @@ package com.github.vbsw.urlsaver;
 
 
 import com.github.vbsw.urlsaver.db.DB;
+import com.github.vbsw.urlsaver.gui.Buttons;
 import com.github.vbsw.urlsaver.gui.GUI;
+import com.github.vbsw.urlsaver.gui.TabPanes;
 import com.github.vbsw.urlsaver.pref.Preferences;
-import com.github.vbsw.urlsaver.worker.WindowCallbacks;
-import com.github.vbsw.urlsaver.worker.WindowLogic;
-import com.github.vbsw.urlsaver.worker.Worker;
+import com.github.vbsw.urlsaver.services.Services;
+import com.github.vbsw.urlsaver.services.WindowCallbacks;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -39,14 +40,16 @@ public class App extends Application {
 
 		GUI.refreshPreferencesView();
 		GUI.selectDefaultFile();
-		Worker.initialize();
+		Services.initialize();
 	}
 
 	public static void quit ( ) {
-		if ( DB.isSaved() )
+		if ( DB.isSaved() ) {
 			App.quitUnconditionally();
-		else
-			WindowLogic.showQuitAppConfirmation();
+		} else {
+			TabPanes.top.control.getSelectionModel().select(TabPanes.top.about.control);
+			Buttons.quitAppSave.control.requestFocus();
+		}
 	}
 
 	public static void quitUnconditionally ( ) {

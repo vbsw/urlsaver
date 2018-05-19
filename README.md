@@ -4,10 +4,10 @@
 URL Saver is a program to manage URLs by keywords.
 URL Saver is published at <https://github.com/vbsw/urlsaver>.
 
-Current version is 0.3.0.
+Current version is 0.4.0.
 
 ## Copyright
-Copyright 2017, Vitali Baumtrok (vbsw@mailbox.org).
+Copyright 2017, 2018, Vitali Baumtrok (vbsw@mailbox.org).
 
 URL Saver is distributed under the terms of the Boost Software License, version 1.0. (See accompanying file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
 

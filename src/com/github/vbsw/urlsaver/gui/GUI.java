@@ -33,14 +33,21 @@ public class GUI {
 	public static Scene scene;
 	public static CSS css;
 
+	private static void setWindowTitle ( final String title ) {
+		final Stage stage = (Stage) GUI.scene.getWindow();
+		stage.setTitle(title);
+	}
+
 	public static void initialize ( ) {
 		final int windowWidth = Preferences.getWindowWidth().getSavedValue();
 		final int windowHeight = Preferences.getWindowHeight().getSavedValue();
+		final String urlsFileToSelect = Preferences.getURLsFileSelect().getSavedValue();
 		final Parent rootStub = new AnchorPane();
 		scene = new Scene(rootStub,windowWidth,windowHeight);
 		reloadFXML();
 		reloadCSS();
 		ListViews.files.control.getItems().addAll(DB.getRecords());
+		ListViews.files.autoSelectRequested = DB.getRecordByFileName(urlsFileToSelect) != null;
 	}
 
 	public static void reloadFXML ( ) {
@@ -67,9 +74,18 @@ public class GUI {
 		GUI.scene.getStylesheets().add(cssURI);
 	}
 
-	public static void setWindowTitle ( final String title ) {
-		final Stage stage = (Stage) GUI.scene.getWindow();
-		stage.setTitle(title);
+	public static void refreshTitle ( ) {
+		final DBRecord record = ListViews.files.control.getSelectionModel().getSelectedItem();
+		final String windowTitleCustom = Preferences.getWindowTitle().getSavedValue();
+		final String windowTitle;
+		if ( record != null )
+			if ( record.isDirty() )
+				windowTitle = windowTitleCustom + " (" + record.getFileName() + " *)";
+			else
+				windowTitle = windowTitleCustom + " (" + record.getFileName() + ")";
+		else
+			windowTitle = windowTitleCustom;
+		GUI.setWindowTitle(windowTitle);
 	}
 
 	public static void refreshPreferencesView ( ) {

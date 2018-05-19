@@ -40,15 +40,33 @@ public class DynArrayOfString {
 
 	public void add ( final int index, final String value ) {
 		final int copyLength = valuesLength - index;
+		// ensure capacity
 		if ( valuesLength == values.length ) {
 			final String[] valuesNew = new String[values.length * 2];
 			System.arraycopy(values,0,valuesNew,0,values.length);
 			values = valuesNew;
 		}
+		// insert
 		if ( copyLength > 0 )
 			System.arraycopy(values,index,values,index + 1,copyLength);
 		values[index] = value;
 		valuesLength += 1;
+	}
+
+	public int binarySearch ( final String key ) {
+		int left = 0;
+		int right = valuesLength - 1;
+		while ( left <= right ) {
+			final int middle = (left + right) / 2;
+			final int compareResult = values[middle].compareTo(key);
+			if ( compareResult < 0 )
+				left = middle + 1;
+			else if ( compareResult > 0 )
+				right = middle - 1;
+			else
+				return middle;
+		}
+		return -left - 1;
 	}
 
 	public void remove ( ) {

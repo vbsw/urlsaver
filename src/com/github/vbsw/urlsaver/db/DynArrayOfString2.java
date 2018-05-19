@@ -40,11 +40,13 @@ public class DynArrayOfString2 {
 
 	public void add ( final int index, final DynArrayOfString value ) {
 		final int copyLength = valuesLength - index;
+		// ensure capacity
 		if ( valuesLength == values.length ) {
 			final DynArrayOfString[] valuesNew = new DynArrayOfString[values.length * 2];
 			System.arraycopy(values,0,valuesNew,0,values.length);
 			values = valuesNew;
 		}
+		// insert
 		if ( copyLength > 0 )
 			System.arraycopy(values,index,values,index + 1,copyLength);
 		values[index] = value;

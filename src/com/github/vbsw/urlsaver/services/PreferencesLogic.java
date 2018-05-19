@@ -6,7 +6,7 @@
  */
 
 
-package com.github.vbsw.urlsaver.worker;
+package com.github.vbsw.urlsaver.services;
 
 
 import java.nio.file.Files;

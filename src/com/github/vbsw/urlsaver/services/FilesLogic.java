@@ -6,7 +6,7 @@
  */
 
 
-package com.github.vbsw.urlsaver.worker;
+package com.github.vbsw.urlsaver.services;
 
 
 import com.github.vbsw.urlsaver.db.DBRecord;
@@ -42,33 +42,9 @@ public class FilesLogic {
 
 	public static void processFileSelection ( ) {
 		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
-		final String pathString;
-		// TODO
-		//		final UrlsData urlsData;
-		//		final UrlsViewData urlsViewData;
-
-		if ( selectedRecord != null ) {
-			pathString = selectedRecord.getPathAsString();
-			//			urlsData = getUrlsData(dbPathIndex);
-			//			urlsViewData = getUrlsViewData(dbPathIndex);
-
-		} else {
-			pathString = "";
-			//			urlsData = null;
-			//			urlsViewData = null;
-		}
+		final String pathString = selectedRecord != null ? selectedRecord.getPathAsString() : "";
 		TextFields.fileName.control.setText(pathString);
-		//		App.urls.setData(urlsData,urlsViewData);
-		//		final Path selectedFilePath = App.scene.lv.files.getSelectionModel().getSelectedItem();
-		//		final int fileDataIndex = App.files.getDataIndex(selectedFilePath);
-		//		final boolean dirty;
-		//
-		//		if ( fileDataIndex >= 0 ) {
-		//			dirty = App.files.isDirty(fileDataIndex);
-		//		} else {
-		//			dirty = false;
-		//		}
-		//		selectedFileDirty.set(dirty);
+		Properties.availableProperty().set(selectedRecord.isLoaded());
 		Properties.selectedProperty().set(selectedRecord != null);
 		Properties.confirmingSaveProperty().set(false);
 	}

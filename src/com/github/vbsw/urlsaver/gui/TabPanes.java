@@ -9,6 +9,8 @@
 package com.github.vbsw.urlsaver.gui;
 
 
+import com.github.vbsw.urlsaver.db.DB;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
@@ -28,7 +30,9 @@ public class TabPanes {
 	}
 
 	private static void topTab_selected ( ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue ) {
-		if ( newValue != top.about.control )
+		if ( newValue == top.about.control )
+			Properties.confirmingQuitAppProperty().set(!DB.isSaved());
+		else
 			Properties.confirmingQuitAppProperty().set(false);
 	}
 
@@ -94,6 +98,11 @@ public class TabPanes {
 	public static final class Preferences extends CustomTab {
 		private void build ( final TabPane topPane, final Parent root ) {
 			control = TabPanes.getTab(topPane,"preferences_tab");
+		}
+
+		public void select ( ) {
+			TabPanes.top.control.getSelectionModel().select(control);
+			TabPanes.top.control.requestFocus();
 		}
 	}
 

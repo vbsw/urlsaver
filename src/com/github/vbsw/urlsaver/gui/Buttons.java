@@ -12,12 +12,11 @@ package com.github.vbsw.urlsaver.gui;
 import com.github.vbsw.urlsaver.App;
 import com.github.vbsw.urlsaver.db.DB;
 import com.github.vbsw.urlsaver.pref.Preferences;
-import com.github.vbsw.urlsaver.worker.FilesLogic;
-import com.github.vbsw.urlsaver.worker.PreferencesLogic;
-import com.github.vbsw.urlsaver.worker.URLsLogic;
-import com.github.vbsw.urlsaver.worker.WebBrowserLogic;
-import com.github.vbsw.urlsaver.worker.WindowLogic;
-import com.github.vbsw.urlsaver.worker.Worker;
+import com.github.vbsw.urlsaver.services.FilesLogic;
+import com.github.vbsw.urlsaver.services.PreferencesLogic;
+import com.github.vbsw.urlsaver.services.Services;
+import com.github.vbsw.urlsaver.services.URLsLogic;
+import com.github.vbsw.urlsaver.services.WebBrowserLogic;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -127,13 +126,13 @@ public class Buttons {
 	}
 
 	private static void reloadAllFiles_clicked ( final ActionEvent event ) {
-		Worker.reloadAllFiles();
+		Services.reloadAllFiles();
 	}
 
 	private static void reloadAllFiles_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER )
-			Worker.reloadAllFiles();
+			Services.reloadAllFiles();
 	}
 
 	private static void fileSave_clicked ( final ActionEvent event ) {
@@ -160,7 +159,7 @@ public class Buttons {
 		FilesLogic.confirmSaveSelectedFile();
 		Properties.selectedFileDirty.setValue(false);
 		Properties.confirmingSave.setValue(false);
-		WindowLogic.refreshTitle();
+		GUI.refreshTitle();
 	}
 
 	private static void fileSaveOK_keyPressed ( final KeyEvent event ) {
@@ -169,7 +168,7 @@ public class Buttons {
 			FilesLogic.confirmSaveSelectedFile();
 			Properties.selectedFileDirty.setValue(false);
 			Properties.confirmingSave.setValue(false);
-			WindowLogic.refreshTitle();
+			GUI.refreshTitle();
 		}
 	}
 
@@ -321,7 +320,7 @@ public class Buttons {
 	private static void reloadPreferencesFile_clicked ( final ActionEvent event ) {
 		Preferences.loadCustomPreferences();
 		GUI.refreshPreferencesView();
-		WindowLogic.refreshTitle();
+		GUI.refreshTitle();
 	}
 
 	private static void reloadCSSFile_clicked ( final ActionEvent event ) {
@@ -333,7 +332,7 @@ public class Buttons {
 		final int selectedIndex = ListViews.files.control.getSelectionModel().getSelectedIndex();
 		GUI.reloadFXML();
 		GUI.refreshPreferencesView();
-		WindowLogic.selectPreferencesTab();
+		TabPanes.top.preferences.select();
 		TextAreas.log.control.setText(logBackup);
 		Platform.runLater(new Runnable() {
 			@Override

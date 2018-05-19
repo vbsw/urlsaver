@@ -10,8 +10,7 @@ package com.github.vbsw.urlsaver.gui;
 
 
 import com.github.vbsw.urlsaver.db.DBRecord;
-import com.github.vbsw.urlsaver.worker.FilesLogic;
-import com.github.vbsw.urlsaver.worker.WindowLogic;
+import com.github.vbsw.urlsaver.services.FilesLogic;
 
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
@@ -52,7 +51,7 @@ public class ListViews {
 
 	private static void files_selected ( ObservableValue<? extends DBRecord> observable, DBRecord oldValue, DBRecord newValue ) {
 		FilesLogic.processFileSelection();
-		WindowLogic.refreshTitle();
+		GUI.refreshTitle();
 	}
 
 	private static void urls_selected ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
@@ -80,6 +79,7 @@ public class ListViews {
 
 	public static final class Files {
 		public ListView<DBRecord> control;
+		public boolean autoSelectRequested;
 
 		@SuppressWarnings ( "unchecked" )
 		private void build ( final Parent root ) {
