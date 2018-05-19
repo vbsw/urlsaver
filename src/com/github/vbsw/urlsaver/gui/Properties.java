@@ -17,29 +17,29 @@ import javafx.beans.property.SimpleBooleanProperty;
  */
 public class Properties {
 
-	protected static final SimpleBooleanProperty confirmingQuitApp = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty selected = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty confirmingSave = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty selectedFileDirty = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty confirmingQuitApp = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty selected = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty confirmingSave = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty selectedFileDirty = new SimpleBooleanProperty();
 
-	protected static final SimpleBooleanProperty urlsAvailable = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty urlExists = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty urlDeleteRequested = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty urlModified = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty urlTagsModified = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty urlsAvailable = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty urlExists = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty urlDeleteRequested = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty urlModified = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty urlTagsModified = new SimpleBooleanProperty();
 
-	protected static final SimpleBooleanProperty confirmingCreatePreferences = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty confirmingCreateCSS = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty confirmingCreateFXML = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty preferencesModified = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty titleChanged = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty widthChanged = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty heightChanged = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty urlsFileExtensionChanged = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty urlsFileSelectChanged = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty maximizeChanged = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty loadAtStartChanged = new SimpleBooleanProperty();
-	protected static final SimpleBooleanProperty byPrefixChanged = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty confirmingCreatePreferences = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty confirmingCreateCSS = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty confirmingCreateFXML = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty preferencesModified = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty titleChanged = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty widthChanged = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty heightChanged = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty urlsFileExtensionChanged = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty urlsFileSelectChanged = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty maximizeChanged = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty loadAtStartChanged = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty byPrefixChanged = new SimpleBooleanProperty();
 
 	public static SimpleBooleanProperty confirmingQuitAppProperty ( ) {
 		return confirmingQuitApp;

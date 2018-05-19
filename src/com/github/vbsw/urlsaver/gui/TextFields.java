@@ -10,6 +10,7 @@ package com.github.vbsw.urlsaver.gui;
 
 
 import com.github.vbsw.urlsaver.Parser;
+import com.github.vbsw.urlsaver.db.DBRecord;
 import com.github.vbsw.urlsaver.pref.Preferences;
 
 import javafx.beans.value.ObservableValue;
@@ -61,17 +62,17 @@ public class TextFields {
 		//		properties.button_urlSearch_clicked();
 	}
 
-	public static void url_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
-		//		final String urlTyped = Parser.trim(App.scene.tf.url.getText());
-		//		final UrlsData urlsData = App.urls.getData();
-		//		final boolean urlExists = urlTyped.length() > 0 && urlsData.getUrlIndex(urlTyped) >= 0;
-		//		final boolean urlModified = urlTyped.length() > 0 && urlsData.getUrlIndex(urlTyped) < 0;
-		//		this.exists.set(urlExists);
-		//		this.urlModified.set(urlModified);
-		//		this.deleteRequested.set(false);
+	public static void url_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
+		final String urlTyped = Parser.trim(TextFields.url.control.getText());
+		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+		final boolean urlExists = urlTyped.length() > 0 && selectedRecord.getUrlIndex(urlTyped) >= 0;
+		final boolean urlModified = urlTyped.length() > 0 && selectedRecord.getUrlIndex(urlTyped) < 0;
+		Properties.urlExistsProperty().set(urlExists);
+		Properties.urlModifiedProperty().set(urlModified);
+		Properties.urlDeleteRequestedProperty().set(false);
 	}
 
-	public static void title_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
+	public static void title_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final String trimmedValue = Parser.trim(newValue);
 		final boolean titlesEqual = Preferences.getWindowTitle().getSavedValue().equals(trimmedValue);
 		Preferences.getWindowTitle().setModifiedValue(newValue);
@@ -80,7 +81,7 @@ public class TextFields {
 		Properties.preferencesModifiedProperty().set(!titlesEqual);
 	}
 
-	public static void width_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
+	public static void width_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final int parsedValueInt = Parser.toUnsignedInteger(newValue);
 		final String parsedValueStr = Integer.toString(parsedValueInt);
 		final boolean valueChanged = parsedValueInt != Preferences.getWindowWidth().getSavedValue();
@@ -93,7 +94,7 @@ public class TextFields {
 		}
 	}
 
-	public static void height_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
+	public static void height_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final int parsedValueInt = Parser.toUnsignedInteger(newValue);
 		final String parsedValueStr = Integer.toString(parsedValueInt);
 		final boolean valueChanged = parsedValueInt != Preferences.getWindowHeight().getSavedValue();
@@ -106,7 +107,7 @@ public class TextFields {
 		}
 	}
 
-	public static void urlsFileExtension_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
+	public static void urlsFileExtension_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final String trimmedValue = Parser.trim(newValue);
 		final boolean valueChanged = !trimmedValue.equals(Preferences.getURLsFileExtension().getSavedValue());
 		Preferences.getURLsFileExtension().setModifiedValue(trimmedValue);
@@ -114,7 +115,7 @@ public class TextFields {
 		TextFields.urlsFileExtension.setFontWeight(valueChanged);
 	}
 
-	public static void urlsFileSelect_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
+	public static void urlsFileSelect_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final String trimmedValue = Parser.trim(newValue);
 		final boolean valueChanged = !trimmedValue.equals(Preferences.getURLsFileSelect().getSavedValue());
 		Preferences.getURLsFileSelect().setModifiedValue(trimmedValue);

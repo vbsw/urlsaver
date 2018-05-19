@@ -15,7 +15,7 @@ import com.github.vbsw.urlsaver.gui.GUI;
 import com.github.vbsw.urlsaver.gui.TabPanes;
 import com.github.vbsw.urlsaver.pref.Preferences;
 import com.github.vbsw.urlsaver.services.Services;
-import com.github.vbsw.urlsaver.services.WindowCallbacks;
+import com.github.vbsw.urlsaver.services.WindowService;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -33,7 +33,7 @@ public class App extends Application {
 		DB.initialize();
 		GUI.initialize();
 
-		primaryStage.setOnCloseRequest(event -> WindowCallbacks.onCloseRequest(event));
+		primaryStage.setOnCloseRequest(event -> WindowService.onCloseRequest(event));
 		primaryStage.setScene(GUI.scene);
 		primaryStage.setMaximized(Preferences.getWindowMaximized().getSavedValue());
 		primaryStage.show();

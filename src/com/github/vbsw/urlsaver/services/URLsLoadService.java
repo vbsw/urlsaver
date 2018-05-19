@@ -54,9 +54,6 @@ public final class URLsLoadService extends Service<DBRecord> {
 		@Override
 		protected DBRecord call ( ) throws Exception {
 			final byte[] bytes = getBytesFromFile(record.getPath());
-			record.clearURLs();
-			record.setDirty(false);
-			record.setLoaded(false);
 			if ( bytes != null && bytes.length > 0 )
 				parseURLs(bytes);
 			else

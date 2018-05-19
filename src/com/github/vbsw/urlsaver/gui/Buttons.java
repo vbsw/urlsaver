@@ -11,12 +11,12 @@ package com.github.vbsw.urlsaver.gui;
 
 import com.github.vbsw.urlsaver.App;
 import com.github.vbsw.urlsaver.db.DB;
+import com.github.vbsw.urlsaver.db.DBRecord;
 import com.github.vbsw.urlsaver.pref.Preferences;
-import com.github.vbsw.urlsaver.services.FilesLogic;
 import com.github.vbsw.urlsaver.services.PreferencesLogic;
 import com.github.vbsw.urlsaver.services.Services;
-import com.github.vbsw.urlsaver.services.URLsLogic;
-import com.github.vbsw.urlsaver.services.WebBrowserLogic;
+import com.github.vbsw.urlsaver.services.URLsService;
+import com.github.vbsw.urlsaver.services.WebBrowserService;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -93,14 +93,14 @@ public class Buttons {
 	}
 
 	private static void quitAppSave_clicked ( final ActionEvent event ) {
-		FilesLogic.saveAllFiles();
+		Services.saveAllFiles();
 		App.quitUnconditionally();
 	}
 
 	private static void quitAppSave_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			FilesLogic.saveAllFiles();
+			Services.saveAllFiles();
 			App.quitUnconditionally();
 		}
 	}
@@ -116,13 +116,16 @@ public class Buttons {
 	}
 
 	private static void reloadFile_clicked ( final ActionEvent event ) {
-		FilesLogic.reloadSelectedFile();
+		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+		Services.reloadFile(selectedRecord);
 	}
 
 	private static void reloadFile_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
-		if ( keyCode == KeyCode.ENTER )
-			FilesLogic.reloadSelectedFile();
+		if ( keyCode == KeyCode.ENTER ) {
+			final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+			Services.reloadFile(selectedRecord);
+		}
 	}
 
 	private static void reloadAllFiles_clicked ( final ActionEvent event ) {
@@ -136,137 +139,141 @@ public class Buttons {
 	}
 
 	private static void fileSave_clicked ( final ActionEvent event ) {
-		FilesLogic.saveSelectedFile();
+		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+		Services.saveFile(selectedRecord);
 	}
 
 	private static void fileSave_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
-		if ( keyCode == KeyCode.ENTER )
-			FilesLogic.saveSelectedFile();
+		if ( keyCode == KeyCode.ENTER ) {
+			final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+			Services.saveFile(selectedRecord);
+		}
 	}
 
 	private static void fileCancel_clicked ( final ActionEvent event ) {
-		FilesLogic.cancelFileAction();
+		Properties.confirmingSaveProperty().set(false);
+		ListViews.files.control.requestFocus();
 	}
 
 	private static void fileCancel_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
-		if ( keyCode == KeyCode.ENTER )
-			FilesLogic.cancelFileAction();
+		if ( keyCode == KeyCode.ENTER ) {
+			Properties.confirmingSaveProperty().set(false);
+			ListViews.files.control.requestFocus();
+		}
 	}
 
 	private static void fileSaveOK_clicked ( final ActionEvent event ) {
-		FilesLogic.confirmSaveSelectedFile();
-		Properties.selectedFileDirty.setValue(false);
-		Properties.confirmingSave.setValue(false);
+		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+		Services.saveFile(selectedRecord);
 		GUI.refreshTitle();
 	}
 
 	private static void fileSaveOK_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			FilesLogic.confirmSaveSelectedFile();
-			Properties.selectedFileDirty.setValue(false);
-			Properties.confirmingSave.setValue(false);
+			final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+			Services.saveFile(selectedRecord);
 			GUI.refreshTitle();
 		}
 	}
 
 	private static void openInBrowser_clicked ( final ActionEvent event ) {
-		WebBrowserLogic.openTypedUrl();
+		WebBrowserService.openTypedUrl();
 	}
 
 	private static void openInBrowser_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER )
-			WebBrowserLogic.openTypedUrl();
+			WebBrowserService.openTypedUrl();
 	}
 
 	private static void urlSearch_clicked ( final ActionEvent event ) {
-		URLsLogic.updateSearchResult();
-		URLsLogic.updateSearchResultListView();
-		URLsLogic.setSelectedAsInfoView();
-		URLsLogic.finalizeURLSearch();
+		URLsService.updateSearchResult();
+		URLsService.updateSearchResultListView();
+		URLsService.setSelectedAsInfoView();
+		URLsService.finalizeURLSearch();
 	}
 
 	private static void urlSearch_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			URLsLogic.updateSearchResult();
-			URLsLogic.updateSearchResultListView();
-			URLsLogic.setSelectedAsInfoView();
-			URLsLogic.finalizeURLSearch();
+			URLsService.updateSearchResult();
+			URLsService.updateSearchResultListView();
+			URLsService.setSelectedAsInfoView();
+			URLsService.finalizeURLSearch();
 		}
 	}
 
 	private static void urlCancel_clicked ( final ActionEvent event ) {
-		URLsLogic.setSelectedAsInfoView();
-		URLsLogic.focusUrlsListOrSearchView();
-		URLsLogic.finalizeURLCancel();
+		URLsService.setSelectedAsInfoView();
+		URLsService.focusUrlsListOrSearchView();
+		URLsService.finalizeURLCancel();
 	}
 
 	private static void urlCancel_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			URLsLogic.setSelectedAsInfoView();
-			URLsLogic.focusUrlsListOrSearchView();
-			URLsLogic.finalizeURLCancel();
+			URLsService.setSelectedAsInfoView();
+			URLsService.focusUrlsListOrSearchView();
+			URLsService.finalizeURLCancel();
 		}
 	}
 
 	private static void urlDelete_clicked ( final ActionEvent event ) {
-		Properties.urlDeleteRequested.set(true);
+		Properties.urlDeleteRequestedProperty().set(true);
 		Buttons.urlCancel.control.requestFocus();
 	}
 
 	private static void urlDelete_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			Properties.urlDeleteRequested.set(true);
+			Properties.urlDeleteRequestedProperty().set(true);
 			Buttons.urlCancel.control.requestFocus();
 		}
 	}
 
 	private static void urlDeleteOK_clicked ( final ActionEvent event ) {
-		URLsLogic.confirmURLDelete();
-		URLsLogic.setSelectedAsInfoView();
-		URLsLogic.finalizeURLDelete();
+		URLsService.confirmURLDelete();
+		URLsService.setSelectedAsInfoView();
+		URLsService.finalizeURLDelete();
 	}
 
 	private static void urlDeleteOK_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			URLsLogic.confirmURLDelete();
-			URLsLogic.setSelectedAsInfoView();
-			URLsLogic.finalizeURLDelete();
+			URLsService.confirmURLDelete();
+			URLsService.setSelectedAsInfoView();
+			URLsService.finalizeURLDelete();
 		}
 	}
 
 	private static void urlCreateOK_clicked ( final ActionEvent event ) {
-		URLsLogic.confirmURLCreate();
-		URLsLogic.finalizeURLCreate();
+		URLsService.confirmURLCreate();
+		GUI.refreshTitle();
 	}
 
 	private static void urlCreateOK_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			URLsLogic.confirmURLCreate();
-			URLsLogic.finalizeURLCreate();
+			URLsService.confirmURLCreate();
+			GUI.refreshTitle();
 		}
 	}
 
 	private static void urlEditOK_clicked ( final ActionEvent event ) {
-		URLsLogic.confirmEdit();
-		Properties.urlExists.set(true);
-		Properties.urlTagsModified.set(false);
+		URLsService.confirmURLEdit();
+		Properties.urlExistsProperty().set(true);
+		Properties.urlTagsModifiedProperty().set(false);
 	}
 
 	private static void urlEditOK_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			URLsLogic.confirmEdit();
-			Properties.urlExists.set(true);
-			Properties.urlTagsModified.set(false);
+			URLsService.confirmURLEdit();
+			Properties.urlExistsProperty().set(true);
+			Properties.urlTagsModifiedProperty().set(false);
 		}
 	}
 

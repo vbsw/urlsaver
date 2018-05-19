@@ -9,6 +9,8 @@
 package com.github.vbsw.urlsaver.db;
 
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.nio.file.Path;
 
 
@@ -109,6 +111,17 @@ public class DBRecord {
 		return false;
 	}
 
+	public String getTagsAsString ( final int index ) {
+		final DynArrayOfString tagsToURL = tagsToURLs.values[index];
+		final StringBuilder stringBuilder = new StringBuilder();
+		for ( int i = 0; i < tagsToURL.valuesLength; i += 1 ) {
+			if ( i > 0 )
+				stringBuilder.append(' ');
+			stringBuilder.append(tagsToURL.values[i]);
+		}
+		return stringBuilder.toString();
+	}
+
 	public void clearURLs ( ) {
 		urls.clear();
 		tags.clear();
@@ -150,6 +163,23 @@ public class DBRecord {
 
 	public boolean isLoaded ( ) {
 		return loadedFlag;
+	}
+
+	public void write ( final BufferedWriter writer ) throws IOException {
+		for ( int i = 0; i < urls.valuesLength; i += 1 ) {
+			final String url = urls.values[i];
+			final DynArrayOfString tagsToURL = tagsToURLs.values[i];
+			writer.write(url);
+			writer.newLine();
+			if ( tagsToURL.valuesLength > 0 ) {
+				writer.write(tagsToURL.values[0]);
+				for ( int j = 1; j < tagsToURL.valuesLength; j += 1 ) {
+					writer.write(" ");
+					writer.write(tagsToURL.values[i]);
+				}
+			}
+			writer.newLine();
+		}
 	}
 
 }

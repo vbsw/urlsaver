@@ -10,7 +10,6 @@ package com.github.vbsw.urlsaver.gui;
 
 
 import com.github.vbsw.urlsaver.db.DBRecord;
-import com.github.vbsw.urlsaver.services.FilesLogic;
 
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
@@ -28,6 +27,16 @@ public class ListViews {
 
 	public static final Files files = new Files();
 	public static final URLs urls = new URLs();
+
+	private static void processFileSelection ( ) {
+		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+		final String pathString = selectedRecord != null ? selectedRecord.getPathAsString() : "";
+		TextFields.fileName.control.setText(pathString);
+		Properties.availableProperty().set(selectedRecord.isLoaded());
+		Properties.selectedFileDirtyProperty().setValue(selectedRecord.isDirty());
+		Properties.selectedProperty().set(selectedRecord != null);
+		Properties.confirmingSaveProperty().set(false);
+	}
 
 	public static void build ( final Parent root ) {
 		files.build(root);
@@ -50,7 +59,7 @@ public class ListViews {
 	}
 
 	private static void files_selected ( ObservableValue<? extends DBRecord> observable, DBRecord oldValue, DBRecord newValue ) {
-		FilesLogic.processFileSelection();
+		ListViews.processFileSelection();
 		GUI.refreshTitle();
 	}
 
@@ -74,7 +83,7 @@ public class ListViews {
 
 	private static void filePathListViewItem_clicked ( final MouseEvent event ) {
 		if ( event.getClickCount() == 2 )
-			FilesLogic.processFileSelection();
+			ListViews.processFileSelection();
 	}
 
 	public static final class Files {

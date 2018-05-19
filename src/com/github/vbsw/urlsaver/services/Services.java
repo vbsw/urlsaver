@@ -9,6 +9,9 @@
 package com.github.vbsw.urlsaver.services;
 
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 import com.github.vbsw.urlsaver.db.DB;
@@ -19,6 +22,7 @@ import com.github.vbsw.urlsaver.gui.Properties;
 import com.github.vbsw.urlsaver.gui.TabPanes;
 import com.github.vbsw.urlsaver.gui.TextFields;
 import com.github.vbsw.urlsaver.pref.Preferences;
+import com.github.vbsw.urlsaver.resources.ResourcesConfig;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -63,8 +67,33 @@ public class Services {
 
 	public static void reloadFile ( final DBRecord record ) {
 		for ( URLsLoadService service: Services.urlsLoadServices ) {
-			if ( service.record == record )
+			if ( service.record == record ) {
+				record.clearURLs();
+				record.setDirty(false);
+				record.setLoaded(false);
 				service.restart();
+			}
+		}
+	}
+
+	public static void saveAllFiles ( ) {
+		for ( DBRecord record: DB.getRecords() )
+			if ( record.isDirty() )
+				Services.saveFile(record);
+		GUI.refreshTitle();
+	}
+
+	public static void saveFile ( final DBRecord record ) {
+		final Path filePath = record.getPath();
+		try ( final BufferedWriter writer = java.nio.file.Files.newBufferedWriter(filePath,ResourcesConfig.FILE_CHARSET) ) {
+			record.write(writer);
+			record.setDirty(false);
+			if ( ListViews.files.control.getSelectionModel().getSelectedItem() == record ) {
+				Properties.selectedFileDirtyProperty().setValue(false);
+				Properties.confirmingSaveProperty().setValue(false);
+			}
+		} catch ( final IOException e ) {
+			e.printStackTrace();
 		}
 	}
 
@@ -106,25 +135,22 @@ public class Services {
 		public void handle ( final WorkerStateEvent event ) {
 			final boolean fileIsAlreadySelected = (ListViews.files.control.getSelectionModel().getSelectedItem() == record);
 			record.setLoaded(true);
-			// select only, if it's initial selection
-			if ( ListViews.files.autoSelectRequested ) {
+			if ( fileIsAlreadySelected ) {
+				Properties.selectedFileDirtyProperty().setValue(false);
+				Properties.availableProperty().set(true);
+				GUI.refreshTitle();
+			} else if ( ListViews.files.autoSelectRequested ) {
 				final String urlsFileSelect = Preferences.getURLsFileSelect().getSavedValue();
 				final DBRecord recordToSelect = DB.getRecordByFileName(urlsFileSelect);
 				if ( recordToSelect == record ) {
 					ListViews.files.autoSelectRequested = false;
-					// select only, if URLs-tab is not already selected
 					if ( TabPanes.top.urls.control.disabledProperty().getValue() ) {
-						if ( fileIsAlreadySelected )
-							Properties.availableProperty().set(true);
-						else
-							ListViews.files.control.getSelectionModel().select(recordToSelect);
+						ListViews.files.control.getSelectionModel().select(recordToSelect);
 						TabPanes.top.control.getSelectionModel().select(TabPanes.top.urls.control);
 						TextFields.urlSearch.control.requestFocus();
 					}
 				}
 			}
-			if ( fileIsAlreadySelected )
-				GUI.refreshTitle();
 		}
 
 	}

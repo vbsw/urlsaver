@@ -16,9 +16,11 @@ import com.github.vbsw.urlsaver.db.DBRecord;
 import com.github.vbsw.urlsaver.gui.CheckBoxes.CustomCheckBox;
 import com.github.vbsw.urlsaver.pref.Preferences;
 import com.github.vbsw.urlsaver.pref.PreferencesBooleanValue;
+import com.github.vbsw.urlsaver.services.WindowService;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -44,10 +46,11 @@ public class GUI {
 		final String urlsFileToSelect = Preferences.getURLsFileSelect().getSavedValue();
 		final Parent rootStub = new AnchorPane();
 		scene = new Scene(rootStub,windowWidth,windowHeight);
+		scene.addEventFilter(KeyEvent.KEY_PRESSED,event -> WindowService.keyPressed(event));
 		reloadFXML();
 		reloadCSS();
 		ListViews.files.control.getItems().addAll(DB.getRecords());
-		ListViews.files.autoSelectRequested = DB.getRecordByFileName(urlsFileToSelect) != null;
+		ListViews.files.autoSelectRequested = Preferences.getURLsFileAutoloadAll().getSavedValue() && DB.getRecordByFileName(urlsFileToSelect) != null;
 	}
 
 	public static void reloadFXML ( ) {
