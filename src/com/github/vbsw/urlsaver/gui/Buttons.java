@@ -9,6 +9,8 @@
 package com.github.vbsw.urlsaver.gui;
 
 
+import java.util.ArrayList;
+
 import com.github.vbsw.urlsaver.App;
 import com.github.vbsw.urlsaver.Converter;
 import com.github.vbsw.urlsaver.Parser;
@@ -18,7 +20,6 @@ import com.github.vbsw.urlsaver.db.DBRecord;
 import com.github.vbsw.urlsaver.db.DynArrayOfString;
 import com.github.vbsw.urlsaver.io.PreferencesIO;
 import com.github.vbsw.urlsaver.io.URLsIO;
-import com.github.vbsw.urlsaver.io.URLsService;
 import com.github.vbsw.urlsaver.pref.Preferences;
 
 import javafx.application.Platform;
@@ -95,8 +96,40 @@ public class Buttons {
 		final String tagsString = record.getTagsAsString(urlIndex);
 		TextAreas.tags.control.setText(tagsString);
 		ListViews.urls.control.requestFocus();
-		GUI.refreshFileInfo();
-		GUI.refreshTitle();
+		GUI.refreshFileSelection();
+	}
+
+	public static void confirmURLDelete ( ) {
+		final DBRecord record = GUI.getCurrentDBRecord();
+		final String url = ListViews.urls.control.getSelectionModel().getSelectedItem();
+		final int urlIndex = record.getURLIndex(url);
+		final int selectedIndex = ListViews.urls.control.getSelectionModel().getSelectedIndex();
+		record.removeURL(urlIndex);
+		ListViews.urls.control.getItems().remove(selectedIndex);
+		if ( ListViews.urls.control.getItems().size() > selectedIndex )
+			ListViews.urls.control.getSelectionModel().select(selectedIndex);
+		else
+			record.setSelectedURLIndex(-1);
+		if ( ListViews.urls.control.getItems().isEmpty() )
+			TextFields.urlSearch.control.requestFocus();
+		else
+			ListViews.urls.control.requestFocus();
+		GUI.refreshFileSelection();
+	}
+
+	public static void confirmURLCreate ( ) {
+		final DBRecord selectedRecord = GUI.getCurrentDBRecord();
+		final String url = Parser.trim(TextFields.url.control.getText());
+		final int urlIndex = selectedRecord.addUrl(url);
+		final ArrayList<String> tags = Converter.toArrayList(TextAreas.tags.control.getText());
+		for ( final String tag: tags )
+			selectedRecord.addTagToUrl(urlIndex,tag);
+		final String tagsString = selectedRecord.getTagsAsString(urlIndex);
+		TextAreas.tags.control.setText(tagsString);
+		ListViews.urls.control.requestFocus();
+		Properties.urlExistsProperty().set(true);
+		Properties.urlModifiedProperty().set(false);
+		GUI.refreshFileSelection();
 	}
 
 	private static void quitApp_clicked ( final ActionEvent event ) {
@@ -156,15 +189,13 @@ public class Buttons {
 	}
 
 	private static void fileSave_clicked ( final ActionEvent event ) {
-		final DBRecord selectedRecord = GUI.getCurrentDBRecord();
-		URLsIO.saveFile(selectedRecord);
+		Properties.confirmingSaveProperty().set(true);
 	}
 
 	private static void fileSave_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			final DBRecord selectedRecord = GUI.getCurrentDBRecord();
-			URLsIO.saveFile(selectedRecord);
+			Properties.confirmingSaveProperty().set(true);
 		}
 	}
 
@@ -175,24 +206,21 @@ public class Buttons {
 
 	private static void fileCancel_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
-		if ( keyCode == KeyCode.ENTER ) {
-			Properties.confirmingSaveProperty().set(false);
-			ListViews.files.control.requestFocus();
-		}
+		if ( keyCode == KeyCode.ENTER )
+			fileCancel_clicked(null);
 	}
 
 	private static void fileSaveOK_clicked ( final ActionEvent event ) {
 		final DBRecord selectedRecord = GUI.getCurrentDBRecord();
 		URLsIO.saveFile(selectedRecord);
+		GUI.refreshFileInfo();
+		GUI.refreshTitle();
 	}
 
 	private static void fileSaveOK_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
-		if ( keyCode == KeyCode.ENTER ) {
-			final DBRecord selectedRecord = GUI.getCurrentDBRecord();
-			URLsIO.saveFile(selectedRecord);
-			GUI.refreshTitle();
-		}
+		if ( keyCode == KeyCode.ENTER )
+			fileSaveOK_clicked(null);
 	}
 
 	private static void openInBrowser_clicked ( final ActionEvent event ) {
@@ -255,28 +283,25 @@ public class Buttons {
 	}
 
 	private static void urlDeleteOK_clicked ( final ActionEvent event ) {
-		URLsService.confirmURLDelete();
-		GUI.refreshURLsInfo();
-		URLsService.finalizeURLDelete();
+		Buttons.confirmURLDelete();
+		Properties.urlDeleteRequestedProperty().set(false);
 	}
 
 	private static void urlDeleteOK_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
-		if ( keyCode == KeyCode.ENTER ) {
-			URLsService.confirmURLDelete();
-			URLsService.finalizeURLDelete();
-		}
+		if ( keyCode == KeyCode.ENTER )
+			Buttons.urlDelete_clicked(null);
 	}
 
 	private static void urlCreateOK_clicked ( final ActionEvent event ) {
-		URLsService.confirmURLCreate();
+		Buttons.confirmURLCreate();
 		GUI.refreshTitle();
 	}
 
 	private static void urlCreateOK_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			URLsService.confirmURLCreate();
+			Buttons.confirmURLCreate();
 			GUI.refreshTitle();
 		}
 	}

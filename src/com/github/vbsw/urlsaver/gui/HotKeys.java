@@ -12,7 +12,6 @@ package com.github.vbsw.urlsaver.gui;
 import com.github.vbsw.urlsaver.App;
 import com.github.vbsw.urlsaver.db.DBRecord;
 import com.github.vbsw.urlsaver.io.URLsIO;
-import com.github.vbsw.urlsaver.io.URLsService;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -72,9 +71,9 @@ public class HotKeys {
 
 	private static void confirmURLs ( ) {
 		if ( !Buttons.urlDeleteOK.control.isDisable() )
-			URLsService.confirmURLDelete();
+			Buttons.confirmURLDelete();
 		else if ( !Buttons.urlCreateOK.control.isDisable() )
-			URLsService.confirmURLCreate();
+			Buttons.confirmURLCreate();
 		else if ( !Buttons.urlEditOK.control.isDisable() )
 			Buttons.confirmURLEdit();
 		Properties.resetURLsProperties();

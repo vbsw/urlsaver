@@ -137,4 +137,10 @@ public class WordSearch {
 		}
 	}
 
+	public void removeFromResult ( final String word ) {
+		final int wordIndex = Collections.binarySearch(result,word);
+		if ( wordIndex >= 0 )
+			result.remove(wordIndex);
+	}
+
 }

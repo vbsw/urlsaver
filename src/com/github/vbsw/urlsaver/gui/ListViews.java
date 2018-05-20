@@ -51,9 +51,7 @@ public class ListViews {
 	}
 
 	private static void files_selected ( final ObservableValue<? extends DBRecord> observable, final DBRecord oldValue, final DBRecord newValue ) {
-		GUI.refereshFileState();
-		GUI.refreshFileInfo();
-		GUI.refreshTitle();
+		GUI.refreshFileSelection();
 		GUI.refreshURLsView();
 		GUI.refreshURLsInfo();
 	}
@@ -87,6 +85,7 @@ public class ListViews {
 
 	private static void filePathListViewItem_clicked ( final MouseEvent event ) {
 		if ( event.getClickCount() == 2 ) {
+			Properties.confirmingSaveProperty().set(false);
 			GUI.refereshFileState();
 			GUI.refreshFileInfo();
 		}

@@ -115,12 +115,18 @@ public class GUI {
 		}
 	}
 
-	public static void refereshFileState ( ) {
-		final DBRecord selectedRecord = GUI.getCurrentDBRecord();
-		Properties.availableProperty().set(selectedRecord.isLoaded());
-		Properties.selectedFileDirtyProperty().setValue(selectedRecord.isDirty());
-		Properties.selectedProperty().set(selectedRecord != null);
+	public static void refreshFileSelection ( ) {
 		Properties.confirmingSaveProperty().set(false);
+		GUI.refereshFileState();
+		GUI.refreshFileInfo();
+		GUI.refreshTitle();
+	}
+
+	public static void refereshFileState ( ) {
+		final DBRecord record = GUI.getCurrentDBRecord();
+		Properties.availableProperty().set(record.isLoaded());
+		Properties.selectedFileDirtyProperty().setValue(record.isDirty());
+		Properties.selectedProperty().set(record != null);
 	}
 
 	public static void refreshFileInfo ( ) {
@@ -136,8 +142,8 @@ public class GUI {
 	}
 
 	public static DBRecord getCurrentDBRecord ( ) {
-		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
-		return selectedRecord;
+		final DBRecord record = ListViews.files.control.getSelectionModel().getSelectedItem();
+		return record;
 	}
 
 	private static void refreshCheckBoxView ( final CustomCheckBox customCheckBox, final PreferencesBooleanValue preferencesValue ) {

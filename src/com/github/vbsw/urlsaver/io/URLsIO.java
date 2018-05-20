@@ -151,23 +151,15 @@ public class URLsIO {
 						ListViews.files.control.getSelectionModel().select(recordToSelect);
 						TabPanes.top.control.getSelectionModel().select(TabPanes.top.urls.control);
 						TextFields.urlSearch.control.requestFocus();
-						GUI.refereshFileState();
-						GUI.refreshFileInfo();
-						GUI.refreshTitle();
+						GUI.refreshFileSelection();
 					} else if ( fileIsAlreadySelected ) {
-						GUI.refereshFileState();
-						GUI.refreshFileInfo();
-						GUI.refreshTitle();
+						GUI.refreshFileSelection();
 					}
 				} else if ( fileIsAlreadySelected ) {
-					GUI.refereshFileState();
-					GUI.refreshFileInfo();
-					GUI.refreshTitle();
+					GUI.refreshFileSelection();
 				}
 			} else if ( fileIsAlreadySelected ) {
-				GUI.refereshFileState();
-				GUI.refreshFileInfo();
-				GUI.refreshTitle();
+				GUI.refreshFileSelection();
 			}
 		}
 

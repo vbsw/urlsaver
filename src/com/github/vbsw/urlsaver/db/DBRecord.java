@@ -41,26 +41,6 @@ public class DBRecord {
 	private int selectedURLIndex;
 	private long fileSize;
 
-	private void setStubs ( ) {
-		final String pathNotSet = "path not set";
-		pathString = pathNotSet;
-		listLabel = pathNotSet;
-		fileName = pathNotSet;
-		fileSize = -1;
-	}
-
-	private final int addTag ( final String tag ) {
-		final int index = getTagIndex(tag);
-		if ( index < 0 ) {
-			final int insertIndex = -index - 1;
-			final DynArrayOfString urlsToTag = new DynArrayOfString();
-			tags.add(insertIndex,tag);
-			urlsOnTags.add(insertIndex,urlsToTag);
-			return insertIndex;
-		}
-		return index;
-	}
-
 	public DBRecord ( ) {
 		setStubs();
 	}
@@ -108,44 +88,44 @@ public class DBRecord {
 		final int index = getURLIndex(url);
 		if ( index < 0 ) {
 			final int insertIndex = -index - 1;
-			final DynArrayOfString tagsToURL = new DynArrayOfString();
+			final DynArrayOfString tagsOnURL = new DynArrayOfString();
 			dirtyFlag = true;
 			urls.add(insertIndex,url);
-			tagsOnURLs.add(insertIndex,tagsToURL);
+			tagsOnURLs.add(insertIndex,tagsOnURL);
 			return insertIndex;
 		}
 		return index;
 	}
 
 	public boolean addTagToUrl ( final int index, final String tag ) {
-		final DynArrayOfString tagsToURL = tagsOnURLs.values[index];
-		final int indexTagToURL = tagsToURL.binarySearch(tag);
+		final DynArrayOfString tagsOnURL = tagsOnURLs.values[index];
+		final int indexTagToURL = tagsOnURL.binarySearch(tag);
 		// URL doesn't have tag
 		if ( indexTagToURL < 0 ) {
 			final int indexTag = addTag(tag); // (ensured tag is available)
 			final int indexInsertTagToURL = -indexTagToURL - 1;
-			final DynArrayOfString urlsToTag = urlsOnTags.values[indexTag];
+			final DynArrayOfString urlsOnTag = urlsOnTags.values[indexTag];
 			final String url = urls.values[index];
-			final int indexURLToTag = urlsToTag.binarySearch(url);
+			final int indexURLToTag = urlsOnTag.binarySearch(url);
 			// tag doesn't have URL
 			if ( indexURLToTag < 0 ) {
 				final int indexInsertURLToTag = -indexURLToTag - 1;
 				dirtyFlag = true;
-				urlsToTag.add(indexInsertURLToTag,url);
+				urlsOnTag.add(indexInsertURLToTag,url);
 			}
-			tagsToURL.add(indexInsertTagToURL,tag);
+			tagsOnURL.add(indexInsertTagToURL,tag);
 			return true;
 		}
 		return false;
 	}
 
 	public String getTagsAsString ( final int index ) {
-		final DynArrayOfString tagsToURL = tagsOnURLs.values[index];
+		final DynArrayOfString tagsOnURL = tagsOnURLs.values[index];
 		final StringBuilder stringBuilder = new StringBuilder();
-		for ( int i = 0; i < tagsToURL.valuesLength; i += 1 ) {
+		for ( int i = 0; i < tagsOnURL.valuesLength; i += 1 ) {
 			if ( i > 0 )
 				stringBuilder.append(' ');
-			stringBuilder.append(tagsToURL.values[i]);
+			stringBuilder.append(tagsOnURL.values[i]);
 		}
 		return stringBuilder.toString();
 	}
@@ -196,15 +176,6 @@ public class DBRecord {
 
 	public int getSelectedURLIndex ( ) {
 		return selectedURLIndex;
-	}
-
-	private void refreshFileSize ( ) {
-		try {
-			fileSize = Files.size(path);
-		} catch ( IOException e ) {
-			fileSize = -1;
-			e.printStackTrace();
-		}
 	}
 
 	public long getFileSize ( ) {
@@ -264,7 +235,8 @@ public class DBRecord {
 
 	public void setTags ( final int urlIndex, final DynArrayOfString tags ) {
 		final DynArrayOfString tagsOnURL = tagsOnURLs.values[urlIndex];
-		final DynArrayOfString tagsOnURLClone = tagsOnURL.clone();
+		final DynArrayOfString tagsOnURLUnused = tagsOnURL.clone();
+		tagsOnURLUnused.remove(tags);
 		while ( tagsOnURL.valuesLength > 0 ) {
 			final int tagsOnURLIndex = tagsOnURL.valuesLength - 1;
 			final String tag = tagsOnURL.values[tagsOnURLIndex];
@@ -277,15 +249,64 @@ public class DBRecord {
 		}
 		for ( int i = 0; i < tags.valuesLength; i += 1 )
 			addTagToUrl(urlIndex,tags.values[i]);
-		removeUnusedTags(tagsOnURLClone,tags);
+		removeUnusedTags(tagsOnURLUnused);
 	}
 
-	private void removeUnusedTags ( final DynArrayOfString oldTags, final DynArrayOfString newTags ) {
-		oldTags.remove(newTags);
-		for ( int i = 0; i < oldTags.valuesLength; i += 1 ) {
-			final int tagsIndex = tags.binarySearch(oldTags.values[i]);
-			tags.remove(tagsIndex);
-			urlsOnTags.remove(tagsIndex);
+	public void removeURL ( final int urlIndex ) {
+		if ( urlIndex >= 0 ) {
+			final String url = urls.values[urlIndex];
+			final DynArrayOfString tagsOnURLUnused = tagsOnURLs.values[urlIndex];
+			dirtyFlag = true;
+			for ( int i = 0; i < tagsOnURLUnused.valuesLength; i += 1 ) {
+				final String tag = tagsOnURLUnused.values[i];
+				final int tagIndex = getTagIndex(tag);
+				final DynArrayOfString urlsOnTag = urlsOnTags.values[tagIndex];
+				final int urlsOnTagIndex = urlsOnTag.binarySearch(url);
+				urlsOnTag.remove(urlsOnTagIndex);
+			}
+			urls.remove(urlIndex);
+			tagsOnURLs.remove(urlIndex);
+			removeUnusedTags(tagsOnURLUnused);
+			urlsSearch.removeFromResult(url);
+		}
+	}
+
+	private void setStubs ( ) {
+		final String pathNotSet = "path not set";
+		pathString = pathNotSet;
+		listLabel = pathNotSet;
+		fileName = pathNotSet;
+		fileSize = -1;
+	}
+
+	private final int addTag ( final String tag ) {
+		final int index = getTagIndex(tag);
+		if ( index < 0 ) {
+			final int insertIndex = -index - 1;
+			final DynArrayOfString urlsOnTag = new DynArrayOfString();
+			tags.add(insertIndex,tag);
+			urlsOnTags.add(insertIndex,urlsOnTag);
+			return insertIndex;
+		}
+		return index;
+	}
+
+	private void refreshFileSize ( ) {
+		try {
+			fileSize = Files.size(path);
+		} catch ( IOException e ) {
+			fileSize = -1;
+			e.printStackTrace();
+		}
+	}
+
+	private void removeUnusedTags ( final DynArrayOfString tags ) {
+		for ( int i = 0; i < tags.valuesLength; i += 1 ) {
+			final int tagsIndex = this.tags.binarySearch(tags.values[i]);
+			if ( tagsIndex >= 0 && this.urlsOnTags.values[tagsIndex].valuesLength == 0 ) {
+				this.tags.remove(tagsIndex);
+				this.urlsOnTags.remove(tagsIndex);
+			}
 		}
 	}
 
