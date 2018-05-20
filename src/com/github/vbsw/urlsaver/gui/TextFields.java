@@ -12,6 +12,7 @@ package com.github.vbsw.urlsaver.gui;
 import com.github.vbsw.urlsaver.Converter;
 import com.github.vbsw.urlsaver.Parser;
 import com.github.vbsw.urlsaver.db.DBRecord;
+import com.github.vbsw.urlsaver.db.DynArrayOfString;
 import com.github.vbsw.urlsaver.pref.Preferences;
 
 import javafx.beans.value.ObservableValue;
@@ -47,25 +48,29 @@ public class TextFields {
 		urlsFileSelect.build(root);
 	}
 
-	public static void urlSearch_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
-		//		final UrlsViewData urlsViewData = App.urls.getViewData();
-		//		if ( newValue != null ) {
-		//			urlsViewData.searchTagsString = newValue;
-		//		} else {
-		//			urlsViewData.searchTagsString = "";
-		//		}
+	public static void urlSearch_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
+		final DBRecord record = GUI.getCurrentDBRecord();
+		if ( newValue != null )
+			record.setURLsSearchString(newValue);
+		else
+			record.setURLsSearchString("");
 	}
 
-	public static void urlSearch_enterPressed ( ActionEvent event ) {
-		//		App.urls.updateSearchResult();
-		//		App.urls.updateSearchResultListView();
-		//		App.urls.setSelectedAsInfoView();
-		//		properties.button_urlSearch_clicked();
+	public static void urlSearch_enterPressed ( final ActionEvent event ) {
+		final DBRecord record = GUI.getCurrentDBRecord();
+		final String searchString = record.getURLsSearchString();
+		final boolean searchByPrefix = Preferences.getSearchByPrefix().getSavedValue();
+		final DynArrayOfString searchTags = Converter.toDynArrayList(searchString);
+
+		record.searchURLs(searchTags,searchByPrefix);
+		ListViews.urls.showSearchResults();
+		GUI.refreshURLsInfo();
+		Properties.resetURLsProperties();
 	}
 
 	public static void url_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final String urlTyped = Parser.trim(TextFields.url.control.getText());
-		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+		final DBRecord selectedRecord = GUI.getCurrentDBRecord();
 		final boolean urlExists = urlTyped.length() > 0 && selectedRecord.getURLIndex(urlTyped) >= 0;
 		final boolean urlModified = urlTyped.length() > 0 && selectedRecord.getURLIndex(urlTyped) < 0;
 		Properties.urlExistsProperty().set(urlExists);

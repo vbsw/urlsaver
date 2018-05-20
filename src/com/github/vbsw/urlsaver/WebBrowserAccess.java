@@ -15,27 +15,21 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 
-import com.github.vbsw.urlsaver.gui.TextFields;
-
 
 /**
  * @author Vitali Baumtrok
  */
 public class WebBrowserAccess {
 
-	public static void openTypedUrl ( ) {
-		final String urlTyped = Parser.trim(TextFields.url.control.getText());
-		WebBrowserAccess.openURL(urlTyped);
-	}
-
 	public static void openURL ( final String url ) {
+		final String urlTrimmed = Parser.trim(url);
 		final String os = System.getProperty("os.name").toLowerCase();
 		if ( os.indexOf("win") >= 0 )
-			openURLWindows(url);
+			openURLWindows(urlTrimmed);
 		else if ( os.indexOf("mac") >= 0 )
-			openURLMac(url);
+			openURLMac(urlTrimmed);
 		else if ( os.indexOf("nux") >= 0 || os.indexOf("nix") >= 0 )
-			openURLUnix(url);
+			openURLUnix(urlTrimmed);
 	}
 
 	private static void openURLUnix ( final String url ) {

@@ -5,7 +5,9 @@
  *        http://www.boost.org/LICENSE_1_0.txt)
  */
 
+
 package com.github.vbsw.urlsaver.io;
+
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -15,11 +17,11 @@ import java.util.ArrayList;
 import com.github.vbsw.urlsaver.db.DB;
 import com.github.vbsw.urlsaver.db.DBRecord;
 import com.github.vbsw.urlsaver.gui.GUI;
-import com.github.vbsw.urlsaver.gui.InfoTextGenerator;
 import com.github.vbsw.urlsaver.gui.ListViews;
 import com.github.vbsw.urlsaver.gui.Properties;
 import com.github.vbsw.urlsaver.gui.TabPanes;
 import com.github.vbsw.urlsaver.gui.TextFields;
+import com.github.vbsw.urlsaver.gui.TextGenerator;
 import com.github.vbsw.urlsaver.pref.Preferences;
 import com.github.vbsw.urlsaver.resources.ResourcesConfig;
 
@@ -27,6 +29,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
+
 
 /**
  * @author Vitali Baumtrok
@@ -86,7 +89,7 @@ public class URLsIO {
 		try ( final BufferedWriter writer = java.nio.file.Files.newBufferedWriter(filePath,ResourcesConfig.FILE_CHARSET) ) {
 			record.write(writer);
 			record.setDirty(false);
-			if ( ListViews.files.control.getSelectionModel().getSelectedItem() == record ) {
+			if ( GUI.getCurrentDBRecord() == record ) {
 				Properties.selectedFileDirtyProperty().setValue(false);
 				Properties.confirmingSaveProperty().setValue(false);
 			}
@@ -105,7 +108,7 @@ public class URLsIO {
 		@Override
 		public void changed ( final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue ) {
 			final int percentLoaded = (int) (newValue.doubleValue() * 100);
-			final String listLabel = InfoTextGenerator.getFileListLabel(record,percentLoaded);
+			final String listLabel = TextGenerator.getFileListLabel(record,percentLoaded);
 			record.setListLabel(listLabel);
 			ListViews.files.control.refresh();
 			GUI.refreshFileInfo();
@@ -132,7 +135,7 @@ public class URLsIO {
 
 		@Override
 		public void handle ( final WorkerStateEvent event ) {
-			final boolean fileIsAlreadySelected = (ListViews.files.control.getSelectionModel().getSelectedItem() == record);
+			final boolean fileIsAlreadySelected = (GUI.getCurrentDBRecord() == record);
 			record.setLoaded(true);
 			record.resetCountSaved();
 			if ( fileIsAlreadySelected ) {

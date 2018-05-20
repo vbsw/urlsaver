@@ -13,8 +13,8 @@ import com.github.vbsw.urlsaver.App;
 import com.github.vbsw.urlsaver.WebBrowserAccess;
 import com.github.vbsw.urlsaver.db.DB;
 import com.github.vbsw.urlsaver.db.DBRecord;
-import com.github.vbsw.urlsaver.io.URLsIO;
 import com.github.vbsw.urlsaver.io.PreferencesIO;
+import com.github.vbsw.urlsaver.io.URLsIO;
 import com.github.vbsw.urlsaver.io.URLsService;
 import com.github.vbsw.urlsaver.pref.Preferences;
 
@@ -116,14 +116,14 @@ public class Buttons {
 	}
 
 	private static void reloadFile_clicked ( final ActionEvent event ) {
-		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+		final DBRecord selectedRecord = GUI.getCurrentDBRecord();
 		URLsIO.reloadFile(selectedRecord);
 	}
 
 	private static void reloadFile_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+			final DBRecord selectedRecord = GUI.getCurrentDBRecord();
 			URLsIO.reloadFile(selectedRecord);
 		}
 	}
@@ -139,14 +139,14 @@ public class Buttons {
 	}
 
 	private static void fileSave_clicked ( final ActionEvent event ) {
-		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+		final DBRecord selectedRecord = GUI.getCurrentDBRecord();
 		URLsIO.saveFile(selectedRecord);
 	}
 
 	private static void fileSave_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+			final DBRecord selectedRecord = GUI.getCurrentDBRecord();
 			URLsIO.saveFile(selectedRecord);
 		}
 	}
@@ -165,7 +165,7 @@ public class Buttons {
 	}
 
 	private static void fileSaveOK_clicked ( final ActionEvent event ) {
-		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+		final DBRecord selectedRecord = GUI.getCurrentDBRecord();
 		URLsIO.saveFile(selectedRecord);
 		GUI.refreshTitle();
 	}
@@ -173,20 +173,23 @@ public class Buttons {
 	private static void fileSaveOK_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+			final DBRecord selectedRecord = GUI.getCurrentDBRecord();
 			URLsIO.saveFile(selectedRecord);
 			GUI.refreshTitle();
 		}
 	}
 
 	private static void openInBrowser_clicked ( final ActionEvent event ) {
-		WebBrowserAccess.openTypedUrl();
+		final String url = ListViews.urls.control.getSelectionModel().getSelectedItem();
+		WebBrowserAccess.openURL(url);
 	}
 
 	private static void openInBrowser_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
-		if ( keyCode == KeyCode.ENTER )
-			WebBrowserAccess.openTypedUrl();
+		if ( keyCode == KeyCode.ENTER ) {
+			final String url = ListViews.urls.control.getSelectionModel().getSelectedItem();
+			WebBrowserAccess.openURL(url);
+		}
 	}
 
 	private static void urlSearch_clicked ( final ActionEvent event ) {

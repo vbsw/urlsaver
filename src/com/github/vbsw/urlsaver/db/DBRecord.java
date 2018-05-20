@@ -12,6 +12,7 @@ package com.github.vbsw.urlsaver.db;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 
 /**
@@ -25,6 +26,7 @@ public class DBRecord {
 	private final DynArrayOfString tags = new DynArrayOfString(INITIAL_CAPACITY);
 	private final DynArrayOfString2 tagsToURLs = new DynArrayOfString2(INITIAL_CAPACITY);
 	private final DynArrayOfString2 urlsToTags = new DynArrayOfString2(INITIAL_CAPACITY);
+	private final WordSearch urlsSearch = new WordSearch(tags,urlsToTags);
 
 	private int urlsCountSaved;
 	private int tagsCountSaved;
@@ -34,6 +36,8 @@ public class DBRecord {
 	private String fileName;
 	private boolean dirtyFlag;
 	private boolean loadedFlag;
+	private String urlsSearchString;
+	private int selectedURLIndex;
 
 	private void setStubs ( ) {
 		final String pathNotSet = "path not set";
@@ -188,6 +192,26 @@ public class DBRecord {
 		return loadedFlag;
 	}
 
+	public void setURLsSearchString ( final String searchString ) {
+		this.urlsSearchString = searchString;
+	}
+
+	public String getURLsSearchString ( ) {
+		return urlsSearchString;
+	}
+
+	public ArrayList<String> getURLsSearchResult ( ) {
+		return urlsSearch.getResult();
+	}
+
+	public void setSelectedURLIndex ( final int selectedURLIndex ) {
+		this.selectedURLIndex = selectedURLIndex;
+	}
+
+	public int getSelectedURLIndex ( ) {
+		return selectedURLIndex;
+	}
+
 	public void write ( final BufferedWriter writer ) throws IOException {
 		for ( int i = 0; i < urls.valuesLength; i += 1 ) {
 			final String url = urls.values[i];
@@ -203,6 +227,13 @@ public class DBRecord {
 			}
 			writer.newLine();
 		}
+	}
+
+	public void searchURLs ( final DynArrayOfString searchTags, final boolean searchByPrefix ) {
+		if ( searchByPrefix )
+			urlsSearch.searchByPrefix(searchTags);
+		else
+			urlsSearch.searchByWord(searchTags);
 	}
 
 }

@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import com.github.vbsw.urlsaver.db.DynArrayOfString;
+
 
 /**
  * @author Vitali Baumtrok
@@ -32,16 +34,16 @@ public final class Converter {
 		return stringBuilder.toString();
 	}
 
-	public static ArrayList<String> toStringArrayList ( final String string ) {
-		final ArrayList<String> list = new ArrayList<String>();
+	public static DynArrayOfString toDynArrayList ( final String string ) {
+		final DynArrayOfString dynArray = new DynArrayOfString();
 		int beginIndex = Parser.seekContent(string,0,string.length());
 		while ( beginIndex < string.length() ) {
 			final int endIndex = Parser.seekWhitespace(string,beginIndex,string.length());
 			final String word = string.substring(beginIndex,endIndex);
 			beginIndex = Parser.seekContent(string,endIndex,string.length());
-			list.add(word);
+			dynArray.add(word);
 		}
-		return list;
+		return dynArray;
 	}
 
 	public static void toArrayListNoDuplicates ( final ArrayList<String> list, final String string ) {

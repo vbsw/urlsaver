@@ -9,11 +9,14 @@
 package com.github.vbsw.urlsaver.gui;
 
 
+import java.util.ArrayList;
+
 import javax.swing.text.html.CSS;
 
 import com.github.vbsw.urlsaver.db.DB;
 import com.github.vbsw.urlsaver.db.DBRecord;
 import com.github.vbsw.urlsaver.gui.CheckBoxes.CustomCheckBox;
+import com.github.vbsw.urlsaver.io.FXMLIO;
 import com.github.vbsw.urlsaver.pref.Preferences;
 import com.github.vbsw.urlsaver.pref.PreferencesBooleanValue;
 
@@ -53,7 +56,7 @@ public class GUI {
 	}
 
 	public static void reloadFXML ( ) {
-		final Parent root = FXMLReader.getRoot();
+		final Parent root = FXMLIO.readFXML();
 		Labels.build(root);
 		Buttons.build(root);
 		ListViews.build(root);
@@ -78,8 +81,8 @@ public class GUI {
 	}
 
 	public static void refreshTitle ( ) {
-		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
-		final String windowTitle = InfoTextGenerator.getWindowTitle(selectedRecord);
+		final DBRecord selectedRecord = GUI.getCurrentDBRecord();
+		final String windowTitle = TextGenerator.getWindowTitle(selectedRecord);
 		GUI.setWindowTitle(windowTitle);
 	}
 
@@ -113,7 +116,7 @@ public class GUI {
 	}
 
 	public static void refereshFileState ( ) {
-		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+		final DBRecord selectedRecord = GUI.getCurrentDBRecord();
 		Properties.availableProperty().set(selectedRecord.isLoaded());
 		Properties.selectedFileDirtyProperty().setValue(selectedRecord.isDirty());
 		Properties.selectedProperty().set(selectedRecord != null);
@@ -121,13 +124,18 @@ public class GUI {
 	}
 
 	public static void refreshFileInfo ( ) {
-		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+		final DBRecord selectedRecord = GUI.getCurrentDBRecord();
 		final String pathString = selectedRecord != null ? selectedRecord.getPathAsString() : "";
-		final String urlsCountString = InfoTextGenerator.getURLsCountLabel(selectedRecord);
-		final String tagsCountString = InfoTextGenerator.getTagsCountLabel(selectedRecord);
+		final String urlsCountString = TextGenerator.getURLsCountLabel(selectedRecord);
+		final String tagsCountString = TextGenerator.getTagsCountLabel(selectedRecord);
 		TextFields.fileName.control.setText(pathString);
 		Labels.urlsCount.control.setText(urlsCountString);
 		Labels.tagsCount.control.setText(tagsCountString);
+	}
+
+	public static DBRecord getCurrentDBRecord ( ) {
+		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+		return selectedRecord;
 	}
 
 	private static void refreshCheckBoxView ( final CustomCheckBox customCheckBox, final PreferencesBooleanValue preferencesValue ) {
@@ -142,6 +150,40 @@ public class GUI {
 			else if ( preferencesValue.getSavedValue() )
 				customCheckBox.setFontWeight(true);
 		}
+	}
+
+	public static void refreshURLsView ( ) {
+		final DBRecord record = GUI.getCurrentDBRecord();
+		final String urlSearchString = record.getURLsSearchString();
+		final ArrayList<String> urlsSearchResult = record.getURLsSearchResult();
+		final int selectedURLIndex = record.getSelectedURLIndex();
+		TextFields.urlSearch.control.setText(urlSearchString);
+		ListViews.urls.control.getItems().setAll(urlsSearchResult);
+		if ( selectedURLIndex >= 0 )
+			ListViews.urls.control.getSelectionModel().select(selectedURLIndex);
+	}
+
+	public static void refreshURLsInfo ( ) {
+		final String selectedURL = ListViews.urls.control.getSelectionModel().getSelectedItem();
+		final DBRecord record = GUI.getCurrentDBRecord();
+		final int selectedURLIndex;
+		final String urlString;
+		final String tagsString;
+
+		if ( selectedURL != null ) {
+			final int urlIndex = record.getURLIndex(selectedURL);
+			selectedURLIndex = ListViews.urls.control.getSelectionModel().getSelectedIndex();
+			urlString = selectedURL;
+			tagsString = record.getTagsAsString(urlIndex);
+
+		} else {
+			selectedURLIndex = -1;
+			urlString = "";
+			tagsString = "";
+		}
+		record.setSelectedURLIndex(selectedURLIndex);
+		TextFields.url.control.setText(urlString);
+		TextAreas.tags.control.setText(tagsString);
 	}
 
 }

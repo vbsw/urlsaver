@@ -16,7 +16,7 @@ import com.github.vbsw.urlsaver.pref.Preferences;
 /**
  * @author Vitali Baumtrok
  */
-public class InfoTextGenerator {
+public class TextGenerator {
 
 	public static String getFileListLabel ( final DBRecord record, final int percentLoaded ) {
 		final String listViewText;

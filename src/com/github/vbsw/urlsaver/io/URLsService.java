@@ -90,7 +90,7 @@ public class URLsService {
 	}
 
 	public static void confirmURLCreate ( ) {
-		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+		final DBRecord selectedRecord = GUI.getCurrentDBRecord();
 		final String url = Parser.trim(TextFields.url.control.getText());
 		final int urlIndex = selectedRecord.addUrl(url);
 		final ArrayList<String> tags = URLsService.stringToList(TextAreas.tags.control.getText());

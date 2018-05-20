@@ -9,6 +9,9 @@
 package com.github.vbsw.urlsaver.gui;
 
 
+import com.github.vbsw.urlsaver.Parser;
+import com.github.vbsw.urlsaver.db.DBRecord;
+
 import javafx.beans.property.SimpleBooleanProperty;
 
 
@@ -123,6 +126,16 @@ public class Properties {
 
 	public static SimpleBooleanProperty byPrefixChangedProperty ( ) {
 		return byPrefixChanged;
+	}
+
+	public static void resetURLsProperties ( ) {
+		final DBRecord selectedRecord = GUI.getCurrentDBRecord();
+		final String urlTyped = Parser.trim(TextFields.url.control.getText());
+		final boolean urlExists = urlTyped.length() > 0 && selectedRecord.getURLIndex(urlTyped) >= 0;
+		Properties.urlExistsProperty().set(urlExists);
+		Properties.urlDeleteRequestedProperty().set(false);
+		Properties.urlModifiedProperty().set(false);
+		Properties.urlTagsModifiedProperty().set(false);
 	}
 
 }

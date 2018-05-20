@@ -9,6 +9,10 @@
 package com.github.vbsw.urlsaver.gui;
 
 
+import java.util.ArrayList;
+
+import com.github.vbsw.urlsaver.Parser;
+import com.github.vbsw.urlsaver.WebBrowserAccess;
 import com.github.vbsw.urlsaver.db.DBRecord;
 
 import javafx.beans.value.ObservableValue;
@@ -46,18 +50,29 @@ public class ListViews {
 		}
 	}
 
-	private static void files_selected ( ObservableValue<? extends DBRecord> observable, DBRecord oldValue, DBRecord newValue ) {
+	private static void files_selected ( final ObservableValue<? extends DBRecord> observable, final DBRecord oldValue, final DBRecord newValue ) {
 		GUI.refereshFileState();
 		GUI.refreshFileInfo();
 		GUI.refreshTitle();
+		GUI.refreshURLsView();
+		GUI.refreshURLsInfo();
 	}
 
-	private static void urls_selected ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
-		// TODO
+	private static void urls_selected ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
+		GUI.refreshURLsInfo();
+		Properties.resetURLsProperties();
 	}
 
 	private static void urls_keyPressed ( final KeyEvent event ) {
-		// TODO Auto-generated method stub
+		final KeyCode keyCode = event.getCode();
+		if ( keyCode == KeyCode.ENTER ) {
+			final String selectedUrl = Parser.trim(ListViews.urls.control.getSelectionModel().getSelectedItem());
+			if ( selectedUrl != null )
+				WebBrowserAccess.openURL(selectedUrl);
+		} else if ( keyCode == KeyCode.DELETE ) {
+			Properties.urlDeleteRequestedProperty().set(true);
+			Buttons.urlCancel.control.requestFocus();
+		}
 	}
 
 	private static ListCell<DBRecord> filesCellFactory ( final ListView<DBRecord> param ) {
@@ -65,15 +80,23 @@ public class ListViews {
 		return listCell;
 	}
 
-	private static ListCell<String> urlsCellFactory ( ListView<String> param ) {
-		// TODO Auto-generated method stub
-		return null;
+	private static ListCell<String> urlsCellFactory ( final ListView<String> param ) {
+		final ListCell<String> listCell = new UrlListCell();
+		return listCell;
 	}
 
 	private static void filePathListViewItem_clicked ( final MouseEvent event ) {
 		if ( event.getClickCount() == 2 ) {
 			GUI.refereshFileState();
 			GUI.refreshFileInfo();
+		}
+	}
+
+	private static void urlsListViewItem_clicked ( final MouseEvent event ) {
+		if ( event.getClickCount() == 2 ) {
+			final UrlListCell cell = (UrlListCell) event.getSource();
+			final String url = cell.getItem();
+			WebBrowserAccess.openURL(url);
 		}
 	}
 
@@ -100,6 +123,16 @@ public class ListViews {
 			control.setCellFactory( ( ListView<String> param ) -> ListViews.urlsCellFactory(param));
 			control.setOnKeyPressed(event -> ListViews.urls_keyPressed(event));
 		}
+
+		public void showSearchResults ( ) {
+			final DBRecord record = GUI.getCurrentDBRecord();
+			final ArrayList<String> searchResult = record.getURLsSearchResult();
+			control.getItems().setAll(searchResult);
+			if ( control.getItems().size() > 0 ) {
+				control.requestFocus();
+				control.getSelectionModel().select(0);
+			}
+		}
 	}
 
 	private static final class FilePathListCell extends ListCell<DBRecord> {
@@ -115,6 +148,22 @@ public class ListViews {
 				setOnMouseClicked(event -> ListViews.filePathListViewItem_clicked(event));
 			}
 		}
+	}
+
+	private static final class UrlListCell extends ListCell<String> {
+
+		@Override
+		protected void updateItem ( final String item, final boolean empty ) {
+			super.updateItem(item,empty);
+			if ( empty ) {
+				setText(null);
+				setOnMouseClicked(null);
+			} else {
+				setText(item);
+				setOnMouseClicked(event -> ListViews.urlsListViewItem_clicked(event));
+			}
+		}
+
 	}
 
 }

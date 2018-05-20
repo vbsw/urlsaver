@@ -6,7 +6,7 @@
  */
 
 
-package com.github.vbsw.urlsaver.gui;
+package com.github.vbsw.urlsaver.io;
 
 
 import java.io.InputStream;
@@ -24,12 +24,12 @@ import javafx.scene.Parent;
 /**
  * @author Vitali Baumtrok
  */
-public class FXMLReader {
+public class FXMLIO {
 
-	public static Parent getRoot ( ) {
-		Parent root = FXMLReader.getCustomRoot();
+	public static Parent readFXML ( ) {
+		Parent root = FXMLIO.readCustomFXML();
 		if ( root == null ) {
-			root = FXMLReader.getDefaultRoot();
+			root = FXMLIO.readDefaultFXML();
 			Preferences.setCustomFXMLLoaded(false);
 		} else {
 			Preferences.setCustomFXMLLoaded(true);
@@ -37,7 +37,7 @@ public class FXMLReader {
 		return root;
 	}
 
-	private static Parent getCustomRoot ( ) {
+	private static Parent readCustomFXML ( ) {
 		if ( Preferences.isCustomFXMLFileAvailable() ) {
 			final Path externalFXMLPath = Preferences.getFXMLPath().getSavedValue();
 			try ( final InputStream stream = Files.newInputStream(externalFXMLPath) ) {
@@ -50,7 +50,7 @@ public class FXMLReader {
 		return null;
 	}
 
-	private static Parent getDefaultRoot ( ) {
+	private static Parent readDefaultFXML ( ) {
 		try ( InputStream stream = JarFile.getStreamOfResource(ResourcesConfig.DEFAULT_FXML_FILE_PATH) ) {
 			final FXMLLoader fxmlLoader = new FXMLLoader();
 			final Parent fxml = fxmlLoader.load(stream);

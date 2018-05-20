@@ -94,4 +94,9 @@ public class DynArrayOfString {
 		return builder.toString();
 	}
 
+	public boolean contains ( final String value ) {
+		final int index = binarySearch(value);
+		return index >= 0;
+	}
+
 }
