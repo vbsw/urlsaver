@@ -10,13 +10,13 @@ package com.github.vbsw.urlsaver.gui;
 
 
 import com.github.vbsw.urlsaver.App;
+import com.github.vbsw.urlsaver.WebBrowserAccess;
 import com.github.vbsw.urlsaver.db.DB;
 import com.github.vbsw.urlsaver.db.DBRecord;
+import com.github.vbsw.urlsaver.io.URLsIO;
+import com.github.vbsw.urlsaver.io.PreferencesIO;
+import com.github.vbsw.urlsaver.io.URLsService;
 import com.github.vbsw.urlsaver.pref.Preferences;
-import com.github.vbsw.urlsaver.services.PreferencesLogic;
-import com.github.vbsw.urlsaver.services.Services;
-import com.github.vbsw.urlsaver.services.URLsService;
-import com.github.vbsw.urlsaver.services.WebBrowserService;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -93,14 +93,14 @@ public class Buttons {
 	}
 
 	private static void quitAppSave_clicked ( final ActionEvent event ) {
-		Services.saveAllFiles();
+		URLsIO.saveAllFiles();
 		App.quitUnconditionally();
 	}
 
 	private static void quitAppSave_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			Services.saveAllFiles();
+			URLsIO.saveAllFiles();
 			App.quitUnconditionally();
 		}
 	}
@@ -117,37 +117,37 @@ public class Buttons {
 
 	private static void reloadFile_clicked ( final ActionEvent event ) {
 		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
-		Services.reloadFile(selectedRecord);
+		URLsIO.reloadFile(selectedRecord);
 	}
 
 	private static void reloadFile_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
 			final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
-			Services.reloadFile(selectedRecord);
+			URLsIO.reloadFile(selectedRecord);
 		}
 	}
 
 	private static void reloadAllFiles_clicked ( final ActionEvent event ) {
-		Services.reloadAllFiles();
+		URLsIO.reloadAllFiles();
 	}
 
 	private static void reloadAllFiles_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER )
-			Services.reloadAllFiles();
+			URLsIO.reloadAllFiles();
 	}
 
 	private static void fileSave_clicked ( final ActionEvent event ) {
 		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
-		Services.saveFile(selectedRecord);
+		URLsIO.saveFile(selectedRecord);
 	}
 
 	private static void fileSave_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
 			final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
-			Services.saveFile(selectedRecord);
+			URLsIO.saveFile(selectedRecord);
 		}
 	}
 
@@ -166,7 +166,7 @@ public class Buttons {
 
 	private static void fileSaveOK_clicked ( final ActionEvent event ) {
 		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
-		Services.saveFile(selectedRecord);
+		URLsIO.saveFile(selectedRecord);
 		GUI.refreshTitle();
 	}
 
@@ -174,19 +174,19 @@ public class Buttons {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
 			final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
-			Services.saveFile(selectedRecord);
+			URLsIO.saveFile(selectedRecord);
 			GUI.refreshTitle();
 		}
 	}
 
 	private static void openInBrowser_clicked ( final ActionEvent event ) {
-		WebBrowserService.openTypedUrl();
+		WebBrowserAccess.openTypedUrl();
 	}
 
 	private static void openInBrowser_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER )
-			WebBrowserService.openTypedUrl();
+			WebBrowserAccess.openTypedUrl();
 	}
 
 	private static void urlSearch_clicked ( final ActionEvent event ) {
@@ -279,11 +279,11 @@ public class Buttons {
 
 	private static void createPreferencesFileOK_clicked ( final ActionEvent event ) {
 		if ( Properties.confirmingCreatePreferencesProperty().get() )
-			PreferencesLogic.overwritePreferencesFile();
+			PreferencesIO.overwritePreferencesFile();
 		else if ( Properties.confirmingCreateCSSProperty().get() )
-			PreferencesLogic.overwriteCSSFile();
+			PreferencesIO.overwriteCSSFile();
 		else if ( Properties.confirmingCreateFXMLProperty().get() )
-			PreferencesLogic.overwriteFXMLFile();
+			PreferencesIO.overwriteFXMLFile();
 	}
 
 	private static void preferencesCancel_clicked ( final ActionEvent event ) {
@@ -352,15 +352,15 @@ public class Buttons {
 	}
 
 	private static void createPreferencesFile_clicked ( final ActionEvent event ) {
-		PreferencesLogic.createPreferencesFile();
+		PreferencesIO.createPreferencesFile();
 	}
 
 	private static void createCSSFile_clicked ( final ActionEvent event ) {
-		PreferencesLogic.createCSSFile();
+		PreferencesIO.createCSSFile();
 	}
 
 	private static void createFXMLFile_clicked ( final ActionEvent event ) {
-		PreferencesLogic.createFXMLFile();
+		PreferencesIO.createFXMLFile();
 	}
 
 	private static BooleanBinding getCreatePreferencesFileDisableBinding ( ) {

@@ -6,7 +6,7 @@
  */
 
 
-package com.github.vbsw.urlsaver.services;
+package com.github.vbsw.urlsaver.io;
 
 
 import java.io.IOException;

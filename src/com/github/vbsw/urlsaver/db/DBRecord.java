@@ -26,6 +26,8 @@ public class DBRecord {
 	private final DynArrayOfString2 tagsToURLs = new DynArrayOfString2(INITIAL_CAPACITY);
 	private final DynArrayOfString2 urlsToTags = new DynArrayOfString2(INITIAL_CAPACITY);
 
+	private int urlsCountSaved;
+	private int tagsCountSaved;
 	private Path path;
 	private String pathString;
 	private String listLabel;
@@ -60,6 +62,27 @@ public class DBRecord {
 		setPath(path);
 	}
 
+	public void resetCountSaved ( ) {
+		urlsCountSaved = urls.valuesLength;
+		tagsCountSaved = tags.valuesLength;
+	}
+
+	public int getURLsCountModified ( ) {
+		return urls.valuesLength;
+	}
+
+	public int getTagsCountModified ( ) {
+		return tags.valuesLength;
+	}
+
+	public int getURLsCountSaved ( ) {
+		return urlsCountSaved;
+	}
+
+	public int getTagsCountSaved ( ) {
+		return tagsCountSaved;
+	}
+
 	public void setPath ( final Path path ) {
 		this.path = path;
 		if ( path != null ) {
@@ -70,7 +93,7 @@ public class DBRecord {
 		}
 	}
 
-	public final int getUrlIndex ( final String url ) {
+	public final int getURLIndex ( final String url ) {
 		return urls.binarySearch(url);
 	}
 
@@ -79,7 +102,7 @@ public class DBRecord {
 	}
 
 	public final int addUrl ( final String url ) {
-		final int index = getUrlIndex(url);
+		final int index = getURLIndex(url);
 		if ( index < 0 ) {
 			final int insertIndex = -index - 1;
 			final DynArrayOfString tagsToURL = new DynArrayOfString();

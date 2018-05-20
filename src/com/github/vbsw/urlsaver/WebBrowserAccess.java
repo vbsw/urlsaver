@@ -6,7 +6,7 @@
  */
 
 
-package com.github.vbsw.urlsaver.services;
+package com.github.vbsw.urlsaver;
 
 
 import java.awt.Desktop;
@@ -15,18 +15,17 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 
-import com.github.vbsw.urlsaver.Parser;
 import com.github.vbsw.urlsaver.gui.TextFields;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public class WebBrowserService {
+public class WebBrowserAccess {
 
 	public static void openTypedUrl ( ) {
 		final String urlTyped = Parser.trim(TextFields.url.control.getText());
-		WebBrowserService.openURL(urlTyped);
+		WebBrowserAccess.openURL(urlTyped);
 	}
 
 	public static void openURL ( final String url ) {
@@ -59,7 +58,7 @@ public class WebBrowserService {
 		if ( Desktop.isDesktopSupported() ) {
 			final Desktop desktop = Desktop.getDesktop();
 			if ( desktop.isSupported(Desktop.Action.BROWSE) ) {
-				final URI uri = WebBrowserService.toURI(url);
+				final URI uri = WebBrowserAccess.toURI(url);
 				if ( uri != null ) {
 					try {
 						desktop.browse(uri);

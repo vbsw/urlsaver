@@ -6,7 +6,7 @@
  */
 
 
-package com.github.vbsw.urlsaver.services;
+package com.github.vbsw.urlsaver.io;
 
 
 import java.nio.file.Files;
@@ -26,42 +26,42 @@ import javafx.beans.property.SimpleBooleanProperty;
 /**
  * @author Vitali Baumtrok
  */
-public class PreferencesLogic {
+public class PreferencesIO {
 
 	public static void createPreferencesFile ( ) {
 		final SimpleBooleanProperty property = Properties.confirmingCreatePreferencesProperty();
 		final Path destFilePath = Preferences.getPreferencesPath().getSavedValue();
-		PreferencesLogic.createFile(ResourcesConfig.DEFAULT_PREFERENCES_FILE_PATH,destFilePath,property);
+		PreferencesIO.createFile(ResourcesConfig.DEFAULT_PREFERENCES_FILE_PATH,destFilePath,property);
 	}
 
 	public static void createCSSFile ( ) {
 		final SimpleBooleanProperty property = Properties.confirmingCreateCSSProperty();
 		final Path destFilePath = Preferences.getCSSPath().getSavedValue();
-		PreferencesLogic.createFile(ResourcesConfig.DEFAULT_CSS_FILE_PATH,destFilePath,property);
+		PreferencesIO.createFile(ResourcesConfig.DEFAULT_CSS_FILE_PATH,destFilePath,property);
 	}
 
 	public static void createFXMLFile ( ) {
 		final SimpleBooleanProperty property = Properties.confirmingCreateFXMLProperty();
 		final Path destFilePath = Preferences.getFXMLPath().getSavedValue();
-		PreferencesLogic.createFile(ResourcesConfig.DEFAULT_FXML_FILE_PATH,destFilePath,property);
+		PreferencesIO.createFile(ResourcesConfig.DEFAULT_FXML_FILE_PATH,destFilePath,property);
 	}
 
 	public static void overwritePreferencesFile ( ) {
 		final SimpleBooleanProperty property = Properties.confirmingCreatePreferencesProperty();
 		final Path destFilePath = Preferences.getPreferencesPath().getSavedValue();
-		PreferencesLogic.overwriteFile(ResourcesConfig.DEFAULT_PREFERENCES_FILE_PATH,destFilePath,property);
+		PreferencesIO.overwriteFile(ResourcesConfig.DEFAULT_PREFERENCES_FILE_PATH,destFilePath,property);
 	}
 
 	public static void overwriteCSSFile ( ) {
 		final SimpleBooleanProperty property = Properties.confirmingCreateCSSProperty();
 		final Path destFilePath = Preferences.getCSSPath().getSavedValue();
-		PreferencesLogic.overwriteFile(ResourcesConfig.DEFAULT_CSS_FILE_PATH,destFilePath,property);
+		PreferencesIO.overwriteFile(ResourcesConfig.DEFAULT_CSS_FILE_PATH,destFilePath,property);
 	}
 
 	public static void overwriteFXMLFile ( ) {
 		final SimpleBooleanProperty property = Properties.confirmingCreateFXMLProperty();
 		final Path destFilePath = Preferences.getFXMLPath().getSavedValue();
-		PreferencesLogic.overwriteFile(ResourcesConfig.DEFAULT_FXML_FILE_PATH,destFilePath,property);
+		PreferencesIO.overwriteFile(ResourcesConfig.DEFAULT_FXML_FILE_PATH,destFilePath,property);
 	}
 
 	private static void createFile ( final String srcFilePathStr, final Path destFilePath, final SimpleBooleanProperty property ) {

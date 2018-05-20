@@ -9,6 +9,7 @@
 package com.github.vbsw.urlsaver.gui;
 
 
+import com.github.vbsw.urlsaver.Converter;
 import com.github.vbsw.urlsaver.Parser;
 import com.github.vbsw.urlsaver.db.DBRecord;
 import com.github.vbsw.urlsaver.pref.Preferences;
@@ -65,8 +66,8 @@ public class TextFields {
 	public static void url_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final String urlTyped = Parser.trim(TextFields.url.control.getText());
 		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
-		final boolean urlExists = urlTyped.length() > 0 && selectedRecord.getUrlIndex(urlTyped) >= 0;
-		final boolean urlModified = urlTyped.length() > 0 && selectedRecord.getUrlIndex(urlTyped) < 0;
+		final boolean urlExists = urlTyped.length() > 0 && selectedRecord.getURLIndex(urlTyped) >= 0;
+		final boolean urlModified = urlTyped.length() > 0 && selectedRecord.getURLIndex(urlTyped) < 0;
 		Properties.urlExistsProperty().set(urlExists);
 		Properties.urlModifiedProperty().set(urlModified);
 		Properties.urlDeleteRequestedProperty().set(false);
@@ -82,7 +83,7 @@ public class TextFields {
 	}
 
 	public static void width_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
-		final int parsedValueInt = Parser.toUnsignedInteger(newValue);
+		final int parsedValueInt = Converter.toUnsignedInteger(newValue);
 		final String parsedValueStr = Integer.toString(parsedValueInt);
 		final boolean valueChanged = parsedValueInt != Preferences.getWindowWidth().getSavedValue();
 		if ( !parsedValueStr.equals(newValue) ) {
@@ -95,7 +96,7 @@ public class TextFields {
 	}
 
 	public static void height_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
-		final int parsedValueInt = Parser.toUnsignedInteger(newValue);
+		final int parsedValueInt = Converter.toUnsignedInteger(newValue);
 		final String parsedValueStr = Integer.toString(parsedValueInt);
 		final boolean valueChanged = parsedValueInt != Preferences.getWindowHeight().getSavedValue();
 		if ( !parsedValueStr.equals(newValue) ) {

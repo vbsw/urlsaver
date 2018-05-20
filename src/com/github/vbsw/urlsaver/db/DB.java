@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import com.github.vbsw.urlsaver.JarFile;
-import com.github.vbsw.urlsaver.gui.GUI;
+import com.github.vbsw.urlsaver.gui.InfoTextGenerator;
 import com.github.vbsw.urlsaver.pref.Preferences;
 
 
@@ -33,7 +33,7 @@ public class DB {
 		final ArrayList<Path> filePathsSorted = DB.getSortedPaths(filePaths);
 		for ( final Path path: filePathsSorted ) {
 			final DBRecord record = new DBRecord(path);
-			final String listLabel = GUI.getListLabel(record,0);
+			final String listLabel = InfoTextGenerator.getFileListLabel(record,0);
 			record.setListLabel(listLabel);
 			records.add(record);
 		}

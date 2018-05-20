@@ -28,16 +28,6 @@ public class ListViews {
 	public static final Files files = new Files();
 	public static final URLs urls = new URLs();
 
-	private static void processFileSelection ( ) {
-		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
-		final String pathString = selectedRecord != null ? selectedRecord.getPathAsString() : "";
-		TextFields.fileName.control.setText(pathString);
-		Properties.availableProperty().set(selectedRecord.isLoaded());
-		Properties.selectedFileDirtyProperty().setValue(selectedRecord.isDirty());
-		Properties.selectedProperty().set(selectedRecord != null);
-		Properties.confirmingSaveProperty().set(false);
-	}
-
 	public static void build ( final Parent root ) {
 		files.build(root);
 		urls.build(root);
@@ -47,19 +37,18 @@ public class ListViews {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
 			event.consume();
-			/*
-			 * TODO
-			 * if ( App.scene.topTab.urls.isDisable() == false ) {
-			 * App.scene.tp.top.getSelectionModel().select(App.scene.topTab.urls
-			 * );
-			 * App.scene.tf.urlSearch.requestFocus();
-			 * }
-			 */
+
+			//			TODO
+			//			if ( App.scene.topTab.urls.isDisable() == false ) {
+			//				App.scene.tp.top.getSelectionModel().select(App.scene.topTab.urls);
+			//				App.scene.tf.urlSearch.requestFocus();
+			//			}
 		}
 	}
 
 	private static void files_selected ( ObservableValue<? extends DBRecord> observable, DBRecord oldValue, DBRecord newValue ) {
-		ListViews.processFileSelection();
+		GUI.refereshFileState();
+		GUI.refreshFileInfo();
 		GUI.refreshTitle();
 	}
 
@@ -82,8 +71,10 @@ public class ListViews {
 	}
 
 	private static void filePathListViewItem_clicked ( final MouseEvent event ) {
-		if ( event.getClickCount() == 2 )
-			ListViews.processFileSelection();
+		if ( event.getClickCount() == 2 ) {
+			GUI.refereshFileState();
+			GUI.refreshFileInfo();
+		}
 	}
 
 	public static final class Files {

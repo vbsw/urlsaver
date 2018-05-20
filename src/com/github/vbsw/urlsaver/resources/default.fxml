@@ -37,9 +37,18 @@
                   </HBox>
                   <ListView fx:id="file_list_view" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                   <TextField fx:id="file_name_tf" editable="false" />
+                  <HBox prefHeight="0.0" prefWidth="710.0" spacing="5.0">
+                     <children>
+                        <Label fx:id="files_urls_count_label" prefHeight="17.0" prefWidth="200.0" text="URLs ?" />
+                        <Label fx:id="files_tags_count_label" prefWidth="200.0" text="Tags ?" />
+                     </children>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
+                  </HBox>
                </children>
                <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
+                  <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
                </padding>
             </VBox>
          </content></Tab>

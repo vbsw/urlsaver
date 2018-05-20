@@ -5,9 +5,7 @@
  *        http://www.boost.org/LICENSE_1_0.txt)
  */
 
-
-package com.github.vbsw.urlsaver.services;
-
+package com.github.vbsw.urlsaver.io;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -17,6 +15,7 @@ import java.util.ArrayList;
 import com.github.vbsw.urlsaver.db.DB;
 import com.github.vbsw.urlsaver.db.DBRecord;
 import com.github.vbsw.urlsaver.gui.GUI;
+import com.github.vbsw.urlsaver.gui.InfoTextGenerator;
 import com.github.vbsw.urlsaver.gui.ListViews;
 import com.github.vbsw.urlsaver.gui.Properties;
 import com.github.vbsw.urlsaver.gui.TabPanes;
@@ -29,11 +28,10 @@ import javafx.beans.value.ObservableValue;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 
-
 /**
  * @author Vitali Baumtrok
  */
-public class Services {
+public class URLsIO {
 
 	private static final ArrayList<URLsLoadService> urlsLoadServices = new ArrayList<>();
 
@@ -49,24 +47,24 @@ public class Services {
 			urlsLoadServices.add(service);
 		}
 		if ( Preferences.getURLsFileAutoloadAll().getModifiedValue() )
-			for ( URLsLoadService service: Services.urlsLoadServices )
+			for ( URLsLoadService service: URLsIO.urlsLoadServices )
 				service.start();
 	}
 
 	public static void reloadAllFiles ( ) {
-		for ( URLsLoadService service: Services.urlsLoadServices )
+		for ( URLsLoadService service: URLsIO.urlsLoadServices )
 			service.restart();
 	}
 
 	public static void cancelLoadingFile ( final DBRecord record ) {
-		for ( URLsLoadService service: Services.urlsLoadServices ) {
+		for ( URLsLoadService service: URLsIO.urlsLoadServices ) {
 			if ( service.record == record )
 				service.cancel();
 		}
 	}
 
 	public static void reloadFile ( final DBRecord record ) {
-		for ( URLsLoadService service: Services.urlsLoadServices ) {
+		for ( URLsLoadService service: URLsIO.urlsLoadServices ) {
 			if ( service.record == record ) {
 				record.clearURLs();
 				record.setDirty(false);
@@ -79,7 +77,7 @@ public class Services {
 	public static void saveAllFiles ( ) {
 		for ( DBRecord record: DB.getRecords() )
 			if ( record.isDirty() )
-				Services.saveFile(record);
+				URLsIO.saveFile(record);
 		GUI.refreshTitle();
 	}
 
@@ -107,9 +105,10 @@ public class Services {
 		@Override
 		public void changed ( final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue ) {
 			final int percentLoaded = (int) (newValue.doubleValue() * 100);
-			final String listLabel = GUI.getListLabel(record,percentLoaded);
+			final String listLabel = InfoTextGenerator.getFileListLabel(record,percentLoaded);
 			record.setListLabel(listLabel);
 			ListViews.files.control.refresh();
+			GUI.refreshFileInfo();
 		}
 
 	}
@@ -135,9 +134,12 @@ public class Services {
 		public void handle ( final WorkerStateEvent event ) {
 			final boolean fileIsAlreadySelected = (ListViews.files.control.getSelectionModel().getSelectedItem() == record);
 			record.setLoaded(true);
+			record.resetCountSaved();
 			if ( fileIsAlreadySelected ) {
 				Properties.selectedFileDirtyProperty().setValue(false);
 				Properties.availableProperty().set(true);
+				GUI.refereshFileState();
+				GUI.refreshFileInfo();
 				GUI.refreshTitle();
 			} else if ( ListViews.files.autoSelectRequested ) {
 				final String urlsFileSelect = Preferences.getURLsFileSelect().getSavedValue();

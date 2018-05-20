@@ -6,13 +6,14 @@
  */
 
 
-package com.github.vbsw.urlsaver.services;
+package com.github.vbsw.urlsaver.io;
 
 
 import java.util.ArrayList;
 
 import com.github.vbsw.urlsaver.Parser;
 import com.github.vbsw.urlsaver.db.DBRecord;
+import com.github.vbsw.urlsaver.gui.GUI;
 import com.github.vbsw.urlsaver.gui.ListViews;
 import com.github.vbsw.urlsaver.gui.Properties;
 import com.github.vbsw.urlsaver.gui.TextAreas;
@@ -101,6 +102,7 @@ public class URLsService {
 		ListViews.urls.control.requestFocus();
 		Properties.urlExistsProperty().set(true);
 		Properties.urlModifiedProperty().set(false);
+		GUI.refreshFileInfo();
 	}
 
 	private static ArrayList<String> stringToList ( final String text ) {

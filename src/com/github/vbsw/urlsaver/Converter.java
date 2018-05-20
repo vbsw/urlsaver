@@ -86,4 +86,19 @@ public final class Converter {
 		return null;
 	}
 
+	public static int toUnsignedInteger ( final String str ) {
+		long number = 0;
+		for ( int i = 0; i < str.length(); i += 1 ) {
+			final char c = str.charAt(i);
+			if ( c >= '0' && c <= '9' ) {
+				number = number * 10 + c - '0';
+				if ( number > Integer.MAX_VALUE ) {
+					number = Integer.MAX_VALUE;
+					break;
+				}
+			}
+		}
+		return (int) number;
+	}
+
 }

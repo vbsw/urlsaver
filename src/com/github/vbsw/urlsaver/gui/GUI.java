@@ -16,7 +16,6 @@ import com.github.vbsw.urlsaver.db.DBRecord;
 import com.github.vbsw.urlsaver.gui.CheckBoxes.CustomCheckBox;
 import com.github.vbsw.urlsaver.pref.Preferences;
 import com.github.vbsw.urlsaver.pref.PreferencesBooleanValue;
-import com.github.vbsw.urlsaver.services.WindowService;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -46,7 +45,7 @@ public class GUI {
 		final String urlsFileToSelect = Preferences.getURLsFileSelect().getSavedValue();
 		final Parent rootStub = new AnchorPane();
 		scene = new Scene(rootStub,windowWidth,windowHeight);
-		scene.addEventFilter(KeyEvent.KEY_PRESSED,event -> WindowService.keyPressed(event));
+		scene.addEventFilter(KeyEvent.KEY_PRESSED,event -> HotKeys.keyPressed(event));
 		reloadFXML();
 		reloadCSS();
 		ListViews.files.control.getItems().addAll(DB.getRecords());
@@ -55,6 +54,7 @@ public class GUI {
 
 	public static void reloadFXML ( ) {
 		final Parent root = FXMLReader.getRoot();
+		Labels.build(root);
 		Buttons.build(root);
 		ListViews.build(root);
 		TabPanes.build(root);
@@ -78,16 +78,8 @@ public class GUI {
 	}
 
 	public static void refreshTitle ( ) {
-		final DBRecord record = ListViews.files.control.getSelectionModel().getSelectedItem();
-		final String windowTitleCustom = Preferences.getWindowTitle().getSavedValue();
-		final String windowTitle;
-		if ( record != null )
-			if ( record.isDirty() )
-				windowTitle = windowTitleCustom + " (" + record.getFileName() + " *)";
-			else
-				windowTitle = windowTitleCustom + " (" + record.getFileName() + ")";
-		else
-			windowTitle = windowTitleCustom;
+		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+		final String windowTitle = InfoTextGenerator.getWindowTitle(selectedRecord);
 		GUI.setWindowTitle(windowTitle);
 	}
 
@@ -120,15 +112,22 @@ public class GUI {
 		}
 	}
 
-	public static String getListLabel ( final DBRecord record, final int percentLoaded ) {
-		final String listViewText;
-		if ( percentLoaded < 0 )
-			listViewText = record.getPathAsString() + "  0%";
-		else if ( percentLoaded < 100 )
-			listViewText = record.getPathAsString() + "  " + percentLoaded + "%";
-		else
-			listViewText = record.getPathAsString();
-		return listViewText;
+	public static void refereshFileState ( ) {
+		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+		Properties.availableProperty().set(selectedRecord.isLoaded());
+		Properties.selectedFileDirtyProperty().setValue(selectedRecord.isDirty());
+		Properties.selectedProperty().set(selectedRecord != null);
+		Properties.confirmingSaveProperty().set(false);
+	}
+
+	public static void refreshFileInfo ( ) {
+		final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+		final String pathString = selectedRecord != null ? selectedRecord.getPathAsString() : "";
+		final String urlsCountString = InfoTextGenerator.getURLsCountLabel(selectedRecord);
+		final String tagsCountString = InfoTextGenerator.getTagsCountLabel(selectedRecord);
+		TextFields.fileName.control.setText(pathString);
+		Labels.urlsCount.control.setText(urlsCountString);
+		Labels.tagsCount.control.setText(tagsCountString);
 	}
 
 	private static void refreshCheckBoxView ( final CustomCheckBox customCheckBox, final PreferencesBooleanValue preferencesValue ) {
