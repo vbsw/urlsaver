@@ -41,12 +41,10 @@ public class ListViews {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
 			event.consume();
-
-			//			TODO
-			//			if ( App.scene.topTab.urls.isDisable() == false ) {
-			//				App.scene.tp.top.getSelectionModel().select(App.scene.topTab.urls);
-			//				App.scene.tf.urlSearch.requestFocus();
-			//			}
+			if ( !TabPanes.top.urls.control.isDisable() ) {
+				TabPanes.top.control.getSelectionModel().select(TabPanes.top.urls.control);
+				TextFields.urlSearch.control.requestFocus();
+			}
 		}
 	}
 

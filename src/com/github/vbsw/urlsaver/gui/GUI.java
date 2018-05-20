@@ -53,6 +53,7 @@ public class GUI {
 		reloadCSS();
 		ListViews.files.control.getItems().addAll(DB.getRecords());
 		ListViews.files.autoSelectRequested = Preferences.getURLsFileAutoloadAll().getSavedValue() && DB.getRecordByFileName(urlsFileToSelect) != null;
+		Properties.createDefaultFilePossibleProperty().set(DB.getRecords().size() == 0);
 	}
 
 	public static void reloadFXML ( ) {

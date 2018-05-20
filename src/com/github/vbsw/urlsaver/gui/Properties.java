@@ -43,6 +43,7 @@ public class Properties {
 	private static final SimpleBooleanProperty maximizeChanged = new SimpleBooleanProperty();
 	private static final SimpleBooleanProperty loadAtStartChanged = new SimpleBooleanProperty();
 	private static final SimpleBooleanProperty byPrefixChanged = new SimpleBooleanProperty();
+	private static final SimpleBooleanProperty createDefaultFilePossible = new SimpleBooleanProperty();
 
 	public static SimpleBooleanProperty confirmingQuitAppProperty ( ) {
 		return confirmingQuitApp;
@@ -126,6 +127,10 @@ public class Properties {
 
 	public static SimpleBooleanProperty byPrefixChangedProperty ( ) {
 		return byPrefixChanged;
+	}
+
+	public static SimpleBooleanProperty createDefaultFilePossibleProperty ( ) {
+		return createDefaultFilePossible;
 	}
 
 	public static void resetURLsProperties ( ) {

@@ -9,10 +9,14 @@
 package com.github.vbsw.urlsaver.gui;
 
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 import com.github.vbsw.urlsaver.App;
 import com.github.vbsw.urlsaver.Converter;
+import com.github.vbsw.urlsaver.JarFile;
 import com.github.vbsw.urlsaver.Parser;
 import com.github.vbsw.urlsaver.WebBrowserAccess;
 import com.github.vbsw.urlsaver.db.DB;
@@ -45,6 +49,7 @@ public class Buttons {
 	public static final QuitApp quitApp = new QuitApp();
 	public static final QuitAppSave quitAppSave = new QuitAppSave();
 	public static final QuitAppOK quitAppOK = new QuitAppOK();
+	public static final CreateDefaultFile createDefaultFile = new CreateDefaultFile();
 	public static final ReloadFile reloadFile = new ReloadFile();
 	public static final ReloadAllFiles reloadAllFiles = new ReloadAllFiles();
 	public static final FileSave fileSave = new FileSave();
@@ -67,6 +72,7 @@ public class Buttons {
 		quitApp.build(root);
 		quitAppSave.build(root);
 		quitAppOK.build(root);
+		createDefaultFile.build(root);
 		reloadFile.build(root);
 		reloadAllFiles.build(root);
 		fileSave.build(root);
@@ -449,6 +455,34 @@ public class Buttons {
 		return binding;
 	}
 
+	public static void createDefaultFile_clicked ( final ActionEvent event ) {
+		final String defaultFileName = Preferences.getURLsFileSelect().getSavedValue();
+		final Path defaultFilePath = JarFile.getPath().resolve(defaultFileName);
+		try {
+			Files.createFile(defaultFilePath);
+			Properties.createDefaultFilePossibleProperty().set(false);
+			DB.initialize();
+			URLsIO.initialize();
+
+			final ArrayList<DBRecord> records = DB.getRecords();
+			ListViews.files.control.getItems().addAll(records);
+			if ( records.size() > 0 ) {
+				ListViews.files.control.requestFocus();
+				ListViews.files.control.getSelectionModel().select(records.get(0));
+				Logger.logSuccess("default file created (" + defaultFileName + ")");
+			}
+		} catch ( final IOException e ) {
+			Logger.logFailure("could not create file (" + defaultFileName + ")");
+			e.printStackTrace();
+		}
+	}
+
+	public static void createDefaultFile_keyPressed ( final KeyEvent event ) {
+		final KeyCode keyCode = event.getCode();
+		if ( keyCode == KeyCode.ENTER )
+			Buttons.createDefaultFile_clicked(null);
+	}
+
 	public static class CustomButton {
 		public Button control;
 	}
@@ -481,6 +515,15 @@ public class Buttons {
 			control.disableProperty().bind(Bindings.not(Properties.confirmingQuitAppProperty()));
 			control.setOnAction(event -> Buttons.quitAppOK_clicked(event));
 			control.setOnKeyPressed(event -> Buttons.quitAppOK_keyPressed(event));
+		}
+	}
+
+	public static final class CreateDefaultFile extends CustomButton {
+		private void build ( final Parent root ) {
+			control = (Button) root.lookup("#create_default_file_btn");
+			control.disableProperty().bind(Properties.createDefaultFilePossibleProperty().not());
+			control.setOnAction(event -> Buttons.createDefaultFile_clicked(event));
+			control.setOnKeyPressed(event -> Buttons.createDefaultFile_keyPressed(event));
 		}
 	}
 
