@@ -5,9 +5,12 @@
  *        http://www.boost.org/LICENSE_1_0.txt)
  */
 
+
 package com.github.vbsw.urlsaver.pref;
 
+
 import java.nio.file.Path;
+
 
 /**
  * @author Vitali Baumtrok

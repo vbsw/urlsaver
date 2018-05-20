@@ -14,7 +14,7 @@ URL Saver is distributed under the terms of the Boost Software License, version 
 URL Saver is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Boost Software License for more details.
 
 ## Compiling
-Install [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html), [Git](https://git-scm.com) and [Eclipse](https://www.eclipse.org).
+Install [Java](http://www.oracle.com/technetwork/java/javase/downloads/index.html), [Git](https://git-scm.com) and [Eclipse](https://www.eclipse.org).
 
 Clone this project into your Eclipse workspace
 
