@@ -52,16 +52,17 @@ public class HotKeys {
 			TabPanes.top.control.getSelectionModel().select(TabPanes.top.about.control);
 
 		} else if ( keyCombination_ctrlS.match(event) ) {
-			final DBRecord selectedRecord = ListViews.files.control.getSelectionModel().getSelectedItem();
+			final DBRecord record = ListViews.files.control.getSelectionModel().getSelectedItem();
 			event.consume();
 			HotKeys.confirmURLs();
-			if ( selectedRecord != null )
-				URLsIO.saveFile(selectedRecord);
+			URLsIO.saveFile(record);
+			GUI.refreshFileInfo();
 			GUI.refreshTitle();
 
 		} else if ( keyCombination_ctrlU.match(event) ) {
 			event.consume();
 			HotKeys.confirmURLs();
+			GUI.refreshTitle();
 
 		} else if ( keyCode == KeyCode.ESCAPE ) {
 			event.consume();
@@ -75,7 +76,7 @@ public class HotKeys {
 		else if ( !Buttons.urlCreateOK.control.isDisable() )
 			URLsService.confirmURLCreate();
 		else if ( !Buttons.urlEditOK.control.isDisable() )
-			URLsService.confirmURLEdit();
+			Buttons.confirmURLEdit();
 		Properties.resetURLsProperties();
 	}
 

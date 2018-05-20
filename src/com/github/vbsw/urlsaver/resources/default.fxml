@@ -41,6 +41,7 @@
                      <children>
                         <Label fx:id="files_urls_count_label" prefHeight="17.0" prefWidth="200.0" text="URLs ?" />
                         <Label fx:id="files_tags_count_label" prefWidth="200.0" text="Tags ?" />
+                        <Label fx:id="files_size_label" prefWidth="200.0" text="Size ?" />
                      </children>
                      <padding>
                         <Insets left="5.0" />

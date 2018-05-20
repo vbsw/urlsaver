@@ -29,39 +29,58 @@ public class TextGenerator {
 		return listViewText;
 	}
 
-	public static String getWindowTitle ( final DBRecord selectedRecord ) {
+	public static String getWindowTitle ( final DBRecord record ) {
 		final String windowTitleCustom = Preferences.getWindowTitle().getSavedValue();
 		final String windowTitle;
-		if ( selectedRecord != null )
-			if ( selectedRecord.isDirty() )
-				windowTitle = windowTitleCustom + " (" + selectedRecord.getFileName() + " *)";
+		if ( record != null )
+			if ( record.isDirty() )
+				windowTitle = windowTitleCustom + " (" + record.getFileName() + " *)";
 			else
-				windowTitle = windowTitleCustom + " (" + selectedRecord.getFileName() + ")";
+				windowTitle = windowTitleCustom + " (" + record.getFileName() + ")";
 		else
 			windowTitle = windowTitleCustom;
 		return windowTitle;
 	}
 
-	public static String getURLsCountLabel ( final DBRecord selectedRecord ) {
-		final int diff = selectedRecord.getURLsCountModified() - selectedRecord.getURLsCountSaved();
+	public static String getURLsCountLabel ( final DBRecord record ) {
+		final int diff = record.getURLsCountModified() - record.getURLsCountSaved();
 		final String diffString = diff != 0 ? " (" + (diff > 0 ? "+" : "") + diff + ")" : "";
 		final String urlsCountString;
-		if ( selectedRecord.isLoaded() )
-			urlsCountString = "URLs  " + selectedRecord.getURLsCountModified() + diffString;
+		if ( record.isLoaded() )
+			urlsCountString = "URLs  " + record.getURLsCountModified() + diffString;
 		else
 			urlsCountString = "URLs  ?";
 		return urlsCountString;
 	}
 
-	public static String getTagsCountLabel ( final DBRecord selectedRecord ) {
-		final int diff = selectedRecord.getTagsCountModified() - selectedRecord.getTagsCountSaved();
+	public static String getTagsCountLabel ( final DBRecord record ) {
+		final int diff = record.getTagsCountModified() - record.getTagsCountSaved();
 		final String diffString = diff != 0 ? " (" + (diff > 0 ? "+" : "") + diff + ")" : "";
 		final String tagsCountString;
-		if ( selectedRecord.isLoaded() )
-			tagsCountString = "Tags  " + selectedRecord.getTagsCountModified() + diffString;
+		if ( record.isLoaded() )
+			tagsCountString = "Tags  " + record.getTagsCountModified() + diffString;
 		else
 			tagsCountString = "Tags  ?";
 		return tagsCountString;
+	}
+
+	public static String getFileSizeLabel ( final DBRecord record ) {
+		final long fileSize = record.getFileSize();
+		final String fileSizeLabel;
+		if ( fileSize >= 0 )
+			if ( fileSize > 1000 )
+				if ( fileSize > 1000 * 1000 )
+					if ( fileSize > 1000 * 1000 * 1000 )
+						fileSizeLabel = "Size " + fileSize / (1000 * 1000 * 1000) + " GB";
+					else
+						fileSizeLabel = "Size " + fileSize / (1000 * 1000) + " MB";
+				else
+					fileSizeLabel = "Size " + fileSize / 1000 + " KB";
+			else
+				fileSizeLabel = "Size " + fileSize + " B";
+		else
+			fileSizeLabel = "Size ?";
+		return fileSizeLabel;
 	}
 
 }

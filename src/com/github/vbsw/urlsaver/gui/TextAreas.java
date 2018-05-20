@@ -9,6 +9,11 @@
 package com.github.vbsw.urlsaver.gui;
 
 
+import com.github.vbsw.urlsaver.Converter;
+import com.github.vbsw.urlsaver.Parser;
+import com.github.vbsw.urlsaver.db.DBRecord;
+import com.github.vbsw.urlsaver.db.DynArrayOfString;
+
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
 import javafx.scene.control.TextArea;
@@ -32,19 +37,17 @@ public class TextAreas {
 	}
 
 	public static void tags_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
-		//		final UrlsData urlsData = App.urls.getData();
-		//		final String urlTyped = Parser.trim(App.scene.tf.url.getText());
-		//		final int urlIndex = urlsData.getUrlIndex(urlTyped);
-		//		if ( urlIndex >= 0 ) {
-		//			final String tagsTyped = Parser.trim(App.scene.ta.tags.getText());
-		//			final SortedUniqueStringList urlTags = urlsData.urlTagsList.get(urlIndex);
-		//			tagsTmp.addStringsSeparatedByWhiteSpace(tagsTyped);
-		//			tagsModified.setValue(tagsTmp.isEqualByStrings(urlTags) == false);
-		//			tagsTmp.clear();
-		//		} else {
-		//			tagsModified.setValue(false);
-		//		}
-		//		this.deleteRequested.set(false);
+		final DBRecord record = GUI.getCurrentDBRecord();
+		final String urlTyped = Parser.trim(TextFields.url.control.getText());
+		final int urlIndex = record.getURLIndex(urlTyped);
+		if ( urlIndex >= 0 ) {
+			final DynArrayOfString tags = Converter.toDynArrayListSorted(TextAreas.tags.control.getText());
+			final boolean equalTags = record.isEqualTags(urlIndex,tags);
+			Properties.urlTagsModifiedProperty().set(!equalTags);
+		} else {
+			Properties.urlTagsModifiedProperty().set(false);
+		}
+		Properties.urlDeleteRequestedProperty().set(false);
 	}
 
 	public static final class Tags extends CustomTextArea {

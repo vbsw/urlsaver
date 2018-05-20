@@ -128,9 +128,11 @@ public class GUI {
 		final String pathString = selectedRecord != null ? selectedRecord.getPathAsString() : "";
 		final String urlsCountString = TextGenerator.getURLsCountLabel(selectedRecord);
 		final String tagsCountString = TextGenerator.getTagsCountLabel(selectedRecord);
+		final String fileSizeString = TextGenerator.getFileSizeLabel(selectedRecord);
 		TextFields.fileName.control.setText(pathString);
 		Labels.urlsCount.control.setText(urlsCountString);
 		Labels.tagsCount.control.setText(tagsCountString);
+		Labels.fileSize.control.setText(fileSizeString);
 	}
 
 	public static DBRecord getCurrentDBRecord ( ) {

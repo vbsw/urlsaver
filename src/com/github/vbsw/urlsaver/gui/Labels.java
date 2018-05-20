@@ -20,6 +20,7 @@ public class Labels {
 
 	public static final URLsCount urlsCount = new URLsCount();
 	public static final TagsCount tagsCount = new TagsCount();
+	public static final FileSize fileSize = new FileSize();
 
 	public static class CustomLabel {
 		public Label control;
@@ -28,6 +29,7 @@ public class Labels {
 	public static void build ( final Parent root ) {
 		urlsCount.build(root);
 		tagsCount.build(root);
+		fileSize.build(root);
 	}
 
 	public static final class URLsCount extends CustomLabel {
@@ -39,6 +41,12 @@ public class Labels {
 	public static final class TagsCount extends CustomLabel {
 		private void build ( final Parent root ) {
 			control = (Label) root.lookup("#files_tags_count_label");
+		}
+	}
+
+	public static final class FileSize extends CustomLabel {
+		private void build ( final Parent root ) {
+			control = (Label) root.lookup("#files_size_label");
 		}
 	}
 }

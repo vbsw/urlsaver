@@ -34,6 +34,18 @@ public final class Converter {
 		return stringBuilder.toString();
 	}
 
+	public static ArrayList<String> toArrayList ( final String text ) {
+		final ArrayList<String> list = new ArrayList<>();
+		int beginIndex = Parser.seekContent(text,0,text.length());
+		while ( beginIndex < text.length() ) {
+			final int endIndex = Parser.seekWhitespace(text,beginIndex,text.length());
+			final String key = text.substring(beginIndex,endIndex);
+			beginIndex = Parser.seekContent(text,endIndex,text.length());
+			list.add(key);
+		}
+		return list;
+	}
+
 	public static DynArrayOfString toDynArrayList ( final String string ) {
 		final DynArrayOfString dynArray = new DynArrayOfString();
 		int beginIndex = Parser.seekContent(string,0,string.length());
@@ -42,6 +54,20 @@ public final class Converter {
 			final String word = string.substring(beginIndex,endIndex);
 			beginIndex = Parser.seekContent(string,endIndex,string.length());
 			dynArray.add(word);
+		}
+		return dynArray;
+	}
+
+	public static DynArrayOfString toDynArrayListSorted ( final String string ) {
+		final DynArrayOfString dynArray = new DynArrayOfString();
+		int beginIndex = Parser.seekContent(string,0,string.length());
+		while ( beginIndex < string.length() ) {
+			final int endIndex = Parser.seekWhitespace(string,beginIndex,string.length());
+			final String word = string.substring(beginIndex,endIndex);
+			final int index = dynArray.binarySearch(word);
+			beginIndex = Parser.seekContent(string,endIndex,string.length());
+			if ( index < 0 )
+				dynArray.add(-index - 1,word);
 		}
 		return dynArray;
 	}

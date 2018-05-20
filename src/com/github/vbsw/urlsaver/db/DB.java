@@ -31,8 +31,8 @@ public class DB {
 		final String fileExtension = Preferences.getURLsFileExtension().getSavedValue();
 		final ArrayList<Path> filePaths = JarFile.getFilePaths(fileExtension);
 		final ArrayList<Path> filePathsSorted = DB.getSortedPaths(filePaths);
-		for ( final Path path: filePathsSorted ) {
-			final DBRecord record = new DBRecord(path);
+		for ( final Path filePath: filePathsSorted ) {
+			final DBRecord record = new DBRecord(filePath);
 			final String listLabel = TextGenerator.getFileListLabel(record,0);
 			record.setListLabel(listLabel);
 			records.add(record);

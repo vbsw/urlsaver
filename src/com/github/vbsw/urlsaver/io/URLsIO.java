@@ -69,9 +69,7 @@ public class URLsIO {
 	public static void reloadFile ( final DBRecord record ) {
 		for ( URLsLoadService service: URLsIO.urlsLoadServices ) {
 			if ( service.record == record ) {
-				record.clearURLs();
-				record.setDirty(false);
-				record.setLoaded(false);
+				record.beginLoading();
 				service.restart();
 			}
 		}
@@ -79,22 +77,28 @@ public class URLsIO {
 
 	public static void saveAllFiles ( ) {
 		for ( DBRecord record: DB.getRecords() )
-			if ( record.isDirty() )
-				URLsIO.saveFile(record);
-		GUI.refreshTitle();
+			URLsIO.saveFile(record);
 	}
 
 	public static void saveFile ( final DBRecord record ) {
-		final Path filePath = record.getPath();
-		try ( final BufferedWriter writer = java.nio.file.Files.newBufferedWriter(filePath,ResourcesConfig.FILE_CHARSET) ) {
-			record.write(writer);
-			record.setDirty(false);
-			if ( GUI.getCurrentDBRecord() == record ) {
-				Properties.selectedFileDirtyProperty().setValue(false);
-				Properties.confirmingSaveProperty().setValue(false);
+		if ( record != null && record.isDirty() ) {
+			final Path filePath = record.getPath();
+			boolean success = false;
+			try ( final BufferedWriter writer = java.nio.file.Files.newBufferedWriter(filePath,ResourcesConfig.FILE_CHARSET) ) {
+				record.write(writer);
+				success = true;
+			} catch ( final IOException e ) {
+				e.printStackTrace();
 			}
-		} catch ( final IOException e ) {
-			e.printStackTrace();
+			if ( success ) {
+				if ( GUI.getCurrentDBRecord() == record ) {
+					Properties.selectedFileDirtyProperty().setValue(false);
+					Properties.confirmingSaveProperty().setValue(false);
+					GUI.refreshFileInfo();
+					GUI.refreshTitle();
+				}
+				record.endSave();
+			}
 		}
 	}
 
@@ -136,15 +140,9 @@ public class URLsIO {
 		@Override
 		public void handle ( final WorkerStateEvent event ) {
 			final boolean fileIsAlreadySelected = (GUI.getCurrentDBRecord() == record);
-			record.setLoaded(true);
-			record.resetCountSaved();
-			if ( fileIsAlreadySelected ) {
-				Properties.selectedFileDirtyProperty().setValue(false);
-				Properties.availableProperty().set(true);
-				GUI.refereshFileState();
-				GUI.refreshFileInfo();
-				GUI.refreshTitle();
-			} else if ( ListViews.files.autoSelectRequested ) {
+			record.endLoading();
+
+			if ( ListViews.files.autoSelectRequested ) {
 				final String urlsFileSelect = Preferences.getURLsFileSelect().getSavedValue();
 				final DBRecord recordToSelect = DB.getRecordByFileName(urlsFileSelect);
 				if ( recordToSelect == record ) {
@@ -153,8 +151,23 @@ public class URLsIO {
 						ListViews.files.control.getSelectionModel().select(recordToSelect);
 						TabPanes.top.control.getSelectionModel().select(TabPanes.top.urls.control);
 						TextFields.urlSearch.control.requestFocus();
+						GUI.refereshFileState();
+						GUI.refreshFileInfo();
+						GUI.refreshTitle();
+					} else if ( fileIsAlreadySelected ) {
+						GUI.refereshFileState();
+						GUI.refreshFileInfo();
+						GUI.refreshTitle();
 					}
+				} else if ( fileIsAlreadySelected ) {
+					GUI.refereshFileState();
+					GUI.refreshFileInfo();
+					GUI.refreshTitle();
 				}
+			} else if ( fileIsAlreadySelected ) {
+				GUI.refereshFileState();
+				GUI.refreshFileInfo();
+				GUI.refreshTitle();
 			}
 		}
 

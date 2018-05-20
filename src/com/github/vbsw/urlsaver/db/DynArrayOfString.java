@@ -53,12 +53,12 @@ public class DynArrayOfString {
 		valuesLength += 1;
 	}
 
-	public int binarySearch ( final String key ) {
+	public int binarySearch ( final String value ) {
 		int left = 0;
 		int right = valuesLength - 1;
 		while ( left <= right ) {
 			final int middle = (left + right) / 2;
-			final int compareResult = values[middle].compareTo(key);
+			final int compareResult = values[middle].compareTo(value);
 			if ( compareResult < 0 )
 				left = middle + 1;
 			else if ( compareResult > 0 )
@@ -97,6 +97,42 @@ public class DynArrayOfString {
 	public boolean contains ( final String value ) {
 		final int index = binarySearch(value);
 		return index >= 0;
+	}
+
+	public boolean equals ( final DynArrayOfString oDynArray ) {
+		if ( this != oDynArray ) {
+			for ( int i = 0; i < valuesLength; i += 1 ) {
+				final String value = values[i];
+				final int index = oDynArray.binarySearch(value);
+				if ( index < 0 )
+					return false;
+			}
+			for ( int i = 0; i < oDynArray.valuesLength; i += 1 ) {
+				final String oValue = oDynArray.values[i];
+				final int index = binarySearch(oValue);
+				if ( index < 0 )
+					return false;
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public DynArrayOfString clone ( ) {
+		final DynArrayOfString newDynArray = new DynArrayOfString(values.length);
+		newDynArray.valuesLength = valuesLength;
+		for ( int i = 0; i < valuesLength; i += 1 )
+			newDynArray.values[i] = values[i];
+		return newDynArray;
+	}
+
+	public void remove ( final DynArrayOfString oDynArray ) {
+		for ( int i = 0; i < valuesLength; i += 1 ) {
+			if ( oDynArray.contains(values[i]) ) {
+				remove(i);
+				i -= 1;
+			}
+		}
 	}
 
 }
