@@ -16,6 +16,7 @@ import com.github.vbsw.urlsaver.gui.HotKeys;
 import com.github.vbsw.urlsaver.gui.TabPanes;
 import com.github.vbsw.urlsaver.io.URLsIO;
 import com.github.vbsw.urlsaver.pref.Preferences;
+import com.github.vbsw.urlsaver.resources.Project;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -29,6 +30,7 @@ public class App extends Application {
 
 	@Override
 	public void start ( final Stage primaryStage ) throws Exception {
+		Project.initialize();
 		Preferences.initialize(getParameters().getRaw());
 		DB.initialize();
 		GUI.initialize();

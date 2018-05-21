@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import com.github.vbsw.urlsaver.JarFile;
 import com.github.vbsw.urlsaver.gui.TextGenerator;
 import com.github.vbsw.urlsaver.pref.Preferences;
+import com.github.vbsw.urlsaver.resources.Project;
 
 
 /**
@@ -29,9 +29,9 @@ public class DB {
 
 	public static void initialize ( ) {
 		final String fileExtension = Preferences.getURLsFileExtension().getSavedValue();
-		final ArrayList<Path> filePaths = JarFile.getFilePaths(fileExtension);
-		final ArrayList<Path> filePathsSorted = DB.getSortedPaths(filePaths);
-		for ( final Path filePath: filePathsSorted ) {
+		final ArrayList<Path> files = Project.getFilesFromProjectDirectory(fileExtension);
+		final ArrayList<Path> filesSorted = DB.getSortedPaths(files);
+		for ( final Path filePath: filesSorted ) {
 			final DBRecord record = new DBRecord(filePath);
 			final String listLabel = TextGenerator.getFileListLabel(record,0);
 			record.setListLabel(listLabel);

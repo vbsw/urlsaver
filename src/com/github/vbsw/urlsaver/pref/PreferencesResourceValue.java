@@ -9,39 +9,39 @@
 package com.github.vbsw.urlsaver.pref;
 
 
-import java.nio.file.Path;
+import com.github.vbsw.urlsaver.resources.Resource;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public class PreferencesPathValue {
+public class PreferencesResourceValue {
 
-	private Path defaultValue;
-	private Path savedValue;
-	private Path modifiedValue;
+	private Resource defaultValue;
+	private Resource savedValue;
+	private Resource modifiedValue;
 
-	public Path getDefaultValue ( ) {
+	public Resource getDefaultValue ( ) {
 		return defaultValue;
 	}
 
-	public void setDefaultValue ( final Path defaultValue ) {
+	public void setDefaultValue ( final Resource defaultValue ) {
 		this.defaultValue = defaultValue;
 	}
 
-	public Path getSavedValue ( ) {
+	public Resource getSavedValue ( ) {
 		return savedValue;
 	}
 
-	public void setSavedValue ( final Path savedValue ) {
+	public void setSavedValue ( final Resource savedValue ) {
 		this.savedValue = savedValue;
 	}
 
-	public Path getModifiedValue ( ) {
+	public Resource getModifiedValue ( ) {
 		return modifiedValue;
 	}
 
-	public void setModifiedValue ( final Path modifiedValue ) {
+	public void setModifiedValue ( final Resource modifiedValue ) {
 		this.modifiedValue = modifiedValue;
 	}
 

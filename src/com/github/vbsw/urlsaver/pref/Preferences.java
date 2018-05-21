@@ -17,10 +17,11 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
 
-import com.github.vbsw.urlsaver.JarFile;
 import com.github.vbsw.urlsaver.Parser;
 import com.github.vbsw.urlsaver.args.ArgumentsConfig;
 import com.github.vbsw.urlsaver.args.ArgumentsParser;
+import com.github.vbsw.urlsaver.resources.Project;
+import com.github.vbsw.urlsaver.resources.Resource;
 import com.github.vbsw.urlsaver.resources.ResourcesConfig;
 
 
@@ -37,9 +38,9 @@ public class Preferences {
 	private static final PreferencesStringValue urlsFileSelect = new PreferencesStringValue();
 	private static final PreferencesBooleanValue urlsFileAutoLoadAll = new PreferencesBooleanValue();
 	private static final PreferencesBooleanValue searchByPrefix = new PreferencesBooleanValue();
-	private static final PreferencesPathValue preferencesPath = new PreferencesPathValue();
-	private static final PreferencesPathValue fxmlPath = new PreferencesPathValue();
-	private static final PreferencesPathValue cssPath = new PreferencesPathValue();
+	private static final PreferencesResourceValue preferencesResource = new PreferencesResourceValue();
+	private static final PreferencesResourceValue fxmlResource = new PreferencesResourceValue();
+	private static final PreferencesResourceValue cssResource = new PreferencesResourceValue();
 
 	private static boolean customPreferencesLoaded = false;
 	private static boolean customFXMLLoaded = false;
@@ -115,38 +116,35 @@ public class Preferences {
 		customCSSLoaded = loaded;
 	}
 
-	public static PreferencesPathValue getPreferencesPath ( ) {
-		return preferencesPath;
+	public static PreferencesResourceValue getPreferencesResource ( ) {
+		return preferencesResource;
 	}
 
-	public static PreferencesPathValue getFXMLPath ( ) {
-		return fxmlPath;
+	public static PreferencesResourceValue getFXMLResource ( ) {
+		return fxmlResource;
 	}
 
-	public static PreferencesPathValue getCSSPath ( ) {
-		return cssPath;
+	public static PreferencesResourceValue getCSSResource ( ) {
+		return cssResource;
 	}
 
 	public static boolean isCustomPreferencesFileAvailable ( ) {
-		final Path filePath = Preferences.getPreferencesPath().getSavedValue();
-		final boolean available = filePath != null && Files.exists(filePath);
-		return available;
+		final Resource resource = Preferences.getPreferencesResource().getSavedValue();
+		return resource.exists();
 	}
 
 	public static boolean isCustomFXMLFileAvailable ( ) {
-		final Path filePath = Preferences.getFXMLPath().getSavedValue();
-		final boolean available = filePath != null && Files.exists(filePath);
-		return available;
+		final Resource resource = Preferences.getFXMLResource().getSavedValue();
+		return resource.exists();
 	}
 
 	public static boolean isCustomCSSFileAvailable ( ) {
-		final Path filePath = Preferences.getCSSPath().getSavedValue();
-		final boolean available = filePath != null && Files.exists(filePath);
-		return available;
+		final Resource resource = Preferences.getCSSResource().getSavedValue();
+		return resource.exists();
 	}
 
 	public static void loadDefaultPreferences ( ) {
-		try ( final InputStream stream = Files.newInputStream(Preferences.getPreferencesPath().getDefaultValue()) ) {
+		try ( final InputStream stream = Preferences.getPreferencesResource().getDefaultValue().newInputStream() ) {
 			final Properties properties = new Properties();
 			properties.load(stream);
 			windowTitle.setDefaultValue(PropertiesReader.getWindowTitle(properties));
@@ -157,7 +155,6 @@ public class Preferences {
 			urlsFileSelect.setDefaultValue(PropertiesReader.getURLsFileSelect(properties));
 			urlsFileAutoLoadAll.setDefaultValue(PropertiesReader.getURLsFileAutoLoadAll(properties));
 			searchByPrefix.setDefaultValue(PropertiesReader.getSearchByPrefix(properties));
-
 		} catch ( final Exception e ) {
 			e.printStackTrace();
 		}
@@ -167,7 +164,7 @@ public class Preferences {
 		customPreferencesLoaded = false;
 
 		if ( Preferences.isCustomPreferencesFileAvailable() ) {
-			try ( final InputStream stream = Files.newInputStream(Preferences.getPreferencesPath().getSavedValue()) ) {
+			try ( final InputStream stream = Preferences.getPreferencesResource().getSavedValue().newInputStream() ) {
 				final Properties properties = new Properties();
 				properties.load(stream);
 				getWindowTitle().setSavedValue(PropertiesReader.getWindowTitle(properties,windowTitle.getDefaultValue()));
@@ -252,7 +249,7 @@ public class Preferences {
 
 		try {
 			final byte[] bytes = stringBuilder.toString().getBytes(ResourcesConfig.FILE_CHARSET);
-			final Path path = JarFile.getPath().resolve(ResourcesConfig.CUSTOM_PREFERENCES_FILE_PATH);
+			final Path path = Preferences.getPreferencesResource().getSavedValue().getPath();
 			Files.write(path,bytes);
 			customPreferencesSaved = true;
 
@@ -263,39 +260,48 @@ public class Preferences {
 	}
 
 	private static void loadDefaultPreferencesPath ( ) {
-		final Path path = JarFile.getPathToResource(ResourcesConfig.DEFAULT_PREFERENCES_FILE_PATH);
-		preferencesPath.setDefaultValue(path);
+		final Resource resource = Project.getResourceFromJar(ResourcesConfig.DEFAULT_PREFERENCES_FILE_PATH);
+		preferencesResource.setDefaultValue(resource);
 	}
 
 	private static void loadDefaultFXMLPath ( ) {
-		final Path path = JarFile.getPathToResource(ResourcesConfig.DEFAULT_FXML_FILE_PATH);
-		fxmlPath.setDefaultValue(path);
+		final Resource resource = Project.getResourceFromJar(ResourcesConfig.DEFAULT_FXML_FILE_PATH);
+		fxmlResource.setDefaultValue(resource);
 	}
 
 	private static void loadDefaultCSSPath ( ) {
-		final Path path = JarFile.getPathToResource(ResourcesConfig.DEFAULT_CSS_FILE_PATH);
-		cssPath.setDefaultValue(path);
+		final Resource resource = Project.getResourceFromJar(ResourcesConfig.DEFAULT_CSS_FILE_PATH);
+		cssResource.setDefaultValue(resource);
 	}
 
 	private static void loadCustomPreferencesPath ( final List<String> args ) {
-		Path customPath = extractCustomPreferencesPath(args);
+		final Path customPath = extractCustomPreferencesPath(args);
+		final Resource resource;
 		if ( customPath == null )
-			customPath = JarFile.getPath().resolve(ResourcesConfig.CUSTOM_PREFERENCES_FILE_PATH);
-		preferencesPath.setSavedValue(customPath);
+			resource = Project.getResourceFromProjectDirectory(ResourcesConfig.CUSTOM_PREFERENCES_FILE_PATH);
+		else
+			resource = Project.getResourceFromPath(customPath);
+		preferencesResource.setSavedValue(resource);
 	}
 
 	private static void loadCustomFXMLPath ( final List<String> args ) {
-		Path customPath = extractCustomFXMLPath(args);
+		final Path customPath = extractCustomFXMLPath(args);
+		final Resource resource;
 		if ( customPath == null )
-			customPath = JarFile.getPath().resolve(ResourcesConfig.CUSTOM_FXML_FILE_PATH);
-		fxmlPath.setSavedValue(customPath);
+			resource = Project.getResourceFromProjectDirectory(ResourcesConfig.CUSTOM_FXML_FILE_PATH);
+		else
+			resource = Project.getResourceFromPath(customPath);
+		fxmlResource.setSavedValue(resource);
 	}
 
 	private static void loadCustomCSSPath ( final List<String> args ) {
-		Path customPath = extractCustomCSSPath(args);
+		final Path customPath = extractCustomCSSPath(args);
+		final Resource resource;
 		if ( customPath == null )
-			customPath = JarFile.getPath().resolve(ResourcesConfig.CUSTOM_CSS_FILE_PATH);
-		cssPath.setSavedValue(customPath);
+			resource = Project.getResourceFromProjectDirectory(ResourcesConfig.CUSTOM_CSS_FILE_PATH);
+		else
+			resource = Project.getResourceFromPath(customPath);
+		cssResource.setSavedValue(resource);
 	}
 
 	private static Path extractCustomPreferencesPath ( final List<String> args ) {

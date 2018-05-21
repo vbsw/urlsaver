@@ -10,12 +10,8 @@ package com.github.vbsw.urlsaver.io;
 
 
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
-import com.github.vbsw.urlsaver.JarFile;
 import com.github.vbsw.urlsaver.pref.Preferences;
-import com.github.vbsw.urlsaver.resources.ResourcesConfig;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -39,8 +35,7 @@ public class FXMLIO {
 
 	private static Parent readCustomFXML ( ) {
 		if ( Preferences.isCustomFXMLFileAvailable() ) {
-			final Path externalFXMLPath = Preferences.getFXMLPath().getSavedValue();
-			try ( final InputStream stream = Files.newInputStream(externalFXMLPath) ) {
+			try ( final InputStream stream = Preferences.getFXMLResource().getSavedValue().newInputStream() ) {
 				final FXMLLoader fxmlLoader = new FXMLLoader();
 				final Parent fxml = fxmlLoader.load(stream);
 				return fxml;
@@ -51,7 +46,7 @@ public class FXMLIO {
 	}
 
 	private static Parent readDefaultFXML ( ) {
-		try ( InputStream stream = JarFile.getStreamOfResource(ResourcesConfig.DEFAULT_FXML_FILE_PATH) ) {
+		try ( final InputStream stream = Preferences.getFXMLResource().getDefaultValue().newInputStream() ) {
 			final FXMLLoader fxmlLoader = new FXMLLoader();
 			final Parent fxml = fxmlLoader.load(stream);
 			return fxml;

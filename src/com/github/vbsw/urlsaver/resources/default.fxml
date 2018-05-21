@@ -182,7 +182,7 @@
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="URL Saver is a tool to manage URLs by keywords." />
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Source code is at https://github.com/vbsw/urlsaver." />
                         <Label maxWidth="1.7976931348623157E308" text="  " />
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Copyright 2017, 2018, Vitali Baumtrok (vbsw@mailbox.org)." />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Copyright 2018, Vitali Baumtrok (vbsw@mailbox.org)." />
                         <Label maxWidth="1.7976931348623157E308" text="  " />
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="URL Saver is distributed under the terms of the" />
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Boost Software License, version 1.0." />

@@ -71,10 +71,10 @@ public class GUI {
 	public static void reloadCSS ( ) {
 		final String cssURI;
 		if ( Preferences.isCustomCSSFileAvailable() ) {
-			cssURI = Preferences.getCSSPath().getSavedValue().toUri().toString();
+			cssURI = Preferences.getCSSResource().getSavedValue().getURI().toString();
 			Preferences.setCustomCSSLoaded(true);
 		} else {
-			cssURI = Preferences.getCSSPath().getDefaultValue().toUri().toString();
+			cssURI = Preferences.getCSSResource().getDefaultValue().getURI().toString();
 			Preferences.setCustomCSSLoaded(false);
 		}
 		GUI.scene.getStylesheets().clear();

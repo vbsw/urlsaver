@@ -16,7 +16,6 @@ import java.util.ArrayList;
 
 import com.github.vbsw.urlsaver.App;
 import com.github.vbsw.urlsaver.Converter;
-import com.github.vbsw.urlsaver.JarFile;
 import com.github.vbsw.urlsaver.Parser;
 import com.github.vbsw.urlsaver.WebBrowserAccess;
 import com.github.vbsw.urlsaver.db.DB;
@@ -25,6 +24,7 @@ import com.github.vbsw.urlsaver.db.DynArrayOfString;
 import com.github.vbsw.urlsaver.io.PreferencesIO;
 import com.github.vbsw.urlsaver.io.URLsIO;
 import com.github.vbsw.urlsaver.pref.Preferences;
+import com.github.vbsw.urlsaver.resources.Project;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -343,7 +343,7 @@ public class Buttons {
 	}
 
 	private static void savePreferences_clicked ( final ActionEvent event ) {
-		final String fileName = Preferences.getPreferencesPath().getSavedValue().getFileName().toString();
+		final String fileName = Preferences.getPreferencesResource().getSavedValue().getFileName().toString();
 		Preferences.savePreferences();
 
 		if ( Preferences.isCustomPreferencesSaved() ) {
@@ -457,7 +457,7 @@ public class Buttons {
 
 	public static void createDefaultFile_clicked ( final ActionEvent event ) {
 		final String defaultFileName = Preferences.getURLsFileSelect().getSavedValue();
-		final Path defaultFilePath = JarFile.getPath().resolve(defaultFileName);
+		final Path defaultFilePath = Project.getDirectory().resolve(defaultFileName);
 		try {
 			Files.createFile(defaultFilePath);
 			Properties.createDefaultFilePossibleProperty().set(false);
