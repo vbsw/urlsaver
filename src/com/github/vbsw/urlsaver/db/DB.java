@@ -31,6 +31,7 @@ public class DB {
 		final String fileExtension = Preferences.getURLsFileExtension().getSavedValue();
 		final ArrayList<Path> files = Project.getFilesFromProjectDirectory(fileExtension);
 		final ArrayList<Path> filesSorted = DB.getSortedPaths(files);
+		records.clear();
 		for ( final Path filePath: filesSorted ) {
 			final DBRecord record = new DBRecord(filePath);
 			final String listLabel = TextGenerator.getFileListLabel(record,0);

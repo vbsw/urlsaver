@@ -39,6 +39,7 @@ public class URLsIO {
 	private static final ArrayList<URLsLoadService> urlsLoadServices = new ArrayList<>();
 
 	public static void initialize ( ) {
+		urlsLoadServices.clear();
 		for ( DBRecord record: DB.getRecords() ) {
 			final URLsLoadService service = new URLsLoadService(record);
 			final URLsLoadProgressListener progressListener = new URLsLoadProgressListener(record);
@@ -49,6 +50,9 @@ public class URLsIO {
 			service.setOnSucceeded(succeededListener);
 			urlsLoadServices.add(service);
 		}
+	}
+
+	public static void autoLoad ( ) {
 		if ( Preferences.getURLsFileAutoloadAll().getModifiedValue() )
 			for ( URLsLoadService service: URLsIO.urlsLoadServices )
 				service.start();

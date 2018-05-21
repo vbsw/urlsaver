@@ -53,7 +53,16 @@ public class GUI {
 		reloadCSS();
 		ListViews.files.control.getItems().addAll(DB.getRecords());
 		ListViews.files.autoSelectRequested = Preferences.getURLsFileAutoloadAll().getSavedValue() && DB.getRecordByFileName(urlsFileToSelect) != null;
-		Properties.createDefaultFilePossibleProperty().set(DB.getRecords().size() == 0);
+		Properties.createDefaultFilePossibleProperty().set(isDefaultFileAvailable());
+	}
+
+	private static boolean isDefaultFileAvailable ( ) {
+		final ArrayList<DBRecord> records = DB.getRecords();
+		final String defaultFileName = Preferences.getURLsFileSelect().getSavedValue();
+		for ( final DBRecord record: records )
+			if ( record.getFileName().equals(defaultFileName) )
+				return false;
+		return true;
 	}
 
 	public static void reloadFXML ( ) {
@@ -82,8 +91,8 @@ public class GUI {
 	}
 
 	public static void refreshTitle ( ) {
-		final DBRecord selectedRecord = GUI.getCurrentDBRecord();
-		final String windowTitle = TextGenerator.getWindowTitle(selectedRecord);
+		final DBRecord record = GUI.getCurrentDBRecord();
+		final String windowTitle = TextGenerator.getWindowTitle(record);
 		GUI.setWindowTitle(windowTitle);
 	}
 
@@ -125,17 +134,34 @@ public class GUI {
 
 	public static void refereshFileState ( ) {
 		final DBRecord record = GUI.getCurrentDBRecord();
-		Properties.availableProperty().set(record.isLoaded());
-		Properties.selectedFileDirtyProperty().setValue(record.isDirty());
-		Properties.selectedProperty().set(record != null);
+		if ( record != null ) {
+			Properties.availableProperty().set(record.isLoaded());
+			Properties.selectedFileDirtyProperty().setValue(record.isDirty());
+			Properties.selectedProperty().set(true);
+		} else {
+			Properties.availableProperty().set(false);
+			Properties.selectedFileDirtyProperty().setValue(false);
+			Properties.selectedProperty().set(false);
+		}
 	}
 
 	public static void refreshFileInfo ( ) {
-		final DBRecord selectedRecord = GUI.getCurrentDBRecord();
-		final String pathString = selectedRecord != null ? selectedRecord.getPathAsString() : "";
-		final String urlsCountString = TextGenerator.getURLsCountLabel(selectedRecord);
-		final String tagsCountString = TextGenerator.getTagsCountLabel(selectedRecord);
-		final String fileSizeString = TextGenerator.getFileSizeLabel(selectedRecord);
+		final DBRecord record = GUI.getCurrentDBRecord();
+		final String pathString;
+		final String urlsCountString;
+		final String tagsCountString;
+		final String fileSizeString;
+		if ( record != null ) {
+			pathString = record.getPathAsString();
+			urlsCountString = TextGenerator.getURLsCountLabel(record);
+			tagsCountString = TextGenerator.getTagsCountLabel(record);
+			fileSizeString = TextGenerator.getFileSizeLabel(record);
+		} else {
+			pathString = "";
+			urlsCountString = "";
+			tagsCountString = "";
+			fileSizeString = "";
+		}
 		TextFields.fileName.control.setText(pathString);
 		Labels.urlsCount.control.setText(urlsCountString);
 		Labels.tagsCount.control.setText(tagsCountString);
@@ -163,36 +189,39 @@ public class GUI {
 
 	public static void refreshURLsView ( ) {
 		final DBRecord record = GUI.getCurrentDBRecord();
-		final String urlSearchString = record.getURLsSearchString();
-		final ArrayList<String> urlsSearchResult = record.getURLsSearchResult();
-		final int selectedURLIndex = record.getSelectedURLIndex();
-		TextFields.urlSearch.control.setText(urlSearchString);
-		ListViews.urls.control.getItems().setAll(urlsSearchResult);
-		if ( selectedURLIndex >= 0 )
-			ListViews.urls.control.getSelectionModel().select(selectedURLIndex);
+		if ( record != null ) {
+			final String urlSearchString = record.getURLsSearchString();
+			final ArrayList<String> urlsSearchResult = record.getURLsSearchResult();
+			final int selectedURLIndex = record.getSelectedURLIndex();
+			TextFields.urlSearch.control.setText(urlSearchString);
+			ListViews.urls.control.getItems().setAll(urlsSearchResult);
+			if ( selectedURLIndex >= 0 )
+				ListViews.urls.control.getSelectionModel().select(selectedURLIndex);
+		}
 	}
 
 	public static void refreshURLsInfo ( ) {
-		final String selectedURL = ListViews.urls.control.getSelectionModel().getSelectedItem();
 		final DBRecord record = GUI.getCurrentDBRecord();
-		final int selectedURLIndex;
-		final String urlString;
-		final String tagsString;
+		if ( record != null ) {
+			final String selectedURL = ListViews.urls.control.getSelectionModel().getSelectedItem();
+			final int selectedURLIndex;
+			final String urlString;
+			final String tagsString;
+			if ( selectedURL != null ) {
+				final int urlIndex = record.getURLIndex(selectedURL);
+				selectedURLIndex = ListViews.urls.control.getSelectionModel().getSelectedIndex();
+				urlString = selectedURL;
+				tagsString = record.getTagsAsString(urlIndex);
 
-		if ( selectedURL != null ) {
-			final int urlIndex = record.getURLIndex(selectedURL);
-			selectedURLIndex = ListViews.urls.control.getSelectionModel().getSelectedIndex();
-			urlString = selectedURL;
-			tagsString = record.getTagsAsString(urlIndex);
-
-		} else {
-			selectedURLIndex = -1;
-			urlString = "";
-			tagsString = "";
+			} else {
+				selectedURLIndex = -1;
+				urlString = "";
+				tagsString = "";
+			}
+			record.setSelectedURLIndex(selectedURLIndex);
+			TextFields.url.control.setText(urlString);
+			TextAreas.tags.control.setText(tagsString);
 		}
-		record.setSelectedURLIndex(selectedURLIndex);
-		TextFields.url.control.setText(urlString);
-		TextAreas.tags.control.setText(tagsString);
 	}
 
 }

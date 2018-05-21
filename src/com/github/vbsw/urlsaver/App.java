@@ -43,6 +43,7 @@ public class App extends Application {
 		GUI.refreshPreferencesView();
 		GUI.selectDefaultFile();
 		URLsIO.initialize();
+		URLsIO.autoLoad();
 	}
 
 	public static void quit ( ) {

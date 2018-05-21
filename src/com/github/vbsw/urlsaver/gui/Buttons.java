@@ -334,12 +334,24 @@ public class Buttons {
 			PreferencesIO.overwriteFXMLFile();
 	}
 
+	private static void createPreferencesFileOK_keyPressed ( final KeyEvent event ) {
+		final KeyCode keyCode = event.getCode();
+		if ( keyCode == KeyCode.ENTER )
+			createPreferencesFileOK_clicked(null);
+	}
+
 	private static void preferencesCancel_clicked ( final ActionEvent event ) {
 		Properties.confirmingCreatePreferencesProperty().set(false);
 		Properties.confirmingCreateCSSProperty().set(false);
 		Properties.confirmingCreateFXMLProperty().set(false);
 		Preferences.resetModifiedValuesToSaved();
 		GUI.refreshPreferencesView();
+	}
+
+	private static void preferencesCancel_keyPressed ( final KeyEvent event ) {
+		final KeyCode keyCode = event.getCode();
+		if ( keyCode == KeyCode.ENTER )
+			preferencesCancel_clicked(null);
 	}
 
 	private static void savePreferences_clicked ( final ActionEvent event ) {
@@ -370,6 +382,12 @@ public class Buttons {
 			Logger.logFailure("file not saved (" + fileName + ")");
 			TextAreas.log.control.requestFocus();
 		}
+	}
+
+	private static void savePreferences_keyPressed ( final KeyEvent event ) {
+		final KeyCode keyCode = event.getCode();
+		if ( keyCode == KeyCode.ENTER )
+			savePreferences_clicked(null);
 	}
 
 	private static void reloadPreferencesFile_clicked ( final ActionEvent event ) {
@@ -463,9 +481,8 @@ public class Buttons {
 			Properties.createDefaultFilePossibleProperty().set(false);
 			DB.initialize();
 			URLsIO.initialize();
-
 			final ArrayList<DBRecord> records = DB.getRecords();
-			ListViews.files.control.getItems().addAll(records);
+			ListViews.files.control.getItems().setAll(records);
 			if ( records.size() > 0 ) {
 				ListViews.files.control.requestFocus();
 				ListViews.files.control.getSelectionModel().select(records.get(0));
@@ -639,6 +656,7 @@ public class Buttons {
 			control = (Button) root.lookup("#create_preferences_file_ok_btn");
 			control.disableProperty().bind(Buttons.getCreatePreferencesFileDisableBinding().not());
 			control.setOnAction(event -> Buttons.createPreferencesFileOK_clicked(event));
+			control.setOnKeyPressed(event -> Buttons.createPreferencesFileOK_keyPressed(event));
 		}
 	}
 
@@ -647,6 +665,7 @@ public class Buttons {
 			control = (Button) root.lookup("#preferences_cancel_btn");
 			control.disableProperty().bind(Bindings.and(Bindings.not(getCreatePreferencesFileDisableBinding()),Buttons.getPreferencesChangedBinding().not()));
 			control.setOnAction(event -> Buttons.preferencesCancel_clicked(event));
+			control.setOnKeyPressed(event -> Buttons.preferencesCancel_keyPressed(event));
 		}
 	}
 
@@ -655,6 +674,7 @@ public class Buttons {
 			control = (Button) root.lookup("#save_preferences_btn");
 			control.disableProperty().bind(Buttons.getPreferencesChangedBinding().not());
 			control.setOnAction(event -> Buttons.savePreferences_clicked(event));
+			control.setOnKeyPressed(event -> Buttons.savePreferences_keyPressed(event));
 		}
 	}
 
