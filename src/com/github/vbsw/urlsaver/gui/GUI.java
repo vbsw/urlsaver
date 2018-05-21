@@ -53,6 +53,10 @@ public class GUI {
 		reloadCSS();
 		ListViews.files.control.getItems().addAll(DB.getRecords());
 		ListViews.files.autoSelectRequested = Preferences.getURLsFileAutoloadAll().getSavedValue() && DB.getRecordByFileName(urlsFileToSelect) != null;
+		refreshCreateDefaultFileButton();
+	}
+	
+	public static void refreshCreateDefaultFileButton() {
 		Properties.createDefaultFilePossibleProperty().set(isDefaultFileAvailable());
 	}
 

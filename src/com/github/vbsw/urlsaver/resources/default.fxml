@@ -155,7 +155,7 @@
                               <MenuItem fx:id="create_fxml_file_menu" mnemonicParsing="false" text="urlsaver.fxml" />
                           </items>
                         </MenuButton>
-                        <Button fx:id="create_preferences_file_ok_btn" disable="true" mnemonicParsing="false" text="Overwrite, OK" />
+                        <Button fx:id="preferences_overwrite_ok_btn" disable="true" mnemonicParsing="false" text="Overwrite, OK" />
                      </children>
                   </HBox>
                   <TextArea fx:id="log_ta" editable="false" prefHeight="150.0" prefWidth="200.0" promptText="log" wrapText="true" VBox.vgrow="NEVER" />

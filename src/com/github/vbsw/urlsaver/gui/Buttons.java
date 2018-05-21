@@ -62,11 +62,11 @@ public class Buttons {
 	public static final URLDeleteOK urlDeleteOK = new URLDeleteOK();
 	public static final URLCreateOK urlCreateOK = new URLCreateOK();
 	public static final URLEditOK urlEditOK = new URLEditOK();
-	public static final PreferencesCreateOK preferencesCreateOK = new PreferencesCreateOK();
 	public static final PreferencesCancel preferencesCancel = new PreferencesCancel();
 	public static final PreferencesSave preferencesSave = new PreferencesSave();
 	public static final PreferencesReload preferencesReload = new PreferencesReload();
 	public static final PreferencesCreate preferencesCreate = new PreferencesCreate();
+	public static final PreferencesOverwriteOK preferencesOverwriteOK = new PreferencesOverwriteOK();
 
 	public static void build ( final Parent root ) {
 		quitApp.build(root);
@@ -85,11 +85,11 @@ public class Buttons {
 		urlDeleteOK.build(root);
 		urlCreateOK.build(root);
 		urlEditOK.build(root);
-		preferencesCreateOK.build(root);
 		preferencesCancel.build(root);
 		preferencesSave.build(root);
 		preferencesReload.build(root);
 		preferencesCreate.build(root);
+		preferencesOverwriteOK.build(root);
 	}
 
 	public static void confirmURLEdit ( ) {
@@ -325,7 +325,7 @@ public class Buttons {
 		}
 	}
 
-	private static void createPreferencesFileOK_clicked ( final ActionEvent event ) {
+	private static void preferencesOverwriteOK_clicked ( final ActionEvent event ) {
 		if ( Properties.confirmingCreatePreferencesProperty().get() )
 			PreferencesIO.overwritePreferencesFile();
 		else if ( Properties.confirmingCreateCSSProperty().get() )
@@ -337,7 +337,7 @@ public class Buttons {
 	private static void createPreferencesFileOK_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER )
-			createPreferencesFileOK_clicked(null);
+			preferencesOverwriteOK_clicked(null);
 	}
 
 	private static void preferencesCancel_clicked ( final ActionEvent event ) {
@@ -357,7 +357,6 @@ public class Buttons {
 	private static void savePreferences_clicked ( final ActionEvent event ) {
 		final String fileName = Preferences.getPreferencesResource().getSavedValue().getFileName().toString();
 		Preferences.savePreferences();
-
 		if ( Preferences.isCustomPreferencesSaved() ) {
 			Preferences.resetSavedValuesToModified();
 			Properties.titleChangedProperty().set(false);
@@ -378,6 +377,7 @@ public class Buttons {
 			CheckBoxes.byPrefix.setFontWeight(false);
 			Logger.logSuccess("file saved (" + fileName + ")");
 			TextAreas.log.control.requestFocus();
+			GUI.refreshCreateDefaultFileButton();
 		} else {
 			Logger.logFailure("file not saved (" + fileName + ")");
 			TextAreas.log.control.requestFocus();
@@ -651,11 +651,11 @@ public class Buttons {
 		}
 	}
 
-	public static final class PreferencesCreateOK extends CustomButton {
+	public static final class PreferencesOverwriteOK extends CustomButton {
 		private void build ( final Parent root ) {
-			control = (Button) root.lookup("#create_preferences_file_ok_btn");
+			control = (Button) root.lookup("#preferences_overwrite_ok_btn");
 			control.disableProperty().bind(Buttons.getCreatePreferencesFileDisableBinding().not());
-			control.setOnAction(event -> Buttons.createPreferencesFileOK_clicked(event));
+			control.setOnAction(event -> Buttons.preferencesOverwriteOK_clicked(event));
 			control.setOnKeyPressed(event -> Buttons.createPreferencesFileOK_keyPressed(event));
 		}
 	}
