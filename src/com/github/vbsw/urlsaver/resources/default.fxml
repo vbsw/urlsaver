@@ -27,6 +27,7 @@
                <children>
                   <HBox prefHeight="10.0" prefWidth="720.0" spacing="5.0">
                      <children>
+                        <Button fx:id="create_default_file_btn" disable="true" mnemonicParsing="false" text="Create Default File" />
                         <Button fx:id="reload_file_btn" disable="true" mnemonicParsing="false" text="Reload" />
                         <Button fx:id="reload_all_files_btn" disable="true" mnemonicParsing="false" text="Reload All" />
                         <AnchorPane HBox.hgrow="ALWAYS" />
@@ -37,9 +38,19 @@
                   </HBox>
                   <ListView fx:id="file_list_view" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                   <TextField fx:id="file_name_tf" editable="false" />
+                  <HBox prefHeight="0.0" prefWidth="710.0" spacing="5.0">
+                     <children>
+                        <Label fx:id="files_urls_count_label" prefHeight="17.0" prefWidth="200.0" text="URLs ?" />
+                        <Label fx:id="files_tags_count_label" prefWidth="200.0" text="Tags ?" />
+                        <Label fx:id="files_size_label" prefWidth="200.0" text="Size ?" />
+                     </children>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
+                  </HBox>
                </children>
                <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
+                  <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
                </padding>
             </VBox>
          </content></Tab>
@@ -76,7 +87,7 @@
                </padding>
             </VBox>
          </content></Tab>
-      <Tab fx:id="settings_tab" text="Settings">
+      <Tab fx:id="preferences_tab" text="Preferences">
          <content>
             <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
                <children>
@@ -97,26 +108,26 @@
                     </rowConstraints>
                      <children>
                         <Label text="title" GridPane.rowIndex="1" />
-                        <TextField fx:id="settings_title_tf" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="1" />
+                        <TextField fx:id="preferences_title_tf" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="1" />
                         <Label text="width" GridPane.rowIndex="2" />
                         <Label text="height" GridPane.rowIndex="3" />
-                        <TextField fx:id="settings_width_tf" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TextField fx:id="settings_height_tf" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextField fx:id="preferences_width_tf" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="preferences_height_tf" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label text="window">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <CheckBox fx:id="settings_maximize_cb" mnemonicParsing="false" text="maximize at startup" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <CheckBox fx:id="preferences_maximize_cb" mnemonicParsing="false" text="maximize at startup" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <Label text="URLs" GridPane.columnIndex="3">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="settings_file_extension_tf" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                        <TextField fx:id="settings_default_file_tf" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                        <CheckBox fx:id="settings_load_at_start_cb" mnemonicParsing="false" text="load all files at startup" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                        <CheckBox fx:id="settings_by_prefix_cb" mnemonicParsing="false" text="search URLs by prefix" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                        <TextField fx:id="preferences_file_extension_tf" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                        <TextField fx:id="preferences_default_file_tf" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                        <CheckBox fx:id="preferences_load_at_start_cb" mnemonicParsing="false" text="load all files at startup" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                        <CheckBox fx:id="preferences_by_prefix_cb" mnemonicParsing="false" text="search URLs by prefix" GridPane.columnIndex="4" GridPane.rowIndex="4" />
                         <Label text="file extension" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                         <Label text="default file" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                      </children>
@@ -127,24 +138,24 @@
                   <AnchorPane prefHeight="47.0" prefWidth="710.0" VBox.vgrow="ALWAYS" />
                   <HBox prefHeight="17.0" prefWidth="720.0" spacing="5.0">
                      <children>
-                        <MenuButton fx:id="reload_settings_file_btn" mnemonicParsing="false" text="Reload File">
+                        <MenuButton fx:id="reload_preferences_file_btn" mnemonicParsing="false" text="Reload File">
                           <items>
-                            <MenuItem fx:id="reload_settings_file_btn" mnemonicParsing="false" text="urlsaver.settings" />
-                            <MenuItem fx:id="reload_css_file_btn" mnemonicParsing="false" text="urlsaver.css" />
-                              <MenuItem fx:id="reload_fxml_file_btn" mnemonicParsing="false" text="urlsaver.fxml" />
+                            <MenuItem fx:id="reload_preferences_file_menu" mnemonicParsing="false" text="urlsaver.pref" />
+                            <MenuItem fx:id="reload_css_file_menu" mnemonicParsing="false" text="urlsaver.css" />
+                              <MenuItem fx:id="reload_fxml_file_menu" mnemonicParsing="false" text="urlsaver.fxml" />
                           </items>
                         </MenuButton>
                         <AnchorPane HBox.hgrow="ALWAYS" />
-                        <Button fx:id="settings_cancel_btn" disable="true" mnemonicParsing="false" text="Cancel" />
-                        <Button fx:id="save_settings_btn" disable="true" mnemonicParsing="false" text="Save Settings" />
-                        <MenuButton fx:id="create_settings_file_btn" mnemonicParsing="false" text="Create File">
+                        <Button fx:id="preferences_cancel_btn" disable="true" mnemonicParsing="false" text="Cancel" />
+                        <Button fx:id="save_preferences_btn" disable="true" mnemonicParsing="false" text="Save Settings" />
+                        <MenuButton fx:id="create_preferences_file_btn" mnemonicParsing="false" text="Create File">
                           <items>
-                            <MenuItem fx:id="create_settings_file_btn" mnemonicParsing="false" text="urlsaver.settings" />
-                            <MenuItem fx:id="create_css_file_btn" mnemonicParsing="false" text="urlsaver.css" />
-                              <MenuItem fx:id="create_fxml_file_btn" mnemonicParsing="false" text="urlsaver.fxml" />
+                            <MenuItem fx:id="create_preferences_file_menu" mnemonicParsing="false" text="urlsaver.pref" />
+                            <MenuItem fx:id="create_css_file_menu" mnemonicParsing="false" text="urlsaver.css" />
+                              <MenuItem fx:id="create_fxml_file_menu" mnemonicParsing="false" text="urlsaver.fxml" />
                           </items>
                         </MenuButton>
-                        <Button fx:id="create_settings_file_ok_btn" disable="true" mnemonicParsing="false" text="Overwrite, OK" />
+                        <Button fx:id="preferences_overwrite_ok_btn" disable="true" mnemonicParsing="false" text="Overwrite, OK" />
                      </children>
                   </HBox>
                   <TextArea fx:id="log_ta" editable="false" prefHeight="150.0" prefWidth="200.0" promptText="log" wrapText="true" VBox.vgrow="NEVER" />
@@ -166,12 +177,12 @@
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Version 0.3.0" />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Version 0.4.0" />
                         <Label maxWidth="1.7976931348623157E308" text="  " />
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="URL Saver is a tool to manage URLs by keywords." />
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Source code is on https://github.com/vbsw/urlsaver." />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Source code is at https://github.com/vbsw/urlsaver." />
                         <Label maxWidth="1.7976931348623157E308" text="  " />
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Copyright 2017, Vitali Baumtrok (vbsw@mailbox.org)." />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Copyright 2018, Vitali Baumtrok (vbsw@mailbox.org)." />
                         <Label maxWidth="1.7976931348623157E308" text="  " />
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="URL Saver is distributed under the terms of the" />
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Boost Software License, version 1.0." />

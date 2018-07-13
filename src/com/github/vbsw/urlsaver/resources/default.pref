@@ -1,0 +1,8 @@
+window.title=URL Saver
+window.width=720
+window.height=480
+window.maximized=false
+urls.file.extension=urls.txt
+urls.file.select=urls.txt
+urls.file.autoload.all=true
+search.byprefix=true

@@ -4,17 +4,17 @@
 URL Saver is a program to manage URLs by keywords.
 URL Saver is published at <https://github.com/vbsw/urlsaver>.
 
-Current version is 0.3.0.
+Current version is 0.4.0.
 
 ## Copyright
-Copyright 2017, Vitali Baumtrok (vbsw@mailbox.org).
+Copyright 2018, Vitali Baumtrok (vbsw@mailbox.org).
 
 URL Saver is distributed under the terms of the Boost Software License, version 1.0. (See accompanying file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 URL Saver is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Boost Software License for more details.
 
 ## Compiling
-Install [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html), [Git](https://git-scm.com) and [Eclipse](https://www.eclipse.org).
+Install [Java](http://www.oracle.com/technetwork/java/javase/downloads/index.html), [Git](https://git-scm.com) and [Eclipse](https://www.eclipse.org).
 
 Clone this project into your Eclipse workspace
 
@@ -37,6 +37,20 @@ Example URL file:
 	git version control system distributed revision scm
 	https://www.eclipse.org
 	eclipse ide java compiler debugger
+
+## Using Git
+Get the master branch and all refs of this project:
+
+	$ git clone https://github.com/vbsw/semver.git
+
+See local and remote branches:
+
+	$ git branch -a
+
+Checkout other branches than master, for example the development branch:
+
+	$ git branch development origin/development
+	$ git checkout development
 
 ## References
 - <https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>
