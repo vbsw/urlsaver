@@ -6,7 +6,7 @@
  */
 
 
-package com.github.vbsw.urlsaver;
+package com.github.vbsw.urlsaver.utility;
 
 
 /**

@@ -9,9 +9,7 @@
 package com.github.vbsw.urlsaver.gui;
 
 
-import com.github.vbsw.urlsaver.App;
 import com.github.vbsw.urlsaver.db.DBRecord;
-import com.github.vbsw.urlsaver.io.URLsIO;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -25,63 +23,69 @@ import javafx.stage.WindowEvent;
  */
 public class HotKeys {
 
-	private static final KeyCombination keyCombination_ctrlS = new KeyCodeCombination(KeyCode.S,KeyCombination.CONTROL_DOWN);
-	private static final KeyCombination keyCombination_ctrlU = new KeyCodeCombination(KeyCode.U,KeyCombination.CONTROL_DOWN);
+	public static final KeyCombination keyCombination_ctrlS = new KeyCodeCombination(KeyCode.S,KeyCombination.CONTROL_DOWN);
+	public static final KeyCombination keyCombination_ctrlU = new KeyCodeCombination(KeyCode.U,KeyCombination.CONTROL_DOWN);
 
-	public static void keyPressed ( KeyEvent event ) {
+	protected StdGUI stdGUI;
+
+	public HotKeys ( final StdGUI stdGUI ) {
+		this.stdGUI = stdGUI;
+	}
+
+	public void keyPressed ( KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 
 		if ( keyCode == KeyCode.F1 ) {
 			event.consume();
-			TabPanes.top.control.getSelectionModel().select(TabPanes.top.files.control);
-			if ( ListViews.files.control.getSelectionModel().isEmpty() == false )
-				ListViews.files.control.requestFocus();
+			stdGUI.tabPanes.top.control.getSelectionModel().select(stdGUI.tabPanes.top.files.control);
+			if ( stdGUI.listViews.files.control.getSelectionModel().isEmpty() == false )
+				stdGUI.listViews.files.control.requestFocus();
 
 		} else if ( keyCode == KeyCode.F2 ) {
 			event.consume();
-			if ( TabPanes.top.urls.control.isDisable() == false )
-				TabPanes.top.control.getSelectionModel().select(TabPanes.top.urls.control);
+			if ( stdGUI.tabPanes.top.urls.control.isDisable() == false )
+				stdGUI.tabPanes.top.control.getSelectionModel().select(stdGUI.tabPanes.top.urls.control);
 
 		} else if ( keyCode == KeyCode.F3 ) {
 			event.consume();
-			TabPanes.top.control.getSelectionModel().select(TabPanes.top.preferences.control);
+			stdGUI.tabPanes.top.control.getSelectionModel().select(stdGUI.tabPanes.top.preferences.control);
 
 		} else if ( keyCode == KeyCode.F4 ) {
 			event.consume();
-			TabPanes.top.control.getSelectionModel().select(TabPanes.top.about.control);
+			stdGUI.tabPanes.top.control.getSelectionModel().select(stdGUI.tabPanes.top.about.control);
 
 		} else if ( keyCombination_ctrlS.match(event) ) {
-			final DBRecord record = ListViews.files.control.getSelectionModel().getSelectedItem();
+			final DBRecord record = stdGUI.listViews.files.control.getSelectionModel().getSelectedItem();
 			event.consume();
-			HotKeys.confirmURLs();
-			URLsIO.saveFile(record);
-			GUI.refreshFileInfo();
-			GUI.refreshTitle();
+			confirmURLs();
+			stdGUI.urlsIO.saveFile(record);
+			stdGUI.refreshFileInfo();
+			stdGUI.refreshTitle();
 
 		} else if ( keyCombination_ctrlU.match(event) ) {
 			event.consume();
-			HotKeys.confirmURLs();
-			GUI.refreshTitle();
+			confirmURLs();
+			stdGUI.refreshTitle();
 
 		} else if ( keyCode == KeyCode.ESCAPE ) {
 			event.consume();
-			App.quit();
+			stdGUI.quit();
 		}
 	}
 
-	private static void confirmURLs ( ) {
-		if ( !Buttons.urlDeleteOK.control.isDisable() )
-			Buttons.confirmURLDelete();
-		else if ( !Buttons.urlCreateOK.control.isDisable() )
-			Buttons.confirmURLCreate();
-		else if ( !Buttons.urlEditOK.control.isDisable() )
-			Buttons.confirmURLEdit();
-		Properties.resetURLsProperties();
+	protected void confirmURLs ( ) {
+		if ( !stdGUI.buttons.urlDeleteOK.control.isDisable() )
+			stdGUI.buttons.confirmURLDelete();
+		else if ( !stdGUI.buttons.urlCreateOK.control.isDisable() )
+			stdGUI.buttons.confirmURLCreate();
+		else if ( !stdGUI.buttons.urlEditOK.control.isDisable() )
+			stdGUI.buttons.confirmURLEdit();
+		stdGUI.resetURLsProperties();
 	}
 
-	public static void onCloseRequest ( final WindowEvent event ) {
+	protected void onCloseRequest ( final WindowEvent event ) {
 		event.consume();
-		App.quit();
+		stdGUI.quit();
 	}
 
 }

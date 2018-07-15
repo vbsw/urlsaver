@@ -11,14 +11,9 @@ package com.github.vbsw.urlsaver.io;
 
 import java.nio.file.Path;
 
-import com.github.vbsw.urlsaver.gui.Buttons;
-import com.github.vbsw.urlsaver.gui.Logger;
-import com.github.vbsw.urlsaver.gui.Properties;
-import com.github.vbsw.urlsaver.pref.Preferences;
-import com.github.vbsw.urlsaver.resources.Resource;
-
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import com.github.vbsw.urlsaver.api.Logger;
+import com.github.vbsw.urlsaver.api.Preferences;
+import com.github.vbsw.urlsaver.api.Resource;
 
 
 /**
@@ -26,67 +21,63 @@ import javafx.beans.property.SimpleBooleanProperty;
  */
 public class PreferencesIO {
 
-	public static void createPreferencesFile ( ) {
-		final SimpleBooleanProperty property = Properties.confirmingCreatePreferencesProperty();
-		final Resource srcResource = Preferences.getPreferencesResource().getDefaultValue();
-		final Resource destResource = Preferences.getPreferencesResource().getSavedValue();
-		PreferencesIO.createFile(srcResource,destResource,property);
+	protected Preferences preferences;
+	protected Logger logger;
+
+	public void initialize ( final Preferences preferences, final Logger logger ) {
+		this.preferences = preferences;
+		this.logger = logger;
 	}
 
-	public static void createCSSFile ( ) {
-		final SimpleBooleanProperty property = Properties.confirmingCreateCSSProperty();
-		final Resource srcResource = Preferences.getCSSResource().getDefaultValue();
-		final Resource destResource = Preferences.getCSSResource().getSavedValue();
-		PreferencesIO.createFile(srcResource,destResource,property);
+	public void createPreferencesFile ( ) {
+		final Resource srcResource = preferences.getPreferences().getDefault();
+		final Resource destResource = preferences.getPreferences().getSaved();
+		createFile(srcResource,destResource);
 	}
 
-	public static void createFXMLFile ( ) {
-		final SimpleBooleanProperty property = Properties.confirmingCreateFXMLProperty();
-		final Resource srcResource = Preferences.getFXMLResource().getDefaultValue();
-		final Resource destResource = Preferences.getFXMLResource().getSavedValue();
-		PreferencesIO.createFile(srcResource,destResource,property);
+	public void createCSSFile ( ) {
+		final Resource srcResource = preferences.getCSS().getDefault();
+		final Resource destResource = preferences.getCSS().getSaved();
+		createFile(srcResource,destResource);
 	}
 
-	public static void overwritePreferencesFile ( ) {
-		final SimpleBooleanProperty property = Properties.confirmingCreatePreferencesProperty();
-		final Resource srcResource = Preferences.getPreferencesResource().getDefaultValue();
-		final Resource destResource = Preferences.getPreferencesResource().getSavedValue();
-		PreferencesIO.overwriteFile(srcResource,destResource,property);
+	public void createFXMLFile ( ) {
+		final Resource srcResource = preferences.getFXML().getDefault();
+		final Resource destResource = preferences.getFXML().getSaved();
+		createFile(srcResource,destResource);
 	}
 
-	public static void overwriteCSSFile ( ) {
-		final SimpleBooleanProperty property = Properties.confirmingCreateCSSProperty();
-		final Resource srcResource = Preferences.getCSSResource().getDefaultValue();
-		final Resource destResource = Preferences.getCSSResource().getSavedValue();
-		PreferencesIO.overwriteFile(srcResource,destResource,property);
+	public void overwritePreferencesFile ( ) {
+		final Resource srcResource = preferences.getPreferences().getDefault();
+		final Resource destResource = preferences.getPreferences().getSaved();
+		overwriteFile(srcResource,destResource);
 	}
 
-	public static void overwriteFXMLFile ( ) {
-		final SimpleBooleanProperty property = Properties.confirmingCreateFXMLProperty();
-		final Resource srcResource = Preferences.getFXMLResource().getDefaultValue();
-		final Resource destResource = Preferences.getFXMLResource().getSavedValue();
-		PreferencesIO.overwriteFile(srcResource,destResource,property);
+	public void overwriteCSSFile ( ) {
+		final Resource srcResource = preferences.getCSS().getDefault();
+		final Resource destResource = preferences.getCSS().getSaved();
+		overwriteFile(srcResource,destResource);
 	}
 
-	private static void createFile ( final Resource srcResource, final Resource destResource, final SimpleBooleanProperty property ) {
-		if ( destResource.exists() ) {
-			property.set(true);
-			Buttons.preferencesCancel.control.requestFocus();
-		} else {
-			final Path destPath = destResource.getPath();
-			srcResource.copyTo(destPath);
-			if ( destResource.exists() )
-				Logger.logSuccess("file created (" + destPath.getFileName() + ")");
-			else
-				Logger.logFailure("file not created (" + destPath.getFileName() + ")");
-		}
+	public void overwriteFXMLFile ( ) {
+		final Resource srcResource = preferences.getFXML().getDefault();
+		final Resource destResource = preferences.getFXML().getSaved();
+		overwriteFile(srcResource,destResource);
 	}
 
-	private static void overwriteFile ( final Resource srcResource, final Resource destResource, final BooleanProperty property ) {
+	protected void createFile ( final Resource srcResource, final Resource destResource ) {
 		final Path destPath = destResource.getPath();
 		srcResource.copyTo(destPath);
-		property.set(false);
-		Logger.logSuccess("file overwritten (" + destPath.getFileName() + ")");
+		if ( destResource.exists() )
+			logger.logSuccess("file created (" + destPath.getFileName() + ")");
+		else
+			logger.logFailure("file not created (" + destPath.getFileName() + ")");
+	}
+
+	protected void overwriteFile ( final Resource srcResource, final Resource destResource ) {
+		final Path destPath = destResource.getPath();
+		srcResource.copyTo(destPath);
+		logger.logSuccess("file overwritten (" + destPath.getFileName() + ")");
 	}
 
 }

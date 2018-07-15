@@ -14,16 +14,14 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-import com.github.vbsw.urlsaver.db.DB;
+import com.github.vbsw.urlsaver.api.DataBase;
+import com.github.vbsw.urlsaver.api.GUI;
+import com.github.vbsw.urlsaver.api.Preferences;
+import com.github.vbsw.urlsaver.api.Properties;
 import com.github.vbsw.urlsaver.db.DBRecord;
-import com.github.vbsw.urlsaver.gui.GUI;
-import com.github.vbsw.urlsaver.gui.ListViews;
-import com.github.vbsw.urlsaver.gui.Properties;
-import com.github.vbsw.urlsaver.gui.TabPanes;
-import com.github.vbsw.urlsaver.gui.TextFields;
-import com.github.vbsw.urlsaver.gui.TextGenerator;
-import com.github.vbsw.urlsaver.pref.Preferences;
+import com.github.vbsw.urlsaver.pref.PreferencesConfig;
 import com.github.vbsw.urlsaver.resources.ResourcesConfig;
+import com.github.vbsw.urlsaver.utility.TextGenerator;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -36,11 +34,20 @@ import javafx.event.EventHandler;
  */
 public class URLsIO {
 
-	private static final ArrayList<URLsLoadService> urlsLoadServices = new ArrayList<>();
+	protected final ArrayList<URLsLoadService> urlsLoadServices = new ArrayList<>();
 
-	public static void initialize ( ) {
+	protected Preferences preferences;
+	protected DataBase db;
+	protected GUI gui;
+	protected Properties properties;
+
+	public void initialize ( final Preferences preferences, final DataBase db, final GUI gui, final Properties properties ) {
+		this.preferences = preferences;
+		this.db = db;
+		this.gui = gui;
+		this.properties = properties;
 		urlsLoadServices.clear();
-		for ( DBRecord record: DB.getRecords() ) {
+		for ( DBRecord record: db.getRecords() ) {
 			final URLsLoadService service = new URLsLoadService(record);
 			final URLsLoadProgressListener progressListener = new URLsLoadProgressListener(record);
 			final ServiceFailedListener failedListener = new ServiceFailedListener();
@@ -52,26 +59,26 @@ public class URLsIO {
 		}
 	}
 
-	public static void autoLoad ( ) {
-		if ( Preferences.getURLsFileAutoloadAll().getModifiedValue() )
-			for ( URLsLoadService service: URLsIO.urlsLoadServices )
+	public void autoLoad ( ) {
+		if ( preferences.getBooleanValue(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID).getModified() )
+			for ( URLsLoadService service: urlsLoadServices )
 				service.start();
 	}
 
-	public static void reloadAllFiles ( ) {
-		for ( URLsLoadService service: URLsIO.urlsLoadServices )
+	public void reloadAllFiles ( ) {
+		for ( URLsLoadService service: urlsLoadServices )
 			service.restart();
 	}
 
-	public static void cancelLoadingFile ( final DBRecord record ) {
-		for ( URLsLoadService service: URLsIO.urlsLoadServices ) {
+	public void cancelLoadingFile ( final DBRecord record ) {
+		for ( URLsLoadService service: urlsLoadServices ) {
 			if ( service.record == record )
 				service.cancel();
 		}
 	}
 
-	public static void reloadFile ( final DBRecord record ) {
-		for ( URLsLoadService service: URLsIO.urlsLoadServices ) {
+	public void reloadFile ( final DBRecord record ) {
+		for ( URLsLoadService service: urlsLoadServices ) {
 			if ( service.record == record ) {
 				record.beginLoading();
 				service.restart();
@@ -79,12 +86,12 @@ public class URLsIO {
 		}
 	}
 
-	public static void saveAllFiles ( ) {
-		for ( DBRecord record: DB.getRecords() )
-			URLsIO.saveFile(record);
+	public void saveAllFiles ( ) {
+		for ( DBRecord record: db.getRecords() )
+			saveFile(record);
 	}
 
-	public static void saveFile ( final DBRecord record ) {
+	public void saveFile ( final DBRecord record ) {
 		if ( record != null && record.isDirty() ) {
 			final Path filePath = record.getPath();
 			boolean success = false;
@@ -95,18 +102,18 @@ public class URLsIO {
 				e.printStackTrace();
 			}
 			if ( success ) {
-				if ( GUI.getCurrentDBRecord() == record ) {
-					Properties.selectedFileDirtyProperty().setValue(false);
-					Properties.confirmingSaveProperty().setValue(false);
-					GUI.refreshFileInfo();
-					GUI.refreshTitle();
+				if ( db.getSelectedRecord() == record ) {
+					properties.selectedFileDirtyProperty().setValue(false);
+					properties.confirmingSaveProperty().setValue(false);
+					gui.refreshFileInfo();
+					gui.refreshTitle();
 				}
 				record.endSave();
 			}
 		}
 	}
 
-	private static class URLsLoadProgressListener implements ChangeListener<Number> {
+	private class URLsLoadProgressListener implements ChangeListener<Number> {
 		private final DBRecord record;
 
 		public URLsLoadProgressListener ( final DBRecord record ) {
@@ -118,8 +125,8 @@ public class URLsIO {
 			final int percentLoaded = (int) (newValue.doubleValue() * 100);
 			final String listLabel = TextGenerator.getFileListLabel(record,percentLoaded);
 			record.setListLabel(listLabel);
-			ListViews.files.control.refresh();
-			GUI.refreshFileInfo();
+			gui.refreshFileListView();
+			gui.refreshFileInfo();
 		}
 
 	}
@@ -133,7 +140,7 @@ public class URLsIO {
 
 	}
 
-	private static final class FileLoadSucceededListener implements EventHandler<WorkerStateEvent> {
+	private final class FileLoadSucceededListener implements EventHandler<WorkerStateEvent> {
 
 		private final DBRecord record;
 
@@ -143,28 +150,8 @@ public class URLsIO {
 
 		@Override
 		public void handle ( final WorkerStateEvent event ) {
-			final boolean fileIsAlreadySelected = (GUI.getCurrentDBRecord() == record);
 			record.endLoading();
-
-			if ( ListViews.files.autoSelectRequested ) {
-				final String urlsFileSelect = Preferences.getURLsFileSelect().getSavedValue();
-				final DBRecord recordToSelect = DB.getRecordByFileName(urlsFileSelect);
-				if ( recordToSelect == record ) {
-					ListViews.files.autoSelectRequested = false;
-					if ( TabPanes.top.urls.control.disabledProperty().getValue() ) {
-						ListViews.files.control.getSelectionModel().select(recordToSelect);
-						TabPanes.top.control.getSelectionModel().select(TabPanes.top.urls.control);
-						TextFields.urlSearch.control.requestFocus();
-						GUI.refreshFileSelection();
-					} else if ( fileIsAlreadySelected ) {
-						GUI.refreshFileSelection();
-					}
-				} else if ( fileIsAlreadySelected ) {
-					GUI.refreshFileSelection();
-				}
-			} else if ( fileIsAlreadySelected ) {
-				GUI.refreshFileSelection();
-			}
+			gui.recordLoaded(record);
 		}
 
 	}

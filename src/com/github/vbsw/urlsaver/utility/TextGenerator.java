@@ -6,11 +6,10 @@
  */
 
 
-package com.github.vbsw.urlsaver.gui;
+package com.github.vbsw.urlsaver.utility;
 
 
 import com.github.vbsw.urlsaver.db.DBRecord;
-import com.github.vbsw.urlsaver.pref.Preferences;
 
 
 /**
@@ -27,19 +26,6 @@ public class TextGenerator {
 		else
 			listViewText = record.getPathAsString();
 		return listViewText;
-	}
-
-	public static String getWindowTitle ( final DBRecord record ) {
-		final String windowTitleCustom = Preferences.getWindowTitle().getSavedValue();
-		final String windowTitle;
-		if ( record != null )
-			if ( record.isDirty() )
-				windowTitle = windowTitleCustom + " (" + record.getFileName() + " *)";
-			else
-				windowTitle = windowTitleCustom + " (" + record.getFileName() + ")";
-		else
-			windowTitle = windowTitleCustom;
-		return windowTitle;
 	}
 
 	public static String getURLsCountLabel ( final DBRecord record ) {

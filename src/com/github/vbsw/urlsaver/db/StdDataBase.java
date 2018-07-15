@@ -14,23 +14,29 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import com.github.vbsw.urlsaver.gui.TextGenerator;
-import com.github.vbsw.urlsaver.pref.Preferences;
-import com.github.vbsw.urlsaver.resources.Project;
+import com.github.vbsw.urlsaver.api.DataBase;
+import com.github.vbsw.urlsaver.api.Preferences;
+import com.github.vbsw.urlsaver.api.ResourceLoader;
+import com.github.vbsw.urlsaver.pref.PreferencesConfig;
+import com.github.vbsw.urlsaver.utility.OSFiles;
+import com.github.vbsw.urlsaver.utility.TextGenerator;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public class DB {
+public class StdDataBase extends DataBase {
 
-	private static final PathComparator pathComparator = new PathComparator();
-	private static final ArrayList<DBRecord> records = new ArrayList<>();
+	protected final PathComparator pathComparator = new PathComparator();
+	protected final ArrayList<DBRecord> records = new ArrayList<>();
+	protected DBRecord selectedRecord;
 
-	public static void initialize ( ) {
-		final String fileExtension = Preferences.getURLsFileExtension().getSavedValue();
-		final ArrayList<Path> files = Project.getFilesFromProjectDirectory(fileExtension);
-		final ArrayList<Path> filesSorted = DB.getSortedPaths(files);
+	@Override
+	public void initialize ( final ResourceLoader resourceLoader, final Preferences preferences ) {
+		final String fileExtension = preferences.getStringValue(PreferencesConfig.URLS_FILE_EXTENSION_ID).getSaved();
+		final Path launchDir = resourceLoader.getLaunchSource().getDirectory();
+		final ArrayList<Path> files = OSFiles.getFilesFromDirectory(launchDir,fileExtension);
+		final ArrayList<Path> filesSorted = getSortedPaths(files);
 		records.clear();
 		for ( final Path filePath: filesSorted ) {
 			final DBRecord record = new DBRecord(filePath);
@@ -40,7 +46,8 @@ public class DB {
 		}
 	}
 
-	public static boolean isSaved ( ) {
+	@Override
+	public boolean isSaved ( ) {
 		final int size = records.size();
 		for ( int i = 0; i < size; i += 1 )
 			if ( records.get(i).isDirty() )
@@ -48,11 +55,13 @@ public class DB {
 		return true;
 	}
 
-	public static ArrayList<DBRecord> getRecords ( ) {
+	@Override
+	public ArrayList<DBRecord> getRecords ( ) {
 		return records;
 	}
 
-	public static DBRecord getRecordByFileName ( final String fileName ) {
+	@Override
+	public DBRecord getRecordByFileName ( final String fileName ) {
 		final int size = records.size();
 		for ( int i = 0; i < size; i += 1 ) {
 			final DBRecord record = records.get(i);
@@ -62,7 +71,17 @@ public class DB {
 		return null;
 	}
 
-	private static ArrayList<Path> getSortedPaths ( final ArrayList<Path> paths ) {
+	@Override
+	public DBRecord getSelectedRecord ( ) {
+		return selectedRecord;
+	}
+
+	@Override
+	public void setSelectedRecord ( final DBRecord record ) {
+		selectedRecord = record;
+	}
+
+	private ArrayList<Path> getSortedPaths ( final ArrayList<Path> paths ) {
 		Collections.sort(paths,pathComparator);
 		return paths;
 	}

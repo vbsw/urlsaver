@@ -14,40 +14,48 @@ import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+
+import com.github.vbsw.urlsaver.api.Resource;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public class Resource {
+public class OSFileResource extends Resource {
 
+	protected final Path path;
+	protected final Path fileName;
+	protected final URI uri;
+
+	public OSFileResource ( final Path path ) {
+		this.path = path;
+		this.fileName = path.getFileName();
+		this.uri = path.toUri();
+	}
+
+	@Override
 	public boolean exists ( ) {
-		return false;
+		return Files.exists(path);
 	}
 
+	@Override
 	public InputStream newInputStream ( ) throws IOException {
-		throw new UnsupportedOperationException();
+		return Files.newInputStream(path);
 	}
 
+	@Override
 	public Path getPath ( ) {
-		throw new UnsupportedOperationException();
+		return path;
 	}
 
+	@Override
 	public URI getURI ( ) {
-		throw new UnsupportedOperationException();
+		return uri;
 	}
 
+	@Override
 	public Path getFileName ( ) {
-		throw new UnsupportedOperationException();
-	}
-
-	public final void copyTo ( final Path target ) {
-		try ( final InputStream inputStream = newInputStream() ) {
-			Files.copy(inputStream,target,StandardCopyOption.REPLACE_EXISTING);
-		} catch ( final Exception e ) {
-			e.printStackTrace();
-		}
+		return fileName;
 	}
 
 }

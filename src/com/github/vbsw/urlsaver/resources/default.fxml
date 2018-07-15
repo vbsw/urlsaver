@@ -177,7 +177,7 @@
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Version 0.4.0" />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Version 0.5.0" />
                         <Label maxWidth="1.7976931348623157E308" text="  " />
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="URL Saver is a tool to manage URLs by keywords." />
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Source code is at https://github.com/vbsw/urlsaver." />

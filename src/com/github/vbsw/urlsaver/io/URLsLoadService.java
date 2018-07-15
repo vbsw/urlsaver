@@ -13,9 +13,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import com.github.vbsw.urlsaver.Parser;
 import com.github.vbsw.urlsaver.db.DBRecord;
 import com.github.vbsw.urlsaver.resources.ResourcesConfig;
+import com.github.vbsw.urlsaver.utility.Parser;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
