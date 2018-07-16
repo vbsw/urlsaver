@@ -17,9 +17,9 @@ import java.util.Comparator;
 import com.github.vbsw.urlsaver.api.DataBase;
 import com.github.vbsw.urlsaver.api.Preferences;
 import com.github.vbsw.urlsaver.api.ResourceLoader;
+import com.github.vbsw.urlsaver.api.TextGenerator;
 import com.github.vbsw.urlsaver.pref.PreferencesConfig;
 import com.github.vbsw.urlsaver.utility.OSFiles;
-import com.github.vbsw.urlsaver.utility.TextGenerator;
 
 
 /**
@@ -32,7 +32,7 @@ public class StdDataBase extends DataBase {
 	protected DBRecord selectedRecord;
 
 	@Override
-	public void initialize ( final ResourceLoader resourceLoader, final Preferences preferences ) {
+	public void initialize ( final ResourceLoader resourceLoader, final Preferences preferences, final TextGenerator textGenerator ) {
 		final String fileExtension = preferences.getStringValue(PreferencesConfig.URLS_FILE_EXTENSION_ID).getSaved();
 		final Path launchDir = resourceLoader.getLaunchSource().getDirectory();
 		final ArrayList<Path> files = OSFiles.getFilesFromDirectory(launchDir,fileExtension);
@@ -40,7 +40,7 @@ public class StdDataBase extends DataBase {
 		records.clear();
 		for ( final Path filePath: filesSorted ) {
 			final DBRecord record = new DBRecord(filePath);
-			final String listLabel = TextGenerator.getFileListLabel(record,0);
+			final String listLabel = textGenerator.getFileListLabel(record,0);
 			record.setListLabel(listLabel);
 			records.add(record);
 		}

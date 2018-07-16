@@ -12,10 +12,10 @@ package com.github.vbsw.urlsaver.api;
 /**
  * @author Vitali Baumtrok
  */
-public abstract class Logger {
+public abstract class URLsIO {
 
-	public abstract void logSuccess ( String message );
+	public abstract void saveAllFiles ( );
 
-	public abstract void logFailure ( String message );
+	public abstract void saveSelectedFile ( );
 
 }

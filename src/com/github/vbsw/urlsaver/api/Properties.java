@@ -21,4 +21,6 @@ public abstract class Properties {
 
 	public abstract SimpleBooleanProperty confirmingSaveProperty ( );
 
+	public abstract SimpleBooleanProperty confirmingQuitProperty ( );
+
 }

@@ -9,13 +9,12 @@
 package com.github.vbsw.urlsaver.gui;
 
 
-import com.github.vbsw.urlsaver.db.DBRecord;
+import com.github.vbsw.urlsaver.api.GUI;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.WindowEvent;
 
 
 /**
@@ -26,10 +25,10 @@ public class HotKeys {
 	public static final KeyCombination keyCombination_ctrlS = new KeyCodeCombination(KeyCode.S,KeyCombination.CONTROL_DOWN);
 	public static final KeyCombination keyCombination_ctrlU = new KeyCodeCombination(KeyCode.U,KeyCombination.CONTROL_DOWN);
 
-	protected StdGUI stdGUI;
+	protected GUI gui;
 
-	public HotKeys ( final StdGUI stdGUI ) {
-		this.stdGUI = stdGUI;
+	public HotKeys ( final GUI gui ) {
+		this.gui = gui;
 	}
 
 	public void keyPressed ( KeyEvent event ) {
@@ -37,55 +36,36 @@ public class HotKeys {
 
 		if ( keyCode == KeyCode.F1 ) {
 			event.consume();
-			stdGUI.tabPanes.top.control.getSelectionModel().select(stdGUI.tabPanes.top.files.control);
-			if ( stdGUI.listViews.files.control.getSelectionModel().isEmpty() == false )
-				stdGUI.listViews.files.control.requestFocus();
+			gui.getViewSelector().selectFilesView();
 
 		} else if ( keyCode == KeyCode.F2 ) {
 			event.consume();
-			if ( stdGUI.tabPanes.top.urls.control.isDisable() == false )
-				stdGUI.tabPanes.top.control.getSelectionModel().select(stdGUI.tabPanes.top.urls.control);
+			gui.getViewSelector().selectURLsView();
 
 		} else if ( keyCode == KeyCode.F3 ) {
 			event.consume();
-			stdGUI.tabPanes.top.control.getSelectionModel().select(stdGUI.tabPanes.top.preferences.control);
+			gui.getViewSelector().selectPreferencesView();
 
 		} else if ( keyCode == KeyCode.F4 ) {
 			event.consume();
-			stdGUI.tabPanes.top.control.getSelectionModel().select(stdGUI.tabPanes.top.about.control);
+			gui.getViewSelector().selectAboutView();
 
 		} else if ( keyCombination_ctrlS.match(event) ) {
-			final DBRecord record = stdGUI.listViews.files.control.getSelectionModel().getSelectedItem();
 			event.consume();
-			confirmURLs();
-			stdGUI.urlsIO.saveFile(record);
-			stdGUI.refreshFileInfo();
-			stdGUI.refreshTitle();
+			gui.confirmAny();
+			gui.getURLsIO().saveSelectedFile();
+			gui.refreshFileInfo();
+			gui.refreshTitle();
 
 		} else if ( keyCombination_ctrlU.match(event) ) {
 			event.consume();
-			confirmURLs();
-			stdGUI.refreshTitle();
+			gui.confirmAny();
+			gui.refreshTitle();
 
 		} else if ( keyCode == KeyCode.ESCAPE ) {
 			event.consume();
-			stdGUI.quit();
+			gui.quit();
 		}
-	}
-
-	protected void confirmURLs ( ) {
-		if ( !stdGUI.buttons.urlDeleteOK.control.isDisable() )
-			stdGUI.buttons.confirmURLDelete();
-		else if ( !stdGUI.buttons.urlCreateOK.control.isDisable() )
-			stdGUI.buttons.confirmURLCreate();
-		else if ( !stdGUI.buttons.urlEditOK.control.isDisable() )
-			stdGUI.buttons.confirmURLEdit();
-		stdGUI.resetURLsProperties();
-	}
-
-	protected void onCloseRequest ( final WindowEvent event ) {
-		event.consume();
-		stdGUI.quit();
 	}
 
 }

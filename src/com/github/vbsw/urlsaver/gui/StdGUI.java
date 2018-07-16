@@ -18,14 +18,16 @@ import com.github.vbsw.urlsaver.api.GUI;
 import com.github.vbsw.urlsaver.api.Preferences;
 import com.github.vbsw.urlsaver.api.Preferences.PreferencesBooleanValue;
 import com.github.vbsw.urlsaver.api.ResourceLoader;
+import com.github.vbsw.urlsaver.api.TextGenerator;
+import com.github.vbsw.urlsaver.api.URLsIO;
+import com.github.vbsw.urlsaver.api.ViewSelector;
 import com.github.vbsw.urlsaver.db.DBRecord;
 import com.github.vbsw.urlsaver.gui.CheckBoxes.CustomCheckBox;
 import com.github.vbsw.urlsaver.io.FXMLIO;
 import com.github.vbsw.urlsaver.io.PreferencesIO;
-import com.github.vbsw.urlsaver.io.URLsIO;
+import com.github.vbsw.urlsaver.io.StdURLsIO;
 import com.github.vbsw.urlsaver.pref.PreferencesConfig;
 import com.github.vbsw.urlsaver.utility.Parser;
-import com.github.vbsw.urlsaver.utility.TextGenerator;
 
 import javafx.application.Platform;
 import javafx.scene.Parent;
@@ -33,6 +35,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 
 /**
@@ -42,15 +45,17 @@ public class StdGUI extends GUI {
 
 	protected ResourceLoader resourceLoader;
 	protected Preferences preferences;
+	protected TextGenerator textGenerator;
 	protected DataBase db;
 
-	public URLsIO urlsIO;
+	public StdURLsIO urlsIO;
 	public FXMLIO fxmlIO;
 	public StdLogger logger;
 	public StdProperties properties;
 	public PreferencesIO preferencesIO;
-	public HotKeys hotKeys;
 
+	public ViewSelector viewSelector;
+	public HotKeys hotKeys;
 	public Buttons buttons;
 	public CheckBoxes checkBoxes;
 	public TabPanes tabPanes;
@@ -67,15 +72,17 @@ public class StdGUI extends GUI {
 	}
 
 	@Override
-	public void initialize ( final ResourceLoader resourceLoader, final Preferences preferences, final DataBase db, final Stage primaryStage ) {
+	public void initialize ( final ResourceLoader resourceLoader, final Preferences preferences, final TextGenerator textGenerator, final DataBase db, final Stage primaryStage ) {
 		this.resourceLoader = resourceLoader;
 		this.preferences = preferences;
+		this.textGenerator = textGenerator;
 		this.db = db;
-		this.urlsIO = new URLsIO();
+		this.urlsIO = new StdURLsIO();
 		this.fxmlIO = new FXMLIO();
 		this.logger = new StdLogger();
 		this.properties = new StdProperties();
 		this.preferencesIO = new PreferencesIO();
+		this.viewSelector = new StdViewSelector(this);
 		this.hotKeys = new HotKeys(this);
 		this.buttons = new Buttons(this);
 		this.checkBoxes = new CheckBoxes(this);
@@ -99,8 +106,8 @@ public class StdGUI extends GUI {
 		listViews.files.control.getItems().addAll(db.getRecords());
 		listViews.files.autoSelectRequested = preferences.getBooleanValue(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID).getSaved() && db.getRecordByFileName(urlsFileToSelect) != null;
 		refreshCreateDefaultFileButton();
-		
-		primaryStage.setOnCloseRequest(event -> hotKeys.onCloseRequest(event));
+
+		primaryStage.setOnCloseRequest(event -> onCloseRequest(event));
 		primaryStage.setScene(scene);
 		primaryStage.setMaximized(preferences.getBooleanValue(PreferencesConfig.WINDOW_MAXIMIZED_ID).getSaved());
 		primaryStage.show();
@@ -110,6 +117,11 @@ public class StdGUI extends GUI {
 
 		urlsIO.initialize(preferences,db,this,properties);
 		urlsIO.autoLoad();
+	}
+
+	public void onCloseRequest ( final WindowEvent event ) {
+		event.consume();
+		quit();
 	}
 
 	@Override
@@ -139,6 +151,16 @@ public class StdGUI extends GUI {
 		final DBRecord record = getCurrentDBRecord();
 		final String windowTitle = createWindowTitle(record);
 		setWindowTitle(windowTitle);
+	}
+
+	@Override
+	public TextGenerator getTextGenerator ( ) {
+		return textGenerator;
+	}
+
+	@Override
+	public ViewSelector getViewSelector ( ) {
+		return viewSelector;
 	}
 
 	public String createWindowTitle ( final DBRecord record ) {
@@ -243,9 +265,9 @@ public class StdGUI extends GUI {
 		final String fileSizeString;
 		if ( record != null ) {
 			pathString = record.getPathAsString();
-			urlsCountString = TextGenerator.getURLsCountLabel(record);
-			tagsCountString = TextGenerator.getTagsCountLabel(record);
-			fileSizeString = TextGenerator.getFileSizeLabel(record);
+			urlsCountString = getTextGenerator().getURLsCountLabel(record);
+			tagsCountString = getTextGenerator().getTagsCountLabel(record);
+			fileSizeString = getTextGenerator().getFileSizeLabel(record);
 		} else {
 			pathString = "";
 			urlsCountString = "";
@@ -286,6 +308,22 @@ public class StdGUI extends GUI {
 		} else if ( fileIsAlreadySelected ) {
 			refreshFileSelection();
 		}
+	}
+
+	@Override
+	public URLsIO getURLsIO ( ) {
+		return urlsIO;
+	}
+
+	@Override
+	public void confirmAny ( ) {
+		if ( !buttons.urlDeleteOK.control.isDisable() )
+			buttons.confirmURLDelete();
+		else if ( !buttons.urlCreateOK.control.isDisable() )
+			buttons.confirmURLCreate();
+		else if ( !buttons.urlEditOK.control.isDisable() )
+			buttons.confirmURLEdit();
+		resetURLsProperties();
 	}
 
 	public DBRecord getCurrentDBRecord ( ) {

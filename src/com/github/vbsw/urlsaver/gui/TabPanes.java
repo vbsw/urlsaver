@@ -34,9 +34,9 @@ public class TabPanes {
 
 	private void topTab_selected ( ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue ) {
 		if ( newValue == top.about.control )
-			stdGUI.properties.confirmingQuitAppProperty().set(!stdGUI.db.isSaved());
+			stdGUI.properties.confirmingQuitProperty().set(!stdGUI.db.isSaved());
 		else
-			stdGUI.properties.confirmingQuitAppProperty().set(false);
+			stdGUI.properties.confirmingQuitProperty().set(false);
 	}
 
 	private void topTab_urls_selected ( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) {

@@ -44,20 +44,23 @@ public class StdProperties extends Properties {
 	private final SimpleBooleanProperty byPrefixChanged = new SimpleBooleanProperty();
 	private final SimpleBooleanProperty createDefaultFilePossible = new SimpleBooleanProperty();
 
-	public SimpleBooleanProperty confirmingQuitAppProperty ( ) {
-		return confirmingQuitApp;
-	}
-
 	public SimpleBooleanProperty selectedProperty ( ) {
 		return selected;
 	}
 
+	@Override
 	public SimpleBooleanProperty confirmingSaveProperty ( ) {
 		return confirmingSave;
 	}
 
+	@Override
 	public SimpleBooleanProperty selectedFileDirtyProperty ( ) {
 		return selectedFileDirty;
+	}
+
+	@Override
+	public SimpleBooleanProperty confirmingQuitProperty ( ) {
+		return confirmingQuitApp;
 	}
 
 	public SimpleBooleanProperty urlExistsProperty ( ) {

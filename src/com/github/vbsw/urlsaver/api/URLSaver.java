@@ -19,10 +19,11 @@ import javafx.stage.Stage;
  */
 public class URLSaver {
 
-	private ResourceLoader resources;
-	private Preferences preferences;
-	private DataBase db;
-	private GUI gui;
+	protected ResourceLoader resources;
+	protected Preferences preferences;
+	protected TextGenerator textGenerator;
+	protected DataBase db;
+	protected GUI gui;
 
 	public void setResourceLoader ( final ResourceLoader resourceLoader ) {
 		this.resources = resourceLoader;
@@ -30,6 +31,10 @@ public class URLSaver {
 
 	public void setPreferences ( final Preferences preferences ) {
 		this.preferences = preferences;
+	}
+
+	public void setTextGenerator ( final TextGenerator textGenerator ) {
+		this.textGenerator = textGenerator;
 	}
 
 	public void setDataBase ( final DataBase db ) {
@@ -43,8 +48,8 @@ public class URLSaver {
 	public void launch ( final Stage primaryStage, final List<String> args ) {
 		resources.initialize();
 		preferences.initialize(resources,args);
-		db.initialize(resources,preferences);
-		gui.initialize(resources,preferences,db,primaryStage);
+		db.initialize(resources,preferences,textGenerator);
+		gui.initialize(resources,preferences,textGenerator,db,primaryStage);
 	}
 
 }

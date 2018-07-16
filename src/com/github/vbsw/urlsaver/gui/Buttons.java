@@ -489,7 +489,7 @@ public class Buttons {
 		try {
 			Files.createFile(defaultFilePath);
 			stdGUI.properties.createDefaultFilePossibleProperty().set(false);
-			stdGUI.db.initialize(stdGUI.resourceLoader,stdGUI.preferences);
+			stdGUI.db.initialize(stdGUI.resourceLoader,stdGUI.preferences,stdGUI.getTextGenerator());
 			stdGUI.urlsIO.initialize(stdGUI.preferences,stdGUI.db,stdGUI,stdGUI.properties);
 			final ArrayList<DBRecord> records = stdGUI.db.getRecords();
 			stdGUI.listViews.files.control.getItems().setAll(records);
@@ -521,7 +521,7 @@ public class Buttons {
 	public final class QuitApp extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#quit_app_btn");
-			control.disableProperty().bind(stdGUI.properties.confirmingQuitAppProperty());
+			control.disableProperty().bind(stdGUI.properties.confirmingQuitProperty());
 			control.setOnAction(event -> stdGUI.buttons.quitApp_clicked(event));
 			control.setOnKeyPressed(event -> stdGUI.buttons.quitApp_keyPressed(event));
 		}
@@ -530,7 +530,7 @@ public class Buttons {
 	public final class QuitAppSave extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#quit_app_save_btn");
-			control.disableProperty().bind(Bindings.not(stdGUI.properties.confirmingQuitAppProperty()));
+			control.disableProperty().bind(Bindings.not(stdGUI.properties.confirmingQuitProperty()));
 			control.setOnAction(event -> stdGUI.buttons.quitAppSave_clicked(event));
 			control.setOnKeyPressed(event -> stdGUI.buttons.quitAppSave_keyPressed(event));
 		}
@@ -539,7 +539,7 @@ public class Buttons {
 	public final class QuitAppOK extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#quit_app_ok_btn");
-			control.disableProperty().bind(Bindings.not(stdGUI.properties.confirmingQuitAppProperty()));
+			control.disableProperty().bind(Bindings.not(stdGUI.properties.confirmingQuitProperty()));
 			control.setOnAction(event -> stdGUI.buttons.quitAppOK_clicked(event));
 			control.setOnKeyPressed(event -> stdGUI.buttons.quitAppOK_keyPressed(event));
 		}

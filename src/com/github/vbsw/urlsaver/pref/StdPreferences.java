@@ -257,26 +257,32 @@ public class StdPreferences extends Preferences {
 		}
 	}
 
+	@Override
 	public boolean isCustomPreferencesLoaded ( ) {
 		return customPreferencesLoaded;
 	}
 
+	@Override
 	public boolean isCustomPreferencesSaved ( ) {
 		return customPreferencesSaved;
 	}
 
+	@Override
 	public boolean isCustomFXMLLoaded ( ) {
 		return customFXMLLoaded;
 	}
 
+	@Override
 	public void setCustomFXMLLoaded ( final boolean loaded ) {
 		customFXMLLoaded = loaded;
 	}
 
+	@Override
 	public boolean isCustomCSSLoaded ( ) {
 		return customCSSLoaded;
 	}
 
+	@Override
 	public void setCustomCSSLoaded ( final boolean loaded ) {
 		customCSSLoaded = loaded;
 	}

@@ -12,10 +12,14 @@ package com.github.vbsw.urlsaver.api;
 /**
  * @author Vitali Baumtrok
  */
-public abstract class Logger {
+public abstract class ViewSelector {
 
-	public abstract void logSuccess ( String message );
+	public abstract void selectFilesView ( );
 
-	public abstract void logFailure ( String message );
+	public abstract void selectURLsView ( );
+
+	public abstract void selectPreferencesView ( );
+
+	public abstract void selectAboutView ( );
 
 }

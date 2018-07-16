@@ -27,11 +27,11 @@ public abstract class Preferences {
 
 	public abstract ResourceVariants getCSS ( );
 
-	public abstract PreferencesStringValue getStringValue ( final int id );
+	public abstract PreferencesStringValue getStringValue ( int id );
 
-	public abstract PreferencesIntValue getIntValue ( final int id );
+	public abstract PreferencesIntValue getIntValue ( int id );
 
-	public abstract PreferencesBooleanValue getBooleanValue ( final int id );
+	public abstract PreferencesBooleanValue getBooleanValue ( int id );
 
 	public abstract void resetSavedToDefault ( );
 
@@ -45,11 +45,11 @@ public abstract class Preferences {
 
 	public abstract boolean isCustomFXMLLoaded ( );
 
-	public abstract void setCustomFXMLLoaded ( final boolean loaded );
+	public abstract void setCustomFXMLLoaded ( boolean loaded );
 
 	public abstract boolean isCustomCSSLoaded ( );
 
-	public abstract void setCustomCSSLoaded ( final boolean loaded );
+	public abstract void setCustomCSSLoaded ( boolean loaded );
 
 	public abstract void savePreferences ( );
 
@@ -63,7 +63,7 @@ public abstract class Preferences {
 			return defaultValue;
 		}
 
-		public void setDefault ( final boolean defaultValue ) {
+		public void setDefault ( boolean defaultValue ) {
 			this.defaultValue = defaultValue;
 		}
 
@@ -71,7 +71,7 @@ public abstract class Preferences {
 			return savedValue;
 		}
 
-		public void setSaved ( final boolean savedValue ) {
+		public void setSaved ( boolean savedValue ) {
 			this.savedValue = savedValue;
 		}
 
@@ -79,7 +79,7 @@ public abstract class Preferences {
 			return modifiedValue;
 		}
 
-		public void setModified ( final boolean modifiedValue ) {
+		public void setModified ( boolean modifiedValue ) {
 			this.modifiedValue = modifiedValue;
 		}
 
@@ -111,7 +111,7 @@ public abstract class Preferences {
 			return defaultValue;
 		}
 
-		public void setDefault ( final int defaultValue ) {
+		public void setDefault ( int defaultValue ) {
 			this.defaultValue = defaultValue;
 		}
 
@@ -119,7 +119,7 @@ public abstract class Preferences {
 			return savedValue;
 		}
 
-		public void setSaved ( final int savedValue ) {
+		public void setSaved ( int savedValue ) {
 			this.savedValue = savedValue;
 		}
 
@@ -127,7 +127,7 @@ public abstract class Preferences {
 			return modifiedValue;
 		}
 
-		public void setModified ( final int modifiedValue ) {
+		public void setModified ( int modifiedValue ) {
 			this.modifiedValue = modifiedValue;
 		}
 
@@ -159,7 +159,7 @@ public abstract class Preferences {
 			return defaultValue;
 		}
 
-		public void setDefault ( final String defaultValue ) {
+		public void setDefault ( String defaultValue ) {
 			this.defaultValue = defaultValue;
 		}
 
@@ -167,7 +167,7 @@ public abstract class Preferences {
 			return savedValue;
 		}
 
-		public void setSaved ( final String savedValue ) {
+		public void setSaved ( String savedValue ) {
 			this.savedValue = savedValue;
 		}
 
@@ -175,7 +175,7 @@ public abstract class Preferences {
 			return modifiedValue;
 		}
 
-		public void setModified ( final String modifiedValue ) {
+		public void setModified ( String modifiedValue ) {
 			this.modifiedValue = modifiedValue;
 		}
 
