@@ -15,9 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import com.github.vbsw.urlsaver.api.DataBase;
-import com.github.vbsw.urlsaver.api.Preferences;
-import com.github.vbsw.urlsaver.api.ResourceLoader;
-import com.github.vbsw.urlsaver.api.TextGenerator;
+import com.github.vbsw.urlsaver.api.Global;
 import com.github.vbsw.urlsaver.pref.PreferencesConfig;
 import com.github.vbsw.urlsaver.utility.OSFiles;
 
@@ -32,15 +30,15 @@ public class StdDataBase extends DataBase {
 	protected DBRecord selectedRecord;
 
 	@Override
-	public void initialize ( final ResourceLoader resourceLoader, final Preferences preferences, final TextGenerator textGenerator ) {
-		final String fileExtension = preferences.getStringValue(PreferencesConfig.URLS_FILE_EXTENSION_ID).getSaved();
-		final Path launchDir = resourceLoader.getLaunchSource().getDirectory();
+	public void initialize ( final Global global ) {
+		final String fileExtension = global.getPreferences().getStringValue(PreferencesConfig.URLS_FILE_EXTENSION_ID).getSaved();
+		final Path launchDir = global.getResourceLoader().getLaunchSource().getDirectory();
 		final ArrayList<Path> files = OSFiles.getFilesFromDirectory(launchDir,fileExtension);
 		final ArrayList<Path> filesSorted = getSortedPaths(files);
 		records.clear();
 		for ( final Path filePath: filesSorted ) {
 			final DBRecord record = new DBRecord(filePath);
-			final String listLabel = textGenerator.getFileListLabel(record,0);
+			final String listLabel = global.getTextGenerator().getFileListLabel(record,0);
 			record.setListLabel(listLabel);
 			records.add(record);
 		}

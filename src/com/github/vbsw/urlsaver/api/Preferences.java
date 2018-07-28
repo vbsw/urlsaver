@@ -9,15 +9,12 @@
 package com.github.vbsw.urlsaver.api;
 
 
-import java.util.List;
-
-
 /**
  * @author Vitali Baumtrok
  */
 public abstract class Preferences {
 
-	public abstract void initialize ( ResourceLoader resources, List<String> args );
+	public abstract void initialize ( Global global );
 
 	public abstract void loadCustomPreferences ( );
 

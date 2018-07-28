@@ -13,11 +13,10 @@ import java.util.ArrayList;
 
 import javax.swing.text.html.CSS;
 
-import com.github.vbsw.urlsaver.api.DataBase;
 import com.github.vbsw.urlsaver.api.GUI;
+import com.github.vbsw.urlsaver.api.Global;
 import com.github.vbsw.urlsaver.api.Preferences;
 import com.github.vbsw.urlsaver.api.Preferences.PreferencesBooleanValue;
-import com.github.vbsw.urlsaver.api.ResourceLoader;
 import com.github.vbsw.urlsaver.api.TextGenerator;
 import com.github.vbsw.urlsaver.api.URLsIO;
 import com.github.vbsw.urlsaver.api.ViewSelector;
@@ -43,10 +42,7 @@ import javafx.stage.WindowEvent;
  */
 public class StdGUI extends GUI {
 
-	protected ResourceLoader resourceLoader;
-	protected Preferences preferences;
-	protected TextGenerator textGenerator;
-	protected DataBase db;
+	protected Global global;
 
 	public StdURLsIO urlsIO;
 	public FXMLIO fxmlIO;
@@ -72,15 +68,12 @@ public class StdGUI extends GUI {
 	}
 
 	@Override
-	public void initialize ( final ResourceLoader resourceLoader, final Preferences preferences, final TextGenerator textGenerator, final DataBase db, final Stage primaryStage ) {
-		this.resourceLoader = resourceLoader;
-		this.preferences = preferences;
-		this.textGenerator = textGenerator;
-		this.db = db;
+	public void initialize ( final Global global, final Stage primaryStage ) {
+		this.global = global;
+		this.properties = (StdProperties) global.getProperties();
 		this.urlsIO = new StdURLsIO();
 		this.fxmlIO = new FXMLIO();
 		this.logger = new StdLogger();
-		this.properties = new StdProperties();
 		this.preferencesIO = new PreferencesIO();
 		this.viewSelector = new StdViewSelector(this);
 		this.hotKeys = new HotKeys(this);
@@ -91,31 +84,31 @@ public class StdGUI extends GUI {
 		this.textAreas = new TextAreas(this);
 		this.textFields = new TextFields(this);
 
-		fxmlIO.initialize(preferences);
-		preferencesIO.initialize(preferences,logger);
+		fxmlIO.initialize(global.getPreferences());
+		preferencesIO.initialize(global.getPreferences(),logger);
 		logger.initialize(this);
 
-		final int windowWidth = preferences.getIntValue(PreferencesConfig.WINDOW_WIDTH_ID).getSaved();
-		final int windowHeight = preferences.getIntValue(PreferencesConfig.WINDOW_HEIGHT_ID).getSaved();
-		final String urlsFileToSelect = preferences.getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
+		final int windowWidth = global.getPreferences().getIntValue(PreferencesConfig.WINDOW_WIDTH_ID).getSaved();
+		final int windowHeight = global.getPreferences().getIntValue(PreferencesConfig.WINDOW_HEIGHT_ID).getSaved();
+		final String urlsFileToSelect = global.getPreferences().getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
 		final Parent rootStub = new AnchorPane();
 		scene = new Scene(rootStub,windowWidth,windowHeight);
 		scene.addEventFilter(KeyEvent.KEY_PRESSED,event -> hotKeys.keyPressed(event));
 		reloadFXML();
 		reloadCSS();
-		listViews.files.control.getItems().addAll(db.getRecords());
-		listViews.files.autoSelectRequested = preferences.getBooleanValue(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID).getSaved() && db.getRecordByFileName(urlsFileToSelect) != null;
+		listViews.files.control.getItems().addAll(global.getDataBase().getRecords());
+		listViews.files.autoSelectRequested = global.getPreferences().getBooleanValue(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID).getSaved() && global.getDataBase().getRecordByFileName(urlsFileToSelect) != null;
 		refreshCreateDefaultFileButton();
 
 		primaryStage.setOnCloseRequest(event -> onCloseRequest(event));
 		primaryStage.setScene(scene);
-		primaryStage.setMaximized(preferences.getBooleanValue(PreferencesConfig.WINDOW_MAXIMIZED_ID).getSaved());
+		primaryStage.setMaximized(global.getPreferences().getBooleanValue(PreferencesConfig.WINDOW_MAXIMIZED_ID).getSaved());
 		primaryStage.show();
 
 		refreshPreferencesView();
 		selectDefaultFile();
 
-		urlsIO.initialize(preferences,db,this,properties);
+		urlsIO.initialize(global);
 		urlsIO.autoLoad();
 	}
 
@@ -126,7 +119,7 @@ public class StdGUI extends GUI {
 
 	@Override
 	public void quit ( ) {
-		if ( db.isSaved() ) {
+		if ( global.getDataBase().isSaved() ) {
 			quitUnconditionally();
 		} else {
 			tabPanes.top.control.getSelectionModel().select(tabPanes.top.about.control);
@@ -154,17 +147,12 @@ public class StdGUI extends GUI {
 	}
 
 	@Override
-	public TextGenerator getTextGenerator ( ) {
-		return textGenerator;
-	}
-
-	@Override
 	public ViewSelector getViewSelector ( ) {
 		return viewSelector;
 	}
 
 	public String createWindowTitle ( final DBRecord record ) {
-		final String windowTitleCustom = preferences.getStringValue(PreferencesConfig.WINDOW_TITLE_ID).getSaved();
+		final String windowTitleCustom = global.getPreferences().getStringValue(PreferencesConfig.WINDOW_TITLE_ID).getSaved();
 		final String windowTitle;
 		if ( record != null )
 			if ( record.isDirty() )
@@ -181,8 +169,8 @@ public class StdGUI extends GUI {
 	}
 
 	private boolean isDefaultFileAvailable ( ) {
-		final ArrayList<DBRecord> records = db.getRecords();
-		final String defaultFileName = preferences.getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
+		final ArrayList<DBRecord> records = global.getDataBase().getRecords();
+		final String defaultFileName = global.getPreferences().getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
 		for ( final DBRecord record: records )
 			if ( record.getFileName().equals(defaultFileName) )
 				return false;
@@ -202,6 +190,7 @@ public class StdGUI extends GUI {
 	}
 
 	public void reloadCSS ( ) {
+		final Preferences preferences = global.getPreferences();
 		final String cssURI;
 		if ( preferences.getCSS().getSaved().exists() ) {
 			cssURI = preferences.getCSS().getSaved().getURI().toString();
@@ -215,6 +204,7 @@ public class StdGUI extends GUI {
 	}
 
 	public void refreshPreferencesView ( ) {
+		final Preferences preferences = global.getPreferences();
 		final boolean disable = !preferences.isCustomPreferencesLoaded();
 		textFields.title.control.setText(preferences.getStringValue(PreferencesConfig.WINDOW_TITLE_ID).getModified());
 		textFields.width.control.setText(Integer.toString(preferences.getIntValue(PreferencesConfig.WINDOW_WIDTH_ID).getModified()));
@@ -235,8 +225,8 @@ public class StdGUI extends GUI {
 	}
 
 	public void selectDefaultFile ( ) {
-		final String urlsFileSelect = preferences.getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID).getModified();
-		final DBRecord record = db.getRecordByFileName(urlsFileSelect);
+		final String urlsFileSelect = global.getPreferences().getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID).getModified();
+		final DBRecord record = global.getDataBase().getRecordByFileName(urlsFileSelect);
 		if ( record != null ) {
 			listViews.files.control.requestFocus();
 			listViews.files.control.getSelectionModel().select(record);
@@ -264,10 +254,11 @@ public class StdGUI extends GUI {
 		final String tagsCountString;
 		final String fileSizeString;
 		if ( record != null ) {
+			final TextGenerator textGenerator = global.getTextGenerator();
 			pathString = record.getPathAsString();
-			urlsCountString = getTextGenerator().getURLsCountLabel(record);
-			tagsCountString = getTextGenerator().getTagsCountLabel(record);
-			fileSizeString = getTextGenerator().getFileSizeLabel(record);
+			urlsCountString = textGenerator.getURLsCountLabel(record);
+			tagsCountString = textGenerator.getTagsCountLabel(record);
+			fileSizeString = textGenerator.getFileSizeLabel(record);
 		} else {
 			pathString = "";
 			urlsCountString = "";
@@ -287,11 +278,11 @@ public class StdGUI extends GUI {
 
 	@Override
 	public void recordLoaded ( final DBRecord record ) {
-		final boolean fileIsAlreadySelected = (db.getSelectedRecord() == record);
+		final boolean fileIsAlreadySelected = (global.getDataBase().getSelectedRecord() == record);
 
 		if ( listViews.files.autoSelectRequested ) {
-			final String urlsFileSelect = preferences.getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
-			final DBRecord recordToSelect = db.getRecordByFileName(urlsFileSelect);
+			final String urlsFileSelect = global.getPreferences().getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
+			final DBRecord recordToSelect = global.getDataBase().getRecordByFileName(urlsFileSelect);
 			if ( recordToSelect == record ) {
 				listViews.files.autoSelectRequested = false;
 				if ( tabPanes.top.urls.control.disabledProperty().getValue() ) {
@@ -359,7 +350,7 @@ public class StdGUI extends GUI {
 	}
 
 	public void resetURLsProperties ( ) {
-		final DBRecord selectedRecord = db.getSelectedRecord();
+		final DBRecord selectedRecord = global.getDataBase().getSelectedRecord();
 		final String urlTyped = Parser.trim(textFields.url.control.getText());
 		final boolean urlExists = urlTyped.length() > 0 && selectedRecord.getURLIndex(urlTyped) >= 0;
 		properties.urlExistsProperty().set(urlExists);

@@ -53,6 +53,12 @@ public class DynArrayOfString {
 		valuesLength += 1;
 	}
 
+	public void set ( final int index, final String value ) {
+		while ( valuesLength <= index )
+			add(null);
+		values[index] = value;
+	}
+
 	public int binarySearch ( final String value ) {
 		int left = 0;
 		int right = valuesLength - 1;

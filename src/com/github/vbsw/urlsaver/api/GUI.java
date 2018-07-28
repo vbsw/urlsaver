@@ -19,7 +19,7 @@ import javafx.stage.Stage;
  */
 public abstract class GUI {
 
-	public abstract void initialize ( ResourceLoader resourceLoader, Preferences preferences, TextGenerator textGenerator, DataBase db, Stage primaryStage );
+	public abstract void initialize ( Global global, Stage primaryStage );
 
 	public abstract void quit ( );
 
@@ -34,8 +34,6 @@ public abstract class GUI {
 	public abstract void refreshTitle ( );
 
 	public abstract void recordLoaded ( DBRecord record );
-
-	public abstract TextGenerator getTextGenerator ( );
 
 	public abstract ViewSelector getViewSelector ( );
 

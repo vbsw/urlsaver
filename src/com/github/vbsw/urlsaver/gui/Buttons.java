@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
+import com.github.vbsw.urlsaver.api.Preferences;
 import com.github.vbsw.urlsaver.db.DBRecord;
 import com.github.vbsw.urlsaver.db.DynArrayOfString;
 import com.github.vbsw.urlsaver.pref.PreferencesConfig;
@@ -94,7 +95,7 @@ public class Buttons {
 	}
 
 	public void confirmURLEdit ( ) {
-		final DBRecord record = stdGUI.db.getSelectedRecord();
+		final DBRecord record = stdGUI.global.getDataBase().getSelectedRecord();
 		final String urlTyped = Parser.trim(stdGUI.textFields.url.control.getText());
 		final int urlIndex = record.getURLIndex(urlTyped);
 		final DynArrayOfString tags = Converter.toDynArrayListSorted(stdGUI.textAreas.tags.control.getText());
@@ -107,7 +108,7 @@ public class Buttons {
 	}
 
 	public void confirmURLDelete ( ) {
-		final DBRecord record = stdGUI.db.getSelectedRecord();
+		final DBRecord record = stdGUI.global.getDataBase().getSelectedRecord();
 		final String url = stdGUI.listViews.urls.control.getSelectionModel().getSelectedItem();
 		final int urlIndex = record.getURLIndex(url);
 		final int selectedIndex = stdGUI.listViews.urls.control.getSelectionModel().getSelectedIndex();
@@ -125,7 +126,7 @@ public class Buttons {
 	}
 
 	public void confirmURLCreate ( ) {
-		final DBRecord selectedRecord = stdGUI.db.getSelectedRecord();
+		final DBRecord selectedRecord = stdGUI.global.getDataBase().getSelectedRecord();
 		final String url = Parser.trim(stdGUI.textFields.url.control.getText());
 		final int urlIndex = selectedRecord.addUrl(url);
 		final ArrayList<String> tags = Converter.toArrayList(stdGUI.textAreas.tags.control.getText());
@@ -173,14 +174,14 @@ public class Buttons {
 	}
 
 	private void reloadFile_clicked ( final ActionEvent event ) {
-		final DBRecord selectedRecord = stdGUI.db.getSelectedRecord();
+		final DBRecord selectedRecord = stdGUI.global.getDataBase().getSelectedRecord();
 		stdGUI.urlsIO.reloadFile(selectedRecord);
 	}
 
 	private void reloadFile_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			final DBRecord selectedRecord = stdGUI.db.getSelectedRecord();
+			final DBRecord selectedRecord = stdGUI.global.getDataBase().getSelectedRecord();
 			stdGUI.urlsIO.reloadFile(selectedRecord);
 		}
 	}
@@ -218,7 +219,7 @@ public class Buttons {
 	}
 
 	private void fileSaveOK_clicked ( final ActionEvent event ) {
-		final DBRecord selectedRecord = stdGUI.db.getSelectedRecord();
+		final DBRecord selectedRecord = stdGUI.global.getDataBase().getSelectedRecord();
 		stdGUI.urlsIO.saveFile(selectedRecord);
 		stdGUI.refreshFileInfo();
 		stdGUI.refreshTitle();
@@ -244,9 +245,9 @@ public class Buttons {
 	}
 
 	private void urlSearch_clicked ( final ActionEvent event ) {
-		final DBRecord record = stdGUI.db.getSelectedRecord();
+		final DBRecord record = stdGUI.global.getDataBase().getSelectedRecord();
 		final String searchString = record.getURLsSearchString();
-		final boolean searchByPrefix = stdGUI.preferences.getBooleanValue(PreferencesConfig.SEARCH_BY_PREFIX_ID).getSaved();
+		final boolean searchByPrefix = stdGUI.global.getPreferences().getBooleanValue(PreferencesConfig.SEARCH_BY_PREFIX_ID).getSaved();
 		final DynArrayOfString searchTags = Converter.toDynArrayList(searchString);
 
 		record.searchURLs(searchTags,searchByPrefix);
@@ -349,7 +350,7 @@ public class Buttons {
 		stdGUI.properties.confirmingCreatePreferencesProperty().set(false);
 		stdGUI.properties.confirmingCreateCSSProperty().set(false);
 		stdGUI.properties.confirmingCreateFXMLProperty().set(false);
-		stdGUI.preferences.resetModifiedValuesToSaved();
+		stdGUI.global.getPreferences().resetModifiedValuesToSaved();
 		stdGUI.refreshPreferencesView();
 	}
 
@@ -360,10 +361,11 @@ public class Buttons {
 	}
 
 	private void savePreferences_clicked ( final ActionEvent event ) {
-		final String fileName = stdGUI.preferences.getPreferences().getSaved().getFileName().toString();
-		stdGUI.preferences.savePreferences();
-		if ( stdGUI.preferences.isCustomPreferencesSaved() ) {
-			stdGUI.preferences.resetSavedToModified();
+		final Preferences preferences = stdGUI.global.getPreferences();
+		final String fileName = preferences.getPreferences().getSaved().getFileName().toString();
+		preferences.savePreferences();
+		if ( preferences.isCustomPreferencesSaved() ) {
+			preferences.resetSavedToModified();
 			stdGUI.properties.titleChangedProperty().set(false);
 			stdGUI.properties.widthChangedProperty().set(false);
 			stdGUI.properties.heightChangedProperty().set(false);
@@ -396,7 +398,7 @@ public class Buttons {
 	}
 
 	private void reloadPreferencesFile_clicked ( final ActionEvent event ) {
-		stdGUI.preferences.loadCustomPreferences();
+		stdGUI.global.getPreferences().loadCustomPreferences();
 		stdGUI.refreshPreferencesView();
 		stdGUI.refreshTitle();
 	}
@@ -418,12 +420,12 @@ public class Buttons {
 				stdGUI.buttons.preferencesReload.control.requestFocus();
 			}
 		});
-		stdGUI.listViews.files.control.getItems().addAll(stdGUI.db.getRecords());
+		stdGUI.listViews.files.control.getItems().addAll(stdGUI.global.getDataBase().getRecords());
 		stdGUI.listViews.files.control.getSelectionModel().select(selectedIndex);
 	}
 
 	private void createPreferencesFile_clicked ( final ActionEvent event ) {
-		if ( stdGUI.preferences.getPreferences().getSaved().exists() ) {
+		if ( stdGUI.global.getPreferences().getPreferences().getSaved().exists() ) {
 			stdGUI.properties.confirmingCreatePreferencesProperty().set(true);
 			stdGUI.buttons.preferencesCancel.control.requestFocus();
 		} else {
@@ -484,14 +486,14 @@ public class Buttons {
 	}
 
 	public void createDefaultFile_clicked ( final ActionEvent event ) {
-		final String defaultFileName = stdGUI.preferences.getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
-		final Path defaultFilePath = stdGUI.resourceLoader.getLaunchSource().getDirectory().resolve(defaultFileName);
+		final String defaultFileName = stdGUI.global.getPreferences().getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
+		final Path defaultFilePath = stdGUI.global.getResourceLoader().getLaunchSource().getDirectory().resolve(defaultFileName);
 		try {
 			Files.createFile(defaultFilePath);
 			stdGUI.properties.createDefaultFilePossibleProperty().set(false);
-			stdGUI.db.initialize(stdGUI.resourceLoader,stdGUI.preferences,stdGUI.getTextGenerator());
-			stdGUI.urlsIO.initialize(stdGUI.preferences,stdGUI.db,stdGUI,stdGUI.properties);
-			final ArrayList<DBRecord> records = stdGUI.db.getRecords();
+			stdGUI.global.getDataBase().initialize(stdGUI.global);
+			stdGUI.urlsIO.initialize(stdGUI.global);
+			final ArrayList<DBRecord> records = stdGUI.global.getDataBase().getRecords();
 			stdGUI.listViews.files.control.getItems().setAll(records);
 			if ( records.size() > 0 ) {
 				stdGUI.listViews.files.control.requestFocus();

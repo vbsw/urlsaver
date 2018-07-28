@@ -57,7 +57,7 @@ public class TextFields {
 	}
 
 	public void urlSearch_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
-		final DBRecord record = stdGUI.db.getSelectedRecord();
+		final DBRecord record = stdGUI.global.getDataBase().getSelectedRecord();
 		if ( newValue != null )
 			record.setURLsSearchString(newValue);
 		else
@@ -65,9 +65,9 @@ public class TextFields {
 	}
 
 	public void urlSearch_enterPressed ( final ActionEvent event ) {
-		final DBRecord record = stdGUI.db.getSelectedRecord();
+		final DBRecord record = stdGUI.global.getDataBase().getSelectedRecord();
 		final String searchString = record.getURLsSearchString();
-		final boolean searchByPrefix = stdGUI.preferences.getBooleanValue(PreferencesConfig.SEARCH_BY_PREFIX_ID).getSaved();
+		final boolean searchByPrefix = stdGUI.global.getPreferences().getBooleanValue(PreferencesConfig.SEARCH_BY_PREFIX_ID).getSaved();
 		final DynArrayOfString searchTags = Converter.toDynArrayList(searchString);
 
 		record.searchURLs(searchTags,searchByPrefix);
@@ -78,7 +78,7 @@ public class TextFields {
 
 	public void url_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final String urlTyped = Parser.trim(url.control.getText());
-		final DBRecord selectedRecord = stdGUI.db.getSelectedRecord();
+		final DBRecord selectedRecord = stdGUI.global.getDataBase().getSelectedRecord();
 		final boolean urlExists = urlTyped.length() > 0 && selectedRecord.getURLIndex(urlTyped) >= 0;
 		final boolean urlModified = urlTyped.length() > 0 && selectedRecord.getURLIndex(urlTyped) < 0;
 		stdGUI.properties.urlExistsProperty().set(urlExists);
@@ -88,7 +88,7 @@ public class TextFields {
 
 	public void title_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final String trimmedValue = Parser.trim(newValue);
-		final PreferencesStringValue windowTitleValue = stdGUI.preferences.getStringValue(PreferencesConfig.WINDOW_TITLE_ID);
+		final PreferencesStringValue windowTitleValue = stdGUI.global.getPreferences().getStringValue(PreferencesConfig.WINDOW_TITLE_ID);
 		final boolean titlesEqual = windowTitleValue.getSaved().equals(trimmedValue);
 		windowTitleValue.setModified(newValue);
 		title.setFontWeight(!titlesEqual);
@@ -99,7 +99,7 @@ public class TextFields {
 	public void width_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final int parsedValueInt = Converter.toUnsignedInteger(newValue);
 		final String parsedValueStr = Integer.toString(parsedValueInt);
-		final PreferencesIntValue windowWidthValue = stdGUI.preferences.getIntValue(PreferencesConfig.WINDOW_WIDTH_ID);
+		final PreferencesIntValue windowWidthValue = stdGUI.global.getPreferences().getIntValue(PreferencesConfig.WINDOW_WIDTH_ID);
 		final boolean valueChanged = parsedValueInt != windowWidthValue.getSaved();
 		if ( !parsedValueStr.equals(newValue) ) {
 			width.control.setText(parsedValueStr);
@@ -113,7 +113,7 @@ public class TextFields {
 	public void height_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final int parsedValueInt = Converter.toUnsignedInteger(newValue);
 		final String parsedValueStr = Integer.toString(parsedValueInt);
-		final PreferencesIntValue windowHeightValue = stdGUI.preferences.getIntValue(PreferencesConfig.WINDOW_HEIGHT_ID);
+		final PreferencesIntValue windowHeightValue = stdGUI.global.getPreferences().getIntValue(PreferencesConfig.WINDOW_HEIGHT_ID);
 		final boolean valueChanged = parsedValueInt != windowHeightValue.getSaved();
 		if ( !parsedValueStr.equals(newValue) ) {
 			height.control.setText(parsedValueStr);
@@ -126,7 +126,7 @@ public class TextFields {
 
 	public void urlsFileExtension_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final String trimmedValue = Parser.trim(newValue);
-		final PreferencesStringValue urlsFileExtensionValue = stdGUI.preferences.getStringValue(PreferencesConfig.URLS_FILE_EXTENSION_ID);
+		final PreferencesStringValue urlsFileExtensionValue = stdGUI.global.getPreferences().getStringValue(PreferencesConfig.URLS_FILE_EXTENSION_ID);
 		final boolean valueChanged = !trimmedValue.equals(urlsFileExtensionValue.getSaved());
 		urlsFileExtensionValue.setModified(trimmedValue);
 		stdGUI.properties.urlsFileExtensionChangedProperty().set(valueChanged);
@@ -135,7 +135,7 @@ public class TextFields {
 
 	public void urlsFileSelect_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final String trimmedValue = Parser.trim(newValue);
-		final PreferencesStringValue urlsFileSelectValue = stdGUI.preferences.getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID);
+		final PreferencesStringValue urlsFileSelectValue = stdGUI.global.getPreferences().getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID);
 		final boolean valueChanged = !trimmedValue.equals(urlsFileSelectValue.getSaved());
 		urlsFileSelectValue.setModified(trimmedValue);
 		stdGUI.properties.urlsFileSelectChangedProperty().set(valueChanged);

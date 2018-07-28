@@ -104,4 +104,14 @@ public class Parser {
 		return b >= 0 && b <= 32;
 	}
 
+	public static int seekByte ( final byte[] bytes, final int fromLeft, final int toRight, final byte b ) {
+		if ( fromLeft < toRight ) {
+			for ( int i = fromLeft; i < toRight; i += 1 )
+				if ( bytes[i] == b )
+					return i;
+			return toRight;
+		}
+		return fromLeft;
+	}
+
 }

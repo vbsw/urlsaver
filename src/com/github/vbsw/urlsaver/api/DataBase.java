@@ -19,7 +19,7 @@ import com.github.vbsw.urlsaver.db.DBRecord;
  */
 public abstract class DataBase {
 
-	public abstract void initialize ( ResourceLoader resourceLoader, Preferences preferences, TextGenerator textGenerator );
+	public abstract void initialize ( Global global );
 
 	public abstract ArrayList<DBRecord> getRecords ( );
 

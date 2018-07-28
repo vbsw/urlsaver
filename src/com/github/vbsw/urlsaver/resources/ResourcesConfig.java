@@ -9,16 +9,10 @@
 package com.github.vbsw.urlsaver.resources;
 
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
-
 /**
  * @author Vitali Baumtrok
  */
 public class ResourcesConfig {
-
-	public static final Charset FILE_CHARSET = StandardCharsets.UTF_8;
 
 	public static final String CUSTOM_CSS_FILE_PATH = "urlsaver.css";
 	public static final String DEFAULT_CSS_FILE_PATH = "com/github/vbsw/urlsaver/resources/default.css";

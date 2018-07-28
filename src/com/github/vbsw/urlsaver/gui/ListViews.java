@@ -55,7 +55,7 @@ public class ListViews {
 	}
 
 	private void files_selected ( final ObservableValue<? extends DBRecord> observable, final DBRecord oldValue, final DBRecord newValue ) {
-		stdGUI.db.setSelectedRecord(newValue);
+		stdGUI.global.getDataBase().setSelectedRecord(newValue);
 		stdGUI.refreshFileSelection();
 		stdGUI.refreshURLsView();
 		stdGUI.refreshURLsInfo();

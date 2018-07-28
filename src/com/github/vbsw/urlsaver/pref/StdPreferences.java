@@ -17,6 +17,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
 
+import com.github.vbsw.urlsaver.api.Global;
 import com.github.vbsw.urlsaver.api.Preferences;
 import com.github.vbsw.urlsaver.api.Resource;
 import com.github.vbsw.urlsaver.api.ResourceLoader;
@@ -44,6 +45,8 @@ public class StdPreferences extends Preferences {
 	protected final PreferencesStringValue urlsFileSelect = new PreferencesStringValue();
 	protected final PreferencesBooleanValue urlsFileAutoLoadAll = new PreferencesBooleanValue();
 	protected final PreferencesBooleanValue searchByPrefix = new PreferencesBooleanValue();
+
+	protected ResourceLoader resourceLoader;
 
 	protected boolean customPreferencesLoaded = false;
 	protected boolean customPreferencesSaved = true;
@@ -150,7 +153,9 @@ public class StdPreferences extends Preferences {
 	}
 
 	@Override
-	public void initialize ( final ResourceLoader resourceLoader, final List<String> args ) {
+	public void initialize ( final Global global ) {
+		this.resourceLoader = global.getResourceLoader();
+
 		final Resource prefDefaultRes = resourceLoader.getLaunchSource().getJarFileResource(ResourcesConfig.DEFAULT_PREFERENCES_FILE_PATH);
 		final Resource fxmlDefaultRes = resourceLoader.getLaunchSource().getJarFileResource(ResourcesConfig.DEFAULT_FXML_FILE_PATH);
 		final Resource cssDefaultRes = resourceLoader.getLaunchSource().getJarFileResource(ResourcesConfig.DEFAULT_CSS_FILE_PATH);
@@ -158,9 +163,9 @@ public class StdPreferences extends Preferences {
 		preferencesVariants.setDefault(prefDefaultRes);
 		fxmlVariants.setDefault(fxmlDefaultRes);
 		cssVariants.setDefault(cssDefaultRes);
-		setPreferencesSavedValue(resourceLoader,args);
-		setFXMLSavedValue(resourceLoader,args);
-		setCSSSavedValue(resourceLoader,args);
+		setPreferencesSavedValue(resourceLoader,global.getArguments());
+		setFXMLSavedValue(resourceLoader,global.getArguments());
+		setCSSSavedValue(resourceLoader,global.getArguments());
 
 		loadDefaultPreferences();
 		loadCustomPreferences();
@@ -318,7 +323,7 @@ public class StdPreferences extends Preferences {
 		stringBuilder.append(newLine);
 
 		try {
-			final byte[] bytes = stringBuilder.toString().getBytes(ResourcesConfig.FILE_CHARSET);
+			final byte[] bytes = stringBuilder.toString().getBytes(resourceLoader.getCharset());
 			final Path path = getPreferences().getSaved().getPath();
 			Files.write(path,bytes);
 			customPreferencesSaved = true;

@@ -34,7 +34,7 @@ public class TabPanes {
 
 	private void topTab_selected ( ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue ) {
 		if ( newValue == top.about.control )
-			stdGUI.properties.confirmingQuitProperty().set(!stdGUI.db.isSaved());
+			stdGUI.properties.confirmingQuitProperty().set(!stdGUI.global.getDataBase().isSaved());
 		else
 			stdGUI.properties.confirmingQuitProperty().set(false);
 	}

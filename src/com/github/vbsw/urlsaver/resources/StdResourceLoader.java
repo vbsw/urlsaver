@@ -9,6 +9,7 @@
 package com.github.vbsw.urlsaver.resources;
 
 
+import com.github.vbsw.urlsaver.api.Global;
 import com.github.vbsw.urlsaver.api.ResourceLoader;
 
 
@@ -20,7 +21,7 @@ public class StdResourceLoader extends ResourceLoader {
 	protected StdLaunchSource source;
 
 	@Override
-	public void initialize ( ) {
+	public void initialize ( Global global ) {
 		source = createLaunchSource();
 	}
 

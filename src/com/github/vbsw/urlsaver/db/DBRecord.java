@@ -15,6 +15,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
+import com.github.vbsw.urlsaver.api.URLMeta;
+
 
 /**
  * @author Vitali Baumtrok
@@ -27,6 +29,7 @@ public class DBRecord {
 	private final DynArrayOfString tags = new DynArrayOfString(INITIAL_CAPACITY);
 	private final DynArrayOfString2 tagsOnURLs = new DynArrayOfString2(INITIAL_CAPACITY);
 	private final DynArrayOfString2 urlsOnTags = new DynArrayOfString2(INITIAL_CAPACITY);
+	private final DynArrayOfString2 metaDataOnURLs = new DynArrayOfString2(INITIAL_CAPACITY);
 	private final WordSearch urlsSearch = new WordSearch(tags,urlsOnTags);
 
 	private int urlsCountSaved;
@@ -89,9 +92,11 @@ public class DBRecord {
 		if ( index < 0 ) {
 			final int insertIndex = -index - 1;
 			final DynArrayOfString tagsOnURL = new DynArrayOfString();
+			final DynArrayOfString metaDataOnURL = new DynArrayOfString();
 			dirtyFlag = true;
 			urls.add(insertIndex,url);
 			tagsOnURLs.add(insertIndex,tagsOnURL);
+			metaDataOnURLs.add(insertIndex,metaDataOnURL);
 			return insertIndex;
 		}
 		return index;
@@ -117,6 +122,11 @@ public class DBRecord {
 			return true;
 		}
 		return false;
+	}
+
+	public void setMetaData ( final int index, final int metaKeyID, final String metaValue ) {
+		final int indexMetaKeyID = metaKeyID - (URLMeta.NONE + 1);
+		metaDataOnURLs.values[index].set(indexMetaKeyID,metaValue);
 	}
 
 	public String getTagsAsString ( final int index ) {

@@ -9,13 +9,21 @@
 package com.github.vbsw.urlsaver.api;
 
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
+
 /**
  * @author Vitali Baumtrok
  */
 public abstract class ResourceLoader {
 
-	public abstract void initialize ( );
+	public abstract void initialize ( Global global );
 
 	public abstract LaunchSource getLaunchSource ( );
+
+	public Charset getCharset ( ) {
+		return StandardCharsets.UTF_8;
+	}
 
 }

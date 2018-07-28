@@ -10,11 +10,13 @@ package com.github.vbsw.urlsaver.io;
 
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import com.github.vbsw.urlsaver.api.ResourceLoader;
+import com.github.vbsw.urlsaver.api.URLMeta;
 import com.github.vbsw.urlsaver.db.DBRecord;
-import com.github.vbsw.urlsaver.resources.ResourcesConfig;
 import com.github.vbsw.urlsaver.utility.Parser;
 
 import javafx.concurrent.Service;
@@ -27,9 +29,13 @@ import javafx.concurrent.Worker;
  */
 public final class URLsLoadService extends Service<DBRecord> {
 
+	protected final ResourceLoader resourceLoader;
+	protected final URLMeta urlMeta;
 	public final DBRecord record;
 
-	public URLsLoadService ( final DBRecord record ) {
+	public URLsLoadService ( final ResourceLoader resourceLoader, final URLMeta urlMeta, final DBRecord record ) {
+		this.resourceLoader = resourceLoader;
+		this.urlMeta = urlMeta;
 		this.record = record;
 	}
 
@@ -39,16 +45,20 @@ public final class URLsLoadService extends Service<DBRecord> {
 
 	@Override
 	protected Task<DBRecord> createTask ( ) {
-		final Task<DBRecord> loadingTask = new URLsLoadTask(record);
+		final Task<DBRecord> loadingTask = new URLsLoadTask(urlMeta,record,resourceLoader.getCharset());
 		return loadingTask;
 	}
 
 	private static final class URLsLoadTask extends Task<DBRecord> {
 
+		private final URLMeta urlMeta;
 		private final DBRecord record;
+		private final Charset charset;
 
-		public URLsLoadTask ( final DBRecord record ) {
+		public URLsLoadTask ( final URLMeta urlMeta, final DBRecord record, final Charset charset ) {
+			this.urlMeta = urlMeta;
 			this.record = record;
+			this.charset = charset;
 		}
 
 		@Override
@@ -75,7 +85,7 @@ public final class URLsLoadService extends Service<DBRecord> {
 			int progress = 0;
 			while ( (offset < bytes.length) && (super.isCancelled() == false) ) {
 				offset = Parser.seekContent(bytes,offset,bytes.length);
-				offset = parseURLAndTags(bytes,offset);
+				offset = parseURLTagsAndMeta(bytes,offset);
 				progress = updateProgressIfNecessary(offset,bytes.length,progress);
 			}
 		}
@@ -89,14 +99,15 @@ public final class URLsLoadService extends Service<DBRecord> {
 			return progress;
 		}
 
-		private int parseURLAndTags ( final byte[] bytes, final int offset ) {
+		private int parseURLTagsAndMeta ( final byte[] bytes, final int offset ) {
 			final int indexLineEnd = Parser.seekLineEnd(bytes,offset,bytes.length);
 			final int indexWordEnd = Parser.seekContentReverse(bytes,indexLineEnd,offset);
 			final int wordLength = indexWordEnd - offset;
 
+			/* wordLength == 0 is when file end */
 			if ( wordLength > 0 ) {
-				final String url = new String(bytes,offset,wordLength,ResourcesConfig.FILE_CHARSET);
-				final int indexUrl = record.addUrl(url);
+				final String url = new String(bytes,offset,wordLength,charset);
+				final int indexURL = record.addUrl(url);
 				final int indexTagsLineBegin = Parser.seekContent(bytes,indexLineEnd,bytes.length);
 				final int indexTagsLineEnd = Parser.seekLineEnd(bytes,indexTagsLineBegin,bytes.length);
 				int indexTagBegin = indexTagsLineBegin;
@@ -104,15 +115,70 @@ public final class URLsLoadService extends Service<DBRecord> {
 				int tagLength = indexTagEnd - indexTagBegin;
 
 				while ( tagLength > 0 ) {
-					final String tag = new String(bytes,indexTagBegin,tagLength,ResourcesConfig.FILE_CHARSET);
+					final String tag = new String(bytes,indexTagBegin,tagLength,charset);
 					indexTagBegin = Parser.seekContent(bytes,indexTagEnd,indexTagsLineEnd);
 					indexTagEnd = Parser.seekWhitespace(bytes,indexTagBegin,indexTagsLineEnd);
 					tagLength = indexTagEnd - indexTagBegin;
-					record.addTagToUrl(indexUrl,tag);
+					record.addTagToUrl(indexURL,tag);
 				}
-				return indexTagsLineEnd;
+				final int indexNext = parseURLMetaData(bytes,indexURL,indexTagsLineEnd);
+				return indexNext;
 			}
 			return indexLineEnd;
+		}
+
+		private int parseURLMetaData ( final byte[] bytes, final int indexURL, final int offset ) {
+			final int indexMetaDataLineBegin = Parser.seekContent(bytes,offset,bytes.length);
+
+			if ( urlMeta.isMetaDataSignature(bytes,indexMetaDataLineBegin) ) {
+				final int indexMetaDataLineEnd = Parser.seekLineEnd(bytes,indexMetaDataLineBegin,bytes.length);
+				int indexMetaDataBegin = indexMetaDataLineBegin;
+				int indexMetaDataEnd = Parser.seekWhitespace(bytes,indexMetaDataBegin,indexMetaDataLineEnd);
+				int metaDataLength = indexMetaDataEnd - indexMetaDataBegin;
+
+				while ( metaDataLength > 0 ) {
+					final int indexSeparator = Parser.seekByte(bytes,indexMetaDataBegin,indexMetaDataEnd,(byte) '=');
+					final int indexMetaValueBegin = indexSeparator + 1;
+					final int metaKeyLength = indexSeparator - indexMetaDataBegin;
+					final int metaValueLength = indexMetaDataEnd - indexMetaValueBegin;
+					final String metaKey = new String(bytes,indexMetaDataBegin,metaKeyLength,charset);
+					final int metaKeyID = urlMeta.getMetaKeyID(metaKey);
+
+					if ( metaValueLength > 0 ) {
+						final String metaValue = new String(bytes,indexMetaDataBegin,metaKeyLength,charset);
+						addURLMetaValue(bytes,indexURL,metaKeyID,metaKey,metaValue);
+					} else {
+						addURLMetaKey(bytes,indexURL,metaKeyID,metaKey);
+					}
+					indexMetaDataBegin = Parser.seekContent(bytes,indexMetaDataEnd,indexMetaDataLineEnd);
+					indexMetaDataEnd = Parser.seekWhitespace(bytes,indexMetaDataBegin,indexMetaDataLineEnd);
+					metaDataLength = indexMetaDataEnd - indexMetaDataBegin;
+				}
+				return indexMetaDataLineEnd;
+			}
+			return indexMetaDataLineBegin;
+		}
+
+		private void addURLMetaValue ( final byte[] bytes, final int indexURL, final int metaKeyID, final String metaKey, final String metaValue ) {
+			switch ( metaKeyID ) {
+				case URLMeta.ACCESSED:
+				case URLMeta.SCORE:
+				record.setMetaData(indexURL,metaKeyID,metaValue);
+
+				case URLMeta.UNKNOWN:
+				System.out.println("unsuported key \"" + metaKey + "\" in \"" + record.getFileName() + "\"");
+			}
+		}
+
+		private void addURLMetaKey ( final byte[] bytes, final int indexURL, final int metaKeyID, final String metaKey ) {
+			switch ( metaKeyID ) {
+				case URLMeta.ACCESSED:
+				case URLMeta.SCORE:
+				System.out.println("key \"" + metaKey + "\" has no value in " + record.getFileName());
+
+				case URLMeta.UNKNOWN:
+				System.out.println("unsuported key \"" + metaKey + "\" in \"" + record.getFileName() + "\"");
+			}
 		}
 
 	}
