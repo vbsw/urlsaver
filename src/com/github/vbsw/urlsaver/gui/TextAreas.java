@@ -9,7 +9,7 @@
 package com.github.vbsw.urlsaver.gui;
 
 
-import com.github.vbsw.urlsaver.db.DBRecord;
+import com.github.vbsw.urlsaver.db.DBTable;
 import com.github.vbsw.urlsaver.db.DynArrayOfString;
 import com.github.vbsw.urlsaver.utility.Converter;
 import com.github.vbsw.urlsaver.utility.Parser;
@@ -38,7 +38,7 @@ public class TextAreas {
 	}
 
 	public void tags_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
-		final DBRecord record = stdGUI.getCurrentDBRecord();
+		final DBTable record = stdGUI.getCurrentDBRecord();
 		final String urlTyped = Parser.trim(stdGUI.textFields.url.control.getText());
 		final int urlIndex = record.getURLIndex(urlTyped);
 		if ( urlIndex >= 0 ) {

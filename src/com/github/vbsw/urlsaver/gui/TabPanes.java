@@ -9,6 +9,8 @@
 package com.github.vbsw.urlsaver.gui;
 
 
+import com.github.vbsw.urlsaver.api.Global;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
@@ -34,15 +36,15 @@ public class TabPanes {
 
 	private void topTab_selected ( ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue ) {
 		if ( newValue == top.about.control )
-			stdGUI.properties.confirmingQuitProperty().set(!stdGUI.global.getDataBase().isSaved());
+			stdGUI.properties.confirmingQuitProperty().set(!Global.dataBase.isSaved());
 		else
 			stdGUI.properties.confirmingQuitProperty().set(false);
 	}
 
 	private void topTab_urls_selected ( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) {
 		if ( newValue ) {
-			if ( stdGUI.listViews.urls.control.getItems().isEmpty() == false )
-				stdGUI.listViews.urls.control.requestFocus();
+			if ( stdGUI.tableViews.urls.control.getItems().isEmpty() == false )
+				stdGUI.tableViews.urls.control.requestFocus();
 			else
 				stdGUI.textFields.urlSearch.control.requestFocus();
 		}

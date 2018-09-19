@@ -9,7 +9,7 @@
 package com.github.vbsw.urlsaver.api;
 
 
-import com.github.vbsw.urlsaver.db.DBRecord;
+import com.github.vbsw.urlsaver.db.DBTable;
 
 import javafx.stage.Stage;
 
@@ -19,7 +19,7 @@ import javafx.stage.Stage;
  */
 public abstract class GUI {
 
-	public abstract void initialize ( Global global, Stage primaryStage );
+	public abstract void initialize ( Stage primaryStage );
 
 	public abstract void quit ( );
 
@@ -33,7 +33,7 @@ public abstract class GUI {
 
 	public abstract void refreshTitle ( );
 
-	public abstract void recordLoaded ( DBRecord record );
+	public abstract void recordLoaded ( DBTable record );
 
 	public abstract ViewSelector getViewSelector ( );
 

@@ -15,22 +15,15 @@ import java.util.List;
 /**
  * @author Vitali Baumtrok
  */
-public abstract class Global {
+public final class Global {
 
-	public abstract ResourceLoader getResourceLoader ( );
-
-	public abstract Preferences getPreferences ( );
-
-	public abstract TextGenerator getTextGenerator ( );
-
-	public abstract DataBase getDataBase ( );
-
-	public abstract GUI getGUI ( );
-
-	public abstract URLMeta getURLMeta ( );
-
-	public abstract List<String> getArguments ( );
-
-	public abstract Properties getProperties ( );
+	public static List<String> arguments;
+	public static ResourceLoader resourceLoader;
+	public static Preferences preferences;
+	public static TextGenerator textGenerator;
+	public static DataBase dataBase;
+	public static GUI gui;
+	public static URLMeta urlMeta;
+	public static Properties properties;
 
 }

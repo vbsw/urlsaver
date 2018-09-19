@@ -10,7 +10,7 @@ package com.github.vbsw.urlsaver.utility;
 
 
 import com.github.vbsw.urlsaver.api.TextGenerator;
-import com.github.vbsw.urlsaver.db.DBRecord;
+import com.github.vbsw.urlsaver.db.DBTable;
 
 
 /**
@@ -19,7 +19,7 @@ import com.github.vbsw.urlsaver.db.DBRecord;
 public class StdTextGenerator extends TextGenerator {
 
 	@Override
-	public String getFileListLabel ( final DBRecord record, final int percentLoaded ) {
+	public String getFileListLabel ( final DBTable record, final int percentLoaded ) {
 		final String listViewText;
 		if ( percentLoaded < 0 )
 			listViewText = record.getPathAsString() + "  0%";
@@ -31,7 +31,7 @@ public class StdTextGenerator extends TextGenerator {
 	}
 
 	@Override
-	public String getURLsCountLabel ( final DBRecord record ) {
+	public String getURLsCountLabel ( final DBTable record ) {
 		final int diff = record.getURLsCountModified() - record.getURLsCountSaved();
 		final String diffString = diff != 0 ? " (" + (diff > 0 ? "+" : "") + diff + ")" : "";
 		final String urlsCountString;
@@ -43,7 +43,7 @@ public class StdTextGenerator extends TextGenerator {
 	}
 
 	@Override
-	public String getTagsCountLabel ( final DBRecord record ) {
+	public String getTagsCountLabel ( final DBTable record ) {
 		final int diff = record.getTagsCountModified() - record.getTagsCountSaved();
 		final String diffString = diff != 0 ? " (" + (diff > 0 ? "+" : "") + diff + ")" : "";
 		final String tagsCountString;
@@ -55,7 +55,7 @@ public class StdTextGenerator extends TextGenerator {
 	}
 
 	@Override
-	public String getFileSizeLabel ( final DBRecord record ) {
+	public String getFileSizeLabel ( final DBTable record ) {
 		final long fileSize = record.getFileSize();
 		final String fileSizeLabel;
 		if ( fileSize >= 0 )

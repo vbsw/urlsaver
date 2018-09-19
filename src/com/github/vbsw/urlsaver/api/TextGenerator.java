@@ -8,19 +8,19 @@
 
 package com.github.vbsw.urlsaver.api;
 
-import com.github.vbsw.urlsaver.db.DBRecord;
+import com.github.vbsw.urlsaver.db.DBTable;
 
 /**
  * @author Vitali Baumtrok
  */
 public abstract class TextGenerator {
 
-	public abstract String getFileListLabel ( final DBRecord record, final int percentLoaded );
+	public abstract String getFileListLabel ( final DBTable record, final int percentLoaded );
 
-	public abstract String getURLsCountLabel ( final DBRecord record );
+	public abstract String getURLsCountLabel ( final DBTable record );
 
-	public abstract String getTagsCountLabel ( final DBRecord record );
+	public abstract String getTagsCountLabel ( final DBTable record );
 
-	public abstract String getFileSizeLabel ( final DBRecord record );
+	public abstract String getFileSizeLabel ( final DBTable record );
 
 }

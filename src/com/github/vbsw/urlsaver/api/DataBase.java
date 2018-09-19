@@ -11,7 +11,7 @@ package com.github.vbsw.urlsaver.api;
 
 import java.util.ArrayList;
 
-import com.github.vbsw.urlsaver.db.DBRecord;
+import com.github.vbsw.urlsaver.db.DBTable;
 
 
 /**
@@ -19,16 +19,16 @@ import com.github.vbsw.urlsaver.db.DBRecord;
  */
 public abstract class DataBase {
 
-	public abstract void initialize ( Global global );
+	public abstract void initialize ( );
 
-	public abstract ArrayList<DBRecord> getRecords ( );
+	public abstract ArrayList<DBTable> getRecords ( );
 
 	public abstract boolean isSaved ( );
 
-	public abstract DBRecord getRecordByFileName ( String fileName );
+	public abstract DBTable getRecordByFileName ( String fileName );
 
-	public abstract DBRecord getSelectedRecord ( );
+	public abstract DBTable getSelectedRecord ( );
 
-	public abstract void setSelectedRecord ( DBRecord record );
+	public abstract void setSelectedRecord ( DBTable record );
 
 }

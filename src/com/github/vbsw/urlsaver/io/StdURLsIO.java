@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 import com.github.vbsw.urlsaver.api.Global;
 import com.github.vbsw.urlsaver.api.URLsIO;
-import com.github.vbsw.urlsaver.db.DBRecord;
+import com.github.vbsw.urlsaver.db.DBTable;
 import com.github.vbsw.urlsaver.gui.StdProperties;
 import com.github.vbsw.urlsaver.pref.PreferencesConfig;
 
@@ -33,13 +33,10 @@ public class StdURLsIO extends URLsIO {
 
 	protected final ArrayList<URLsLoadService> urlsLoadServices = new ArrayList<>();
 
-	protected Global global;
-
-	public void initialize ( final Global global ) {
-		this.global = global;
+	public void initialize ( ) {
 		urlsLoadServices.clear();
-		for ( DBRecord record: global.getDataBase().getRecords() ) {
-			final URLsLoadService service = new URLsLoadService(global.getResourceLoader(),global.getURLMeta(),record);
+		for ( DBTable record: Global.dataBase.getRecords() ) {
+			final URLsLoadService service = new URLsLoadService(Global.resourceLoader,Global.urlMeta,record);
 			final URLsLoadProgressListener progressListener = new URLsLoadProgressListener(record);
 			final ServiceFailedListener failedListener = new ServiceFailedListener();
 			final FileLoadSucceededListener succeededListener = new FileLoadSucceededListener(record);
@@ -51,7 +48,7 @@ public class StdURLsIO extends URLsIO {
 	}
 
 	public void autoLoad ( ) {
-		if ( global.getPreferences().getBooleanValue(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID).getModified() )
+		if ( Global.preferences.getBooleanValue(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID).getModified() )
 			for ( URLsLoadService service: urlsLoadServices )
 				service.start();
 	}
@@ -61,14 +58,14 @@ public class StdURLsIO extends URLsIO {
 			service.restart();
 	}
 
-	public void cancelLoadingFile ( final DBRecord record ) {
+	public void cancelLoadingFile ( final DBTable record ) {
 		for ( URLsLoadService service: urlsLoadServices ) {
 			if ( service.record == record )
 				service.cancel();
 		}
 	}
 
-	public void reloadFile ( final DBRecord record ) {
+	public void reloadFile ( final DBTable record ) {
 		for ( URLsLoadService service: urlsLoadServices ) {
 			if ( service.record == record ) {
 				record.beginLoading();
@@ -79,32 +76,32 @@ public class StdURLsIO extends URLsIO {
 
 	@Override
 	public void saveAllFiles ( ) {
-		for ( DBRecord record: global.getDataBase().getRecords() )
+		for ( DBTable record: Global.dataBase.getRecords() )
 			saveFile(record);
 	}
 
 	@Override
 	public void saveSelectedFile ( ) {
-		saveFile(global.getDataBase().getSelectedRecord());
+		saveFile(Global.dataBase.getSelectedRecord());
 	}
 
-	public void saveFile ( final DBRecord record ) {
+	public void saveFile ( final DBTable record ) {
 		if ( record != null && record.isDirty() ) {
 			final Path filePath = record.getPath();
 			boolean success = false;
-			try ( final BufferedWriter writer = java.nio.file.Files.newBufferedWriter(filePath,global.getResourceLoader().getCharset()) ) {
+			try ( final BufferedWriter writer = java.nio.file.Files.newBufferedWriter(filePath,Global.resourceLoader.getCharset()) ) {
 				record.write(writer);
 				success = true;
 			} catch ( final IOException e ) {
 				e.printStackTrace();
 			}
 			if ( success ) {
-				if ( global.getDataBase().getSelectedRecord() == record ) {
-					final StdProperties properties = (StdProperties) global.getProperties();
+				if ( Global.dataBase.getSelectedRecord() == record ) {
+					final StdProperties properties = (StdProperties) Global.properties;
 					properties.selectedFileDirtyProperty().setValue(false);
 					properties.confirmingSaveProperty().setValue(false);
-					global.getGUI().refreshFileInfo();
-					global.getGUI().refreshTitle();
+					Global.gui.refreshFileInfo();
+					Global.gui.refreshTitle();
 				}
 				record.endSave();
 			}
@@ -112,19 +109,19 @@ public class StdURLsIO extends URLsIO {
 	}
 
 	private class URLsLoadProgressListener implements ChangeListener<Number> {
-		private final DBRecord record;
+		private final DBTable record;
 
-		public URLsLoadProgressListener ( final DBRecord record ) {
+		public URLsLoadProgressListener ( final DBTable record ) {
 			this.record = record;
 		}
 
 		@Override
 		public void changed ( final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue ) {
 			final int percentLoaded = (int) (newValue.doubleValue() * 100);
-			final String listLabel = global.getTextGenerator().getFileListLabel(record,percentLoaded);
+			final String listLabel = Global.textGenerator.getFileListLabel(record,percentLoaded);
 			record.setListLabel(listLabel);
-			global.getGUI().refreshFileListView();
-			global.getGUI().refreshFileInfo();
+			Global.gui.refreshFileListView();
+			Global.gui.refreshFileInfo();
 		}
 
 	}
@@ -140,16 +137,16 @@ public class StdURLsIO extends URLsIO {
 
 	private final class FileLoadSucceededListener implements EventHandler<WorkerStateEvent> {
 
-		private final DBRecord record;
+		private final DBTable record;
 
-		public FileLoadSucceededListener ( final DBRecord record ) {
+		public FileLoadSucceededListener ( final DBTable record ) {
 			this.record = record;
 		}
 
 		@Override
 		public void handle ( final WorkerStateEvent event ) {
 			record.endLoading();
-			global.getGUI().recordLoaded(record);
+			Global.gui.recordLoaded(record);
 		}
 
 	}

@@ -26,19 +26,19 @@ import com.github.vbsw.urlsaver.utility.OSFiles;
 public class StdDataBase extends DataBase {
 
 	protected final PathComparator pathComparator = new PathComparator();
-	protected final ArrayList<DBRecord> records = new ArrayList<>();
-	protected DBRecord selectedRecord;
+	protected final ArrayList<DBTable> records = new ArrayList<>();
+	protected DBTable selectedRecord;
 
 	@Override
-	public void initialize ( final Global global ) {
-		final String fileExtension = global.getPreferences().getStringValue(PreferencesConfig.URLS_FILE_EXTENSION_ID).getSaved();
-		final Path launchDir = global.getResourceLoader().getLaunchSource().getDirectory();
+	public void initialize ( ) {
+		final String fileExtension = Global.preferences.getStringValue(PreferencesConfig.URLS_FILE_EXTENSION_ID).getSaved();
+		final Path launchDir = Global.resourceLoader.getLaunchSource().getDirectory();
 		final ArrayList<Path> files = OSFiles.getFilesFromDirectory(launchDir,fileExtension);
 		final ArrayList<Path> filesSorted = getSortedPaths(files);
 		records.clear();
 		for ( final Path filePath: filesSorted ) {
-			final DBRecord record = new DBRecord(filePath);
-			final String listLabel = global.getTextGenerator().getFileListLabel(record,0);
+			final DBTable record = new DBTable(filePath);
+			final String listLabel = Global.textGenerator.getFileListLabel(record,0);
 			record.setListLabel(listLabel);
 			records.add(record);
 		}
@@ -54,15 +54,15 @@ public class StdDataBase extends DataBase {
 	}
 
 	@Override
-	public ArrayList<DBRecord> getRecords ( ) {
+	public ArrayList<DBTable> getRecords ( ) {
 		return records;
 	}
 
 	@Override
-	public DBRecord getRecordByFileName ( final String fileName ) {
+	public DBTable getRecordByFileName ( final String fileName ) {
 		final int size = records.size();
 		for ( int i = 0; i < size; i += 1 ) {
-			final DBRecord record = records.get(i);
+			final DBTable record = records.get(i);
 			if ( record.getFileName().equals(fileName) )
 				return record;
 		}
@@ -70,12 +70,12 @@ public class StdDataBase extends DataBase {
 	}
 
 	@Override
-	public DBRecord getSelectedRecord ( ) {
+	public DBTable getSelectedRecord ( ) {
 		return selectedRecord;
 	}
 
 	@Override
-	public void setSelectedRecord ( final DBRecord record ) {
+	public void setSelectedRecord ( final DBTable record ) {
 		selectedRecord = record;
 	}
 

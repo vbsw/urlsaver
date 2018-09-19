@@ -14,12 +14,32 @@ package com.github.vbsw.urlsaver.api;
  */
 public class URLMeta {
 
-	public static final int UNKNOWN = 0;
-	public static final int NONE = 1;
-	public static final int ACCESSED = 2;
-	public static final int SCORE = 3;
+	public static final int ACCESSED = 0;
+	public static final int SCORE = 1;
+	public static final int NONE = 2;
+	public static final int UNKNOWN = 3;
 
-	public int getMetaKeyID ( final String metaKey ) {
+	public String metaKey;
+	public String metaValue;
+	public int metaKeyID;
+
+	public void setMeta ( final String metaKey, final String metaValue ) {
+		this.metaKey = metaKey;
+		this.metaKeyID = getMetaKeyID(metaKey);
+		this.metaValue = metaValue;
+	}
+
+	public boolean isMetaDataSignature ( final byte[] bytes, final int offset ) {
+		return offset < bytes.length && bytes[offset] == '\\';
+	}
+
+	@Override
+	public String toString ( ) {
+		final String str = "[" + metaKey + "=" + metaValue + "]";
+		return str;
+	}
+
+	private int getMetaKeyID ( final String metaKey ) {
 		final int metaKeyID;
 		if ( isNoneKey(metaKey) )
 			metaKeyID = URLMeta.NONE;
@@ -30,10 +50,6 @@ public class URLMeta {
 		else
 			metaKeyID = URLMeta.UNKNOWN;
 		return metaKeyID;
-	}
-
-	public boolean isMetaDataSignature ( final byte[] bytes, final int offset ) {
-		return offset < bytes.length && bytes[offset] == '\\';
 	}
 
 	private boolean isNoneKey ( final String metaKey ) {

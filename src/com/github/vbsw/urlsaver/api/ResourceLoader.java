@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
  */
 public abstract class ResourceLoader {
 
-	public abstract void initialize ( Global global );
+	public abstract void initialize ( );
 
 	public abstract LaunchSource getLaunchSource ( );
 

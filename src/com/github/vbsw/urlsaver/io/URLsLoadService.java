@@ -16,7 +16,7 @@ import java.nio.file.Path;
 
 import com.github.vbsw.urlsaver.api.ResourceLoader;
 import com.github.vbsw.urlsaver.api.URLMeta;
-import com.github.vbsw.urlsaver.db.DBRecord;
+import com.github.vbsw.urlsaver.db.DBTable;
 import com.github.vbsw.urlsaver.utility.Parser;
 
 import javafx.concurrent.Service;
@@ -27,13 +27,13 @@ import javafx.concurrent.Worker;
 /**
  * @author Vitali Baumtrok
  */
-public final class URLsLoadService extends Service<DBRecord> {
+public final class URLsLoadService extends Service<DBTable> {
 
 	protected final ResourceLoader resourceLoader;
 	protected final URLMeta urlMeta;
-	public final DBRecord record;
+	public final DBTable record;
 
-	public URLsLoadService ( final ResourceLoader resourceLoader, final URLMeta urlMeta, final DBRecord record ) {
+	public URLsLoadService ( final ResourceLoader resourceLoader, final URLMeta urlMeta, final DBTable record ) {
 		this.resourceLoader = resourceLoader;
 		this.urlMeta = urlMeta;
 		this.record = record;
@@ -44,25 +44,25 @@ public final class URLsLoadService extends Service<DBRecord> {
 	}
 
 	@Override
-	protected Task<DBRecord> createTask ( ) {
-		final Task<DBRecord> loadingTask = new URLsLoadTask(urlMeta,record,resourceLoader.getCharset());
+	protected Task<DBTable> createTask ( ) {
+		final Task<DBTable> loadingTask = new URLsLoadTask(urlMeta,record,resourceLoader.getCharset());
 		return loadingTask;
 	}
 
-	private static final class URLsLoadTask extends Task<DBRecord> {
+	private static final class URLsLoadTask extends Task<DBTable> {
 
 		private final URLMeta urlMeta;
-		private final DBRecord record;
+		private final DBTable record;
 		private final Charset charset;
 
-		public URLsLoadTask ( final URLMeta urlMeta, final DBRecord record, final Charset charset ) {
+		public URLsLoadTask ( final URLMeta urlMeta, final DBTable record, final Charset charset ) {
 			this.urlMeta = urlMeta;
 			this.record = record;
 			this.charset = charset;
 		}
 
 		@Override
-		protected DBRecord call ( ) throws Exception {
+		protected DBTable call ( ) throws Exception {
 			final byte[] bytes = getBytesFromFile(record.getPath());
 			if ( bytes != null && bytes.length > 0 )
 				parseURLs(bytes);
@@ -142,14 +142,10 @@ public final class URLsLoadService extends Service<DBRecord> {
 					final int metaKeyLength = indexSeparator - indexMetaDataBegin;
 					final int metaValueLength = indexMetaDataEnd - indexMetaValueBegin;
 					final String metaKey = new String(bytes,indexMetaDataBegin,metaKeyLength,charset);
-					final int metaKeyID = urlMeta.getMetaKeyID(metaKey);
+					final String metaValue = metaValueLength > 0 ? new String(bytes,indexMetaValueBegin,metaValueLength,charset) : "";
+					urlMeta.setMeta(metaKey,metaValue);
+					addURLMetaValue(indexURL);
 
-					if ( metaValueLength > 0 ) {
-						final String metaValue = new String(bytes,indexMetaDataBegin,metaKeyLength,charset);
-						addURLMetaValue(bytes,indexURL,metaKeyID,metaKey,metaValue);
-					} else {
-						addURLMetaKey(bytes,indexURL,metaKeyID,metaKey);
-					}
 					indexMetaDataBegin = Parser.seekContent(bytes,indexMetaDataEnd,indexMetaDataLineEnd);
 					indexMetaDataEnd = Parser.seekWhitespace(bytes,indexMetaDataBegin,indexMetaDataLineEnd);
 					metaDataLength = indexMetaDataEnd - indexMetaDataBegin;
@@ -159,25 +155,29 @@ public final class URLsLoadService extends Service<DBRecord> {
 			return indexMetaDataLineBegin;
 		}
 
-		private void addURLMetaValue ( final byte[] bytes, final int indexURL, final int metaKeyID, final String metaKey, final String metaValue ) {
-			switch ( metaKeyID ) {
-				case URLMeta.ACCESSED:
-				case URLMeta.SCORE:
-				record.setMetaData(indexURL,metaKeyID,metaValue);
+		private void addURLMetaValue ( final int indexURL ) {
+			final String metaValue = urlMeta.metaValue;
+			final int metaKeyID = urlMeta.metaKeyID;
+			if ( !metaValue.isEmpty() ) {
+				switch ( metaKeyID ) {
+					case URLMeta.ACCESSED:
+					case URLMeta.SCORE:
+					record.setMetaData(indexURL,metaKeyID,metaValue);
+					break;
+					case URLMeta.UNKNOWN:
+					System.out.println("unsuported key \"" + urlMeta.metaKey + "\" in \"" + record.getFileName() + "\"");
+					break;
+				}
+			} else {
+				switch ( metaKeyID ) {
+					case URLMeta.ACCESSED:
+					case URLMeta.SCORE:
+					System.out.println("key \"" + urlMeta.metaKey + "\" has no value in " + record.getFileName());
+					break;
 
-				case URLMeta.UNKNOWN:
-				System.out.println("unsuported key \"" + metaKey + "\" in \"" + record.getFileName() + "\"");
-			}
-		}
-
-		private void addURLMetaKey ( final byte[] bytes, final int indexURL, final int metaKeyID, final String metaKey ) {
-			switch ( metaKeyID ) {
-				case URLMeta.ACCESSED:
-				case URLMeta.SCORE:
-				System.out.println("key \"" + metaKey + "\" has no value in " + record.getFileName());
-
-				case URLMeta.UNKNOWN:
-				System.out.println("unsuported key \"" + metaKey + "\" in \"" + record.getFileName() + "\"");
+					case URLMeta.UNKNOWN:
+					System.out.println("unsuported key \"" + urlMeta.metaKey + "\" in \"" + record.getFileName() + "\"");
+				}
 			}
 		}
 

@@ -9,6 +9,7 @@
 package com.github.vbsw.urlsaver.gui;
 
 
+import com.github.vbsw.urlsaver.api.Global;
 import com.github.vbsw.urlsaver.api.Preferences.PreferencesBooleanValue;
 import com.github.vbsw.urlsaver.pref.PreferencesConfig;
 
@@ -48,7 +49,7 @@ public class CheckBoxes {
 	}
 
 	private void maximize_changed ( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) {
-		final PreferencesBooleanValue windowMaximizedValue = stdGUI.global.getPreferences().getBooleanValue(PreferencesConfig.WINDOW_MAXIMIZED_ID);
+		final PreferencesBooleanValue windowMaximizedValue = Global.preferences.getBooleanValue(PreferencesConfig.WINDOW_MAXIMIZED_ID);
 		final boolean valueChanged = windowMaximizedValue.getSaved() != newValue;
 		windowMaximizedValue.setModified(newValue);
 		maximize.setFontWeight(valueChanged);
@@ -56,7 +57,7 @@ public class CheckBoxes {
 	}
 
 	private void loadAtStart_changed ( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) {
-		final PreferencesBooleanValue urlsFileAutoloadAllValue = stdGUI.global.getPreferences().getBooleanValue(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID);
+		final PreferencesBooleanValue urlsFileAutoloadAllValue = Global.preferences.getBooleanValue(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID);
 		final boolean valueChanged = urlsFileAutoloadAllValue.getSaved() != newValue;
 		urlsFileAutoloadAllValue.setModified(newValue);
 		urlsFileAutoloadAll.setFontWeight(valueChanged);
@@ -64,7 +65,7 @@ public class CheckBoxes {
 	}
 
 	private void byPrefix_changed ( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) {
-		final PreferencesBooleanValue searchByPrefixValue = stdGUI.global.getPreferences().getBooleanValue(PreferencesConfig.SEARCH_BY_PREFIX_ID);
+		final PreferencesBooleanValue searchByPrefixValue = Global.preferences.getBooleanValue(PreferencesConfig.SEARCH_BY_PREFIX_ID);
 		final boolean valueChanged = searchByPrefixValue.getSaved() != newValue;
 		searchByPrefixValue.setModified(newValue);
 		byPrefix.setFontWeight(valueChanged);

@@ -14,7 +14,7 @@ package com.github.vbsw.urlsaver.api;
  */
 public abstract class Preferences {
 
-	public abstract void initialize ( Global global );
+	public abstract void initialize ( );
 
 	public abstract void loadCustomPreferences ( );
 

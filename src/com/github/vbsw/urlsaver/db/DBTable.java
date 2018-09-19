@@ -15,13 +15,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-import com.github.vbsw.urlsaver.api.URLMeta;
-
 
 /**
  * @author Vitali Baumtrok
  */
-public class DBRecord {
+public class DBTable {
 
 	private static final int INITIAL_CAPACITY = 250;
 
@@ -30,7 +28,7 @@ public class DBRecord {
 	private final DynArrayOfString2 tagsOnURLs = new DynArrayOfString2(INITIAL_CAPACITY);
 	private final DynArrayOfString2 urlsOnTags = new DynArrayOfString2(INITIAL_CAPACITY);
 	private final DynArrayOfString2 metaDataOnURLs = new DynArrayOfString2(INITIAL_CAPACITY);
-	private final WordSearch urlsSearch = new WordSearch(tags,urlsOnTags);
+	private final URLsSearch urlsSearch = new URLsSearch(urls,tags,urlsOnTags,metaDataOnURLs);
 
 	private int urlsCountSaved;
 	private int tagsCountSaved;
@@ -44,11 +42,11 @@ public class DBRecord {
 	private int selectedURLIndex;
 	private long fileSize;
 
-	public DBRecord ( ) {
+	public DBTable ( ) {
 		setStubs();
 	}
 
-	public DBRecord ( final Path path ) {
+	public DBTable ( final Path path ) {
 		setPath(path);
 	}
 
@@ -125,8 +123,7 @@ public class DBRecord {
 	}
 
 	public void setMetaData ( final int index, final int metaKeyID, final String metaValue ) {
-		final int indexMetaKeyID = metaKeyID - (URLMeta.NONE + 1);
-		metaDataOnURLs.values[index].set(indexMetaKeyID,metaValue);
+		metaDataOnURLs.values[index].set(metaKeyID,metaValue);
 	}
 
 	public String getTagsAsString ( final int index ) {
@@ -176,8 +173,8 @@ public class DBRecord {
 		return urlsSearchString;
 	}
 
-	public ArrayList<String> getURLsSearchResult ( ) {
-		return urlsSearch.getResult();
+	public ArrayList<URLsSearchResult> getURLsSearchResults ( ) {
+		return urlsSearch.getResults();
 	}
 
 	public void setSelectedURLIndex ( final int selectedURLIndex ) {
@@ -276,6 +273,7 @@ public class DBRecord {
 			}
 			urls.remove(urlIndex);
 			tagsOnURLs.remove(urlIndex);
+			metaDataOnURLs.remove(urlIndex);
 			removeUnusedTags(tagsOnURLUnused);
 			urlsSearch.removeFromResult(url);
 		}
