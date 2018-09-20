@@ -58,7 +58,7 @@ public class TextFields {
 	}
 
 	public void urlSearch_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
-		final DBTable record = Global.dataBase.getSelectedRecord();
+		final DBTable record = Global.db.getSelectedDBTable();
 		if ( newValue != null )
 			record.setURLsSearchString(newValue);
 		else
@@ -66,7 +66,7 @@ public class TextFields {
 	}
 
 	public void urlSearch_enterPressed ( final ActionEvent event ) {
-		final DBTable record = Global.dataBase.getSelectedRecord();
+		final DBTable record = Global.db.getSelectedDBTable();
 		final String searchString = record.getURLsSearchString();
 		final boolean searchByPrefix = Global.preferences.getBooleanValue(PreferencesConfig.SEARCH_BY_PREFIX_ID).getSaved();
 		final DynArrayOfString searchTags = Converter.toDynArrayList(searchString);
@@ -79,9 +79,9 @@ public class TextFields {
 
 	public void url_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final String urlTyped = Parser.trim(url.control.getText());
-		final DBTable selectedRecord = Global.dataBase.getSelectedRecord();
-		final boolean urlExists = urlTyped.length() > 0 && selectedRecord.getURLIndex(urlTyped) >= 0;
-		final boolean urlModified = urlTyped.length() > 0 && selectedRecord.getURLIndex(urlTyped) < 0;
+		final DBTable selectedDBTable = Global.db.getSelectedDBTable();
+		final boolean urlExists = selectedDBTable.getURLIndex(urlTyped) >= 0;
+		final boolean urlModified = urlTyped.length() > 0 && !urlExists;
 		stdGUI.properties.urlExistsProperty().set(urlExists);
 		stdGUI.properties.urlModifiedProperty().set(urlModified);
 		stdGUI.properties.urlDeleteRequestedProperty().set(false);

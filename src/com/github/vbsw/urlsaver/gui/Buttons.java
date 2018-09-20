@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import com.github.vbsw.urlsaver.api.Global;
 import com.github.vbsw.urlsaver.api.Preferences;
+import com.github.vbsw.urlsaver.api.URLMeta;
 import com.github.vbsw.urlsaver.db.DBTable;
 import com.github.vbsw.urlsaver.db.DynArrayOfString;
 import com.github.vbsw.urlsaver.pref.PreferencesConfig;
@@ -96,20 +97,24 @@ public class Buttons {
 	}
 
 	public void confirmURLEdit ( ) {
-		final DBTable record = Global.dataBase.getSelectedRecord();
+		final DBTable selectedDBTable = Global.db.getSelectedDBTable();
 		final String urlTyped = Parser.trim(stdGUI.textFields.url.control.getText());
-		final int urlIndex = record.getURLIndex(urlTyped);
+		final int urlIndex = selectedDBTable.getURLIndex(urlTyped);
 		final DynArrayOfString tags = Converter.toDynArrayListSorted(stdGUI.textAreas.tags.control.getText());
-		record.setTags(urlIndex,tags);
+		final String score = null; // TODO: set score
+		final String urlDate = null; // TODO: set url date
+		selectedDBTable.setTags(urlIndex,tags);
+		selectedDBTable.setMetaData(urlIndex,URLMeta.SCORE,score);
+		selectedDBTable.setMetaData(urlIndex,URLMeta.DATE,urlDate);
 
-		final String tagsString = record.getTagsAsString(urlIndex);
+		final String tagsString = selectedDBTable.getTagsAsString(urlIndex);
 		stdGUI.textAreas.tags.control.setText(tagsString);
 		stdGUI.tableViews.urls.control.requestFocus();
 		stdGUI.refreshFileSelection();
 	}
 
 	public void confirmURLDelete ( ) {
-		final DBTable record = Global.dataBase.getSelectedRecord();
+		final DBTable record = Global.db.getSelectedDBTable();
 		final String url = stdGUI.tableViews.urls.control.getSelectionModel().getSelectedItem().getURL();
 		final int urlIndex = record.getURLIndex(url);
 		final int selectedIndex = stdGUI.tableViews.urls.control.getSelectionModel().getSelectedIndex();
@@ -127,7 +132,7 @@ public class Buttons {
 	}
 
 	public void confirmURLCreate ( ) {
-		final DBTable selectedRecord = Global.dataBase.getSelectedRecord();
+		final DBTable selectedRecord = Global.db.getSelectedDBTable();
 		final String url = Parser.trim(stdGUI.textFields.url.control.getText());
 		final int urlIndex = selectedRecord.addUrl(url);
 		final ArrayList<String> tags = Converter.toArrayList(stdGUI.textAreas.tags.control.getText());
@@ -175,14 +180,14 @@ public class Buttons {
 	}
 
 	private void reloadFile_clicked ( final ActionEvent event ) {
-		final DBTable selectedRecord = Global.dataBase.getSelectedRecord();
+		final DBTable selectedRecord = Global.db.getSelectedDBTable();
 		stdGUI.urlsIO.reloadFile(selectedRecord);
 	}
 
 	private void reloadFile_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			final DBTable selectedRecord = Global.dataBase.getSelectedRecord();
+			final DBTable selectedRecord = Global.db.getSelectedDBTable();
 			stdGUI.urlsIO.reloadFile(selectedRecord);
 		}
 	}
@@ -220,7 +225,7 @@ public class Buttons {
 	}
 
 	private void fileSaveOK_clicked ( final ActionEvent event ) {
-		final DBTable selectedRecord = Global.dataBase.getSelectedRecord();
+		final DBTable selectedRecord = Global.db.getSelectedDBTable();
 		stdGUI.urlsIO.saveFile(selectedRecord);
 		stdGUI.refreshFileInfo();
 		stdGUI.refreshTitle();
@@ -246,7 +251,7 @@ public class Buttons {
 	}
 
 	private void urlSearch_clicked ( final ActionEvent event ) {
-		final DBTable record = Global.dataBase.getSelectedRecord();
+		final DBTable record = Global.db.getSelectedDBTable();
 		final String searchString = record.getURLsSearchString();
 		final boolean searchByPrefix = Global.preferences.getBooleanValue(PreferencesConfig.SEARCH_BY_PREFIX_ID).getSaved();
 		final DynArrayOfString searchTags = Converter.toDynArrayList(searchString);
@@ -421,7 +426,7 @@ public class Buttons {
 				stdGUI.buttons.preferencesReload.control.requestFocus();
 			}
 		});
-		stdGUI.listViews.files.control.getItems().addAll(Global.dataBase.getRecords());
+		stdGUI.listViews.files.control.getItems().addAll(Global.db.getTables());
 		stdGUI.listViews.files.control.getSelectionModel().select(selectedIndex);
 	}
 
@@ -452,6 +457,7 @@ public class Buttons {
 	private ObservableValue<? extends Boolean> getUrlCancelDisableBinding ( ) {
 		BooleanBinding binding;
 		binding = Bindings.or(stdGUI.properties.urlModifiedProperty(),stdGUI.properties.urlTagsModifiedProperty());
+		binding = Bindings.or(binding,stdGUI.properties.urlDateModifiedProperty());
 		binding = Bindings.or(binding,stdGUI.properties.urlDeleteRequestedProperty());
 		binding = Bindings.not(binding);
 		return binding;
@@ -463,13 +469,14 @@ public class Buttons {
 		binding = Bindings.or(binding,stdGUI.properties.urlDeleteRequestedProperty());
 		binding = Bindings.or(binding,stdGUI.properties.urlModifiedProperty());
 		binding = Bindings.or(binding,stdGUI.properties.urlTagsModifiedProperty());
+		binding = Bindings.or(binding,stdGUI.properties.urlDateModifiedProperty());
 		return binding;
 	}
 
 	private ObservableValue<? extends Boolean> getEditOKDisableBinding ( ) {
 		BooleanBinding binding;
-		binding = Bindings.not(stdGUI.properties.urlModifiedProperty());
-		binding = Bindings.and(binding,stdGUI.properties.urlTagsModifiedProperty());
+		binding = Bindings.or(stdGUI.properties.urlTagsModifiedProperty(),stdGUI.properties.urlDateModifiedProperty());
+		binding = Bindings.and(binding,Bindings.not(stdGUI.properties.urlModifiedProperty()));
 		binding = Bindings.not(binding);
 		return binding;
 	}
@@ -492,9 +499,9 @@ public class Buttons {
 		try {
 			Files.createFile(defaultFilePath);
 			stdGUI.properties.createDefaultFilePossibleProperty().set(false);
-			Global.dataBase.initialize();
+			Global.db.initialize();
 			stdGUI.urlsIO.initialize();
-			final ArrayList<DBTable> records = Global.dataBase.getRecords();
+			final ArrayList<DBTable> records = Global.db.getTables();
 			stdGUI.listViews.files.control.getItems().setAll(records);
 			if ( records.size() > 0 ) {
 				stdGUI.listViews.files.control.requestFocus();

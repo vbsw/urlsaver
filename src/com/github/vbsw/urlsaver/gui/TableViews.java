@@ -11,8 +11,7 @@ package com.github.vbsw.urlsaver.gui;
 
 import java.util.ArrayList;
 
-import org.junit.jupiter.params.shadow.com.univocity.parsers.common.ColumnMap;
-
+import com.github.vbsw.urlsaver.api.Global;
 import com.github.vbsw.urlsaver.db.DBTable;
 import com.github.vbsw.urlsaver.db.URLsSearchResult;
 import com.github.vbsw.urlsaver.utility.Parser;
@@ -20,14 +19,10 @@ import com.github.vbsw.urlsaver.utility.WebBrowserAccess;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.scene.Parent;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -68,18 +63,21 @@ public class TableViews {
 		stdGUI.resetURLsProperties();
 	}
 
-//	private ListCell<String> urlsCellFactory ( final ListView<String> param ) {
-//		final ListCell<String> listCell = new UrlListCell();
-//		return listCell;
-//	}
-//
-//	private void urlsListViewItem_clicked ( final MouseEvent event ) {
-//		if ( event.getClickCount() == 2 ) {
-//			final UrlListCell cell = (UrlListCell) event.getSource();
-//			final String url = cell.getItem();
-//			WebBrowserAccess.openURL(url);
-//		}
-//	}
+	private TableRow<URLsSearchResult> urlsRowFactory ( final TableView<URLsSearchResult> table ) {
+		final TableRow<URLsSearchResult> row = new TableRow<URLsSearchResult>();
+		row.setOnMouseClicked( ( event ) -> urlsListViewItem_clicked(event));
+		return row;
+	}
+
+	private void urlsListViewItem_clicked ( final MouseEvent event ) {
+		if ( event.getClickCount() == 2 ) {
+			@SuppressWarnings ( "unchecked" )
+			final TableRow<URLsSearchResult> row = (TableRow<URLsSearchResult>) event.getSource();
+			final URLsSearchResult result = row.getItem();
+			final String url = result.getURL();
+			WebBrowserAccess.openURL(url);
+		}
+	}
 
 	public final class URLs {
 
@@ -94,12 +92,17 @@ public class TableViews {
 			final TableColumn<URLsSearchResult, String> accessedColumn = new TableColumn<URLsSearchResult, String>();
 			final TableColumn<URLsSearchResult, String> scoreColumn = new TableColumn<URLsSearchResult, String>();
 
-//			urlColumn.setCellFactory( ( param ) -> tableCellFactory(param));
-//			accessedColumn.setCellFactory( ( param ) -> accessedCellFactory(param));
-//			scoreColumn.setCellFactory( ( param ) -> scoreCellFactory(param));
-
+			urlColumn.setText("url");
 			urlColumn.setCellValueFactory( ( param ) -> urlCellValueFactory(param));
+			accessedColumn.setText("date");
+			accessedColumn.setMinWidth(100);
+			accessedColumn.setMaxWidth(100);
+			accessedColumn.setPrefWidth(100);
 			accessedColumn.setCellValueFactory( ( param ) -> accessedCellValueFactory(param));
+			scoreColumn.setText("score");
+			scoreColumn.setMinWidth(80);
+			scoreColumn.setMaxWidth(80);
+			scoreColumn.setPrefWidth(80);
 			scoreColumn.setCellValueFactory( ( param ) -> scoreCellValueFactory(param));
 
 			control.getColumns().clear();
@@ -107,14 +110,9 @@ public class TableViews {
 			control.getColumns().add(accessedColumn);
 			control.getColumns().add(scoreColumn);
 
-//			control.setCellFactory( ( ListView<String> param ) -> urlsCellFactory(param));
+			control.setRowFactory( ( table ) -> urlsRowFactory(table));
 			control.setOnKeyPressed(event -> urls_keyPressed(event));
 		}
-
-//		private TableCell<URLsSearchResult, String> tableCellFactory ( final TableColumn<URLsSearchResult, String> column ) {
-//			final TableCell<URLsSearchResult, String> tableCell = new URLTableCell();
-//			return tableCell;
-//		}
 
 		private ObservableValue<String> urlCellValueFactory ( final CellDataFeatures<URLsSearchResult, String> param ) {
 			final String str = param.getValue().getURL();
@@ -123,7 +121,7 @@ public class TableViews {
 		}
 
 		private ObservableValue<String> accessedCellValueFactory ( final CellDataFeatures<URLsSearchResult, String> param ) {
-			final String str = param.getValue().getAccessed();
+			final String str = param.getValue().getDate();
 			final ObservableValue<String> cellData = new SimpleStringProperty(str);
 			return cellData;
 		}
@@ -135,7 +133,7 @@ public class TableViews {
 		}
 
 		public void showSearchResults ( ) {
-			final DBTable record = stdGUI.getCurrentDBRecord();
+			final DBTable record = Global.db.getSelectedDBTable();
 			final ArrayList<URLsSearchResult> searchResult = record.getURLsSearchResults();
 			control.getItems().setAll(searchResult);
 			if ( control.getItems().size() > 0 ) {
@@ -145,21 +143,5 @@ public class TableViews {
 		}
 
 	}
-
-//	private final class URLTableCell extends TableCell<URLsSearchResult, String> {
-//
-//		@Override
-//		protected void updateItem ( final String item, final boolean empty ) {
-//			super.updateItem(item,empty);
-//			if ( empty ) {
-//				setText(null);
-//				setOnMouseClicked(null);
-//			} else {
-//				setText(item);
-//				setOnMouseClicked(event -> urlsListViewItem_clicked(event));
-//			}
-//		}
-//
-//	}
 
 }

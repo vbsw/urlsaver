@@ -9,6 +9,7 @@
 package com.github.vbsw.urlsaver.gui;
 
 
+import com.github.vbsw.urlsaver.api.Global;
 import com.github.vbsw.urlsaver.db.DBTable;
 import com.github.vbsw.urlsaver.db.DynArrayOfString;
 import com.github.vbsw.urlsaver.utility.Converter;
@@ -26,6 +27,7 @@ public class TextAreas {
 
 	public final Tags tags = new Tags();
 	public final Log log = new Log();
+
 	protected StdGUI stdGUI;
 
 	public TextAreas ( final StdGUI stdGUI ) {
@@ -38,12 +40,12 @@ public class TextAreas {
 	}
 
 	public void tags_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
-		final DBTable record = stdGUI.getCurrentDBRecord();
+		final DBTable selectedDBTable = Global.db.getSelectedDBTable();
 		final String urlTyped = Parser.trim(stdGUI.textFields.url.control.getText());
-		final int urlIndex = record.getURLIndex(urlTyped);
+		final int urlIndex = selectedDBTable.getURLIndex(urlTyped);
 		if ( urlIndex >= 0 ) {
 			final DynArrayOfString tags = Converter.toDynArrayListSorted(this.tags.control.getText());
-			final boolean equalTags = record.isEqualTags(urlIndex,tags);
+			final boolean equalTags = selectedDBTable.isEqualTags(urlIndex,tags);
 			stdGUI.properties.urlTagsModifiedProperty().set(!equalTags);
 		} else {
 			stdGUI.properties.urlTagsModifiedProperty().set(false);

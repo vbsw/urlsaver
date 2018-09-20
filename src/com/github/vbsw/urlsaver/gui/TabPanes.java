@@ -36,7 +36,7 @@ public class TabPanes {
 
 	private void topTab_selected ( ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue ) {
 		if ( newValue == top.about.control )
-			stdGUI.properties.confirmingQuitProperty().set(!Global.dataBase.isSaved());
+			stdGUI.properties.confirmingQuitProperty().set(!Global.db.isSaved());
 		else
 			stdGUI.properties.confirmingQuitProperty().set(false);
 	}
@@ -89,8 +89,9 @@ public class TabPanes {
 	public final class URLs extends CustomTab {
 		private void build ( final TabPane topPane, final Parent root ) {
 			control = stdGUI.tabPanes.getTab(topPane,"urls_tab");
-			control.disableProperty().bind(Bindings.not(stdGUI.properties.availableProperty()));
+			control.disableProperty().bind(Bindings.not(stdGUI.properties.urlsAvailableProperty()));
 			control.selectedProperty().addListener( ( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) -> stdGUI.tabPanes.topTab_urls_selected(observable,oldValue,newValue));
+			control.disableProperty().addListener( ( observable, oldValue, newValue ) -> stdGUI.clearURLsSearch(observable,oldValue,newValue));
 		}
 	}
 

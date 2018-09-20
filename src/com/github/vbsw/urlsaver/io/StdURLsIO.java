@@ -35,7 +35,7 @@ public class StdURLsIO extends URLsIO {
 
 	public void initialize ( ) {
 		urlsLoadServices.clear();
-		for ( DBTable record: Global.dataBase.getRecords() ) {
+		for ( DBTable record: Global.db.getTables() ) {
 			final URLsLoadService service = new URLsLoadService(Global.resourceLoader,Global.urlMeta,record);
 			final URLsLoadProgressListener progressListener = new URLsLoadProgressListener(record);
 			final ServiceFailedListener failedListener = new ServiceFailedListener();
@@ -54,21 +54,27 @@ public class StdURLsIO extends URLsIO {
 	}
 
 	public void reloadAllFiles ( ) {
-		for ( URLsLoadService service: urlsLoadServices )
+		for ( URLsLoadService service: urlsLoadServices ) {
+			service.dbTable.beginLoading();
+			if ( Global.db.getSelectedDBTable() == service.dbTable )
+				Global.gui.refreshFileSelection();
 			service.restart();
+		}
 	}
 
-	public void cancelLoadingFile ( final DBTable record ) {
+	public void cancelLoadingFile ( final DBTable dbTable ) {
 		for ( URLsLoadService service: urlsLoadServices ) {
-			if ( service.record == record )
+			if ( service.dbTable == dbTable )
 				service.cancel();
 		}
 	}
 
-	public void reloadFile ( final DBTable record ) {
+	public void reloadFile ( final DBTable dbTable ) {
 		for ( URLsLoadService service: urlsLoadServices ) {
-			if ( service.record == record ) {
-				record.beginLoading();
+			if ( service.dbTable == dbTable ) {
+				dbTable.beginLoading();
+				if ( Global.db.getSelectedDBTable() == dbTable )
+					Global.gui.refreshFileSelection();
 				service.restart();
 			}
 		}
@@ -76,13 +82,13 @@ public class StdURLsIO extends URLsIO {
 
 	@Override
 	public void saveAllFiles ( ) {
-		for ( DBTable record: Global.dataBase.getRecords() )
+		for ( DBTable record: Global.db.getTables() )
 			saveFile(record);
 	}
 
 	@Override
 	public void saveSelectedFile ( ) {
-		saveFile(Global.dataBase.getSelectedRecord());
+		saveFile(Global.db.getSelectedDBTable());
 	}
 
 	public void saveFile ( final DBTable record ) {
@@ -96,7 +102,7 @@ public class StdURLsIO extends URLsIO {
 				e.printStackTrace();
 			}
 			if ( success ) {
-				if ( Global.dataBase.getSelectedRecord() == record ) {
+				if ( Global.db.getSelectedDBTable() == record ) {
 					final StdProperties properties = (StdProperties) Global.properties;
 					properties.selectedFileDirtyProperty().setValue(false);
 					properties.confirmingSaveProperty().setValue(false);

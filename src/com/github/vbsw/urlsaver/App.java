@@ -33,14 +33,14 @@ public class App extends Application {
 		Global.resourceLoader = new StdResourceLoader();
 		Global.preferences = new StdPreferences();
 		Global.textGenerator = new StdTextGenerator();
-		Global.dataBase = new StdDataBase();
+		Global.db = new StdDataBase();
 		Global.gui = new StdGUI();
 		Global.urlMeta = new URLMeta();
 		Global.properties = new StdProperties();
 
 		Global.resourceLoader.initialize();
 		Global.preferences.initialize();
-		Global.dataBase.initialize();
+		Global.db.initialize();
 		Global.gui.initialize(primaryStage);
 	}
 

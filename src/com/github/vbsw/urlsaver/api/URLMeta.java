@@ -14,7 +14,7 @@ package com.github.vbsw.urlsaver.api;
  */
 public class URLMeta {
 
-	public static final int ACCESSED = 0;
+	public static final int DATE = 0;
 	public static final int SCORE = 1;
 	public static final int NONE = 2;
 	public static final int UNKNOWN = 3;
@@ -43,8 +43,8 @@ public class URLMeta {
 		final int metaKeyID;
 		if ( isNoneKey(metaKey) )
 			metaKeyID = URLMeta.NONE;
-		else if ( isAccessedKey(metaKey) )
-			metaKeyID = URLMeta.ACCESSED;
+		else if ( isDateKey(metaKey) )
+			metaKeyID = URLMeta.DATE;
 		else if ( isScoreKey(metaKey) )
 			metaKeyID = URLMeta.SCORE;
 		else
@@ -56,8 +56,8 @@ public class URLMeta {
 		return metaKey.equals("\\none");
 	}
 
-	private boolean isAccessedKey ( final String metaKey ) {
-		return metaKey.equals("\\accessed");
+	private boolean isDateKey ( final String metaKey ) {
+		return metaKey.equals("\\date");
 	}
 
 	private boolean isScoreKey ( final String metaKey ) {

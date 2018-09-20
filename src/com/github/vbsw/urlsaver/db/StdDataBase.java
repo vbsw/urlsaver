@@ -54,12 +54,12 @@ public class StdDataBase extends DataBase {
 	}
 
 	@Override
-	public ArrayList<DBTable> getRecords ( ) {
+	public ArrayList<DBTable> getTables ( ) {
 		return records;
 	}
 
 	@Override
-	public DBTable getRecordByFileName ( final String fileName ) {
+	public DBTable getTableByFileName ( final String fileName ) {
 		final int size = records.size();
 		for ( int i = 0; i < size; i += 1 ) {
 			final DBTable record = records.get(i);
@@ -70,12 +70,12 @@ public class StdDataBase extends DataBase {
 	}
 
 	@Override
-	public DBTable getSelectedRecord ( ) {
+	public DBTable getSelectedDBTable ( ) {
 		return selectedRecord;
 	}
 
 	@Override
-	public void setSelectedRecord ( final DBTable record ) {
+	public void setSelectedTable ( final DBTable record ) {
 		selectedRecord = record;
 	}
 

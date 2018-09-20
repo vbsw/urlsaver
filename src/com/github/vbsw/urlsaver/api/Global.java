@@ -21,7 +21,7 @@ public final class Global {
 	public static ResourceLoader resourceLoader;
 	public static Preferences preferences;
 	public static TextGenerator textGenerator;
-	public static DataBase dataBase;
+	public static DataBase db;
 	public static GUI gui;
 	public static URLMeta urlMeta;
 	public static Properties properties;

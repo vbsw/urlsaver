@@ -30,6 +30,7 @@ import com.github.vbsw.urlsaver.pref.PreferencesConfig;
 import com.github.vbsw.urlsaver.utility.Parser;
 
 import javafx.application.Platform;
+import javafx.beans.Observable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
@@ -59,6 +60,7 @@ public class StdGUI extends GUI {
 	public TextAreas textAreas;
 	public TextFields textFields;
 	public ComboBoxes comboBoxes;
+	public DatePickers datePickers;
 
 	public Scene scene;
 	public CSS css;
@@ -85,6 +87,7 @@ public class StdGUI extends GUI {
 		this.textAreas = new TextAreas(this);
 		this.textFields = new TextFields(this);
 		this.comboBoxes = new ComboBoxes(this);
+		this.datePickers = new DatePickers(this);
 
 		fxmlIO.initialize(Global.preferences);
 		preferencesIO.initialize(Global.preferences,logger);
@@ -98,8 +101,8 @@ public class StdGUI extends GUI {
 		scene.addEventFilter(KeyEvent.KEY_PRESSED,event -> hotKeys.keyPressed(event));
 		reloadFXML();
 		reloadCSS();
-		listViews.files.control.getItems().addAll(Global.dataBase.getRecords());
-		listViews.files.autoSelectRequested = Global.preferences.getBooleanValue(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID).getSaved() && Global.dataBase.getRecordByFileName(urlsFileToSelect) != null;
+		listViews.files.control.getItems().addAll(Global.db.getTables());
+		listViews.files.autoSelectRequested = Global.preferences.getBooleanValue(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID).getSaved() && Global.db.getTableByFileName(urlsFileToSelect) != null;
 		refreshCreateDefaultFileButton();
 
 		primaryStage.setOnCloseRequest(event -> onCloseRequest(event));
@@ -121,7 +124,7 @@ public class StdGUI extends GUI {
 
 	@Override
 	public void quit ( ) {
-		if ( Global.dataBase.isSaved() ) {
+		if ( Global.db.isSaved() ) {
 			quitUnconditionally();
 		} else {
 			tabPanes.top.control.getSelectionModel().select(tabPanes.top.about.control);
@@ -143,8 +146,8 @@ public class StdGUI extends GUI {
 
 	@Override
 	public void refreshTitle ( ) {
-		final DBTable record = getCurrentDBRecord();
-		final String windowTitle = createWindowTitle(record);
+		final DBTable dbTable = Global.db.getSelectedDBTable();
+		final String windowTitle = createWindowTitle(dbTable);
 		setWindowTitle(windowTitle);
 	}
 
@@ -171,7 +174,7 @@ public class StdGUI extends GUI {
 	}
 
 	private boolean isDefaultFileAvailable ( ) {
-		final ArrayList<DBTable> records = Global.dataBase.getRecords();
+		final ArrayList<DBTable> records = Global.db.getTables();
 		final String defaultFileName = Global.preferences.getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
 		for ( final DBTable record: records )
 			if ( record.getFileName().equals(defaultFileName) )
@@ -190,6 +193,7 @@ public class StdGUI extends GUI {
 		textFields.build(root);
 		comboBoxes.build(root);
 		checkBoxes.build(root);
+		datePickers.build(root);
 		scene.setRoot(root);
 	}
 
@@ -230,7 +234,7 @@ public class StdGUI extends GUI {
 
 	public void selectDefaultFile ( ) {
 		final String urlsFileSelect = Global.preferences.getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID).getModified();
-		final DBTable record = Global.dataBase.getRecordByFileName(urlsFileSelect);
+		final DBTable record = Global.db.getTableByFileName(urlsFileSelect);
 		if ( record != null ) {
 			listViews.files.control.requestFocus();
 			listViews.files.control.getSelectionModel().select(record);
@@ -238,13 +242,13 @@ public class StdGUI extends GUI {
 	}
 
 	public void refereshFileState ( ) {
-		final DBTable record = getCurrentDBRecord();
+		final DBTable record = Global.db.getSelectedDBTable();
 		if ( record != null ) {
-			properties.availableProperty().set(record.isLoaded());
+			properties.urlsAvailableProperty().set(record.isLoaded());
 			properties.selectedFileDirtyProperty().setValue(record.isDirty());
 			properties.selectedProperty().set(true);
 		} else {
-			properties.availableProperty().set(false);
+			properties.urlsAvailableProperty().set(false);
 			properties.selectedFileDirtyProperty().setValue(false);
 			properties.selectedProperty().set(false);
 		}
@@ -252,7 +256,7 @@ public class StdGUI extends GUI {
 
 	@Override
 	public void refreshFileInfo ( ) {
-		final DBTable record = getCurrentDBRecord();
+		final DBTable record = Global.db.getSelectedDBTable();
 		final String pathString;
 		final String urlsCountString;
 		final String tagsCountString;
@@ -282,11 +286,11 @@ public class StdGUI extends GUI {
 
 	@Override
 	public void recordLoaded ( final DBTable record ) {
-		final boolean fileIsAlreadySelected = (Global.dataBase.getSelectedRecord() == record);
+		final boolean fileIsAlreadySelected = (Global.db.getSelectedDBTable() == record);
 
 		if ( listViews.files.autoSelectRequested ) {
 			final String urlsFileSelect = Global.preferences.getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
-			final DBTable recordToSelect = Global.dataBase.getRecordByFileName(urlsFileSelect);
+			final DBTable recordToSelect = Global.db.getTableByFileName(urlsFileSelect);
 			if ( recordToSelect == record ) {
 				listViews.files.autoSelectRequested = false;
 				if ( tabPanes.top.urls.control.disabledProperty().getValue() ) {
@@ -321,9 +325,11 @@ public class StdGUI extends GUI {
 		resetURLsProperties();
 	}
 
-	public DBTable getCurrentDBRecord ( ) {
-		final DBTable record = listViews.files.control.getSelectionModel().getSelectedItem();
-		return record;
+	public void clearURLsSearch ( final Observable observable, final Boolean oldURLsAvailable, final Boolean newURLsAvailable ) {
+		if ( !newURLsAvailable ) {
+			textFields.urlSearch.control.setText("");
+			tableViews.urls.control.getItems().clear();
+		}
 	}
 
 	private void refreshCheckBoxView ( final CustomCheckBox customCheckBox, final PreferencesBooleanValue preferencesValue ) {
@@ -341,13 +347,12 @@ public class StdGUI extends GUI {
 	}
 
 	public void refreshURLsView ( ) {
-		final DBTable record = getCurrentDBRecord();
+		final DBTable record = Global.db.getSelectedDBTable();
 		if ( record != null ) {
 			final String urlSearchString = record.getURLsSearchString();
 			final ArrayList<URLsSearchResult> urlsSearchResults = record.getURLsSearchResults();
 			final int selectedURLIndex = record.getSelectedURLIndex();
 			textFields.urlSearch.control.setText(urlSearchString);
-			System.out.println(tableViews.urls.control);
 			tableViews.urls.control.getItems().setAll(urlsSearchResults);
 			if ( selectedURLIndex >= 0 )
 				tableViews.urls.control.getSelectionModel().select(selectedURLIndex);
@@ -355,7 +360,7 @@ public class StdGUI extends GUI {
 	}
 
 	public void resetURLsProperties ( ) {
-		final DBTable selectedRecord = Global.dataBase.getSelectedRecord();
+		final DBTable selectedRecord = Global.db.getSelectedDBTable();
 		final String urlTyped = Parser.trim(textFields.url.control.getText());
 		final boolean urlExists = urlTyped.length() > 0 && selectedRecord.getURLIndex(urlTyped) >= 0;
 		properties.urlExistsProperty().set(urlExists);
@@ -365,26 +370,33 @@ public class StdGUI extends GUI {
 	}
 
 	public void refreshURLsInfo ( ) {
-		final DBTable record = getCurrentDBRecord();
+		final DBTable record = Global.db.getSelectedDBTable();
 		if ( record != null ) {
 			final URLsSearchResult selectedURL = tableViews.urls.control.getSelectionModel().getSelectedItem();
 			final int selectedURLIndex;
 			final String urlString;
 			final String tagsString;
+			final String date;
+			final String score;
 			if ( selectedURL != null ) {
 				final int urlIndex = record.getURLIndex(selectedURL.getURL());
 				selectedURLIndex = tableViews.urls.control.getSelectionModel().getSelectedIndex();
 				urlString = selectedURL.getURL();
 				tagsString = record.getTagsAsString(urlIndex);
-
+				date = selectedURL.getDate();
+				score = selectedURL.getScore();
 			} else {
 				selectedURLIndex = -1;
 				urlString = "";
 				tagsString = "";
+				date = "";
+				score = "";
 			}
 			record.setSelectedURLIndex(selectedURLIndex);
 			textFields.url.control.setText(urlString);
 			textAreas.tags.control.setText(tagsString);
+			datePickers.urlDate.setDate(date);
+			comboBoxes.score.selectScore(score);
 		}
 	}
 

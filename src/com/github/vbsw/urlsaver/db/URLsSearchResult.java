@@ -39,7 +39,7 @@ public class URLsSearchResult {
 		this.score = score;
 	}
 
-	public String getAccessed ( ) {
+	public String getDate ( ) {
 		return accessed;
 	}
 

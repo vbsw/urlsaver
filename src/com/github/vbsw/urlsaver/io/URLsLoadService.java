@@ -31,12 +31,12 @@ public final class URLsLoadService extends Service<DBTable> {
 
 	protected final ResourceLoader resourceLoader;
 	protected final URLMeta urlMeta;
-	public final DBTable record;
+	public final DBTable dbTable;
 
-	public URLsLoadService ( final ResourceLoader resourceLoader, final URLMeta urlMeta, final DBTable record ) {
+	public URLsLoadService ( final ResourceLoader resourceLoader, final URLMeta urlMeta, final DBTable dbTable ) {
 		this.resourceLoader = resourceLoader;
 		this.urlMeta = urlMeta;
-		this.record = record;
+		this.dbTable = dbTable;
 	}
 
 	public boolean isSucceeded ( ) {
@@ -45,30 +45,30 @@ public final class URLsLoadService extends Service<DBTable> {
 
 	@Override
 	protected Task<DBTable> createTask ( ) {
-		final Task<DBTable> loadingTask = new URLsLoadTask(urlMeta,record,resourceLoader.getCharset());
+		final Task<DBTable> loadingTask = new URLsLoadTask(urlMeta,dbTable,resourceLoader.getCharset());
 		return loadingTask;
 	}
 
 	private static final class URLsLoadTask extends Task<DBTable> {
 
 		private final URLMeta urlMeta;
-		private final DBTable record;
+		private final DBTable dbTable;
 		private final Charset charset;
 
-		public URLsLoadTask ( final URLMeta urlMeta, final DBTable record, final Charset charset ) {
+		public URLsLoadTask ( final URLMeta urlMeta, final DBTable dbTable, final Charset charset ) {
 			this.urlMeta = urlMeta;
-			this.record = record;
+			this.dbTable = dbTable;
 			this.charset = charset;
 		}
 
 		@Override
 		protected DBTable call ( ) throws Exception {
-			final byte[] bytes = getBytesFromFile(record.getPath());
+			final byte[] bytes = getBytesFromFile(dbTable.getPath());
 			if ( bytes != null && bytes.length > 0 )
 				parseURLs(bytes);
 			else
 				super.updateProgress(100,100);
-			return record;
+			return dbTable;
 		}
 
 		private byte[] getBytesFromFile ( final Path path ) {
@@ -107,7 +107,7 @@ public final class URLsLoadService extends Service<DBTable> {
 			/* wordLength == 0 is when file end */
 			if ( wordLength > 0 ) {
 				final String url = new String(bytes,offset,wordLength,charset);
-				final int indexURL = record.addUrl(url);
+				final int indexURL = dbTable.addUrl(url);
 				final int indexTagsLineBegin = Parser.seekContent(bytes,indexLineEnd,bytes.length);
 				final int indexTagsLineEnd = Parser.seekLineEnd(bytes,indexTagsLineBegin,bytes.length);
 				int indexTagBegin = indexTagsLineBegin;
@@ -119,7 +119,7 @@ public final class URLsLoadService extends Service<DBTable> {
 					indexTagBegin = Parser.seekContent(bytes,indexTagEnd,indexTagsLineEnd);
 					indexTagEnd = Parser.seekWhitespace(bytes,indexTagBegin,indexTagsLineEnd);
 					tagLength = indexTagEnd - indexTagBegin;
-					record.addTagToUrl(indexURL,tag);
+					dbTable.addTagToUrl(indexURL,tag);
 				}
 				final int indexNext = parseURLMetaData(bytes,indexURL,indexTagsLineEnd);
 				return indexNext;
@@ -160,23 +160,23 @@ public final class URLsLoadService extends Service<DBTable> {
 			final int metaKeyID = urlMeta.metaKeyID;
 			if ( !metaValue.isEmpty() ) {
 				switch ( metaKeyID ) {
-					case URLMeta.ACCESSED:
+					case URLMeta.DATE:
 					case URLMeta.SCORE:
-					record.setMetaData(indexURL,metaKeyID,metaValue);
+					dbTable.setMetaData(indexURL,metaKeyID,metaValue);
 					break;
 					case URLMeta.UNKNOWN:
-					System.out.println("unsuported key \"" + urlMeta.metaKey + "\" in \"" + record.getFileName() + "\"");
+					System.out.println("unsuported key \"" + urlMeta.metaKey + "\" in \"" + dbTable.getFileName() + "\"");
 					break;
 				}
 			} else {
 				switch ( metaKeyID ) {
-					case URLMeta.ACCESSED:
+					case URLMeta.DATE:
 					case URLMeta.SCORE:
-					System.out.println("key \"" + urlMeta.metaKey + "\" has no value in " + record.getFileName());
+					System.out.println("key \"" + urlMeta.metaKey + "\" has no value in " + dbTable.getFileName());
 					break;
 
 					case URLMeta.UNKNOWN:
-					System.out.println("unsuported key \"" + urlMeta.metaKey + "\" in \"" + record.getFileName() + "\"");
+					System.out.println("unsuported key \"" + urlMeta.metaKey + "\" in \"" + dbTable.getFileName() + "\"");
 				}
 			}
 		}

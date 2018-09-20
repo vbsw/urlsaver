@@ -50,7 +50,7 @@ public class ListViews {
 	}
 
 	private void files_selected ( final ObservableValue<? extends DBTable> observable, final DBTable oldValue, final DBTable newValue ) {
-		Global.dataBase.setSelectedRecord(newValue);
+		Global.db.setSelectedTable(newValue);
 		stdGUI.refreshFileSelection();
 		stdGUI.refreshURLsView();
 		stdGUI.refreshURLsInfo();

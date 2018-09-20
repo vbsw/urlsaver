@@ -21,14 +21,14 @@ public abstract class DataBase {
 
 	public abstract void initialize ( );
 
-	public abstract ArrayList<DBTable> getRecords ( );
+	public abstract ArrayList<DBTable> getTables ( );
 
 	public abstract boolean isSaved ( );
 
-	public abstract DBTable getRecordByFileName ( String fileName );
+	public abstract DBTable getTableByFileName ( String fileName );
 
-	public abstract DBTable getSelectedRecord ( );
+	public abstract DBTable getSelectedDBTable ( );
 
-	public abstract void setSelectedRecord ( DBTable record );
+	public abstract void setSelectedTable ( DBTable table );
 
 }

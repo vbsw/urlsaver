@@ -160,7 +160,7 @@ public class URLsSearch {
 	private void fillResults ( ) {
 		for ( final String url: resultsStrings ) {
 			final int urlIndex = urls.binarySearch(url);
-			final String accessed = metaDataOnURLs.values[urlIndex].values[URLMeta.ACCESSED];
+			final String accessed = metaDataOnURLs.values[urlIndex].values[URLMeta.DATE];
 			final String score = metaDataOnURLs.values[urlIndex].values[URLMeta.SCORE];
 			final URLsSearchResult result = new URLsSearchResult();
 			result.setURL(url);

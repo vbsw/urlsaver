@@ -126,6 +126,10 @@ public class DBTable {
 		metaDataOnURLs.values[index].set(metaKeyID,metaValue);
 	}
 
+	public String getMetaData ( final int index, final int metaKeyID ) {
+		return metaDataOnURLs.values[index].values[metaKeyID];
+	}
+
 	public String getTagsAsString ( final int index ) {
 		final DynArrayOfString tagsOnURL = tagsOnURLs.values[index];
 		final StringBuilder stringBuilder = new StringBuilder();
@@ -220,6 +224,7 @@ public class DBTable {
 		tags.clear();
 		urlsOnTags.clear();
 		tagsOnURLs.clear();
+		urlsSearch.getResults().clear();
 	}
 
 	public void endLoading ( ) {
