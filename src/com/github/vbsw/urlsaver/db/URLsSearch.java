@@ -164,7 +164,7 @@ public class URLsSearch {
 			final String score = metaDataOnURLs.values[urlIndex].values[URLMeta.SCORE];
 			final URLsSearchResult result = new URLsSearchResult();
 			result.setURL(url);
-			result.setAccessed(accessed);
+			result.setDate(accessed);
 			result.setScore(score);
 			results.add(result);
 		}

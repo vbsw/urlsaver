@@ -19,6 +19,7 @@ import com.github.vbsw.urlsaver.api.Preferences;
 import com.github.vbsw.urlsaver.api.URLMeta;
 import com.github.vbsw.urlsaver.db.DBTable;
 import com.github.vbsw.urlsaver.db.DynArrayOfString;
+import com.github.vbsw.urlsaver.db.URLsSearchResult;
 import com.github.vbsw.urlsaver.pref.PreferencesConfig;
 import com.github.vbsw.urlsaver.utility.Converter;
 import com.github.vbsw.urlsaver.utility.Parser;
@@ -101,15 +102,19 @@ public class Buttons {
 		final String urlTyped = Parser.trim(stdGUI.textFields.url.control.getText());
 		final int urlIndex = selectedDBTable.getURLIndex(urlTyped);
 		final DynArrayOfString tags = Converter.toDynArrayListSorted(stdGUI.textAreas.tags.control.getText());
-		final String score = null; // TODO: set score
-		final String urlDate = null; // TODO: set url date
+		final String score = stdGUI.comboBoxes.score.getScoreAsString();
+		final String urlDate = stdGUI.datePickers.urlDate.getDateAsString();
 		selectedDBTable.setTags(urlIndex,tags);
 		selectedDBTable.setMetaData(urlIndex,URLMeta.SCORE,score);
 		selectedDBTable.setMetaData(urlIndex,URLMeta.DATE,urlDate);
 
 		final String tagsString = selectedDBTable.getTagsAsString(urlIndex);
+		final URLsSearchResult urlsResult = stdGUI.tableViews.urls.control.getSelectionModel().getSelectedItem();
+		urlsResult.setScore(score);
+		urlsResult.setDate(urlDate);
 		stdGUI.textAreas.tags.control.setText(tagsString);
 		stdGUI.tableViews.urls.control.requestFocus();
+		stdGUI.tableViews.urls.control.refresh();
 		stdGUI.refreshFileSelection();
 	}
 
@@ -134,10 +139,14 @@ public class Buttons {
 	public void confirmURLCreate ( ) {
 		final DBTable selectedRecord = Global.db.getSelectedDBTable();
 		final String url = Parser.trim(stdGUI.textFields.url.control.getText());
+		final String score = stdGUI.comboBoxes.score.getScoreAsString();
+		final String urlDate = stdGUI.datePickers.urlDate.getDateAsString();
 		final int urlIndex = selectedRecord.addUrl(url);
 		final ArrayList<String> tags = Converter.toArrayList(stdGUI.textAreas.tags.control.getText());
 		for ( final String tag: tags )
 			selectedRecord.addTagToUrl(urlIndex,tag);
+		selectedRecord.setMetaData(urlIndex,URLMeta.SCORE,score);
+		selectedRecord.setMetaData(urlIndex,URLMeta.DATE,urlDate);
 		final String tagsString = selectedRecord.getTagsAsString(urlIndex);
 		stdGUI.textAreas.tags.control.setText(tagsString);
 		stdGUI.tableViews.urls.control.requestFocus();
@@ -324,6 +333,8 @@ public class Buttons {
 		confirmURLEdit();
 		stdGUI.properties.urlExistsProperty().set(true);
 		stdGUI.properties.urlTagsModifiedProperty().set(false);
+		stdGUI.properties.urlDateModifiedProperty().set(false);
+		stdGUI.properties.urlScoreModifiedProperty().set(false);
 	}
 
 	private void urlEditOK_keyPressed ( final KeyEvent event ) {
@@ -458,6 +469,7 @@ public class Buttons {
 		BooleanBinding binding;
 		binding = Bindings.or(stdGUI.properties.urlModifiedProperty(),stdGUI.properties.urlTagsModifiedProperty());
 		binding = Bindings.or(binding,stdGUI.properties.urlDateModifiedProperty());
+		binding = Bindings.or(binding,stdGUI.properties.urlScoreModifiedProperty());
 		binding = Bindings.or(binding,stdGUI.properties.urlDeleteRequestedProperty());
 		binding = Bindings.not(binding);
 		return binding;
@@ -470,12 +482,14 @@ public class Buttons {
 		binding = Bindings.or(binding,stdGUI.properties.urlModifiedProperty());
 		binding = Bindings.or(binding,stdGUI.properties.urlTagsModifiedProperty());
 		binding = Bindings.or(binding,stdGUI.properties.urlDateModifiedProperty());
+		binding = Bindings.or(binding,stdGUI.properties.urlScoreModifiedProperty());
 		return binding;
 	}
 
 	private ObservableValue<? extends Boolean> getEditOKDisableBinding ( ) {
 		BooleanBinding binding;
 		binding = Bindings.or(stdGUI.properties.urlTagsModifiedProperty(),stdGUI.properties.urlDateModifiedProperty());
+		binding = Bindings.or(binding,stdGUI.properties.urlScoreModifiedProperty());
 		binding = Bindings.and(binding,Bindings.not(stdGUI.properties.urlModifiedProperty()));
 		binding = Bindings.not(binding);
 		return binding;

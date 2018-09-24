@@ -9,6 +9,12 @@
 package com.github.vbsw.urlsaver.gui;
 
 
+import com.github.vbsw.urlsaver.api.Global;
+import com.github.vbsw.urlsaver.api.URLMeta;
+import com.github.vbsw.urlsaver.db.DBTable;
+import com.github.vbsw.urlsaver.utility.Parser;
+
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
@@ -36,6 +42,21 @@ public class ComboBoxes {
 		score.build(root);
 	}
 
+	private void score_selected ( final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue ) {
+		final DBTable selectedDBTable = Global.db.getSelectedDBTable();
+		final String urlTyped = Parser.trim(stdGUI.textFields.url.control.getText());
+		final int urlIndex = selectedDBTable.getURLIndex(urlTyped);
+		if ( urlIndex >= 0 ) {
+			final String scoreOld = selectedDBTable.getMetaData(urlIndex,URLMeta.SCORE);
+			final String scoreNew = score.getScoreAsString();
+			final boolean equalDates = scoreOld == scoreNew || scoreOld != null && scoreOld.equals(scoreNew);
+			stdGUI.properties.urlScoreModifiedProperty().set(!equalDates);
+		} else {
+			stdGUI.properties.urlScoreModifiedProperty().set(false);
+		}
+		stdGUI.properties.urlDeleteRequestedProperty().set(false);
+	}
+
 	public final class Score extends CustomComboBox {
 
 		@SuppressWarnings ( "unchecked" )
@@ -43,6 +64,7 @@ public class ComboBoxes {
 			final ObservableList<String> items = FXCollections.observableArrayList("no score","(10) Materpiece","(9) Great","(8) Very Good","(7) Good","(6) Fine","(5) Avarage","(4) Bad","(3) Very Bad","(2) Horrible","(1) Appaling");
 			control = (ComboBox<String>) root.lookup("#score_cb");
 			control.getItems().addAll(items);
+			control.getSelectionModel().selectedIndexProperty().addListener( ( observable, oldValue, newValue ) -> score_selected(observable,oldValue,newValue));
 		}
 
 		public void selectScore ( final String score ) {
@@ -72,6 +94,18 @@ public class ComboBoxes {
 			} else {
 				control.getSelectionModel().select(0);
 			}
+		}
+
+		public String getScoreAsString ( ) {
+			final int index = control.getSelectionModel().getSelectedIndex();
+			final String score;
+			if ( index == 0 )
+				score = null;
+			else if ( index == 1 )
+				score = "10";
+			else
+				score = "" + (char) (59 - index);
+			return score;
 		}
 
 	}

@@ -11,6 +11,7 @@ package com.github.vbsw.urlsaver.io;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
@@ -95,7 +96,7 @@ public class StdURLsIO extends URLsIO {
 		if ( record != null && record.isDirty() ) {
 			final Path filePath = record.getPath();
 			boolean success = false;
-			try ( final BufferedWriter writer = java.nio.file.Files.newBufferedWriter(filePath,Global.resourceLoader.getCharset()) ) {
+			try ( final BufferedWriter writer = Files.newBufferedWriter(filePath,Global.resourceLoader.getCharset()) ) {
 				record.write(writer);
 				success = true;
 			} catch ( final IOException e ) {
@@ -109,7 +110,7 @@ public class StdURLsIO extends URLsIO {
 					Global.gui.refreshFileInfo();
 					Global.gui.refreshTitle();
 				}
-				record.endSave();
+				record.saveComplete();
 			}
 		}
 	}

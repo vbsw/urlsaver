@@ -15,6 +15,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
+import com.github.vbsw.urlsaver.api.URLMeta;
+
 
 /**
  * @author Vitali Baumtrok
@@ -206,6 +208,24 @@ public class DBTable {
 					writer.write(tagsOnURL.values[j]);
 				}
 			}
+			final String score = metaDataOnURLs.values[i].values[URLMeta.SCORE];
+			final String date = metaDataOnURLs.values[i].values[URLMeta.DATE];
+			final boolean metaExists = score != null || date != null;
+			if ( metaExists ) {
+				writer.newLine();
+				if ( score != null ) {
+					writer.write("\\score=");
+					writer.write(score);
+					if ( date != null ) {
+						writer.write(" ");
+						writer.write("\\date=");
+						writer.write(date);
+					}
+				} else {
+					writer.write("\\date=");
+					writer.write(date);
+				}
+			}
 			writer.newLine();
 		}
 	}
@@ -235,7 +255,7 @@ public class DBTable {
 		loadedFlag = true;
 	}
 
-	public void endSave ( ) {
+	public void saveComplete ( ) {
 		endLoading();
 	}
 

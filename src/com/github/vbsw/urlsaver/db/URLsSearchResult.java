@@ -21,7 +21,7 @@ public class URLsSearchResult {
 
 	private String url;
 	private String score;
-	private String accessed;
+	private String date;
 
 	public String getURL ( ) {
 		return url;
@@ -40,11 +40,11 @@ public class URLsSearchResult {
 	}
 
 	public String getDate ( ) {
-		return accessed;
+		return date;
 	}
 
-	public void setAccessed ( final String accessed ) {
-		this.accessed = accessed;
+	public void setDate ( final String date ) {
+		this.date = date;
 	}
 
 	private static class ResultComparator implements Comparator<URLsSearchResult> {

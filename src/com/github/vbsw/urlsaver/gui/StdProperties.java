@@ -29,6 +29,7 @@ public class StdProperties extends Properties {
 	private final SimpleBooleanProperty urlDeleteRequested = new SimpleBooleanProperty();
 	private final SimpleBooleanProperty urlModified = new SimpleBooleanProperty();
 	private final SimpleBooleanProperty urlTagsModified = new SimpleBooleanProperty();
+	private final SimpleBooleanProperty urlScoreModified = new SimpleBooleanProperty();
 	private final SimpleBooleanProperty urlDateModified = new SimpleBooleanProperty();
 
 	private final SimpleBooleanProperty confirmingCreatePreferences = new SimpleBooleanProperty();
@@ -82,6 +83,10 @@ public class StdProperties extends Properties {
 
 	public SimpleBooleanProperty urlTagsModifiedProperty ( ) {
 		return urlTagsModified;
+	}
+
+	public SimpleBooleanProperty urlScoreModifiedProperty ( ) {
+		return urlScoreModified;
 	}
 
 	public SimpleBooleanProperty urlDateModifiedProperty ( ) {

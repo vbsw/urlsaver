@@ -367,6 +367,8 @@ public class StdGUI extends GUI {
 		properties.urlDeleteRequestedProperty().set(false);
 		properties.urlModifiedProperty().set(false);
 		properties.urlTagsModifiedProperty().set(false);
+		properties.urlDateModifiedProperty().set(false);
+		properties.urlScoreModifiedProperty().set(false);
 	}
 
 	public void refreshURLsInfo ( ) {

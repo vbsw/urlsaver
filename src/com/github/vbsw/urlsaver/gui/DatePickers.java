@@ -11,6 +11,7 @@ package com.github.vbsw.urlsaver.gui;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import com.github.vbsw.urlsaver.api.Global;
 import com.github.vbsw.urlsaver.api.URLMeta;
@@ -44,13 +45,13 @@ public class DatePickers {
 		urlDate.build(root);
 	}
 
-	private void urlDate_changed ( final ObservableValue<? extends LocalDate> observable, final LocalDate oldValue, final LocalDate newValue ) {
+	private void urlDate_textChanged ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final DBTable selectedDBTable = Global.db.getSelectedDBTable();
 		final String urlTyped = Parser.trim(stdGUI.textFields.url.control.getText());
 		final int urlIndex = selectedDBTable.getURLIndex(urlTyped);
 		if ( urlIndex >= 0 ) {
 			final String urlDateStrOld = selectedDBTable.getMetaData(urlIndex,URLMeta.DATE);
-			final String urlDateStrNew = DatePickers.converter.toString(newValue);
+			final String urlDateStrNew = stdGUI.datePickers.urlDate.getDateAsString();
 			final boolean equalDates = urlDateStrOld == urlDateStrNew || urlDateStrOld != null && urlDateStrOld.equals(urlDateStrNew);
 			stdGUI.properties.urlDateModifiedProperty().set(!equalDates);
 		} else {
@@ -67,7 +68,7 @@ public class DatePickers {
 			control = (DatePicker) root.lookup("#url_dp");
 			control.setPromptText(DatePickers.datePattern);
 			control.setConverter(DatePickers.converter);
-			control.valueProperty().addListener( ( observable, oldValue, newValue ) -> urlDate_changed(observable,oldValue,newValue));
+			control.getEditor().textProperty().addListener( ( observable, oldValue, newValue ) -> urlDate_textChanged(observable,oldValue,newValue));
 		}
 
 		public void setDate ( final String dateStr ) {
@@ -81,6 +82,22 @@ public class DatePickers {
 			} else {
 				control.setValue(null);
 			}
+		}
+
+		public String getDateAsString ( ) {
+			final String dateStrRaw = control.getEditor().getText();
+			String dateStr = null;
+			if ( !dateStrRaw.isEmpty() ) {
+				try {
+					LocalDate.parse(dateStrRaw,DatePickers.dateFormatter);
+					dateStr = dateStrRaw;
+				} catch ( DateTimeParseException e ) {
+					final LocalDate urlDateOld = control.getValue();
+					if ( urlDateOld != null )
+						dateStr = DatePickers.dateFormatter.format(urlDateOld);
+				}
+			}
+			return dateStr;
 		}
 
 	}
