@@ -15,11 +15,11 @@ import java.nio.file.Path;
 /**
  * @author Vitali Baumtrok
  */
-public abstract class LaunchSource {
+public abstract class ProgramFile {
 
 	public abstract boolean isJar ( );
 
-	public abstract Path getJarName ( );
+	public abstract Path getName ( );
 
 	public abstract Path getDirectory ( );
 

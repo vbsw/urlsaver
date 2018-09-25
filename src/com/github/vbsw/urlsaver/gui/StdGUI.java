@@ -93,21 +93,21 @@ public class StdGUI extends GUI {
 		preferencesIO.initialize(Global.preferences,logger);
 		logger.initialize(this);
 
-		final int windowWidth = Global.preferences.getIntValue(PreferencesConfig.WINDOW_WIDTH_ID).getSaved();
-		final int windowHeight = Global.preferences.getIntValue(PreferencesConfig.WINDOW_HEIGHT_ID).getSaved();
-		final String urlsFileToSelect = Global.preferences.getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
+		final int windowWidth = Global.preferences.getPropertyInt(PreferencesConfig.WINDOW_WIDTH_ID).getSaved();
+		final int windowHeight = Global.preferences.getPropertyInt(PreferencesConfig.WINDOW_HEIGHT_ID).getSaved();
+		final String urlsFileToSelect = Global.preferences.getPropertyString(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
 		final Parent rootStub = new AnchorPane();
 		scene = new Scene(rootStub,windowWidth,windowHeight);
 		scene.addEventFilter(KeyEvent.KEY_PRESSED,event -> hotKeys.keyPressed(event));
 		reloadFXML();
 		reloadCSS();
 		listViews.files.control.getItems().addAll(Global.db.getTables());
-		listViews.files.autoSelectRequested = Global.preferences.getBooleanValue(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID).getSaved() && Global.db.getTableByFileName(urlsFileToSelect) != null;
+		listViews.files.autoSelectRequested = Global.preferences.getPropertyBoolean(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID).getSaved() && Global.db.getTableByFileName(urlsFileToSelect) != null;
 		refreshCreateDefaultFileButton();
 
 		primaryStage.setOnCloseRequest(event -> onCloseRequest(event));
 		primaryStage.setScene(scene);
-		primaryStage.setMaximized(Global.preferences.getBooleanValue(PreferencesConfig.WINDOW_MAXIMIZED_ID).getSaved());
+		primaryStage.setMaximized(Global.preferences.getPropertyBoolean(PreferencesConfig.WINDOW_MAXIMIZED_ID).getSaved());
 		primaryStage.show();
 
 		refreshPreferencesView();
@@ -157,7 +157,7 @@ public class StdGUI extends GUI {
 	}
 
 	public String createWindowTitle ( final DBTable record ) {
-		final String windowTitleCustom = Global.preferences.getStringValue(PreferencesConfig.WINDOW_TITLE_ID).getSaved();
+		final String windowTitleCustom = Global.preferences.getPropertyString(PreferencesConfig.WINDOW_TITLE_ID).getSaved();
 		final String windowTitle;
 		if ( record != null )
 			if ( record.isDirty() )
@@ -175,7 +175,7 @@ public class StdGUI extends GUI {
 
 	private boolean isDefaultFileAvailable ( ) {
 		final ArrayList<DBTable> records = Global.db.getTables();
-		final String defaultFileName = Global.preferences.getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
+		final String defaultFileName = Global.preferences.getPropertyString(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
 		for ( final DBTable record: records )
 			if ( record.getFileName().equals(defaultFileName) )
 				return false;
@@ -214,14 +214,14 @@ public class StdGUI extends GUI {
 	public void refreshPreferencesView ( ) {
 		final Preferences preferences = Global.preferences;
 		final boolean disable = !preferences.isCustomPreferencesLoaded();
-		textFields.title.control.setText(preferences.getStringValue(PreferencesConfig.WINDOW_TITLE_ID).getModified());
-		textFields.width.control.setText(Integer.toString(preferences.getIntValue(PreferencesConfig.WINDOW_WIDTH_ID).getModified()));
-		textFields.height.control.setText(Integer.toString(preferences.getIntValue(PreferencesConfig.WINDOW_HEIGHT_ID).getModified()));
-		textFields.urlsFileExtension.control.setText(preferences.getStringValue(PreferencesConfig.URLS_FILE_EXTENSION_ID).getModified());
-		textFields.urlsFileSelect.control.setText(preferences.getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID).getModified());
-		refreshCheckBoxView(checkBoxes.maximize,preferences.getBooleanValue(PreferencesConfig.WINDOW_MAXIMIZED_ID));
-		refreshCheckBoxView(checkBoxes.urlsFileAutoloadAll,preferences.getBooleanValue(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID));
-		refreshCheckBoxView(checkBoxes.byPrefix,preferences.getBooleanValue(PreferencesConfig.SEARCH_BY_PREFIX_ID));
+		textFields.title.control.setText(preferences.getPropertyString(PreferencesConfig.WINDOW_TITLE_ID).getModified());
+		textFields.width.control.setText(Integer.toString(preferences.getPropertyInt(PreferencesConfig.WINDOW_WIDTH_ID).getModified()));
+		textFields.height.control.setText(Integer.toString(preferences.getPropertyInt(PreferencesConfig.WINDOW_HEIGHT_ID).getModified()));
+		textFields.urlsFileExtension.control.setText(preferences.getPropertyString(PreferencesConfig.URLS_FILE_EXTENSION_ID).getModified());
+		textFields.urlsFileSelect.control.setText(preferences.getPropertyString(PreferencesConfig.URLS_FILE_SELECT_ID).getModified());
+		refreshCheckBoxView(checkBoxes.maximize,preferences.getPropertyBoolean(PreferencesConfig.WINDOW_MAXIMIZED_ID));
+		refreshCheckBoxView(checkBoxes.urlsFileAutoloadAll,preferences.getPropertyBoolean(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID));
+		refreshCheckBoxView(checkBoxes.byPrefix,preferences.getPropertyBoolean(PreferencesConfig.SEARCH_BY_PREFIX_ID));
 		textFields.title.control.setDisable(disable);
 		textFields.width.control.setDisable(disable);
 		textFields.height.control.setDisable(disable);
@@ -233,7 +233,7 @@ public class StdGUI extends GUI {
 	}
 
 	public void selectDefaultFile ( ) {
-		final String urlsFileSelect = Global.preferences.getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID).getModified();
+		final String urlsFileSelect = Global.preferences.getPropertyString(PreferencesConfig.URLS_FILE_SELECT_ID).getModified();
 		final DBTable record = Global.db.getTableByFileName(urlsFileSelect);
 		if ( record != null ) {
 			listViews.files.control.requestFocus();
@@ -289,7 +289,7 @@ public class StdGUI extends GUI {
 		final boolean fileIsAlreadySelected = (Global.db.getSelectedDBTable() == record);
 
 		if ( listViews.files.autoSelectRequested ) {
-			final String urlsFileSelect = Global.preferences.getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
+			final String urlsFileSelect = Global.preferences.getPropertyString(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
 			final DBTable recordToSelect = Global.db.getTableByFileName(urlsFileSelect);
 			if ( recordToSelect == record ) {
 				listViews.files.autoSelectRequested = false;

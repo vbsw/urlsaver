@@ -16,20 +16,20 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.github.vbsw.urlsaver.api.LaunchSource;
+import com.github.vbsw.urlsaver.api.ProgramFile;
 import com.github.vbsw.urlsaver.api.Resource;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public class StdLaunchSource extends LaunchSource {
+public class StdProgramFile extends ProgramFile {
 
 	protected boolean classIsInJar;
 	protected Path directory;
 	protected Path jarName;
 
-	public StdLaunchSource ( ) {
+	public StdProgramFile ( ) {
 		final String classURLString = getClassURLString();
 		final int canonicalClassNameLength = getCanonicalClassNameLength();
 		classIsInJar = checkIsInJar(classURLString);
@@ -48,14 +48,14 @@ public class StdLaunchSource extends LaunchSource {
 	 * @return for example jar:file:/C:/Users/alice/Desktop/test.jar!/com/github/vbsw/urlsaver/utility/Jar.class
 	 */
 	protected String getClassURLString ( ) {
-		final String className = StdLaunchSource.class.getSimpleName() + ".class";
-		final URL classURL = StdLaunchSource.class.getResource(className);
+		final String className = StdProgramFile.class.getSimpleName() + ".class";
+		final URL classURL = StdProgramFile.class.getResource(className);
 		final String classURLString = classURL.toString();
 		return classURLString;
 	}
 
 	protected int getCanonicalClassNameLength ( ) {
-		final String canonicalClassName = StdLaunchSource.class.getCanonicalName();
+		final String canonicalClassName = StdProgramFile.class.getCanonicalName();
 		final int canonicalClassNameLength = canonicalClassName.length() + ".class".length();
 		return canonicalClassNameLength;
 	}
@@ -101,7 +101,7 @@ public class StdLaunchSource extends LaunchSource {
 	}
 
 	@Override
-	public Path getJarName ( ) {
+	public Path getName ( ) {
 		return jarName;
 	}
 

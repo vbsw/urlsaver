@@ -68,7 +68,7 @@ public class TextFields {
 	public void urlSearch_enterPressed ( final ActionEvent event ) {
 		final DBTable record = Global.db.getSelectedDBTable();
 		final String searchString = record.getURLsSearchString();
-		final boolean searchByPrefix = Global.preferences.getBooleanValue(PreferencesConfig.SEARCH_BY_PREFIX_ID).getSaved();
+		final boolean searchByPrefix = Global.preferences.getPropertyBoolean(PreferencesConfig.SEARCH_BY_PREFIX_ID).getSaved();
 		final DynArrayOfString searchTags = Converter.toDynArrayList(searchString);
 
 		record.searchURLs(searchTags,searchByPrefix);
@@ -89,7 +89,7 @@ public class TextFields {
 
 	public void title_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final String trimmedValue = Parser.trim(newValue);
-		final PreferencesStringValue windowTitleValue = Global.preferences.getStringValue(PreferencesConfig.WINDOW_TITLE_ID);
+		final PreferencesStringValue windowTitleValue = Global.preferences.getPropertyString(PreferencesConfig.WINDOW_TITLE_ID);
 		final boolean titlesEqual = windowTitleValue.getSaved().equals(trimmedValue);
 		windowTitleValue.setModified(newValue);
 		title.setFontWeight(!titlesEqual);
@@ -100,7 +100,7 @@ public class TextFields {
 	public void width_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final int parsedValueInt = Converter.toUnsignedInteger(newValue);
 		final String parsedValueStr = Integer.toString(parsedValueInt);
-		final PreferencesIntValue windowWidthValue = Global.preferences.getIntValue(PreferencesConfig.WINDOW_WIDTH_ID);
+		final PreferencesIntValue windowWidthValue = Global.preferences.getPropertyInt(PreferencesConfig.WINDOW_WIDTH_ID);
 		final boolean valueChanged = parsedValueInt != windowWidthValue.getSaved();
 		if ( !parsedValueStr.equals(newValue) ) {
 			width.control.setText(parsedValueStr);
@@ -114,7 +114,7 @@ public class TextFields {
 	public void height_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final int parsedValueInt = Converter.toUnsignedInteger(newValue);
 		final String parsedValueStr = Integer.toString(parsedValueInt);
-		final PreferencesIntValue windowHeightValue = Global.preferences.getIntValue(PreferencesConfig.WINDOW_HEIGHT_ID);
+		final PreferencesIntValue windowHeightValue = Global.preferences.getPropertyInt(PreferencesConfig.WINDOW_HEIGHT_ID);
 		final boolean valueChanged = parsedValueInt != windowHeightValue.getSaved();
 		if ( !parsedValueStr.equals(newValue) ) {
 			height.control.setText(parsedValueStr);
@@ -127,7 +127,7 @@ public class TextFields {
 
 	public void urlsFileExtension_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final String trimmedValue = Parser.trim(newValue);
-		final PreferencesStringValue urlsFileExtensionValue = Global.preferences.getStringValue(PreferencesConfig.URLS_FILE_EXTENSION_ID);
+		final PreferencesStringValue urlsFileExtensionValue = Global.preferences.getPropertyString(PreferencesConfig.URLS_FILE_EXTENSION_ID);
 		final boolean valueChanged = !trimmedValue.equals(urlsFileExtensionValue.getSaved());
 		urlsFileExtensionValue.setModified(trimmedValue);
 		stdGUI.properties.urlsFileExtensionChangedProperty().set(valueChanged);
@@ -136,7 +136,7 @@ public class TextFields {
 
 	public void urlsFileSelect_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final String trimmedValue = Parser.trim(newValue);
-		final PreferencesStringValue urlsFileSelectValue = Global.preferences.getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID);
+		final PreferencesStringValue urlsFileSelectValue = Global.preferences.getPropertyString(PreferencesConfig.URLS_FILE_SELECT_ID);
 		final boolean valueChanged = !trimmedValue.equals(urlsFileSelectValue.getSaved());
 		urlsFileSelectValue.setModified(trimmedValue);
 		stdGUI.properties.urlsFileSelectChangedProperty().set(valueChanged);

@@ -20,7 +20,7 @@ public abstract class ResourceLoader {
 
 	public abstract void initialize ( );
 
-	public abstract LaunchSource getLaunchSource ( );
+	public abstract ProgramFile getProgramFile ( );
 
 	public Charset getCharset ( ) {
 		return StandardCharsets.UTF_8;

@@ -262,7 +262,7 @@ public class Buttons {
 	private void urlSearch_clicked ( final ActionEvent event ) {
 		final DBTable record = Global.db.getSelectedDBTable();
 		final String searchString = record.getURLsSearchString();
-		final boolean searchByPrefix = Global.preferences.getBooleanValue(PreferencesConfig.SEARCH_BY_PREFIX_ID).getSaved();
+		final boolean searchByPrefix = Global.preferences.getPropertyBoolean(PreferencesConfig.SEARCH_BY_PREFIX_ID).getSaved();
 		final DynArrayOfString searchTags = Converter.toDynArrayList(searchString);
 
 		record.searchURLs(searchTags,searchByPrefix);
@@ -508,10 +508,10 @@ public class Buttons {
 	}
 
 	public void createDefaultFile_clicked ( final ActionEvent event ) {
-		final String defaultFileName = Global.preferences.getStringValue(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
-		final Path defaultFilePath = Global.resourceLoader.getLaunchSource().getDirectory().resolve(defaultFileName);
+		final String urlsDefaultFileName = Global.preferences.getPropertyString(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
+		final Path urlsDefaultFilePath = Global.resourceLoader.getProgramFile().getDirectory().resolve(urlsDefaultFileName);
 		try {
-			Files.createFile(defaultFilePath);
+			Files.createFile(urlsDefaultFilePath);
 			stdGUI.properties.createDefaultFilePossibleProperty().set(false);
 			Global.db.initialize();
 			stdGUI.urlsIO.initialize();
@@ -520,10 +520,10 @@ public class Buttons {
 			if ( records.size() > 0 ) {
 				stdGUI.listViews.files.control.requestFocus();
 				stdGUI.listViews.files.control.getSelectionModel().select(records.get(0));
-				stdGUI.logger.logSuccess("default file created (" + defaultFileName + ")");
+				stdGUI.logger.logSuccess("default file created (" + urlsDefaultFileName + ")");
 			}
 		} catch ( final IOException e ) {
-			stdGUI.logger.logFailure("could not create file (" + defaultFileName + ")");
+			stdGUI.logger.logFailure("could not create file (" + urlsDefaultFileName + ")");
 			e.printStackTrace();
 		}
 	}

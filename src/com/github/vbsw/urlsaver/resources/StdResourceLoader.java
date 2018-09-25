@@ -17,20 +17,15 @@ import com.github.vbsw.urlsaver.api.ResourceLoader;
  */
 public class StdResourceLoader extends ResourceLoader {
 
-	protected StdLaunchSource source;
+	protected StdProgramFile source;
 
 	@Override
 	public void initialize ( ) {
-		source = createLaunchSource();
-	}
-
-	protected StdLaunchSource createLaunchSource ( ) {
-		final StdLaunchSource source = new StdLaunchSource();
-		return source;
+		source = new StdProgramFile();
 	}
 
 	@Override
-	public StdLaunchSource getLaunchSource ( ) {
+	public StdProgramFile getProgramFile ( ) {
 		return source;
 	}
 

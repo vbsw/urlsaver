@@ -49,7 +49,7 @@ public class StdURLsIO extends URLsIO {
 	}
 
 	public void autoLoad ( ) {
-		if ( Global.preferences.getBooleanValue(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID).getModified() )
+		if ( Global.preferences.getPropertyBoolean(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID).getModified() )
 			for ( URLsLoadService service: urlsLoadServices )
 				service.start();
 	}

@@ -24,11 +24,11 @@ public abstract class Preferences {
 
 	public abstract ResourceVariants getCSS ( );
 
-	public abstract PreferencesStringValue getStringValue ( int id );
+	public abstract PreferencesStringValue getPropertyString ( int propertyId );
 
-	public abstract PreferencesIntValue getIntValue ( int id );
+	public abstract PreferencesIntValue getPropertyInt ( int propertyId );
 
-	public abstract PreferencesBooleanValue getBooleanValue ( int id );
+	public abstract PreferencesBooleanValue getPropertyBoolean ( int propertyId );
 
 	public abstract void resetSavedToDefault ( );
 

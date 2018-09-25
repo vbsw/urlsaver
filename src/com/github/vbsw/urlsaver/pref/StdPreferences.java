@@ -82,9 +82,9 @@ public class StdPreferences extends Preferences {
 		final Path customPath = extractCustomPreferencesPath(args);
 		final Resource resource;
 		if ( customPath == null )
-			resource = resourceLoader.getLaunchSource().getJarFileResource(ResourcesConfig.CUSTOM_PREFERENCES_FILE_PATH);
+			resource = resourceLoader.getProgramFile().getOSFileResource(Paths.get(ResourcesConfig.CUSTOM_PREFERENCES_FILE_PATH));
 		else
-			resource = resourceLoader.getLaunchSource().getOSFileResource(customPath);
+			resource = resourceLoader.getProgramFile().getOSFileResource(customPath);
 		preferencesVariants.setSaved(resource);
 	}
 
@@ -92,9 +92,9 @@ public class StdPreferences extends Preferences {
 		final Path customPath = extractCustomFXMLPath(args);
 		final Resource resource;
 		if ( customPath == null )
-			resource = resourceLoader.getLaunchSource().getJarFileResource(ResourcesConfig.CUSTOM_FXML_FILE_PATH);
+			resource = resourceLoader.getProgramFile().getOSFileResource(Paths.get(ResourcesConfig.CUSTOM_FXML_FILE_PATH));
 		else
-			resource = resourceLoader.getLaunchSource().getOSFileResource(customPath);
+			resource = resourceLoader.getProgramFile().getOSFileResource(customPath);
 		fxmlVariants.setSaved(resource);
 	}
 
@@ -102,9 +102,9 @@ public class StdPreferences extends Preferences {
 		final Path customPath = extractCustomCSSPath(args);
 		final Resource resource;
 		if ( customPath == null )
-			resource = resourceLoader.getLaunchSource().getJarFileResource(ResourcesConfig.CUSTOM_CSS_FILE_PATH);
+			resource = resourceLoader.getProgramFile().getOSFileResource(Paths.get(ResourcesConfig.CUSTOM_CSS_FILE_PATH));
 		else
-			resource = resourceLoader.getLaunchSource().getOSFileResource(customPath);
+			resource = resourceLoader.getProgramFile().getOSFileResource(customPath);
 		cssVariants.setSaved(resource);
 	}
 
@@ -152,9 +152,9 @@ public class StdPreferences extends Preferences {
 
 	@Override
 	public void initialize ( ) {
-		final Resource prefDefaultRes = Global.resourceLoader.getLaunchSource().getJarFileResource(ResourcesConfig.DEFAULT_PREFERENCES_FILE_PATH);
-		final Resource fxmlDefaultRes = Global.resourceLoader.getLaunchSource().getJarFileResource(ResourcesConfig.DEFAULT_FXML_FILE_PATH);
-		final Resource cssDefaultRes = Global.resourceLoader.getLaunchSource().getJarFileResource(ResourcesConfig.DEFAULT_CSS_FILE_PATH);
+		final Resource prefDefaultRes = Global.resourceLoader.getProgramFile().getJarFileResource(ResourcesConfig.DEFAULT_PREFERENCES_FILE_PATH);
+		final Resource fxmlDefaultRes = Global.resourceLoader.getProgramFile().getJarFileResource(ResourcesConfig.DEFAULT_FXML_FILE_PATH);
+		final Resource cssDefaultRes = Global.resourceLoader.getProgramFile().getJarFileResource(ResourcesConfig.DEFAULT_CSS_FILE_PATH);
 
 		preferencesVariants.setDefault(prefDefaultRes);
 		fxmlVariants.setDefault(fxmlDefaultRes);
@@ -219,8 +219,8 @@ public class StdPreferences extends Preferences {
 	}
 
 	@Override
-	public PreferencesStringValue getStringValue ( final int id ) {
-		switch ( id ) {
+	public PreferencesStringValue getPropertyString ( final int propertyId ) {
+		switch ( propertyId ) {
 			case PreferencesConfig.WINDOW_TITLE_ID:
 			return windowTitle;
 			case PreferencesConfig.URLS_FILE_EXTENSION_ID:
@@ -233,8 +233,8 @@ public class StdPreferences extends Preferences {
 	}
 
 	@Override
-	public PreferencesIntValue getIntValue ( final int id ) {
-		switch ( id ) {
+	public PreferencesIntValue getPropertyInt ( final int propertyId ) {
+		switch ( propertyId ) {
 			case PreferencesConfig.WINDOW_WIDTH_ID:
 			return windowWidth;
 			case PreferencesConfig.WINDOW_HEIGHT_ID:
@@ -245,8 +245,8 @@ public class StdPreferences extends Preferences {
 	}
 
 	@Override
-	public PreferencesBooleanValue getBooleanValue ( final int id ) {
-		switch ( id ) {
+	public PreferencesBooleanValue getPropertyBoolean ( final int propertyId ) {
+		switch ( propertyId ) {
 			case PreferencesConfig.WINDOW_MAXIMIZED_ID:
 			return windowMaximized;
 			case PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID:

@@ -26,43 +26,43 @@ import com.github.vbsw.urlsaver.utility.OSFiles;
 public class StdDataBase extends DataBase {
 
 	protected final PathComparator pathComparator = new PathComparator();
-	protected final ArrayList<DBTable> records = new ArrayList<>();
+	protected final ArrayList<DBTable> tables = new ArrayList<>();
 	protected DBTable selectedRecord;
 
 	@Override
 	public void initialize ( ) {
-		final String fileExtension = Global.preferences.getStringValue(PreferencesConfig.URLS_FILE_EXTENSION_ID).getSaved();
-		final Path launchDir = Global.resourceLoader.getLaunchSource().getDirectory();
-		final ArrayList<Path> files = OSFiles.getFilesFromDirectory(launchDir,fileExtension);
+		final String fileExtension = Global.preferences.getPropertyString(PreferencesConfig.URLS_FILE_EXTENSION_ID).getSaved();
+		final Path programDir = Global.resourceLoader.getProgramFile().getDirectory();
+		final ArrayList<Path> files = OSFiles.getFilesFromDirectory(programDir,fileExtension);
 		final ArrayList<Path> filesSorted = getSortedPaths(files);
-		records.clear();
+		tables.clear();
 		for ( final Path filePath: filesSorted ) {
 			final DBTable record = new DBTable(filePath);
 			final String listLabel = Global.textGenerator.getFileListLabel(record,0);
 			record.setListLabel(listLabel);
-			records.add(record);
+			tables.add(record);
 		}
 	}
 
 	@Override
 	public boolean isSaved ( ) {
-		final int size = records.size();
+		final int size = tables.size();
 		for ( int i = 0; i < size; i += 1 )
-			if ( records.get(i).isDirty() )
+			if ( tables.get(i).isDirty() )
 				return false;
 		return true;
 	}
 
 	@Override
 	public ArrayList<DBTable> getTables ( ) {
-		return records;
+		return tables;
 	}
 
 	@Override
 	public DBTable getTableByFileName ( final String fileName ) {
-		final int size = records.size();
+		final int size = tables.size();
 		for ( int i = 0; i < size; i += 1 ) {
-			final DBTable record = records.get(i);
+			final DBTable record = tables.get(i);
 			if ( record.getFileName().equals(fileName) )
 				return record;
 		}
