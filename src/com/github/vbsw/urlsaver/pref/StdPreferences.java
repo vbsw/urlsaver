@@ -23,7 +23,6 @@ import com.github.vbsw.urlsaver.api.Resource;
 import com.github.vbsw.urlsaver.api.ResourceLoader;
 import com.github.vbsw.urlsaver.api.ResourceVariants;
 import com.github.vbsw.urlsaver.args.ArgumentsConfig;
-import com.github.vbsw.urlsaver.args.ArgumentsParser;
 import com.github.vbsw.urlsaver.resources.ResourcesConfig;
 import com.github.vbsw.urlsaver.utility.Parser;
 
@@ -54,7 +53,7 @@ public class StdPreferences extends Preferences {
 	protected Path extractCustomPreferencesPath ( final List<String> args ) {
 		if ( args.size() > 0 ) {
 			final String arg = args.get(0);
-			final String pathStrBare = ArgumentsParser.getValue(arg,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR);
+			final String pathStrBare = Parser.getArgumentValue(arg,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR);
 			final String pathStr = Parser.trim(pathStrBare);
 			if ( pathStr.length() > 0 ) {
 				final Path path = Paths.get(pathStr);

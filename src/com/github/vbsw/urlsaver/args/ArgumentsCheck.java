@@ -9,19 +9,22 @@
 package com.github.vbsw.urlsaver.args;
 
 
+import com.github.vbsw.urlsaver.utility.Parser;
+
+
 /**
  * @author Vitali Baumtrok
  */
 public class ArgumentsCheck {
 
-	public static boolean isValidForApplication ( final String[] args ) {
-		return args.length == 0 || ArgumentsCheck.startsWithConfigOption(args[0]);
+	public static boolean isValidForApplication ( final String[] arguments ) {
+		return arguments.length == 0 || ArgumentsCheck.startsWithConfigOption(arguments[0]);
 	}
 
-	private static boolean startsWithConfigOption ( final String arg ) {
-		final int offset = ArgumentsParser.getWordOffset(arg);
+	private static boolean startsWithConfigOption ( final String argument ) {
+		final int offset = Parser.seekContent(argument,0,argument.length(),'-');
 		for ( final String key: ArgumentsConfig.PREFERENCES_OPTION )
-			if ( arg.startsWith(key,offset) )
+			if ( argument.startsWith(key,offset) )
 				return true;
 		return false;
 	}

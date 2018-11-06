@@ -26,7 +26,7 @@ public class Main {
 		if ( ArgumentsCheck.isValidForApplication(args) )
 			Application.launch(App.class,args);
 		else
-			CommandLineInfo.parseArgsAndPrintInfo(args);
+			CommandLineInfo.parseAndPrintInfo(args);
 	}
 
 }

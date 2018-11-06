@@ -5,6 +5,7 @@
  *        http://www.boost.org/LICENSE_1_0.txt)
  */
 
+
 package com.github.vbsw.urlsaver.tests;
 
 
@@ -13,13 +14,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import com.github.vbsw.urlsaver.args.ArgumentsConfig;
-import com.github.vbsw.urlsaver.args.ArgumentsParser;
+import com.github.vbsw.urlsaver.args.CommandLineInfo;
+import com.github.vbsw.urlsaver.utility.Parser;
 
 
 /**
  * @author Vitali Baumtrok
  */
-class ArgumentsParserTest {
+class CommandLineInfoTest {
 
 	private static final String path = "C:/tmp";
 	private static final String str00 = "";
@@ -36,41 +38,41 @@ class ArgumentsParserTest {
 	private static final String str11 = str08 + ArgumentsConfig.ASSIGINMENT_OPERATOR[0];
 
 	/**
-	 * Test method for {@link com.github.vbsw.urlsaver.args.ArgumentsParser#isOption(java.lang.String,java.lang.String[])}.
+	 * Test method for {@link com.github.vbsw.urlsaver.args.CommandLineInfo#isOption(java.lang.String,java.lang.String[])}.
 	 */
 	@Test
 	void testIsOption ( ) {
-		assertEquals(false,ArgumentsParser.isOption(str00,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(false,ArgumentsParser.isOption(str01,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(false,ArgumentsParser.isOption(str02,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(false,ArgumentsParser.isOption(str03,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(false,ArgumentsParser.isOption(str04,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(false,ArgumentsParser.isOption(str05,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(true,ArgumentsParser.isOption(str06,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(true,ArgumentsParser.isOption(str07,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(true,ArgumentsParser.isOption(str08,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(false,ArgumentsParser.isOption(str09 + path,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(false,ArgumentsParser.isOption(str10 + path,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(false,ArgumentsParser.isOption(str11 + path,ArgumentsConfig.PREFERENCES_OPTION));
+		assertEquals(false,CommandLineInfo.isOption(str00,ArgumentsConfig.PREFERENCES_OPTION));
+		assertEquals(false,CommandLineInfo.isOption(str01,ArgumentsConfig.PREFERENCES_OPTION));
+		assertEquals(false,CommandLineInfo.isOption(str02,ArgumentsConfig.PREFERENCES_OPTION));
+		assertEquals(false,CommandLineInfo.isOption(str03,ArgumentsConfig.PREFERENCES_OPTION));
+		assertEquals(false,CommandLineInfo.isOption(str04,ArgumentsConfig.PREFERENCES_OPTION));
+		assertEquals(false,CommandLineInfo.isOption(str05,ArgumentsConfig.PREFERENCES_OPTION));
+		assertEquals(true,CommandLineInfo.isOption(str06,ArgumentsConfig.PREFERENCES_OPTION));
+		assertEquals(true,CommandLineInfo.isOption(str07,ArgumentsConfig.PREFERENCES_OPTION));
+		assertEquals(true,CommandLineInfo.isOption(str08,ArgumentsConfig.PREFERENCES_OPTION));
+		assertEquals(false,CommandLineInfo.isOption(str09 + path,ArgumentsConfig.PREFERENCES_OPTION));
+		assertEquals(false,CommandLineInfo.isOption(str10 + path,ArgumentsConfig.PREFERENCES_OPTION));
+		assertEquals(false,CommandLineInfo.isOption(str11 + path,ArgumentsConfig.PREFERENCES_OPTION));
 	}
 
 	/**
-	 * Test method for {@link com.github.vbsw.urlsaver.args.ArgumentsParser#getValue(java.lang.String,java.lang.String[],java.lang.String[])}.
+	 * Test method for {@link com.github.vbsw.urlsaver.utility.Parser#getArgumentValue(java.lang.String,java.lang.String[],java.lang.String[])}.
 	 */
 	@Test
 	void testGetValue ( ) {
-		assertEquals("",ArgumentsParser.getValue(str00 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals("",ArgumentsParser.getValue(str01 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals("",ArgumentsParser.getValue(str02 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals("",ArgumentsParser.getValue(str03 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals("",ArgumentsParser.getValue(str04 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals("",ArgumentsParser.getValue(str05 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals(path,ArgumentsParser.getValue(str06 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals(path,ArgumentsParser.getValue(str07 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals(path,ArgumentsParser.getValue(str08 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals(path,ArgumentsParser.getValue(str09 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals(path,ArgumentsParser.getValue(str10 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals(path,ArgumentsParser.getValue(str11 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals("",Parser.getArgumentValue(str00 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals("",Parser.getArgumentValue(str01 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals("",Parser.getArgumentValue(str02 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals("",Parser.getArgumentValue(str03 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals("",Parser.getArgumentValue(str04 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals("",Parser.getArgumentValue(str05 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals(path,Parser.getArgumentValue(str06 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals(path,Parser.getArgumentValue(str07 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals(path,Parser.getArgumentValue(str08 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals(path,Parser.getArgumentValue(str09 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals(path,Parser.getArgumentValue(str10 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals(path,Parser.getArgumentValue(str11 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
 	}
 
 }
