@@ -12,6 +12,7 @@ package com.github.vbsw.urlsaver.gui;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import com.github.vbsw.urlsaver.api.Global;
 import com.github.vbsw.urlsaver.api.Logger;
 
 
@@ -22,6 +23,10 @@ public class StdLogger extends Logger {
 
 	protected StdGUI stdGUI;
 
+	public void initialize ( ) {
+		this.stdGUI = (StdGUI) Global.gui;
+	}
+
 	@Override
 	public void logSuccess ( final String message ) {
 		log("",message);
@@ -30,10 +35,6 @@ public class StdLogger extends Logger {
 	@Override
 	public void logFailure ( final String message ) {
 		log("",message);
-	}
-
-	public void initialize ( final StdGUI stdGUI ) {
-		this.stdGUI = stdGUI;
 	}
 
 	private void log ( final String prefix, final String message ) {

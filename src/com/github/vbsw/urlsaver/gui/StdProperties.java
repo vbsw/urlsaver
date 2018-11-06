@@ -145,4 +145,9 @@ public class StdProperties extends Properties {
 		return createDefaultFilePossible;
 	}
 
+	public void refreshPreferencesModifiedProperty ( ) {
+		final boolean modified = titleChanged.get() || widthChanged.get() || heightChanged.get() || urlsFileExtensionChanged.get() || urlsFileSelectChanged.get() || maximizeChanged.get() || loadAtStartChanged.get() || byPrefixChanged.get();
+		preferencesModified.set(modified);
+	}
+
 }

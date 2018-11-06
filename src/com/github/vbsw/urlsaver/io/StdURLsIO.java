@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import com.github.vbsw.urlsaver.api.Global;
 import com.github.vbsw.urlsaver.api.URLsIO;
 import com.github.vbsw.urlsaver.db.DBTable;
-import com.github.vbsw.urlsaver.gui.StdProperties;
 import com.github.vbsw.urlsaver.pref.PreferencesConfig;
 
 import javafx.beans.value.ChangeListener;
@@ -34,6 +33,7 @@ public class StdURLsIO extends URLsIO {
 
 	protected final ArrayList<URLsLoadService> urlsLoadServices = new ArrayList<>();
 
+	@Override
 	public void initialize ( ) {
 		urlsLoadServices.clear();
 		for ( DBTable record: Global.db.getTables() ) {
@@ -48,12 +48,14 @@ public class StdURLsIO extends URLsIO {
 		}
 	}
 
+	@Override
 	public void autoLoad ( ) {
-		if ( Global.preferences.getPropertyBoolean(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID).getModified() )
+		if ( Global.preferences.getBooleanPreference(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID).getModified() )
 			for ( URLsLoadService service: urlsLoadServices )
 				service.start();
 	}
 
+	@Override
 	public void reloadAllFiles ( ) {
 		for ( URLsLoadService service: urlsLoadServices ) {
 			service.dbTable.beginLoading();
@@ -61,6 +63,12 @@ public class StdURLsIO extends URLsIO {
 				Global.gui.refreshFileSelection();
 			service.restart();
 		}
+	}
+
+	@Override
+	public void reloadSelectedFile ( ) {
+		final DBTable selectedTable = Global.db.getSelectedDBTable();
+		reloadFile(selectedTable);
 	}
 
 	public void cancelLoadingFile ( final DBTable dbTable ) {
@@ -102,16 +110,8 @@ public class StdURLsIO extends URLsIO {
 			} catch ( final IOException e ) {
 				e.printStackTrace();
 			}
-			if ( success ) {
-				if ( Global.db.getSelectedDBTable() == record ) {
-					final StdProperties properties = (StdProperties) Global.properties;
-					properties.selectedFileDirtyProperty().setValue(false);
-					properties.confirmingSaveProperty().setValue(false);
-					Global.gui.refreshFileInfo();
-					Global.gui.refreshTitle();
-				}
+			if ( success )
 				record.saveComplete();
-			}
 		}
 	}
 

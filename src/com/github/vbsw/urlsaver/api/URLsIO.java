@@ -14,8 +14,16 @@ package com.github.vbsw.urlsaver.api;
  */
 public abstract class URLsIO {
 
+	public abstract void initialize ( );
+
+	public abstract void autoLoad ( );
+
 	public abstract void saveAllFiles ( );
 
 	public abstract void saveSelectedFile ( );
+
+	public abstract void reloadAllFiles ( );
+
+	public abstract void reloadSelectedFile ( );
 
 }

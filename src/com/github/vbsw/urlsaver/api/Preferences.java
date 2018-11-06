@@ -24,11 +24,11 @@ public abstract class Preferences {
 
 	public abstract ResourceVariants getCSS ( );
 
-	public abstract PreferencesStringValue getPropertyString ( int propertyId );
+	public abstract StringPreference getStringPereference ( int preferenceId );
 
-	public abstract PreferencesIntValue getPropertyInt ( int propertyId );
+	public abstract IntPreference getIntPreference ( int preferenceId );
 
-	public abstract PreferencesBooleanValue getPropertyBoolean ( int propertyId );
+	public abstract BooleanPreference getBooleanPreference ( int preferenceId );
 
 	public abstract void resetSavedToDefault ( );
 
@@ -50,7 +50,7 @@ public abstract class Preferences {
 
 	public abstract void savePreferences ( );
 
-	public class PreferencesBooleanValue {
+	public class BooleanPreference {
 
 		private boolean defaultValue;
 		private boolean savedValue;
@@ -98,7 +98,7 @@ public abstract class Preferences {
 
 	}
 
-	public class PreferencesIntValue {
+	public class IntPreference {
 
 		private int defaultValue;
 		private int savedValue;
@@ -146,7 +146,7 @@ public abstract class Preferences {
 
 	}
 
-	public class PreferencesStringValue {
+	public class StringPreference {
 
 		private String defaultValue;
 		private String savedValue;

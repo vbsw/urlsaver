@@ -11,7 +11,8 @@ package com.github.vbsw.urlsaver.io;
 
 import java.io.InputStream;
 
-import com.github.vbsw.urlsaver.api.Preferences;
+import com.github.vbsw.urlsaver.api.FXMLIO;
+import com.github.vbsw.urlsaver.api.Global;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,28 +21,23 @@ import javafx.scene.Parent;
 /**
  * @author Vitali Baumtrok
  */
-public class FXMLIO {
+public class StdFXMLIO extends FXMLIO {
 
-	protected Preferences preferences;
-
-	public void initialize ( final Preferences preferences ) {
-		this.preferences = preferences;
-	}
-
+	@Override
 	public Parent readFXML ( ) {
 		Parent root = readCustomFXML();
 		if ( root == null ) {
 			root = readDefaultFXML();
-			preferences.setCustomFXMLLoaded(false);
+			Global.preferences.setCustomFXMLLoaded(false);
 		} else {
-			preferences.setCustomFXMLLoaded(true);
+			Global.preferences.setCustomFXMLLoaded(true);
 		}
 		return root;
 	}
 
 	protected Parent readCustomFXML ( ) {
-		if ( preferences.getFXML().getSaved().exists() ) {
-			try ( final InputStream stream = preferences.getFXML().getSaved().newInputStream() ) {
+		if ( Global.preferences.getFXML().getSaved().exists() ) {
+			try ( final InputStream stream = Global.preferences.getFXML().getSaved().newInputStream() ) {
 				final FXMLLoader fxmlLoader = new FXMLLoader();
 				final Parent fxml = fxmlLoader.load(stream);
 				return fxml;
@@ -52,7 +48,7 @@ public class FXMLIO {
 	}
 
 	protected Parent readDefaultFXML ( ) {
-		try ( final InputStream stream = preferences.getFXML().getDefault().newInputStream() ) {
+		try ( final InputStream stream = Global.preferences.getFXML().getDefault().newInputStream() ) {
 			final FXMLLoader fxmlLoader = new FXMLLoader();
 			final Parent fxml = fxmlLoader.load(stream);
 			return fxml;

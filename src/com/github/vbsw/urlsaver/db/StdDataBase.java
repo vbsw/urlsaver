@@ -31,7 +31,7 @@ public class StdDataBase extends DataBase {
 
 	@Override
 	public void initialize ( ) {
-		final String fileExtension = Global.preferences.getPropertyString(PreferencesConfig.URLS_FILE_EXTENSION_ID).getSaved();
+		final String fileExtension = Global.preferences.getStringPereference(PreferencesConfig.URLS_FILE_EXTENSION_ID).getSaved();
 		final Path programDir = Global.resourceLoader.getProgramFile().getDirectory();
 		final ArrayList<Path> files = OSFiles.getFilesFromDirectory(programDir,fileExtension);
 		final ArrayList<Path> filesSorted = getSortedPaths(files);

@@ -10,7 +10,7 @@ package com.github.vbsw.urlsaver.gui;
 
 
 import com.github.vbsw.urlsaver.api.Global;
-import com.github.vbsw.urlsaver.api.Preferences.PreferencesBooleanValue;
+import com.github.vbsw.urlsaver.api.Preferences.BooleanPreference;
 import com.github.vbsw.urlsaver.pref.PreferencesConfig;
 
 import javafx.beans.value.ObservableValue;
@@ -49,27 +49,30 @@ public class CheckBoxes {
 	}
 
 	private void maximize_changed ( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) {
-		final PreferencesBooleanValue windowMaximizedValue = Global.preferences.getPropertyBoolean(PreferencesConfig.WINDOW_MAXIMIZED_ID);
+		final BooleanPreference windowMaximizedValue = Global.preferences.getBooleanPreference(PreferencesConfig.WINDOW_MAXIMIZED_ID);
 		final boolean valueChanged = windowMaximizedValue.getSaved() != newValue;
 		windowMaximizedValue.setModified(newValue);
 		maximize.setFontWeight(valueChanged);
 		stdGUI.properties.maximizeChangedProperty().set(valueChanged);
+		stdGUI.properties.refreshPreferencesModifiedProperty();
 	}
 
 	private void loadAtStart_changed ( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) {
-		final PreferencesBooleanValue urlsFileAutoloadAllValue = Global.preferences.getPropertyBoolean(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID);
+		final BooleanPreference urlsFileAutoloadAllValue = Global.preferences.getBooleanPreference(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID);
 		final boolean valueChanged = urlsFileAutoloadAllValue.getSaved() != newValue;
 		urlsFileAutoloadAllValue.setModified(newValue);
 		urlsFileAutoloadAll.setFontWeight(valueChanged);
 		stdGUI.properties.loadAtStartChangedProperty().set(valueChanged);
+		stdGUI.properties.refreshPreferencesModifiedProperty();
 	}
 
 	private void byPrefix_changed ( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) {
-		final PreferencesBooleanValue searchByPrefixValue = Global.preferences.getPropertyBoolean(PreferencesConfig.SEARCH_BY_PREFIX_ID);
+		final BooleanPreference searchByPrefixValue = Global.preferences.getBooleanPreference(PreferencesConfig.SEARCH_BY_PREFIX_ID);
 		final boolean valueChanged = searchByPrefixValue.getSaved() != newValue;
 		searchByPrefixValue.setModified(newValue);
 		byPrefix.setFontWeight(valueChanged);
 		stdGUI.properties.byPrefixChangedProperty().set(valueChanged);
+		stdGUI.properties.refreshPreferencesModifiedProperty();
 	}
 
 	public final class Maximize extends CustomCheckBox {

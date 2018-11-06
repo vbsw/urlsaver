@@ -16,16 +16,12 @@ import javax.swing.text.html.CSS;
 import com.github.vbsw.urlsaver.api.GUI;
 import com.github.vbsw.urlsaver.api.Global;
 import com.github.vbsw.urlsaver.api.Preferences;
-import com.github.vbsw.urlsaver.api.Preferences.PreferencesBooleanValue;
+import com.github.vbsw.urlsaver.api.Preferences.BooleanPreference;
 import com.github.vbsw.urlsaver.api.TextGenerator;
-import com.github.vbsw.urlsaver.api.URLsIO;
 import com.github.vbsw.urlsaver.api.ViewSelector;
 import com.github.vbsw.urlsaver.db.DBTable;
 import com.github.vbsw.urlsaver.db.URLsSearchResult;
 import com.github.vbsw.urlsaver.gui.CheckBoxes.CustomCheckBox;
-import com.github.vbsw.urlsaver.io.FXMLIO;
-import com.github.vbsw.urlsaver.io.PreferencesIO;
-import com.github.vbsw.urlsaver.io.StdURLsIO;
 import com.github.vbsw.urlsaver.pref.PreferencesConfig;
 import com.github.vbsw.urlsaver.utility.Parser;
 
@@ -44,11 +40,7 @@ import javafx.stage.WindowEvent;
  */
 public class StdGUI extends GUI {
 
-	public StdURLsIO urlsIO;
-	public FXMLIO fxmlIO;
-	public StdLogger logger;
 	public StdProperties properties;
-	public PreferencesIO preferencesIO;
 
 	public ViewSelector viewSelector;
 	public HotKeys hotKeys;
@@ -73,12 +65,8 @@ public class StdGUI extends GUI {
 	@Override
 	public void initialize ( final Stage primaryStage ) {
 		this.properties = (StdProperties) Global.properties;
-		this.urlsIO = new StdURLsIO();
-		this.fxmlIO = new FXMLIO();
-		this.logger = new StdLogger();
-		this.preferencesIO = new PreferencesIO();
 		this.viewSelector = new StdViewSelector(this);
-		this.hotKeys = new HotKeys(this);
+		this.hotKeys = new HotKeys();
 		this.buttons = new Buttons(this);
 		this.checkBoxes = new CheckBoxes(this);
 		this.tabPanes = new TabPanes(this);
@@ -89,32 +77,28 @@ public class StdGUI extends GUI {
 		this.comboBoxes = new ComboBoxes(this);
 		this.datePickers = new DatePickers(this);
 
-		fxmlIO.initialize(Global.preferences);
-		preferencesIO.initialize(Global.preferences,logger);
-		logger.initialize(this);
-
-		final int windowWidth = Global.preferences.getPropertyInt(PreferencesConfig.WINDOW_WIDTH_ID).getSaved();
-		final int windowHeight = Global.preferences.getPropertyInt(PreferencesConfig.WINDOW_HEIGHT_ID).getSaved();
-		final String urlsFileToSelect = Global.preferences.getPropertyString(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
+		final int windowWidth = Global.preferences.getIntPreference(PreferencesConfig.WINDOW_WIDTH_ID).getSaved();
+		final int windowHeight = Global.preferences.getIntPreference(PreferencesConfig.WINDOW_HEIGHT_ID).getSaved();
+		final String urlsFileToSelect = Global.preferences.getStringPereference(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
 		final Parent rootStub = new AnchorPane();
 		scene = new Scene(rootStub,windowWidth,windowHeight);
 		scene.addEventFilter(KeyEvent.KEY_PRESSED,event -> hotKeys.keyPressed(event));
 		reloadFXML();
 		reloadCSS();
 		listViews.files.control.getItems().addAll(Global.db.getTables());
-		listViews.files.autoSelectRequested = Global.preferences.getPropertyBoolean(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID).getSaved() && Global.db.getTableByFileName(urlsFileToSelect) != null;
+		listViews.files.autoSelectRequested = Global.preferences.getBooleanPreference(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID).getSaved() && Global.db.getTableByFileName(urlsFileToSelect) != null;
 		refreshCreateDefaultFileButton();
 
 		primaryStage.setOnCloseRequest(event -> onCloseRequest(event));
 		primaryStage.setScene(scene);
-		primaryStage.setMaximized(Global.preferences.getPropertyBoolean(PreferencesConfig.WINDOW_MAXIMIZED_ID).getSaved());
+		primaryStage.setMaximized(Global.preferences.getBooleanPreference(PreferencesConfig.WINDOW_MAXIMIZED_ID).getSaved());
 		primaryStage.show();
 
 		refreshPreferencesView();
 		selectDefaultFile();
 
-		urlsIO.initialize();
-		urlsIO.autoLoad();
+		Global.urlsIO.initialize();
+		Global.urlsIO.autoLoad();
 	}
 
 	public void onCloseRequest ( final WindowEvent event ) {
@@ -157,7 +141,7 @@ public class StdGUI extends GUI {
 	}
 
 	public String createWindowTitle ( final DBTable record ) {
-		final String windowTitleCustom = Global.preferences.getPropertyString(PreferencesConfig.WINDOW_TITLE_ID).getSaved();
+		final String windowTitleCustom = Global.preferences.getStringPereference(PreferencesConfig.WINDOW_TITLE_ID).getSaved();
 		final String windowTitle;
 		if ( record != null )
 			if ( record.isDirty() )
@@ -175,7 +159,7 @@ public class StdGUI extends GUI {
 
 	private boolean isDefaultFileAvailable ( ) {
 		final ArrayList<DBTable> records = Global.db.getTables();
-		final String defaultFileName = Global.preferences.getPropertyString(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
+		final String defaultFileName = Global.preferences.getStringPereference(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
 		for ( final DBTable record: records )
 			if ( record.getFileName().equals(defaultFileName) )
 				return false;
@@ -183,7 +167,7 @@ public class StdGUI extends GUI {
 	}
 
 	public void reloadFXML ( ) {
-		final Parent root = fxmlIO.readFXML();
+		final Parent root = Global.fxmlIO.readFXML();
 		Labels.build(root);
 		buttons.build(root);
 		listViews.build(root);
@@ -213,15 +197,15 @@ public class StdGUI extends GUI {
 
 	public void refreshPreferencesView ( ) {
 		final Preferences preferences = Global.preferences;
-		final boolean disable = !preferences.isCustomPreferencesLoaded();
-		textFields.title.control.setText(preferences.getPropertyString(PreferencesConfig.WINDOW_TITLE_ID).getModified());
-		textFields.width.control.setText(Integer.toString(preferences.getPropertyInt(PreferencesConfig.WINDOW_WIDTH_ID).getModified()));
-		textFields.height.control.setText(Integer.toString(preferences.getPropertyInt(PreferencesConfig.WINDOW_HEIGHT_ID).getModified()));
-		textFields.urlsFileExtension.control.setText(preferences.getPropertyString(PreferencesConfig.URLS_FILE_EXTENSION_ID).getModified());
-		textFields.urlsFileSelect.control.setText(preferences.getPropertyString(PreferencesConfig.URLS_FILE_SELECT_ID).getModified());
-		refreshCheckBoxView(checkBoxes.maximize,preferences.getPropertyBoolean(PreferencesConfig.WINDOW_MAXIMIZED_ID));
-		refreshCheckBoxView(checkBoxes.urlsFileAutoloadAll,preferences.getPropertyBoolean(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID));
-		refreshCheckBoxView(checkBoxes.byPrefix,preferences.getPropertyBoolean(PreferencesConfig.SEARCH_BY_PREFIX_ID));
+		final boolean disable = !preferences.isCustomPreferencesLoaded() || properties.confirmingCreatePreferencesProperty().get() || properties.confirmingCreateCSSProperty().get() || properties.confirmingCreateFXMLProperty().get();
+		textFields.title.control.setText(preferences.getStringPereference(PreferencesConfig.WINDOW_TITLE_ID).getModified());
+		textFields.width.control.setText(Integer.toString(preferences.getIntPreference(PreferencesConfig.WINDOW_WIDTH_ID).getModified()));
+		textFields.height.control.setText(Integer.toString(preferences.getIntPreference(PreferencesConfig.WINDOW_HEIGHT_ID).getModified()));
+		textFields.urlsFileExtension.control.setText(preferences.getStringPereference(PreferencesConfig.URLS_FILE_EXTENSION_ID).getModified());
+		textFields.urlsFileSelect.control.setText(preferences.getStringPereference(PreferencesConfig.URLS_FILE_SELECT_ID).getModified());
+		refreshCheckBoxView(checkBoxes.maximize,preferences.getBooleanPreference(PreferencesConfig.WINDOW_MAXIMIZED_ID));
+		refreshCheckBoxView(checkBoxes.urlsFileAutoloadAll,preferences.getBooleanPreference(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID));
+		refreshCheckBoxView(checkBoxes.byPrefix,preferences.getBooleanPreference(PreferencesConfig.SEARCH_BY_PREFIX_ID));
 		textFields.title.control.setDisable(disable);
 		textFields.width.control.setDisable(disable);
 		textFields.height.control.setDisable(disable);
@@ -233,7 +217,7 @@ public class StdGUI extends GUI {
 	}
 
 	public void selectDefaultFile ( ) {
-		final String urlsFileSelect = Global.preferences.getPropertyString(PreferencesConfig.URLS_FILE_SELECT_ID).getModified();
+		final String urlsFileSelect = Global.preferences.getStringPereference(PreferencesConfig.URLS_FILE_SELECT_ID).getModified();
 		final DBTable record = Global.db.getTableByFileName(urlsFileSelect);
 		if ( record != null ) {
 			listViews.files.control.requestFocus();
@@ -289,7 +273,7 @@ public class StdGUI extends GUI {
 		final boolean fileIsAlreadySelected = (Global.db.getSelectedDBTable() == record);
 
 		if ( listViews.files.autoSelectRequested ) {
-			final String urlsFileSelect = Global.preferences.getPropertyString(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
+			final String urlsFileSelect = Global.preferences.getStringPereference(PreferencesConfig.URLS_FILE_SELECT_ID).getSaved();
 			final DBTable recordToSelect = Global.db.getTableByFileName(urlsFileSelect);
 			if ( recordToSelect == record ) {
 				listViews.files.autoSelectRequested = false;
@@ -310,11 +294,6 @@ public class StdGUI extends GUI {
 	}
 
 	@Override
-	public URLsIO getURLsIO ( ) {
-		return urlsIO;
-	}
-
-	@Override
 	public void confirmAny ( ) {
 		if ( !buttons.urlDeleteOK.control.isDisable() )
 			buttons.confirmURLDelete();
@@ -332,7 +311,7 @@ public class StdGUI extends GUI {
 		}
 	}
 
-	private void refreshCheckBoxView ( final CustomCheckBox customCheckBox, final PreferencesBooleanValue preferencesValue ) {
+	private void refreshCheckBoxView ( final CustomCheckBox customCheckBox, final BooleanPreference preferencesValue ) {
 		if ( customCheckBox.control.isSelected() ) {
 			if ( !preferencesValue.getModified() )
 				customCheckBox.control.setSelected(preferencesValue.getModified());

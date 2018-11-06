@@ -9,15 +9,14 @@
 package com.github.vbsw.urlsaver.api;
 
 
+import javafx.scene.Parent;
+
+
 /**
  * @author Vitali Baumtrok
  */
-public abstract class Logger {
+public abstract class FXMLIO {
 
-	public abstract void initialize ( );
-
-	public abstract void logSuccess ( String message );
-
-	public abstract void logFailure ( String message );
+	public abstract Parent readFXML ( );
 
 }

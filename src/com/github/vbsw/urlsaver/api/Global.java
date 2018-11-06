@@ -22,6 +22,10 @@ public final class Global {
 	public static Preferences preferences;
 	public static TextGenerator textGenerator;
 	public static DataBase db;
+	public static Logger logger;
+	public static PreferencesIO preferencesIO;
+	public static URLsIO urlsIO;
+	public static FXMLIO fxmlIO;
 	public static GUI gui;
 	public static URLMeta urlMeta;
 	public static Properties properties;

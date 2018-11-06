@@ -36,14 +36,14 @@ public class StdPreferences extends Preferences {
 	protected final ResourceVariants fxmlVariants = new ResourceVariants();
 	protected final ResourceVariants cssVariants = new ResourceVariants();
 
-	protected final PreferencesStringValue windowTitle = new PreferencesStringValue();
-	protected final PreferencesIntValue windowWidth = new PreferencesIntValue();
-	protected final PreferencesIntValue windowHeight = new PreferencesIntValue();
-	protected final PreferencesBooleanValue windowMaximized = new PreferencesBooleanValue();
-	protected final PreferencesStringValue urlsFileExtension = new PreferencesStringValue();
-	protected final PreferencesStringValue urlsFileSelect = new PreferencesStringValue();
-	protected final PreferencesBooleanValue urlsFileAutoLoadAll = new PreferencesBooleanValue();
-	protected final PreferencesBooleanValue searchByPrefix = new PreferencesBooleanValue();
+	protected final StringPreference windowTitle = new StringPreference();
+	protected final IntPreference windowWidth = new IntPreference();
+	protected final IntPreference windowHeight = new IntPreference();
+	protected final BooleanPreference windowMaximized = new BooleanPreference();
+	protected final StringPreference urlsFileExtension = new StringPreference();
+	protected final StringPreference urlsFileSelect = new StringPreference();
+	protected final BooleanPreference urlsFileAutoLoadAll = new BooleanPreference();
+	protected final BooleanPreference searchByPrefix = new BooleanPreference();
 
 	protected boolean customPreferencesLoaded = false;
 	protected boolean customPreferencesSaved = true;
@@ -218,8 +218,8 @@ public class StdPreferences extends Preferences {
 	}
 
 	@Override
-	public PreferencesStringValue getPropertyString ( final int propertyId ) {
-		switch ( propertyId ) {
+	public StringPreference getStringPereference ( final int preferenceId ) {
+		switch ( preferenceId ) {
 			case PreferencesConfig.WINDOW_TITLE_ID:
 			return windowTitle;
 			case PreferencesConfig.URLS_FILE_EXTENSION_ID:
@@ -232,8 +232,8 @@ public class StdPreferences extends Preferences {
 	}
 
 	@Override
-	public PreferencesIntValue getPropertyInt ( final int propertyId ) {
-		switch ( propertyId ) {
+	public IntPreference getIntPreference ( final int preferenceId ) {
+		switch ( preferenceId ) {
 			case PreferencesConfig.WINDOW_WIDTH_ID:
 			return windowWidth;
 			case PreferencesConfig.WINDOW_HEIGHT_ID:
@@ -244,8 +244,8 @@ public class StdPreferences extends Preferences {
 	}
 
 	@Override
-	public PreferencesBooleanValue getPropertyBoolean ( final int propertyId ) {
-		switch ( propertyId ) {
+	public BooleanPreference getBooleanPreference ( final int preferenceId ) {
+		switch ( preferenceId ) {
 			case PreferencesConfig.WINDOW_MAXIMIZED_ID:
 			return windowMaximized;
 			case PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID:

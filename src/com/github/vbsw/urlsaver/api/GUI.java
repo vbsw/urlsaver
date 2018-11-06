@@ -37,6 +37,4 @@ public abstract class GUI {
 
 	public abstract ViewSelector getViewSelector ( );
 
-	public abstract URLsIO getURLsIO ( );
-
 }

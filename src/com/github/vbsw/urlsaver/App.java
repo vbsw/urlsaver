@@ -13,7 +13,11 @@ import com.github.vbsw.urlsaver.api.URLMeta;
 import com.github.vbsw.urlsaver.api.Global;
 import com.github.vbsw.urlsaver.db.StdDataBase;
 import com.github.vbsw.urlsaver.gui.StdGUI;
+import com.github.vbsw.urlsaver.gui.StdLogger;
 import com.github.vbsw.urlsaver.gui.StdProperties;
+import com.github.vbsw.urlsaver.io.StdFXMLIO;
+import com.github.vbsw.urlsaver.io.StdPreferencesIO;
+import com.github.vbsw.urlsaver.io.StdURLsIO;
 import com.github.vbsw.urlsaver.pref.StdPreferences;
 import com.github.vbsw.urlsaver.resources.StdResourceLoader;
 import com.github.vbsw.urlsaver.utility.StdTextGenerator;
@@ -34,6 +38,10 @@ public class App extends Application {
 		Global.preferences = new StdPreferences();
 		Global.textGenerator = new StdTextGenerator();
 		Global.db = new StdDataBase();
+		Global.logger = new StdLogger();
+		Global.preferencesIO = new StdPreferencesIO();
+		Global.urlsIO = new StdURLsIO();
+		Global.fxmlIO = new StdFXMLIO();
 		Global.gui = new StdGUI();
 		Global.urlMeta = new URLMeta();
 		Global.properties = new StdProperties();
@@ -41,6 +49,7 @@ public class App extends Application {
 		Global.resourceLoader.initialize();
 		Global.preferences.initialize();
 		Global.db.initialize();
+		Global.logger.initialize();
 		Global.gui.initialize(primaryStage);
 	}
 

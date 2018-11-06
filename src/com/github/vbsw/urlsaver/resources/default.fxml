@@ -163,19 +163,18 @@
                      <children>
                         <MenuButton fx:id="reload_preferences_file_btn" mnemonicParsing="false" text="Reload File">
                           <items>
-                            <MenuItem fx:id="reload_preferences_file_menu" mnemonicParsing="false" text="urlsaver.pref" />
-                            <MenuItem fx:id="reload_css_file_menu" mnemonicParsing="false" text="urlsaver.css" />
-                              <MenuItem fx:id="reload_fxml_file_menu" mnemonicParsing="false" text="urlsaver.fxml" />
+                            <MenuItem fx:id="reload_preferences_file_menu" mnemonicParsing="false" text="preferences" />
+                            <MenuItem fx:id="reload_css_file_menu" mnemonicParsing="false" text="CSS" />
+                              <MenuItem fx:id="reload_fxml_file_menu" mnemonicParsing="false" text="FXML" />
                           </items>
                         </MenuButton>
                         <AnchorPane HBox.hgrow="ALWAYS" />
                         <Button fx:id="preferences_cancel_btn" disable="true" mnemonicParsing="false" text="Cancel" />
-                        <Button fx:id="save_preferences_btn" disable="true" mnemonicParsing="false" text="Save Settings" />
                         <MenuButton fx:id="create_preferences_file_btn" mnemonicParsing="false" text="Create File">
                           <items>
-                            <MenuItem fx:id="create_preferences_file_menu" mnemonicParsing="false" text="urlsaver.pref" />
-                            <MenuItem fx:id="create_css_file_menu" mnemonicParsing="false" text="urlsaver.css" />
-                              <MenuItem fx:id="create_fxml_file_menu" mnemonicParsing="false" text="urlsaver.fxml" />
+                            <MenuItem fx:id="create_preferences_file_menu" mnemonicParsing="false" text="preferences" />
+                            <MenuItem fx:id="create_css_file_menu" mnemonicParsing="false" text="CSS" />
+                              <MenuItem fx:id="create_fxml_file_menu" mnemonicParsing="false" text="FXML" />
                           </items>
                         </MenuButton>
                         <Button fx:id="preferences_overwrite_ok_btn" disable="true" mnemonicParsing="false" text="Overwrite, OK" />
