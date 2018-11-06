@@ -22,6 +22,18 @@ public abstract class ResourceLoader {
 
 	public abstract ProgramFile getProgramFile ( );
 
+	public abstract String getCustomPreferencesFilePath ( );
+
+	public abstract String getCustomFXMLFilePath ( );
+
+	public abstract String getCustomCSSFilePath ( );
+
+	public abstract String getDefaultPreferencesFilePath ( );
+
+	public abstract String getDefaultFXMLFilePath ( );
+
+	public abstract String getDefaultCSSFilePath ( );
+
 	public Charset getCharset ( ) {
 		return StandardCharsets.UTF_8;
 	}

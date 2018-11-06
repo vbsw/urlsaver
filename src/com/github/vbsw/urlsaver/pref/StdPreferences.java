@@ -23,7 +23,6 @@ import com.github.vbsw.urlsaver.api.Resource;
 import com.github.vbsw.urlsaver.api.ResourceLoader;
 import com.github.vbsw.urlsaver.api.ResourceVariants;
 import com.github.vbsw.urlsaver.args.ArgumentsConfig;
-import com.github.vbsw.urlsaver.resources.ResourcesConfig;
 import com.github.vbsw.urlsaver.utility.Parser;
 
 
@@ -77,31 +76,31 @@ public class StdPreferences extends Preferences {
 		return null;
 	}
 
-	protected void setPreferencesSavedValue ( final ResourceLoader resourceLoader, final List<String> args ) {
+	protected void setPreferencesSavedValue ( final ResourceLoader resourceLoader, final List<String> args, final String filePathStr ) {
 		final Path customPath = extractCustomPreferencesPath(args);
 		final Resource resource;
 		if ( customPath == null )
-			resource = resourceLoader.getProgramFile().getOSFileResource(Paths.get(ResourcesConfig.CUSTOM_PREFERENCES_FILE_PATH));
+			resource = resourceLoader.getProgramFile().getOSFileResource(Paths.get(filePathStr));
 		else
 			resource = resourceLoader.getProgramFile().getOSFileResource(customPath);
 		preferencesVariants.setSaved(resource);
 	}
 
-	protected void setFXMLSavedValue ( final ResourceLoader resourceLoader, final List<String> args ) {
+	protected void setFXMLSavedValue ( final ResourceLoader resourceLoader, final List<String> args, final String filePathStr ) {
 		final Path customPath = extractCustomFXMLPath(args);
 		final Resource resource;
 		if ( customPath == null )
-			resource = resourceLoader.getProgramFile().getOSFileResource(Paths.get(ResourcesConfig.CUSTOM_FXML_FILE_PATH));
+			resource = resourceLoader.getProgramFile().getOSFileResource(Paths.get(filePathStr));
 		else
 			resource = resourceLoader.getProgramFile().getOSFileResource(customPath);
 		fxmlVariants.setSaved(resource);
 	}
 
-	protected void setCSSSavedValue ( final ResourceLoader resourceLoader, final List<String> args ) {
+	protected void setCSSSavedValue ( final ResourceLoader resourceLoader, final List<String> args, final String filePathStr ) {
 		final Path customPath = extractCustomCSSPath(args);
 		final Resource resource;
 		if ( customPath == null )
-			resource = resourceLoader.getProgramFile().getOSFileResource(Paths.get(ResourcesConfig.CUSTOM_CSS_FILE_PATH));
+			resource = resourceLoader.getProgramFile().getOSFileResource(Paths.get(filePathStr));
 		else
 			resource = resourceLoader.getProgramFile().getOSFileResource(customPath);
 		cssVariants.setSaved(resource);
@@ -151,16 +150,16 @@ public class StdPreferences extends Preferences {
 
 	@Override
 	public void initialize ( ) {
-		final Resource prefDefaultRes = Global.resourceLoader.getProgramFile().getJarFileResource(ResourcesConfig.DEFAULT_PREFERENCES_FILE_PATH);
-		final Resource fxmlDefaultRes = Global.resourceLoader.getProgramFile().getJarFileResource(ResourcesConfig.DEFAULT_FXML_FILE_PATH);
-		final Resource cssDefaultRes = Global.resourceLoader.getProgramFile().getJarFileResource(ResourcesConfig.DEFAULT_CSS_FILE_PATH);
+		final Resource prefDefaultRes = Global.resourceLoader.getProgramFile().getJarFileResource(Global.resourceLoader.getDefaultPreferencesFilePath());
+		final Resource fxmlDefaultRes = Global.resourceLoader.getProgramFile().getJarFileResource(Global.resourceLoader.getDefaultFXMLFilePath());
+		final Resource cssDefaultRes = Global.resourceLoader.getProgramFile().getJarFileResource(Global.resourceLoader.getDefaultCSSFilePath());
 
 		preferencesVariants.setDefault(prefDefaultRes);
 		fxmlVariants.setDefault(fxmlDefaultRes);
 		cssVariants.setDefault(cssDefaultRes);
-		setPreferencesSavedValue(Global.resourceLoader,Global.arguments);
-		setFXMLSavedValue(Global.resourceLoader,Global.arguments);
-		setCSSSavedValue(Global.resourceLoader,Global.arguments);
+		setPreferencesSavedValue(Global.resourceLoader,Global.arguments,Global.resourceLoader.getCustomPreferencesFilePath());
+		setFXMLSavedValue(Global.resourceLoader,Global.arguments,Global.resourceLoader.getCustomFXMLFilePath());
+		setCSSSavedValue(Global.resourceLoader,Global.arguments,Global.resourceLoader.getCustomCSSFilePath());
 
 		loadDefaultPreferences();
 		loadCustomPreferences();

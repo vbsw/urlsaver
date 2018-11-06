@@ -29,4 +29,34 @@ public class StdResourceLoader extends ResourceLoader {
 		return source;
 	}
 
+	@Override
+	public String getCustomPreferencesFilePath ( ) {
+		return ResourcesConfig.CUSTOM_PREFERENCES_FILE_PATH;
+	}
+
+	@Override
+	public String getCustomFXMLFilePath ( ) {
+		return ResourcesConfig.CUSTOM_FXML_FILE_PATH;
+	}
+
+	@Override
+	public String getCustomCSSFilePath ( ) {
+		return ResourcesConfig.CUSTOM_CSS_FILE_PATH;
+	}
+
+	@Override
+	public String getDefaultPreferencesFilePath ( ) {
+		return ResourcesConfig.DEFAULT_PREFERENCES_FILE_PATH;
+	}
+
+	@Override
+	public String getDefaultFXMLFilePath ( ) {
+		return ResourcesConfig.DEFAULT_FXML_FILE_PATH;
+	}
+
+	@Override
+	public String getDefaultCSSFilePath ( ) {
+		return ResourcesConfig.DEFAULT_CSS_FILE_PATH;
+	}
+
 }
