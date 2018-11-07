@@ -14,7 +14,7 @@ package com.github.vbsw.urlsaver.args;
  */
 public class ArgumentsConfig {
 
-	public static final String[] PREFERENCES_OPTION = new String[] { "config", "pref" };
+	public static final String[] SETTINGS_OPTION = new String[] { "config", "pref" };
 	public static final String[] ASSIGINMENT_OPERATOR = new String[] { "=" };
 	public static final String[] HELP_OPTION = new String[] { "help", "h" };
 	public static final String[] VERSION_OPTION = new String[] { "version", "v" };

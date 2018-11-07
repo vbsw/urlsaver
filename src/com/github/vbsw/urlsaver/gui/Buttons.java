@@ -14,22 +14,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-import com.github.vbsw.urlsaver.App;
-import com.github.vbsw.urlsaver.Converter;
-import com.github.vbsw.urlsaver.Parser;
-import com.github.vbsw.urlsaver.WebBrowserAccess;
-import com.github.vbsw.urlsaver.db.DB;
-import com.github.vbsw.urlsaver.db.DBRecord;
+import com.github.vbsw.urlsaver.api.Global;
+import com.github.vbsw.urlsaver.api.Settings;
+import com.github.vbsw.urlsaver.api.URLMeta;
+import com.github.vbsw.urlsaver.db.DBTable;
 import com.github.vbsw.urlsaver.db.DynArrayOfString;
-import com.github.vbsw.urlsaver.io.PreferencesIO;
-import com.github.vbsw.urlsaver.io.URLsIO;
-import com.github.vbsw.urlsaver.pref.Preferences;
-import com.github.vbsw.urlsaver.resources.Project;
+import com.github.vbsw.urlsaver.db.URLsSearchResult;
+import com.github.vbsw.urlsaver.settings.SettingsConfig;
+import com.github.vbsw.urlsaver.utility.Converter;
+import com.github.vbsw.urlsaver.utility.Parser;
+import com.github.vbsw.urlsaver.utility.WebBrowserAccess;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.binding.BooleanExpression;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -46,29 +44,34 @@ import javafx.scene.input.KeyEvent;
  */
 public class Buttons {
 
-	public static final QuitApp quitApp = new QuitApp();
-	public static final QuitAppSave quitAppSave = new QuitAppSave();
-	public static final QuitAppOK quitAppOK = new QuitAppOK();
-	public static final CreateDefaultFile createDefaultFile = new CreateDefaultFile();
-	public static final ReloadFile reloadFile = new ReloadFile();
-	public static final ReloadAllFiles reloadAllFiles = new ReloadAllFiles();
-	public static final FileSave fileSave = new FileSave();
-	public static final FileCancel fileCancel = new FileCancel();
-	public static final FileSaveOK fileSaveOK = new FileSaveOK();
-	public static final OpenInBrowser openInBrowser = new OpenInBrowser();
-	public static final UrlSearch urlSearch = new UrlSearch();
-	public static final URLCancel urlCancel = new URLCancel();
-	public static final URLDelete urlDelete = new URLDelete();
-	public static final URLDeleteOK urlDeleteOK = new URLDeleteOK();
-	public static final URLCreateOK urlCreateOK = new URLCreateOK();
-	public static final URLEditOK urlEditOK = new URLEditOK();
-	public static final PreferencesCancel preferencesCancel = new PreferencesCancel();
-	public static final PreferencesSave preferencesSave = new PreferencesSave();
-	public static final PreferencesReload preferencesReload = new PreferencesReload();
-	public static final PreferencesCreate preferencesCreate = new PreferencesCreate();
-	public static final PreferencesOverwriteOK preferencesOverwriteOK = new PreferencesOverwriteOK();
+	protected StdGUI stdGUI;
 
-	public static void build ( final Parent root ) {
+	public final QuitApp quitApp = new QuitApp();
+	public final QuitAppSave quitAppSave = new QuitAppSave();
+	public final QuitAppOK quitAppOK = new QuitAppOK();
+	public final CreateDefaultFile createDefaultFile = new CreateDefaultFile();
+	public final ReloadFile reloadFile = new ReloadFile();
+	public final ReloadAllFiles reloadAllFiles = new ReloadAllFiles();
+	public final FileSave fileSave = new FileSave();
+	public final FileCancel fileCancel = new FileCancel();
+	public final FileSaveOK fileSaveOK = new FileSaveOK();
+	public final OpenInBrowser openInBrowser = new OpenInBrowser();
+	public final UrlSearch urlSearch = new UrlSearch();
+	public final URLCancel urlCancel = new URLCancel();
+	public final URLDelete urlDelete = new URLDelete();
+	public final URLDeleteOK urlDeleteOK = new URLDeleteOK();
+	public final URLCreateOK urlCreateOK = new URLCreateOK();
+	public final URLEditOK urlEditOK = new URLEditOK();
+	public final SettingsCancel settingsCancel = new SettingsCancel();
+	public final SettingsReload settingsReload = new SettingsReload();
+	public final SettingsCreate settingsCreate = new SettingsCreate();
+	public final SettingsOverwriteOK settingsOverwriteOK = new SettingsOverwriteOK();
+
+	public Buttons ( StdGUI stdGUI ) {
+		this.stdGUI = stdGUI;
+	}
+
+	public void build ( final Parent root ) {
 		quitApp.build(root);
 		quitAppSave.build(root);
 		quitAppOK.build(root);
@@ -85,605 +88,650 @@ public class Buttons {
 		urlDeleteOK.build(root);
 		urlCreateOK.build(root);
 		urlEditOK.build(root);
-		preferencesCancel.build(root);
-		preferencesSave.build(root);
-		preferencesReload.build(root);
-		preferencesCreate.build(root);
-		preferencesOverwriteOK.build(root);
+		settingsCancel.build(root);
+		settingsReload.build(root);
+		settingsCreate.build(root);
+		settingsOverwriteOK.build(root);
 	}
 
-	public static void confirmURLEdit ( ) {
-		final DBRecord record = GUI.getCurrentDBRecord();
-		final String urlTyped = Parser.trim(TextFields.url.control.getText());
-		final int urlIndex = record.getURLIndex(urlTyped);
-		final DynArrayOfString tags = Converter.toDynArrayListSorted(TextAreas.tags.control.getText());
-		record.setTags(urlIndex,tags);
+	public void confirmURLEdit ( ) {
+		final DBTable selectedDBTable = Global.db.getSelectedDBTable();
+		final String urlTyped = Parser.trim(stdGUI.textFields.url.control.getText());
+		final int urlIndex = selectedDBTable.getURLIndex(urlTyped);
+		final DynArrayOfString tags = Converter.toDynArrayListSorted(stdGUI.textAreas.tags.control.getText());
+		final String score = stdGUI.comboBoxes.score.getScoreAsString();
+		final String urlDate = stdGUI.datePickers.urlDate.getDateAsString();
+		selectedDBTable.setTags(urlIndex,tags);
+		selectedDBTable.setMetaData(urlIndex,URLMeta.SCORE,score);
+		selectedDBTable.setMetaData(urlIndex,URLMeta.DATE,urlDate);
 
-		final String tagsString = record.getTagsAsString(urlIndex);
-		TextAreas.tags.control.setText(tagsString);
-		ListViews.urls.control.requestFocus();
-		GUI.refreshFileSelection();
+		final String tagsString = selectedDBTable.getTagsAsString(urlIndex);
+		final URLsSearchResult urlsResult = stdGUI.tableViews.urls.control.getSelectionModel().getSelectedItem();
+		urlsResult.setScore(score);
+		urlsResult.setDate(urlDate);
+		stdGUI.textAreas.tags.control.setText(tagsString);
+		stdGUI.tableViews.urls.control.requestFocus();
+		stdGUI.tableViews.urls.control.refresh();
+		stdGUI.refreshFileSelection();
 	}
 
-	public static void confirmURLDelete ( ) {
-		final DBRecord record = GUI.getCurrentDBRecord();
-		final String url = ListViews.urls.control.getSelectionModel().getSelectedItem();
+	public void confirmURLDelete ( ) {
+		final DBTable record = Global.db.getSelectedDBTable();
+		final String url = stdGUI.tableViews.urls.control.getSelectionModel().getSelectedItem().getURL();
 		final int urlIndex = record.getURLIndex(url);
-		final int selectedIndex = ListViews.urls.control.getSelectionModel().getSelectedIndex();
+		final int selectedIndex = stdGUI.tableViews.urls.control.getSelectionModel().getSelectedIndex();
 		record.removeURL(urlIndex);
-		ListViews.urls.control.getItems().remove(selectedIndex);
-		if ( ListViews.urls.control.getItems().size() > selectedIndex )
-			ListViews.urls.control.getSelectionModel().select(selectedIndex);
+		stdGUI.tableViews.urls.control.getItems().remove(selectedIndex);
+		if ( stdGUI.tableViews.urls.control.getItems().size() > selectedIndex )
+			stdGUI.tableViews.urls.control.getSelectionModel().select(selectedIndex);
 		else
 			record.setSelectedURLIndex(-1);
-		if ( ListViews.urls.control.getItems().isEmpty() )
-			TextFields.urlSearch.control.requestFocus();
+		if ( stdGUI.tableViews.urls.control.getItems().isEmpty() )
+			stdGUI.textFields.urlSearch.control.requestFocus();
 		else
-			ListViews.urls.control.requestFocus();
-		GUI.refreshFileSelection();
+			stdGUI.tableViews.urls.control.requestFocus();
+		stdGUI.refreshFileSelection();
 	}
 
-	public static void confirmURLCreate ( ) {
-		final DBRecord selectedRecord = GUI.getCurrentDBRecord();
-		final String url = Parser.trim(TextFields.url.control.getText());
+	public void confirmURLCreate ( ) {
+		final DBTable selectedRecord = Global.db.getSelectedDBTable();
+		final String url = Parser.trim(stdGUI.textFields.url.control.getText());
+		final String score = stdGUI.comboBoxes.score.getScoreAsString();
+		final String urlDate = stdGUI.datePickers.urlDate.getDateAsString();
 		final int urlIndex = selectedRecord.addUrl(url);
-		final ArrayList<String> tags = Converter.toArrayList(TextAreas.tags.control.getText());
+		final ArrayList<String> tags = Converter.toArrayList(stdGUI.textAreas.tags.control.getText());
 		for ( final String tag: tags )
 			selectedRecord.addTagToUrl(urlIndex,tag);
+		selectedRecord.setMetaData(urlIndex,URLMeta.SCORE,score);
+		selectedRecord.setMetaData(urlIndex,URLMeta.DATE,urlDate);
 		final String tagsString = selectedRecord.getTagsAsString(urlIndex);
-		TextAreas.tags.control.setText(tagsString);
-		ListViews.urls.control.requestFocus();
-		Properties.urlExistsProperty().set(true);
-		Properties.urlModifiedProperty().set(false);
-		GUI.refreshFileSelection();
+		stdGUI.textAreas.tags.control.setText(tagsString);
+		stdGUI.tableViews.urls.control.requestFocus();
+		stdGUI.properties.urlExistsProperty().set(true);
+		stdGUI.properties.urlModifiedProperty().set(false);
+		stdGUI.refreshFileSelection();
 	}
 
-	private static void quitApp_clicked ( final ActionEvent event ) {
-		App.quit();
+	private void quitApp_clicked ( final ActionEvent event ) {
+		stdGUI.quit();
 	}
 
-	private static void quitApp_keyPressed ( final KeyEvent event ) {
+	private void quitApp_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER )
-			App.quit();
+			stdGUI.quit();
 	}
 
-	private static void quitAppSave_clicked ( final ActionEvent event ) {
-		URLsIO.saveAllFiles();
-		App.quitUnconditionally();
+	private void quitAppSave_clicked ( final ActionEvent event ) {
+		Global.urlsIO.saveAllFiles();
+		stdGUI.quitUnconditionally();
 	}
 
-	private static void quitAppSave_keyPressed ( final KeyEvent event ) {
+	private void quitAppSave_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			URLsIO.saveAllFiles();
-			App.quitUnconditionally();
+			Global.urlsIO.saveAllFiles();
+			stdGUI.quitUnconditionally();
 		}
 	}
 
-	private static void quitAppOK_clicked ( final ActionEvent event ) {
-		App.quitUnconditionally();
+	private void quitAppOK_clicked ( final ActionEvent event ) {
+		stdGUI.quitUnconditionally();
 	}
 
-	private static void quitAppOK_keyPressed ( final KeyEvent event ) {
+	private void quitAppOK_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER )
-			App.quitUnconditionally();
+			stdGUI.quitUnconditionally();
 	}
 
-	private static void reloadFile_clicked ( final ActionEvent event ) {
-		final DBRecord selectedRecord = GUI.getCurrentDBRecord();
-		URLsIO.reloadFile(selectedRecord);
+	private void reloadFile_clicked ( final ActionEvent event ) {
+		Global.urlsIO.reloadSelectedFile();
 	}
 
-	private static void reloadFile_keyPressed ( final KeyEvent event ) {
+	private void reloadFile_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			final DBRecord selectedRecord = GUI.getCurrentDBRecord();
-			URLsIO.reloadFile(selectedRecord);
+			Global.urlsIO.reloadSelectedFile();
 		}
 	}
 
-	private static void reloadAllFiles_clicked ( final ActionEvent event ) {
-		URLsIO.reloadAllFiles();
+	private void reloadAllFiles_clicked ( final ActionEvent event ) {
+		Global.urlsIO.reloadAllFiles();
 	}
 
-	private static void reloadAllFiles_keyPressed ( final KeyEvent event ) {
+	private void reloadAllFiles_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER )
-			URLsIO.reloadAllFiles();
+			Global.urlsIO.reloadAllFiles();
 	}
 
-	private static void fileSave_clicked ( final ActionEvent event ) {
-		Properties.confirmingSaveProperty().set(true);
+	private void fileSave_clicked ( final ActionEvent event ) {
+		stdGUI.properties.confirmingSaveProperty().set(true);
 	}
 
-	private static void fileSave_keyPressed ( final KeyEvent event ) {
+	private void fileSave_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			Properties.confirmingSaveProperty().set(true);
+			stdGUI.properties.confirmingSaveProperty().set(true);
 		}
 	}
 
-	private static void fileCancel_clicked ( final ActionEvent event ) {
-		Properties.confirmingSaveProperty().set(false);
-		ListViews.files.control.requestFocus();
+	private void fileCancel_clicked ( final ActionEvent event ) {
+		stdGUI.properties.confirmingSaveProperty().set(false);
+		stdGUI.listViews.files.control.requestFocus();
 	}
 
-	private static void fileCancel_keyPressed ( final KeyEvent event ) {
+	private void fileCancel_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER )
 			fileCancel_clicked(null);
 	}
 
-	private static void fileSaveOK_clicked ( final ActionEvent event ) {
-		final DBRecord selectedRecord = GUI.getCurrentDBRecord();
-		URLsIO.saveFile(selectedRecord);
-		GUI.refreshFileInfo();
-		GUI.refreshTitle();
+	private void fileSaveOK_clicked ( final ActionEvent event ) {
+		Global.urlsIO.saveSelectedFile();
+		if ( !Global.db.getSelectedDBTable().isDirty() ) {
+			stdGUI.properties.selectedFileDirtyProperty().setValue(false);
+			stdGUI.properties.confirmingSaveProperty().setValue(false);
+		}
+		stdGUI.refreshFileInfo();
+		stdGUI.refreshTitle();
 	}
 
-	private static void fileSaveOK_keyPressed ( final KeyEvent event ) {
+	private void fileSaveOK_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER )
 			fileSaveOK_clicked(null);
 	}
 
-	private static void openInBrowser_clicked ( final ActionEvent event ) {
-		final String url = ListViews.urls.control.getSelectionModel().getSelectedItem();
+	private void openInBrowser_clicked ( final ActionEvent event ) {
+		final String url = stdGUI.tableViews.urls.control.getSelectionModel().getSelectedItem().getURL();
 		WebBrowserAccess.openURL(url);
 	}
 
-	private static void openInBrowser_keyPressed ( final KeyEvent event ) {
+	private void openInBrowser_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			final String url = ListViews.urls.control.getSelectionModel().getSelectedItem();
+			final String url = stdGUI.tableViews.urls.control.getSelectionModel().getSelectedItem().getURL();
 			WebBrowserAccess.openURL(url);
 		}
 	}
 
-	private static void urlSearch_clicked ( final ActionEvent event ) {
-		final DBRecord record = GUI.getCurrentDBRecord();
+	private void urlSearch_clicked ( final ActionEvent event ) {
+		final DBTable record = Global.db.getSelectedDBTable();
 		final String searchString = record.getURLsSearchString();
-		final boolean searchByPrefix = Preferences.getSearchByPrefix().getSavedValue();
+		final boolean searchByPrefix = Global.settings.getBooleanSetting(SettingsConfig.SEARCH_BY_PREFIX_ID).getSaved();
 		final DynArrayOfString searchTags = Converter.toDynArrayList(searchString);
 
 		record.searchURLs(searchTags,searchByPrefix);
-		ListViews.urls.showSearchResults();
-		GUI.refreshURLsInfo();
-		Properties.resetURLsProperties();
+		stdGUI.tableViews.urls.showSearchResults();
+		stdGUI.refreshURLsInfo();
+		stdGUI.resetURLsProperties();
 	}
 
-	private static void urlSearch_keyPressed ( final KeyEvent event ) {
+	private void urlSearch_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
 			urlSearch_clicked(null);
 		}
 	}
 
-	private static void urlCancel_clicked ( final ActionEvent event ) {
-		GUI.refreshURLsInfo();
-		if ( ListViews.urls.control.getItems().isEmpty() )
-			TextFields.urlSearch.control.requestFocus();
+	private void urlCancel_clicked ( final ActionEvent event ) {
+		stdGUI.refreshURLsInfo();
+		if ( stdGUI.tableViews.urls.control.getItems().isEmpty() )
+			stdGUI.textFields.urlSearch.control.requestFocus();
 		else
-			ListViews.urls.control.requestFocus();
+			stdGUI.tableViews.urls.control.requestFocus();
 	}
 
-	private static void urlCancel_keyPressed ( final KeyEvent event ) {
+	private void urlCancel_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER )
-			Buttons.urlCancel_clicked(null);
+			stdGUI.buttons.urlCancel_clicked(null);
 	}
 
-	private static void urlDelete_clicked ( final ActionEvent event ) {
-		Properties.urlDeleteRequestedProperty().set(true);
-		Buttons.urlCancel.control.requestFocus();
+	private void urlDelete_clicked ( final ActionEvent event ) {
+		stdGUI.properties.urlDeleteRequestedProperty().set(true);
+		stdGUI.buttons.urlCancel.control.requestFocus();
 	}
 
-	private static void urlDelete_keyPressed ( final KeyEvent event ) {
+	private void urlDelete_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			Properties.urlDeleteRequestedProperty().set(true);
-			Buttons.urlCancel.control.requestFocus();
+			stdGUI.properties.urlDeleteRequestedProperty().set(true);
+			stdGUI.buttons.urlCancel.control.requestFocus();
 		}
 	}
 
-	private static void urlDeleteOK_clicked ( final ActionEvent event ) {
-		Buttons.confirmURLDelete();
-		Properties.urlDeleteRequestedProperty().set(false);
+	private void urlDeleteOK_clicked ( final ActionEvent event ) {
+		stdGUI.buttons.confirmURLDelete();
+		stdGUI.properties.urlDeleteRequestedProperty().set(false);
 	}
 
-	private static void urlDeleteOK_keyPressed ( final KeyEvent event ) {
+	private void urlDeleteOK_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER )
-			Buttons.urlDelete_clicked(null);
+			stdGUI.buttons.urlDelete_clicked(null);
 	}
 
-	private static void urlCreateOK_clicked ( final ActionEvent event ) {
-		Buttons.confirmURLCreate();
-		GUI.refreshTitle();
+	private void urlCreateOK_clicked ( final ActionEvent event ) {
+		stdGUI.buttons.confirmURLCreate();
+		stdGUI.refreshTitle();
 	}
 
-	private static void urlCreateOK_keyPressed ( final KeyEvent event ) {
+	private void urlCreateOK_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
-			Buttons.confirmURLCreate();
-			GUI.refreshTitle();
+			stdGUI.buttons.confirmURLCreate();
+			stdGUI.refreshTitle();
 		}
 	}
 
-	private static void urlEditOK_clicked ( final ActionEvent event ) {
+	private void urlEditOK_clicked ( final ActionEvent event ) {
 		confirmURLEdit();
-		Properties.urlExistsProperty().set(true);
-		Properties.urlTagsModifiedProperty().set(false);
+		stdGUI.properties.urlExistsProperty().set(true);
+		stdGUI.properties.urlTagsModifiedProperty().set(false);
+		stdGUI.properties.urlDateModifiedProperty().set(false);
+		stdGUI.properties.urlScoreModifiedProperty().set(false);
 	}
 
-	private static void urlEditOK_keyPressed ( final KeyEvent event ) {
+	private void urlEditOK_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
 			urlEditOK_clicked(null);
 		}
 	}
 
-	private static void preferencesOverwriteOK_clicked ( final ActionEvent event ) {
-		if ( Properties.confirmingCreatePreferencesProperty().get() )
-			PreferencesIO.overwritePreferencesFile();
-		else if ( Properties.confirmingCreateCSSProperty().get() )
-			PreferencesIO.overwriteCSSFile();
-		else if ( Properties.confirmingCreateFXMLProperty().get() )
-			PreferencesIO.overwriteFXMLFile();
-	}
-
-	private static void createPreferencesFileOK_keyPressed ( final KeyEvent event ) {
-		final KeyCode keyCode = event.getCode();
-		if ( keyCode == KeyCode.ENTER )
-			preferencesOverwriteOK_clicked(null);
-	}
-
-	private static void preferencesCancel_clicked ( final ActionEvent event ) {
-		Properties.confirmingCreatePreferencesProperty().set(false);
-		Properties.confirmingCreateCSSProperty().set(false);
-		Properties.confirmingCreateFXMLProperty().set(false);
-		Preferences.resetModifiedValuesToSaved();
-		GUI.refreshPreferencesView();
-	}
-
-	private static void preferencesCancel_keyPressed ( final KeyEvent event ) {
-		final KeyCode keyCode = event.getCode();
-		if ( keyCode == KeyCode.ENTER )
-			preferencesCancel_clicked(null);
-	}
-
-	private static void savePreferences_clicked ( final ActionEvent event ) {
-		final String fileName = Preferences.getPreferencesResource().getSavedValue().getFileName().toString();
-		Preferences.savePreferences();
-		if ( Preferences.isCustomPreferencesSaved() ) {
-			Preferences.resetSavedValuesToModified();
-			Properties.titleChangedProperty().set(false);
-			Properties.widthChangedProperty().set(false);
-			Properties.heightChangedProperty().set(false);
-			Properties.urlsFileExtensionChangedProperty().set(false);
-			Properties.urlsFileSelectChangedProperty().set(false);
-			Properties.maximizeChangedProperty().set(false);
-			Properties.loadAtStartChangedProperty().set(false);
-			Properties.byPrefixChangedProperty().set(false);
-			TextFields.title.setFontWeight(false);
-			TextFields.width.setFontWeight(false);
-			TextFields.height.setFontWeight(false);
-			TextFields.urlsFileExtension.setFontWeight(false);
-			TextFields.urlsFileSelect.setFontWeight(false);
-			CheckBoxes.maximize.setFontWeight(false);
-			CheckBoxes.urlsFileAutoloadAll.setFontWeight(false);
-			CheckBoxes.byPrefix.setFontWeight(false);
-			Logger.logSuccess("file saved (" + fileName + ")");
-			TextAreas.log.control.requestFocus();
-			GUI.refreshCreateDefaultFileButton();
-		} else {
-			Logger.logFailure("file not saved (" + fileName + ")");
-			TextAreas.log.control.requestFocus();
+	private void settingsOverwriteOK_clicked ( final ActionEvent event ) {
+		if ( stdGUI.properties.settingsModifiedProperty().get() ) {
+			saveSettings_clicked(null);
+		} else if ( stdGUI.properties.confirmingCreateSettingsProperty().get() ) {
+			Global.settingsIO.overwriteSettingsFile();
+			stdGUI.properties.confirmingCreateSettingsProperty().set(false);
+			stdGUI.refreshSettingsView();
+		} else if ( stdGUI.properties.confirmingCreateCSSProperty().get() ) {
+			Global.settingsIO.overwriteCSSFile();
+			stdGUI.properties.confirmingCreateCSSProperty().set(false);
+			stdGUI.refreshSettingsView();
+		} else if ( stdGUI.properties.confirmingCreateFXMLProperty().get() ) {
+			Global.settingsIO.overwriteFXMLFile();
+			stdGUI.properties.confirmingCreateFXMLProperty().set(false);
+			stdGUI.refreshSettingsView();
 		}
 	}
 
-	private static void savePreferences_keyPressed ( final KeyEvent event ) {
+	private void createSettingsFileOK_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER )
-			savePreferences_clicked(null);
+			settingsOverwriteOK_clicked(null);
 	}
 
-	private static void reloadPreferencesFile_clicked ( final ActionEvent event ) {
-		Preferences.loadCustomPreferences();
-		GUI.refreshPreferencesView();
-		GUI.refreshTitle();
+	private void settingsCancel_clicked ( final ActionEvent event ) {
+		stdGUI.properties.confirmingCreateSettingsProperty().set(false);
+		stdGUI.properties.confirmingCreateCSSProperty().set(false);
+		stdGUI.properties.confirmingCreateFXMLProperty().set(false);
+		Global.settings.resetModifiedValuesToSaved();
+		stdGUI.refreshSettingsView();
 	}
 
-	private static void reloadCSSFile_clicked ( final ActionEvent event ) {
-		GUI.reloadCSS();
+	private void settingsCancel_keyPressed ( final KeyEvent event ) {
+		final KeyCode keyCode = event.getCode();
+		if ( keyCode == KeyCode.ENTER )
+			settingsCancel_clicked(null);
 	}
 
-	private static void reloadFXMLFile_clicked ( final ActionEvent event ) {
-		final String logBackup = TextAreas.log.control.getText();
-		final int selectedIndex = ListViews.files.control.getSelectionModel().getSelectedIndex();
-		GUI.reloadFXML();
-		GUI.refreshPreferencesView();
-		TabPanes.top.preferences.select();
-		TextAreas.log.control.setText(logBackup);
+	private void saveSettings_clicked ( final ActionEvent event ) {
+		final Settings settings = Global.settings;
+		final String fileName = settings.getSettings().getSaved().getFileName().toString();
+		settings.saveSettings();
+		stdGUI.properties.settingsModifiedProperty().set(false);
+		if ( settings.isCustomSettingsSaved() ) {
+			settings.resetSavedToModified();
+			stdGUI.properties.titleChangedProperty().set(false);
+			stdGUI.properties.widthChangedProperty().set(false);
+			stdGUI.properties.heightChangedProperty().set(false);
+			stdGUI.properties.urlsFileExtensionChangedProperty().set(false);
+			stdGUI.properties.urlsFileSelectChangedProperty().set(false);
+			stdGUI.properties.maximizeChangedProperty().set(false);
+			stdGUI.properties.loadAtStartChangedProperty().set(false);
+			stdGUI.properties.byPrefixChangedProperty().set(false);
+			stdGUI.properties.settingsModifiedProperty().set(false);
+			stdGUI.textFields.title.setFontWeight(false);
+			stdGUI.textFields.width.setFontWeight(false);
+			stdGUI.textFields.height.setFontWeight(false);
+			stdGUI.textFields.urlsFileExtension.setFontWeight(false);
+			stdGUI.textFields.urlsFileSelect.setFontWeight(false);
+			stdGUI.checkBoxes.maximize.setFontWeight(false);
+			stdGUI.checkBoxes.urlsFileAutoloadAll.setFontWeight(false);
+			stdGUI.checkBoxes.byPrefix.setFontWeight(false);
+			Global.logger.logSuccess("settings saved (" + fileName + ")");
+			stdGUI.refreshSettingsView();
+			stdGUI.textAreas.log.control.requestFocus();
+			stdGUI.refreshCreateDefaultFileButton();
+		} else {
+			Global.logger.logFailure("settings not saved (" + fileName + ")");
+			stdGUI.textAreas.log.control.requestFocus();
+		}
+	}
+
+	/*
+	 * private void saveSettings_keyPressed ( final KeyEvent event ) {
+	 * final KeyCode keyCode = event.getCode();
+	 * if ( keyCode == KeyCode.ENTER )
+	 * saveSettings_clicked(null);
+	 * }
+	 */
+
+	private void reloadSettingsFile_clicked ( final ActionEvent event ) {
+		Global.settings.loadCustomSettings();
+		stdGUI.refreshSettingsView();
+		stdGUI.refreshTitle();
+	}
+
+	private void reloadCSSFile_clicked ( final ActionEvent event ) {
+		stdGUI.reloadCSS();
+	}
+
+	private void reloadFXMLFile_clicked ( final ActionEvent event ) {
+		final String logBackup = stdGUI.textAreas.log.control.getText();
+		final int selectedIndex = stdGUI.listViews.files.control.getSelectionModel().getSelectedIndex();
+		stdGUI.reloadFXML();
+		stdGUI.refreshSettingsView();
+		stdGUI.tabPanes.top.settings.select();
+		stdGUI.textAreas.log.control.setText(logBackup);
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run ( ) {
-				Buttons.preferencesReload.control.requestFocus();
+				stdGUI.buttons.settingsReload.control.requestFocus();
 			}
 		});
-		ListViews.files.control.getItems().addAll(DB.getRecords());
-		ListViews.files.control.getSelectionModel().select(selectedIndex);
+		stdGUI.listViews.files.control.getItems().addAll(Global.db.getTables());
+		stdGUI.listViews.files.control.getSelectionModel().select(selectedIndex);
 	}
 
-	private static void createPreferencesFile_clicked ( final ActionEvent event ) {
-		PreferencesIO.createPreferencesFile();
+	private void createSettingsFile_clicked ( final ActionEvent event ) {
+		if ( Global.settings.getSettings().getSaved().exists() ) {
+			stdGUI.properties.confirmingCreateSettingsProperty().set(true);
+			stdGUI.refreshSettingsView();
+			stdGUI.buttons.settingsCancel.control.requestFocus();
+		} else {
+			Global.settingsIO.createSettingsFile();
+		}
 	}
 
-	private static void createCSSFile_clicked ( final ActionEvent event ) {
-		PreferencesIO.createCSSFile();
+	private void createCSSFile_clicked ( final ActionEvent event ) {
+		if ( Global.settings.getCSS().getSaved().exists() ) {
+			stdGUI.properties.confirmingCreateCSSProperty().set(true);
+			stdGUI.refreshSettingsView();
+			stdGUI.buttons.settingsCancel.control.requestFocus();
+		} else {
+			Global.settingsIO.createCSSFile();
+		}
 	}
 
-	private static void createFXMLFile_clicked ( final ActionEvent event ) {
-		PreferencesIO.createFXMLFile();
+	private void createFXMLFile_clicked ( final ActionEvent event ) {
+		if ( Global.settings.getFXML().getSaved().exists() ) {
+			stdGUI.properties.confirmingCreateFXMLProperty().set(true);
+			stdGUI.refreshSettingsView();
+			stdGUI.buttons.settingsCancel.control.requestFocus();
+		} else {
+			Global.settingsIO.createFXMLFile();
+		}
 	}
 
-	private static BooleanBinding getCreatePreferencesFileDisableBinding ( ) {
+	private BooleanBinding getCreateSettingsFileDisableBinding ( ) {
 		BooleanBinding binding;
-		binding = Bindings.or(Properties.confirmingCreatePreferencesProperty(),Properties.confirmingCreateCSSProperty());
-		binding = Bindings.or(binding,Properties.confirmingCreateFXMLProperty());
+		binding = Bindings.or(stdGUI.properties.confirmingCreateSettingsProperty(),stdGUI.properties.confirmingCreateCSSProperty());
+		binding = Bindings.or(binding,stdGUI.properties.confirmingCreateFXMLProperty());
 		return binding;
 	}
 
-	private static ObservableValue<? extends Boolean> getUrlCancelDisableBinding ( ) {
+	private ObservableValue<? extends Boolean> getUrlCancelDisableBinding ( ) {
 		BooleanBinding binding;
-		binding = Bindings.or(Properties.urlModifiedProperty(),Properties.urlTagsModifiedProperty());
-		binding = Bindings.or(binding,Properties.urlDeleteRequestedProperty());
+		binding = Bindings.or(stdGUI.properties.urlModifiedProperty(),stdGUI.properties.urlTagsModifiedProperty());
+		binding = Bindings.or(binding,stdGUI.properties.urlDateModifiedProperty());
+		binding = Bindings.or(binding,stdGUI.properties.urlScoreModifiedProperty());
+		binding = Bindings.or(binding,stdGUI.properties.urlDeleteRequestedProperty());
 		binding = Bindings.not(binding);
 		return binding;
 	}
 
-	private static ObservableValue<? extends Boolean> getUrlDeleteDisableBinding ( ) {
+	private ObservableValue<? extends Boolean> getUrlDeleteDisableBinding ( ) {
 		BooleanBinding binding;
-		binding = Bindings.not(Properties.urlExistsProperty());
-		binding = Bindings.or(binding,Properties.urlDeleteRequestedProperty());
-		binding = Bindings.or(binding,Properties.urlModifiedProperty());
-		binding = Bindings.or(binding,Properties.urlTagsModifiedProperty());
+		binding = Bindings.not(stdGUI.properties.urlExistsProperty());
+		binding = Bindings.or(binding,stdGUI.properties.urlDeleteRequestedProperty());
+		binding = Bindings.or(binding,stdGUI.properties.urlModifiedProperty());
+		binding = Bindings.or(binding,stdGUI.properties.urlTagsModifiedProperty());
+		binding = Bindings.or(binding,stdGUI.properties.urlDateModifiedProperty());
+		binding = Bindings.or(binding,stdGUI.properties.urlScoreModifiedProperty());
 		return binding;
 	}
 
-	private static ObservableValue<? extends Boolean> getEditOKDisableBinding ( ) {
+	private ObservableValue<? extends Boolean> getEditOKDisableBinding ( ) {
 		BooleanBinding binding;
-		binding = Bindings.not(Properties.urlModifiedProperty());
-		binding = Bindings.and(binding,Properties.urlTagsModifiedProperty());
+		binding = Bindings.or(stdGUI.properties.urlTagsModifiedProperty(),stdGUI.properties.urlDateModifiedProperty());
+		binding = Bindings.or(binding,stdGUI.properties.urlScoreModifiedProperty());
+		binding = Bindings.and(binding,Bindings.not(stdGUI.properties.urlModifiedProperty()));
 		binding = Bindings.not(binding);
 		return binding;
 	}
 
-	private static BooleanExpression getPreferencesChangedBinding ( ) {
-		BooleanBinding binding;
-		binding = Bindings.or(Properties.titleChangedProperty(),Properties.widthChangedProperty());
-		binding = Bindings.or(binding,Properties.heightChangedProperty());
-		binding = Bindings.or(binding,Properties.urlsFileExtensionChangedProperty());
-		binding = Bindings.or(binding,Properties.urlsFileSelectChangedProperty());
-		binding = Bindings.or(binding,Properties.maximizeChangedProperty());
-		binding = Bindings.or(binding,Properties.loadAtStartChangedProperty());
-		binding = Bindings.or(binding,Properties.byPrefixChangedProperty());
-		return binding;
-	}
-
-	public static void createDefaultFile_clicked ( final ActionEvent event ) {
-		final String defaultFileName = Preferences.getURLsFileSelect().getSavedValue();
-		final Path defaultFilePath = Project.getDirectory().resolve(defaultFileName);
+	public void createDefaultFile_clicked ( final ActionEvent event ) {
+		final String urlsDefaultFileName = Global.settings.getStringPereference(SettingsConfig.URLS_FILE_SELECT_ID).getSaved();
+		final Path urlsDefaultFilePath = Global.resourceLoader.getProgramFile().getDirectory().resolve(urlsDefaultFileName);
 		try {
-			Files.createFile(defaultFilePath);
-			Properties.createDefaultFilePossibleProperty().set(false);
-			DB.initialize();
-			URLsIO.initialize();
-			final ArrayList<DBRecord> records = DB.getRecords();
-			ListViews.files.control.getItems().setAll(records);
+			Files.createFile(urlsDefaultFilePath);
+			stdGUI.properties.createDefaultFilePossibleProperty().set(false);
+			Global.db.initialize();
+			Global.urlsIO.initialize();
+			final ArrayList<DBTable> records = Global.db.getTables();
+			stdGUI.listViews.files.control.getItems().setAll(records);
 			if ( records.size() > 0 ) {
-				ListViews.files.control.requestFocus();
-				ListViews.files.control.getSelectionModel().select(records.get(0));
-				Logger.logSuccess("default file created (" + defaultFileName + ")");
+				stdGUI.listViews.files.control.requestFocus();
+				stdGUI.listViews.files.control.getSelectionModel().select(records.get(0));
+				Global.logger.logSuccess("default file created (" + urlsDefaultFileName + ")");
 			}
 		} catch ( final IOException e ) {
-			Logger.logFailure("could not create file (" + defaultFileName + ")");
+			Global.logger.logFailure("could not create file (" + urlsDefaultFileName + ")");
 			e.printStackTrace();
 		}
 	}
 
-	public static void createDefaultFile_keyPressed ( final KeyEvent event ) {
+	public void createDefaultFile_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER )
-			Buttons.createDefaultFile_clicked(null);
+			stdGUI.buttons.createDefaultFile_clicked(null);
 	}
 
-	public static class CustomButton {
+	public class CustomButton {
 		public Button control;
 	}
 
-	public static class CustomMenuButton {
+	public class CustomMenuButton {
 		public MenuButton control;
 	}
 
-	public static final class QuitApp extends CustomButton {
+	public final class QuitApp extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#quit_app_btn");
-			control.disableProperty().bind(Properties.confirmingQuitAppProperty());
-			control.setOnAction(event -> Buttons.quitApp_clicked(event));
-			control.setOnKeyPressed(event -> Buttons.quitApp_keyPressed(event));
+			control.disableProperty().bind(stdGUI.properties.confirmingQuitProperty());
+			control.setOnAction(event -> stdGUI.buttons.quitApp_clicked(event));
+			control.setOnKeyPressed(event -> stdGUI.buttons.quitApp_keyPressed(event));
 		}
 	}
 
-	public static final class QuitAppSave extends CustomButton {
+	public final class QuitAppSave extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#quit_app_save_btn");
-			control.disableProperty().bind(Bindings.not(Properties.confirmingQuitAppProperty()));
-			control.setOnAction(event -> Buttons.quitAppSave_clicked(event));
-			control.setOnKeyPressed(event -> Buttons.quitAppSave_keyPressed(event));
+			control.disableProperty().bind(Bindings.not(stdGUI.properties.confirmingQuitProperty()));
+			control.setOnAction(event -> stdGUI.buttons.quitAppSave_clicked(event));
+			control.setOnKeyPressed(event -> stdGUI.buttons.quitAppSave_keyPressed(event));
 		}
 	}
 
-	public static final class QuitAppOK extends CustomButton {
+	public final class QuitAppOK extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#quit_app_ok_btn");
-			control.disableProperty().bind(Bindings.not(Properties.confirmingQuitAppProperty()));
-			control.setOnAction(event -> Buttons.quitAppOK_clicked(event));
-			control.setOnKeyPressed(event -> Buttons.quitAppOK_keyPressed(event));
+			control.disableProperty().bind(Bindings.not(stdGUI.properties.confirmingQuitProperty()));
+			control.setOnAction(event -> stdGUI.buttons.quitAppOK_clicked(event));
+			control.setOnKeyPressed(event -> stdGUI.buttons.quitAppOK_keyPressed(event));
 		}
 	}
 
-	public static final class CreateDefaultFile extends CustomButton {
+	public final class CreateDefaultFile extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#create_default_file_btn");
-			control.disableProperty().bind(Properties.createDefaultFilePossibleProperty().not());
-			control.setOnAction(event -> Buttons.createDefaultFile_clicked(event));
-			control.setOnKeyPressed(event -> Buttons.createDefaultFile_keyPressed(event));
+			control.disableProperty().bind(stdGUI.properties.createDefaultFilePossibleProperty().not());
+			control.setOnAction(event -> stdGUI.buttons.createDefaultFile_clicked(event));
+			control.setOnKeyPressed(event -> stdGUI.buttons.createDefaultFile_keyPressed(event));
 		}
 	}
 
-	public static final class ReloadFile extends CustomButton {
+	public final class ReloadFile extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#reload_file_btn");
-			control.disableProperty().bind(Bindings.or(Bindings.not(Properties.selectedProperty()),Properties.confirmingSaveProperty()));
-			control.setOnAction(event -> Buttons.reloadFile_clicked(event));
-			control.setOnKeyPressed(event -> Buttons.reloadFile_keyPressed(event));
+			control.disableProperty().bind(Bindings.or(Bindings.not(stdGUI.properties.selectedProperty()),stdGUI.properties.confirmingSaveProperty()));
+			control.setOnAction(event -> stdGUI.buttons.reloadFile_clicked(event));
+			control.setOnKeyPressed(event -> stdGUI.buttons.reloadFile_keyPressed(event));
 		}
 	}
 
-	public static final class ReloadAllFiles extends CustomButton {
+	public final class ReloadAllFiles extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#reload_all_files_btn");
-			control.disableProperty().bind(Bindings.or(Bindings.not(Properties.selectedProperty()),Properties.confirmingSaveProperty()));
-			control.setOnAction(event -> Buttons.reloadAllFiles_clicked(event));
-			control.setOnKeyPressed(event -> Buttons.reloadAllFiles_keyPressed(event));
+			control.disableProperty().bind(Bindings.or(Bindings.not(stdGUI.properties.selectedProperty()),stdGUI.properties.confirmingSaveProperty()));
+			control.setOnAction(event -> stdGUI.buttons.reloadAllFiles_clicked(event));
+			control.setOnKeyPressed(event -> stdGUI.buttons.reloadAllFiles_keyPressed(event));
 		}
 	}
 
-	public static final class FileSave extends CustomButton {
+	public final class FileSave extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#file_save_btn");
-			control.disableProperty().bind(Bindings.or(Bindings.not(Properties.selectedFileDirtyProperty()),Properties.confirmingSaveProperty()));
-			control.setOnAction(event -> Buttons.fileSave_clicked(event));
-			control.setOnKeyPressed(event -> Buttons.fileSave_keyPressed(event));
+			control.disableProperty().bind(Bindings.or(Bindings.not(stdGUI.properties.selectedFileDirtyProperty()),stdGUI.properties.confirmingSaveProperty()));
+			control.setOnAction(event -> stdGUI.buttons.fileSave_clicked(event));
+			control.setOnKeyPressed(event -> stdGUI.buttons.fileSave_keyPressed(event));
 		}
 	}
 
-	public static final class FileCancel extends CustomButton {
+	public final class FileCancel extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#file_cancel_btn");
-			control.disableProperty().bind(Bindings.not(Properties.confirmingSaveProperty()));
-			control.setOnAction(event -> Buttons.fileCancel_clicked(event));
-			control.setOnKeyPressed(event -> Buttons.fileCancel_keyPressed(event));
+			control.disableProperty().bind(Bindings.not(stdGUI.properties.confirmingSaveProperty()));
+			control.setOnAction(event -> stdGUI.buttons.fileCancel_clicked(event));
+			control.setOnKeyPressed(event -> stdGUI.buttons.fileCancel_keyPressed(event));
 		}
 	}
 
-	public static final class FileSaveOK extends CustomButton {
+	public final class FileSaveOK extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#file_save_ok_btn");
-			control.disableProperty().bind(Bindings.not(Properties.confirmingSaveProperty()));
-			control.setOnAction(event -> Buttons.fileSaveOK_clicked(event));
-			control.setOnKeyPressed(event -> Buttons.fileSaveOK_keyPressed(event));
+			control.disableProperty().bind(Bindings.not(stdGUI.properties.confirmingSaveProperty()));
+			control.setOnAction(event -> stdGUI.buttons.fileSaveOK_clicked(event));
+			control.setOnKeyPressed(event -> stdGUI.buttons.fileSaveOK_keyPressed(event));
 		}
 	}
 
-	public static final class OpenInBrowser extends CustomButton {
+	public final class OpenInBrowser extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#open_in_browser_btn");
-			control.disableProperty().bind(Bindings.not(Properties.urlExistsProperty()));
-			control.setOnAction(event -> Buttons.openInBrowser_clicked(event));
-			control.setOnKeyPressed(event -> Buttons.openInBrowser_keyPressed(event));
+			control.disableProperty().bind(Bindings.not(stdGUI.properties.urlExistsProperty()));
+			control.setOnAction(event -> stdGUI.buttons.openInBrowser_clicked(event));
+			control.setOnKeyPressed(event -> stdGUI.buttons.openInBrowser_keyPressed(event));
 		}
 	}
 
-	public static final class UrlSearch extends CustomButton {
+	public final class UrlSearch extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#url_search_btn");
-			control.setOnAction(event -> Buttons.urlSearch_clicked(event));
-			control.setOnKeyPressed(event -> Buttons.urlSearch_keyPressed(event));
+			control.setOnAction(event -> stdGUI.buttons.urlSearch_clicked(event));
+			control.setOnKeyPressed(event -> stdGUI.buttons.urlSearch_keyPressed(event));
 		}
 	}
 
-	public static final class URLCancel extends CustomButton {
+	public final class URLCancel extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#url_cancel_btn");
-			control.disableProperty().bind(Buttons.getUrlCancelDisableBinding());
-			control.setOnAction(event -> Buttons.urlCancel_clicked(event));
-			control.setOnKeyPressed(event -> Buttons.urlCancel_keyPressed(event));
+			control.disableProperty().bind(stdGUI.buttons.getUrlCancelDisableBinding());
+			control.setOnAction(event -> stdGUI.buttons.urlCancel_clicked(event));
+			control.setOnKeyPressed(event -> stdGUI.buttons.urlCancel_keyPressed(event));
 		}
 	}
 
-	public static final class URLDelete extends CustomButton {
+	public final class URLDelete extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#url_delete_btn");
-			control.disableProperty().bind(Buttons.getUrlDeleteDisableBinding());
-			control.setOnAction(event -> Buttons.urlDelete_clicked(event));
-			control.setOnKeyPressed(event -> Buttons.urlDelete_keyPressed(event));
+			control.disableProperty().bind(stdGUI.buttons.getUrlDeleteDisableBinding());
+			control.setOnAction(event -> stdGUI.buttons.urlDelete_clicked(event));
+			control.setOnKeyPressed(event -> stdGUI.buttons.urlDelete_keyPressed(event));
 		}
 	}
 
-	public static final class URLDeleteOK extends CustomButton {
+	public final class URLDeleteOK extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#url_delete_ok_btn");
-			control.disableProperty().bind(Bindings.not(Properties.urlDeleteRequestedProperty()));
-			control.setOnAction(event -> Buttons.urlDeleteOK_clicked(event));
-			control.setOnKeyPressed(event -> Buttons.urlDeleteOK_keyPressed(event));
+			control.disableProperty().bind(Bindings.not(stdGUI.properties.urlDeleteRequestedProperty()));
+			control.setOnAction(event -> stdGUI.buttons.urlDeleteOK_clicked(event));
+			control.setOnKeyPressed(event -> stdGUI.buttons.urlDeleteOK_keyPressed(event));
 		}
 	}
 
-	public static final class URLCreateOK extends CustomButton {
+	public final class URLCreateOK extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#url_create_ok_btn");
-			control.disableProperty().bind(Bindings.not(Properties.urlModifiedProperty()));
-			control.setOnAction(event -> Buttons.urlCreateOK_clicked(event));
-			control.setOnKeyPressed(event -> Buttons.urlCreateOK_keyPressed(event));
+			control.disableProperty().bind(Bindings.not(stdGUI.properties.urlModifiedProperty()));
+			control.setOnAction(event -> stdGUI.buttons.urlCreateOK_clicked(event));
+			control.setOnKeyPressed(event -> stdGUI.buttons.urlCreateOK_keyPressed(event));
 		}
 	}
 
-	public static final class URLEditOK extends CustomButton {
+	public final class URLEditOK extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#url_edit_ok_btn");
-			control.disableProperty().bind(Buttons.getEditOKDisableBinding());
-			control.setOnAction(event -> Buttons.urlEditOK_clicked(event));
-			control.setOnKeyPressed(event -> Buttons.urlEditOK_keyPressed(event));
+			control.disableProperty().bind(stdGUI.buttons.getEditOKDisableBinding());
+			control.setOnAction(event -> stdGUI.buttons.urlEditOK_clicked(event));
+			control.setOnKeyPressed(event -> stdGUI.buttons.urlEditOK_keyPressed(event));
 		}
 	}
 
-	public static final class PreferencesOverwriteOK extends CustomButton {
+	public final class SettingsOverwriteOK extends CustomButton {
 		private void build ( final Parent root ) {
-			control = (Button) root.lookup("#preferences_overwrite_ok_btn");
-			control.disableProperty().bind(Buttons.getCreatePreferencesFileDisableBinding().not());
-			control.setOnAction(event -> Buttons.preferencesOverwriteOK_clicked(event));
-			control.setOnKeyPressed(event -> Buttons.createPreferencesFileOK_keyPressed(event));
+			control = (Button) root.lookup("#settings_overwrite_ok_btn");
+			control.disableProperty().bind(Bindings.and(getCreateSettingsFileDisableBinding().not(),stdGUI.properties.settingsModifiedProperty().not()));
+			control.setOnAction(event -> stdGUI.buttons.settingsOverwriteOK_clicked(event));
+			control.setOnKeyPressed(event -> stdGUI.buttons.createSettingsFileOK_keyPressed(event));
 		}
 	}
 
-	public static final class PreferencesCancel extends CustomButton {
+	public final class SettingsCancel extends CustomButton {
 		private void build ( final Parent root ) {
-			control = (Button) root.lookup("#preferences_cancel_btn");
-			control.disableProperty().bind(Bindings.and(Bindings.not(getCreatePreferencesFileDisableBinding()),Buttons.getPreferencesChangedBinding().not()));
-			control.setOnAction(event -> Buttons.preferencesCancel_clicked(event));
-			control.setOnKeyPressed(event -> Buttons.preferencesCancel_keyPressed(event));
+			control = (Button) root.lookup("#settings_cancel_btn");
+			control.disableProperty().bind(Bindings.and(getCreateSettingsFileDisableBinding().not(),stdGUI.properties.settingsModifiedProperty().not()));
+			control.setOnAction(event -> stdGUI.buttons.settingsCancel_clicked(event));
+			control.setOnKeyPressed(event -> stdGUI.buttons.settingsCancel_keyPressed(event));
 		}
 	}
 
-	public static final class PreferencesSave extends CustomButton {
-		private void build ( final Parent root ) {
-			control = (Button) root.lookup("#save_preferences_btn");
-			control.disableProperty().bind(Buttons.getPreferencesChangedBinding().not());
-			control.setOnAction(event -> Buttons.savePreferences_clicked(event));
-			control.setOnKeyPressed(event -> Buttons.savePreferences_keyPressed(event));
-		}
-	}
+	/*
+	 * public final class SettingsSave extends CustomButton {
+	 * private void build ( final Parent root ) {
+	 * control = (Button) root.lookup("#save_settings_btn");
+	 * control.disableProperty().bind(stdGUI.buttons.
+	 * getSettingsChangedBinding().not());
+	 * control.setOnAction(event ->
+	 * stdGUI.buttons.saveSettings_clicked(event));
+	 * control.setOnKeyPressed(event ->
+	 * stdGUI.buttons.saveSettings_keyPressed(event));
+	 * }
+	 * }
+	 */
 
-	public static final class PreferencesReload extends CustomMenuButton {
+	public final class SettingsReload extends CustomMenuButton {
 		private void build ( final Parent root ) {
-			control = (MenuButton) root.lookup("#reload_preferences_file_btn");
+			control = (MenuButton) root.lookup("#reload_settings_file_btn");
 
 			final ObservableList<MenuItem> items = control.getItems();
-			final String settingsBtnSelector = "reload_preferences_file_menu";
+			final String settingsBtnSelector = "reload_settings_file_menu";
 			final String cssBtnSelector = "reload_css_file_menu";
 			final String fxmlBtnSelector = "reload_fxml_file_menu";
 
@@ -691,34 +739,34 @@ public class Buttons {
 				final String id = item.getId();
 				if ( id != null )
 					if ( id.equals(settingsBtnSelector) )
-						item.setOnAction(event -> Buttons.reloadPreferencesFile_clicked(event));
+						item.setOnAction(event -> stdGUI.buttons.reloadSettingsFile_clicked(event));
 					else if ( id.equals(cssBtnSelector) )
-						item.setOnAction(event -> Buttons.reloadCSSFile_clicked(event));
+						item.setOnAction(event -> stdGUI.buttons.reloadCSSFile_clicked(event));
 					else if ( id.equals(fxmlBtnSelector) )
-						item.setOnAction(event -> Buttons.reloadFXMLFile_clicked(event));
+						item.setOnAction(event -> stdGUI.buttons.reloadFXMLFile_clicked(event));
 			}
 		}
 	}
 
-	public static final class PreferencesCreate extends CustomMenuButton {
+	public final class SettingsCreate extends CustomMenuButton {
 		private void build ( final Parent root ) {
-			control = (MenuButton) root.lookup("#create_preferences_file_btn");
-			control.disableProperty().bind(Bindings.or(Buttons.getCreatePreferencesFileDisableBinding(),Buttons.getPreferencesChangedBinding()));
+			control = (MenuButton) root.lookup("#create_settings_file_btn");
+			control.disableProperty().bind(Bindings.or(stdGUI.buttons.getCreateSettingsFileDisableBinding(),stdGUI.properties.settingsModifiedProperty()));
 
 			final ObservableList<MenuItem> items = control.getItems();
-			final String preferencesBtnSelector = "create_preferences_file_menu";
+			final String settingsBtnSelector = "create_settings_file_menu";
 			final String cssBtnSelector = "create_css_file_menu";
 			final String fxmlBtnSelector = "create_fxml_file_menu";
 
 			for ( final MenuItem item: items ) {
 				final String id = item.getId();
 				if ( id != null )
-					if ( id.equals(preferencesBtnSelector) )
-						item.setOnAction(event -> Buttons.createPreferencesFile_clicked(event));
+					if ( id.equals(settingsBtnSelector) )
+						item.setOnAction(event -> stdGUI.buttons.createSettingsFile_clicked(event));
 					else if ( id.equals(cssBtnSelector) )
-						item.setOnAction(event -> Buttons.createCSSFile_clicked(event));
+						item.setOnAction(event -> stdGUI.buttons.createCSSFile_clicked(event));
 					else if ( id.equals(fxmlBtnSelector) )
-						item.setOnAction(event -> Buttons.createFXMLFile_clicked(event));
+						item.setOnAction(event -> stdGUI.buttons.createFXMLFile_clicked(event));
 			}
 		}
 	}

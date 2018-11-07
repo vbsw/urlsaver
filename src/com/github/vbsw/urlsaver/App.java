@@ -9,17 +9,20 @@
 package com.github.vbsw.urlsaver;
 
 
-import com.github.vbsw.urlsaver.db.DB;
-import com.github.vbsw.urlsaver.gui.Buttons;
-import com.github.vbsw.urlsaver.gui.GUI;
-import com.github.vbsw.urlsaver.gui.HotKeys;
-import com.github.vbsw.urlsaver.gui.TabPanes;
-import com.github.vbsw.urlsaver.io.URLsIO;
-import com.github.vbsw.urlsaver.pref.Preferences;
-import com.github.vbsw.urlsaver.resources.Project;
+import com.github.vbsw.urlsaver.api.URLMeta;
+import com.github.vbsw.urlsaver.api.Global;
+import com.github.vbsw.urlsaver.db.StdDataBase;
+import com.github.vbsw.urlsaver.gui.StdGUI;
+import com.github.vbsw.urlsaver.gui.StdLogger;
+import com.github.vbsw.urlsaver.gui.StdProperties;
+import com.github.vbsw.urlsaver.io.StdFXMLIO;
+import com.github.vbsw.urlsaver.io.StdSettingsIO;
+import com.github.vbsw.urlsaver.io.StdURLsIO;
+import com.github.vbsw.urlsaver.resources.StdResourceLoader;
+import com.github.vbsw.urlsaver.settings.StdSettings;
+import com.github.vbsw.urlsaver.utility.StdTextGenerator;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.stage.Stage;
 
 
@@ -30,33 +33,24 @@ public class App extends Application {
 
 	@Override
 	public void start ( final Stage primaryStage ) throws Exception {
-		Project.initialize();
-		Preferences.initialize(getParameters().getRaw());
-		DB.initialize();
-		GUI.initialize();
+		Global.arguments = getParameters().getRaw();
+		Global.resourceLoader = new StdResourceLoader();
+		Global.settings = new StdSettings();
+		Global.textGenerator = new StdTextGenerator();
+		Global.db = new StdDataBase();
+		Global.logger = new StdLogger();
+		Global.settingsIO = new StdSettingsIO();
+		Global.urlsIO = new StdURLsIO();
+		Global.fxmlIO = new StdFXMLIO();
+		Global.gui = new StdGUI();
+		Global.urlMeta = new URLMeta();
+		Global.properties = new StdProperties();
 
-		primaryStage.setOnCloseRequest(event -> HotKeys.onCloseRequest(event));
-		primaryStage.setScene(GUI.scene);
-		primaryStage.setMaximized(Preferences.getWindowMaximized().getSavedValue());
-		primaryStage.show();
-
-		GUI.refreshPreferencesView();
-		GUI.selectDefaultFile();
-		URLsIO.initialize();
-		URLsIO.autoLoad();
-	}
-
-	public static void quit ( ) {
-		if ( DB.isSaved() ) {
-			App.quitUnconditionally();
-		} else {
-			TabPanes.top.control.getSelectionModel().select(TabPanes.top.about.control);
-			Buttons.quitAppSave.control.requestFocus();
-		}
-	}
-
-	public static void quitUnconditionally ( ) {
-		Platform.exit();
+		Global.resourceLoader.initialize();
+		Global.settings.initialize();
+		Global.db.initialize();
+		Global.logger.initialize();
+		Global.gui.initialize(primaryStage);
 	}
 
 }

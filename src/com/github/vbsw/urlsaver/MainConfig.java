@@ -15,7 +15,7 @@ package com.github.vbsw.urlsaver;
 public class MainConfig {
 
 	public final static int VERSION_MAJOR = 0;
-	public final static int VERSION_MINOR = 4;
+	public final static int VERSION_MINOR = 5;
 	public final static int VERSION_PATCH = 0;
 	public final static String VERSION_STRING = VERSION_MAJOR + "." + VERSION_MINOR + "." + VERSION_PATCH;
 

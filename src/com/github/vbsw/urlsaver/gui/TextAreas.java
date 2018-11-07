@@ -9,10 +9,11 @@
 package com.github.vbsw.urlsaver.gui;
 
 
-import com.github.vbsw.urlsaver.Converter;
-import com.github.vbsw.urlsaver.Parser;
-import com.github.vbsw.urlsaver.db.DBRecord;
+import com.github.vbsw.urlsaver.api.Global;
+import com.github.vbsw.urlsaver.db.DBTable;
 import com.github.vbsw.urlsaver.db.DynArrayOfString;
+import com.github.vbsw.urlsaver.utility.Converter;
+import com.github.vbsw.urlsaver.utility.Parser;
 
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
@@ -24,36 +25,42 @@ import javafx.scene.control.TextArea;
  */
 public class TextAreas {
 
-	public static final Tags tags = new Tags();
-	public static final Log log = new Log();
+	public final Tags tags = new Tags();
+	public final Log log = new Log();
+
+	protected StdGUI stdGUI;
+
+	public TextAreas ( final StdGUI stdGUI ) {
+		this.stdGUI = stdGUI;
+	}
+
+	public void build ( final Parent root ) {
+		tags.build(root);
+		log.build(root);
+	}
+
+	public void tags_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
+		final DBTable selectedDBTable = Global.db.getSelectedDBTable();
+		final String urlTyped = Parser.trim(stdGUI.textFields.url.control.getText());
+		final int urlIndex = selectedDBTable.getURLIndex(urlTyped);
+		if ( urlIndex >= 0 ) {
+			final DynArrayOfString tags = Converter.toDynArrayListSorted(this.tags.control.getText());
+			final boolean equalTags = selectedDBTable.isEqualTags(urlIndex,tags);
+			stdGUI.properties.urlTagsModifiedProperty().set(!equalTags);
+		} else {
+			stdGUI.properties.urlTagsModifiedProperty().set(false);
+		}
+		stdGUI.properties.urlDeleteRequestedProperty().set(false);
+	}
 
 	public static class CustomTextArea {
 		public TextArea control;
 	}
 
-	public static void build ( final Parent root ) {
-		tags.build(root);
-		log.build(root);
-	}
-
-	public static void tags_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
-		final DBRecord record = GUI.getCurrentDBRecord();
-		final String urlTyped = Parser.trim(TextFields.url.control.getText());
-		final int urlIndex = record.getURLIndex(urlTyped);
-		if ( urlIndex >= 0 ) {
-			final DynArrayOfString tags = Converter.toDynArrayListSorted(TextAreas.tags.control.getText());
-			final boolean equalTags = record.isEqualTags(urlIndex,tags);
-			Properties.urlTagsModifiedProperty().set(!equalTags);
-		} else {
-			Properties.urlTagsModifiedProperty().set(false);
-		}
-		Properties.urlDeleteRequestedProperty().set(false);
-	}
-
-	public static final class Tags extends CustomTextArea {
+	public final class Tags extends CustomTextArea {
 		private void build ( final Parent root ) {
 			control = (TextArea) root.lookup("#tags_ta");
-			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> TextAreas.tags_changed(observable,oldValue,newValue));
+			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> tags_changed(observable,oldValue,newValue));
 		}
 	}
 

@@ -10,6 +10,7 @@ package com.github.vbsw.urlsaver.args;
 
 
 import com.github.vbsw.urlsaver.MainConfig;
+import com.github.vbsw.urlsaver.utility.Parser;
 
 
 /**
@@ -17,13 +18,13 @@ import com.github.vbsw.urlsaver.MainConfig;
  */
 public class CommandLineInfo {
 
-	public static void parseArgsAndPrintInfo ( final String[] args ) {
+	public static void parseAndPrintInfo ( final String[] args ) {
 		if ( args.length == 1 )
-			if ( ArgumentsParser.isOption(args[0],ArgumentsConfig.HELP_OPTION) )
+			if ( CommandLineInfo.isOption(args[0],ArgumentsConfig.HELP_OPTION) )
 				CommandLineInfo.printHelp();
-			else if ( ArgumentsParser.isOption(args[0],ArgumentsConfig.VERSION_OPTION) )
+			else if ( CommandLineInfo.isOption(args[0],ArgumentsConfig.VERSION_OPTION) )
 				CommandLineInfo.printVersion();
-			else if ( ArgumentsParser.isOption(args[0],ArgumentsConfig.COPYRIGHT_OPTION) )
+			else if ( CommandLineInfo.isOption(args[0],ArgumentsConfig.COPYRIGHT_OPTION) )
 				CommandLineInfo.printCopyright();
 			else
 				CommandLineInfo.printUnknownArgument(args[0]);
@@ -31,6 +32,14 @@ public class CommandLineInfo {
 			CommandLineInfo.printTooManyArguments();
 		else
 			CommandLineInfo.printUnexpectedState(0);
+	}
+
+	public static boolean isOption ( final String argument, final String[] options ) {
+		final int offset = Parser.seekContent(argument,0,argument.length(),'-');
+		for ( final String option: options )
+			if ( Parser.endsWith(argument,offset,option) )
+				return true;
+		return false;
 	}
 
 	private static void printHelp ( ) {

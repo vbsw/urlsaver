@@ -38,6 +38,11 @@ public class DynArrayOfString2 {
 		add(valuesLength,value);
 	}
 
+	public void add ( final int index ) {
+		final DynArrayOfString value = new DynArrayOfString(2);
+		add(index,value);
+	}
+
 	public void add ( final int index, final DynArrayOfString value ) {
 		final int copyLength = valuesLength - index;
 		// ensure capacity
@@ -64,6 +69,7 @@ public class DynArrayOfString2 {
 			final int copyLength = valuesLength - valueIndex;
 			System.arraycopy(values,srcIndex,values,valueIndex,copyLength);
 		}
+		values[valuesLength] = null;
 	}
 
 	public String toString ( final String prefix, final String suffix, final String separator ) {

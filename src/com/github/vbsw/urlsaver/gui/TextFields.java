@@ -9,11 +9,14 @@
 package com.github.vbsw.urlsaver.gui;
 
 
-import com.github.vbsw.urlsaver.Converter;
-import com.github.vbsw.urlsaver.Parser;
-import com.github.vbsw.urlsaver.db.DBRecord;
+import com.github.vbsw.urlsaver.api.Global;
+import com.github.vbsw.urlsaver.api.Settings.IntSetting;
+import com.github.vbsw.urlsaver.api.Settings.StringSetting;
+import com.github.vbsw.urlsaver.db.DBTable;
 import com.github.vbsw.urlsaver.db.DynArrayOfString;
-import com.github.vbsw.urlsaver.pref.Preferences;
+import com.github.vbsw.urlsaver.settings.SettingsConfig;
+import com.github.vbsw.urlsaver.utility.Converter;
+import com.github.vbsw.urlsaver.utility.Parser;
 
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -28,16 +31,22 @@ import javafx.scene.text.FontWeight;
  */
 public class TextFields {
 
-	public static final FileName fileName = new FileName();
-	public static final URLSearch urlSearch = new URLSearch();
-	public static final URL url = new URL();
-	public static final Title title = new Title();
-	public static final Width width = new Width();
-	public static final Height height = new Height();
-	public static final FileExtension urlsFileExtension = new FileExtension();
-	public static final DefaultFile urlsFileSelect = new DefaultFile();
+	public final FileName fileName = new FileName();
+	public final URLSearch urlSearch = new URLSearch();
+	public final URL url = new URL();
+	public final Title title = new Title();
+	public final Width width = new Width();
+	public final Height height = new Height();
+	public final FileExtension urlsFileExtension = new FileExtension();
+	public final DefaultFile urlsFileSelect = new DefaultFile();
 
-	public static void build ( final Parent root ) {
+	protected StdGUI stdGUI;
+
+	public TextFields ( final StdGUI stdGUI ) {
+		this.stdGUI = stdGUI;
+	}
+
+	public void build ( final Parent root ) {
 		fileName.build(root);
 		urlSearch.build(root);
 		url.build(root);
@@ -48,85 +57,96 @@ public class TextFields {
 		urlsFileSelect.build(root);
 	}
 
-	public static void urlSearch_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
-		final DBRecord record = GUI.getCurrentDBRecord();
+	public void urlSearch_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
+		final DBTable record = Global.db.getSelectedDBTable();
 		if ( newValue != null )
 			record.setURLsSearchString(newValue);
 		else
 			record.setURLsSearchString("");
 	}
 
-	public static void urlSearch_enterPressed ( final ActionEvent event ) {
-		final DBRecord record = GUI.getCurrentDBRecord();
+	public void urlSearch_enterPressed ( final ActionEvent event ) {
+		final DBTable record = Global.db.getSelectedDBTable();
 		final String searchString = record.getURLsSearchString();
-		final boolean searchByPrefix = Preferences.getSearchByPrefix().getSavedValue();
+		final boolean searchByPrefix = Global.settings.getBooleanSetting(SettingsConfig.SEARCH_BY_PREFIX_ID).getSaved();
 		final DynArrayOfString searchTags = Converter.toDynArrayList(searchString);
 
 		record.searchURLs(searchTags,searchByPrefix);
-		ListViews.urls.showSearchResults();
-		GUI.refreshURLsInfo();
-		Properties.resetURLsProperties();
+		stdGUI.tableViews.urls.showSearchResults();
+		stdGUI.refreshURLsInfo();
+		stdGUI.resetURLsProperties();
 	}
 
-	public static void url_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
-		final String urlTyped = Parser.trim(TextFields.url.control.getText());
-		final DBRecord selectedRecord = GUI.getCurrentDBRecord();
-		final boolean urlExists = urlTyped.length() > 0 && selectedRecord.getURLIndex(urlTyped) >= 0;
-		final boolean urlModified = urlTyped.length() > 0 && selectedRecord.getURLIndex(urlTyped) < 0;
-		Properties.urlExistsProperty().set(urlExists);
-		Properties.urlModifiedProperty().set(urlModified);
-		Properties.urlDeleteRequestedProperty().set(false);
+	public void url_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
+		final String urlTyped = Parser.trim(url.control.getText());
+		final DBTable selectedDBTable = Global.db.getSelectedDBTable();
+		final boolean urlExists = selectedDBTable.getURLIndex(urlTyped) >= 0;
+		final boolean urlModified = urlTyped.length() > 0 && !urlExists;
+		stdGUI.properties.urlExistsProperty().set(urlExists);
+		stdGUI.properties.urlModifiedProperty().set(urlModified);
+		stdGUI.properties.urlDeleteRequestedProperty().set(false);
 	}
 
-	public static void title_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
+	private void title_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final String trimmedValue = Parser.trim(newValue);
-		final boolean titlesEqual = Preferences.getWindowTitle().getSavedValue().equals(trimmedValue);
-		Preferences.getWindowTitle().setModifiedValue(newValue);
-		TextFields.title.setFontWeight(!titlesEqual);
-		Properties.titleChangedProperty().set(!titlesEqual);
-		Properties.preferencesModifiedProperty().set(!titlesEqual);
+		final StringSetting windowTitleSetting = Global.settings.getStringPereference(SettingsConfig.WINDOW_TITLE_ID);
+		final boolean valueChanged = !windowTitleSetting.getSaved().equals(trimmedValue);
+		windowTitleSetting.setModified(newValue);
+		title.setFontWeight(valueChanged);
+		stdGUI.properties.titleChangedProperty().set(valueChanged);
+		stdGUI.properties.refreshSettingsModifiedProperty();
 	}
 
-	public static void width_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
-		final int parsedValueInt = Converter.toUnsignedInteger(newValue);
-		final String parsedValueStr = Integer.toString(parsedValueInt);
-		final boolean valueChanged = parsedValueInt != Preferences.getWindowWidth().getSavedValue();
-		if ( !parsedValueStr.equals(newValue) ) {
-			TextFields.width.control.setText(parsedValueStr);
+	private void width_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
+		final int newValueInt = Converter.toUnsignedInteger(newValue);
+		final String newValueStr = Integer.toString(newValueInt);
+		final IntSetting windowWidthSetting = Global.settings.getIntSetting(SettingsConfig.WINDOW_WIDTH_ID);
+		final boolean valueChanged = newValueInt != windowWidthSetting.getSaved();
+		if ( newValueStr.equals(newValue) ) {
+			windowWidthSetting.setModified(newValueInt);
+			width.setFontWeight(valueChanged);
+			stdGUI.properties.widthChangedProperty().set(valueChanged);
+			stdGUI.properties.refreshSettingsModifiedProperty();
 		} else {
-			Preferences.getWindowWidth().setModifiedValue(parsedValueInt);
-			Properties.widthChangedProperty().set(valueChanged);
-			TextFields.width.setFontWeight(valueChanged);
+			// can't remember what case this is... maybe some empty values?
+			width.control.setText(newValueStr);
 		}
 	}
 
-	public static void height_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
-		final int parsedValueInt = Converter.toUnsignedInteger(newValue);
-		final String parsedValueStr = Integer.toString(parsedValueInt);
-		final boolean valueChanged = parsedValueInt != Preferences.getWindowHeight().getSavedValue();
-		if ( !parsedValueStr.equals(newValue) ) {
-			TextFields.height.control.setText(parsedValueStr);
+	private void height_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
+		final int newValueInt = Converter.toUnsignedInteger(newValue);
+		final String newValueStr = Integer.toString(newValueInt);
+		final IntSetting windowHeightSetting = Global.settings.getIntSetting(SettingsConfig.WINDOW_HEIGHT_ID);
+		final boolean valueChanged = newValueInt != windowHeightSetting.getSaved();
+		if ( newValueStr.equals(newValue) ) {
+			windowHeightSetting.setModified(newValueInt);
+			height.setFontWeight(valueChanged);
+			stdGUI.properties.heightChangedProperty().set(valueChanged);
+			stdGUI.properties.refreshSettingsModifiedProperty();
 		} else {
-			Preferences.getWindowHeight().setModifiedValue(parsedValueInt);
-			Properties.heightChangedProperty().set(valueChanged);
-			TextFields.height.setFontWeight(valueChanged);
+			// can't remember what case this is... maybe some empty values?
+			height.control.setText(newValueStr);
 		}
 	}
 
-	public static void urlsFileExtension_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
+	private void urlsFileExtension_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final String trimmedValue = Parser.trim(newValue);
-		final boolean valueChanged = !trimmedValue.equals(Preferences.getURLsFileExtension().getSavedValue());
-		Preferences.getURLsFileExtension().setModifiedValue(trimmedValue);
-		Properties.urlsFileExtensionChangedProperty().set(valueChanged);
-		TextFields.urlsFileExtension.setFontWeight(valueChanged);
+		final StringSetting urlsFileExtensionValue = Global.settings.getStringPereference(SettingsConfig.URLS_FILE_EXTENSION_ID);
+		final boolean valueChanged = !trimmedValue.equals(urlsFileExtensionValue.getSaved());
+		urlsFileExtensionValue.setModified(trimmedValue);
+		urlsFileExtension.setFontWeight(valueChanged);
+		stdGUI.properties.urlsFileExtensionChangedProperty().set(valueChanged);
+		stdGUI.properties.refreshSettingsModifiedProperty();
 	}
 
-	public static void urlsFileSelect_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
+	private void urlsFileSelect_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final String trimmedValue = Parser.trim(newValue);
-		final boolean valueChanged = !trimmedValue.equals(Preferences.getURLsFileSelect().getSavedValue());
-		Preferences.getURLsFileSelect().setModifiedValue(trimmedValue);
-		Properties.urlsFileSelectChangedProperty().set(valueChanged);
-		TextFields.urlsFileSelect.setFontWeight(valueChanged);
+		final StringSetting urlsFileSelectValue = Global.settings.getStringPereference(SettingsConfig.URLS_FILE_SELECT_ID);
+		final boolean valueChanged = !trimmedValue.equals(urlsFileSelectValue.getSaved());
+		urlsFileSelectValue.setModified(trimmedValue);
+		urlsFileSelect.setFontWeight(valueChanged);
+		stdGUI.properties.urlsFileSelectChangedProperty().set(valueChanged);
+		stdGUI.properties.refreshSettingsModifiedProperty();
 	}
 
 	public static class CustomTextField {
@@ -146,53 +166,53 @@ public class TextFields {
 		}
 	}
 
-	public static class URLSearch extends CustomTextField {
+	public class URLSearch extends CustomTextField {
 		private void build ( final Parent root ) {
 			control = (TextField) root.lookup("#url_search_tf");
-			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> TextFields.urlSearch_changed(observable,oldValue,newValue));
-			control.setOnAction(event -> TextFields.urlSearch_enterPressed(event));
+			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> urlSearch_changed(observable,oldValue,newValue));
+			control.setOnAction(event -> urlSearch_enterPressed(event));
 		}
 	}
 
-	public static class URL extends CustomTextField {
+	public class URL extends CustomTextField {
 		private void build ( final Parent root ) {
 			control = (TextField) root.lookup("#url_tf");
-			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> TextFields.url_changed(observable,oldValue,newValue));
+			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> url_changed(observable,oldValue,newValue));
 		}
 	}
 
-	public static class Title extends CustomTextField {
+	public class Title extends CustomTextField {
 		private void build ( final Parent root ) {
-			control = (TextField) root.lookup("#preferences_title_tf");
-			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> TextFields.title_changed(observable,oldValue,newValue));
+			control = (TextField) root.lookup("#settings_title_tf");
+			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> title_changed(observable,oldValue,newValue));
 		}
 	}
 
-	public static class Width extends CustomTextField {
+	public class Width extends CustomTextField {
 		private void build ( final Parent root ) {
-			control = (TextField) root.lookup("#preferences_width_tf");
-			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> TextFields.width_changed(observable,oldValue,newValue));
+			control = (TextField) root.lookup("#settings_width_tf");
+			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> width_changed(observable,oldValue,newValue));
 		}
 	}
 
-	public static class Height extends CustomTextField {
+	public class Height extends CustomTextField {
 		private void build ( final Parent root ) {
-			control = (TextField) root.lookup("#preferences_height_tf");
-			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> TextFields.height_changed(observable,oldValue,newValue));
+			control = (TextField) root.lookup("#settings_height_tf");
+			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> height_changed(observable,oldValue,newValue));
 		}
 	}
 
-	public static class FileExtension extends CustomTextField {
+	public class FileExtension extends CustomTextField {
 		private void build ( final Parent root ) {
-			control = (TextField) root.lookup("#preferences_file_extension_tf");
-			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> TextFields.urlsFileExtension_changed(observable,oldValue,newValue));
+			control = (TextField) root.lookup("#settings_file_extension_tf");
+			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> urlsFileExtension_changed(observable,oldValue,newValue));
 		}
 	}
 
-	public static class DefaultFile extends CustomTextField {
+	public class DefaultFile extends CustomTextField {
 		private void build ( final Parent root ) {
-			control = (TextField) root.lookup("#preferences_default_file_tf");
-			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> TextFields.urlsFileSelect_changed(observable,oldValue,newValue));
+			control = (TextField) root.lookup("#settings_default_file_tf");
+			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> urlsFileSelect_changed(observable,oldValue,newValue));
 		}
 	}
 
