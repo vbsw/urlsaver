@@ -32,10 +32,10 @@ public class StdProperties extends Properties {
 	private final SimpleBooleanProperty urlScoreModified = new SimpleBooleanProperty();
 	private final SimpleBooleanProperty urlDateModified = new SimpleBooleanProperty();
 
-	private final SimpleBooleanProperty confirmingCreatePreferences = new SimpleBooleanProperty();
+	private final SimpleBooleanProperty confirmingCreateSettings = new SimpleBooleanProperty();
 	private final SimpleBooleanProperty confirmingCreateCSS = new SimpleBooleanProperty();
 	private final SimpleBooleanProperty confirmingCreateFXML = new SimpleBooleanProperty();
-	private final SimpleBooleanProperty preferencesModified = new SimpleBooleanProperty();
+	private final SimpleBooleanProperty settingsModified = new SimpleBooleanProperty();
 	private final SimpleBooleanProperty titleChanged = new SimpleBooleanProperty();
 	private final SimpleBooleanProperty widthChanged = new SimpleBooleanProperty();
 	private final SimpleBooleanProperty heightChanged = new SimpleBooleanProperty();
@@ -93,8 +93,8 @@ public class StdProperties extends Properties {
 		return urlDateModified;
 	}
 
-	public SimpleBooleanProperty confirmingCreatePreferencesProperty ( ) {
-		return confirmingCreatePreferences;
+	public SimpleBooleanProperty confirmingCreateSettingsProperty ( ) {
+		return confirmingCreateSettings;
 	}
 
 	public SimpleBooleanProperty confirmingCreateCSSProperty ( ) {
@@ -105,8 +105,8 @@ public class StdProperties extends Properties {
 		return confirmingCreateFXML;
 	}
 
-	public SimpleBooleanProperty preferencesModifiedProperty ( ) {
-		return preferencesModified;
+	public SimpleBooleanProperty settingsModifiedProperty ( ) {
+		return settingsModified;
 	}
 
 	public SimpleBooleanProperty titleChangedProperty ( ) {
@@ -145,9 +145,9 @@ public class StdProperties extends Properties {
 		return createDefaultFilePossible;
 	}
 
-	public void refreshPreferencesModifiedProperty ( ) {
+	public void refreshSettingsModifiedProperty ( ) {
 		final boolean modified = titleChanged.get() || widthChanged.get() || heightChanged.get() || urlsFileExtensionChanged.get() || urlsFileSelectChanged.get() || maximizeChanged.get() || loadAtStartChanged.get() || byPrefixChanged.get();
-		preferencesModified.set(modified);
+		settingsModified.set(modified);
 	}
 
 }

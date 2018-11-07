@@ -16,7 +16,7 @@ import java.util.Comparator;
 
 import com.github.vbsw.urlsaver.api.DataBase;
 import com.github.vbsw.urlsaver.api.Global;
-import com.github.vbsw.urlsaver.pref.PreferencesConfig;
+import com.github.vbsw.urlsaver.settings.SettingsConfig;
 import com.github.vbsw.urlsaver.utility.OSFiles;
 
 
@@ -31,7 +31,7 @@ public class StdDataBase extends DataBase {
 
 	@Override
 	public void initialize ( ) {
-		final String fileExtension = Global.preferences.getStringPereference(PreferencesConfig.URLS_FILE_EXTENSION_ID).getSaved();
+		final String fileExtension = Global.settings.getStringPereference(SettingsConfig.URLS_FILE_EXTENSION_ID).getSaved();
 		final Path programDir = Global.resourceLoader.getProgramFile().getDirectory();
 		final ArrayList<Path> files = OSFiles.getFilesFromDirectory(programDir,fileExtension);
 		final ArrayList<Path> filesSorted = getSortedPaths(files);

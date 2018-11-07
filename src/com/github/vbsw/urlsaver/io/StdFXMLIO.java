@@ -28,16 +28,16 @@ public class StdFXMLIO extends FXMLIO {
 		Parent root = readCustomFXML();
 		if ( root == null ) {
 			root = readDefaultFXML();
-			Global.preferences.setCustomFXMLLoaded(false);
+			Global.settings.setCustomFXMLLoaded(false);
 		} else {
-			Global.preferences.setCustomFXMLLoaded(true);
+			Global.settings.setCustomFXMLLoaded(true);
 		}
 		return root;
 	}
 
 	protected Parent readCustomFXML ( ) {
-		if ( Global.preferences.getFXML().getSaved().exists() ) {
-			try ( final InputStream stream = Global.preferences.getFXML().getSaved().newInputStream() ) {
+		if ( Global.settings.getFXML().getSaved().exists() ) {
+			try ( final InputStream stream = Global.settings.getFXML().getSaved().newInputStream() ) {
 				final FXMLLoader fxmlLoader = new FXMLLoader();
 				final Parent fxml = fxmlLoader.load(stream);
 				return fxml;
@@ -48,7 +48,7 @@ public class StdFXMLIO extends FXMLIO {
 	}
 
 	protected Parent readDefaultFXML ( ) {
-		try ( final InputStream stream = Global.preferences.getFXML().getDefault().newInputStream() ) {
+		try ( final InputStream stream = Global.settings.getFXML().getDefault().newInputStream() ) {
 			final FXMLLoader fxmlLoader = new FXMLLoader();
 			final Parent fxml = fxmlLoader.load(stream);
 			return fxml;

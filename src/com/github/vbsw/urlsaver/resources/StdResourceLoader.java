@@ -30,8 +30,8 @@ public class StdResourceLoader extends ResourceLoader {
 	}
 
 	@Override
-	public String getCustomPreferencesFilePath ( ) {
-		return ResourcesConfig.CUSTOM_PREFERENCES_FILE_PATH;
+	public String getCustomSettingsFilePath ( ) {
+		return ResourcesConfig.CUSTOM_SETTINGS_FILE_PATH;
 	}
 
 	@Override
@@ -45,8 +45,8 @@ public class StdResourceLoader extends ResourceLoader {
 	}
 
 	@Override
-	public String getDefaultPreferencesFilePath ( ) {
-		return ResourcesConfig.DEFAULT_PREFERENCES_FILE_PATH;
+	public String getDefaultSettingsFilePath ( ) {
+		return ResourcesConfig.DEFAULT_SETTINGS_FILE_PATH;
 	}
 
 	@Override

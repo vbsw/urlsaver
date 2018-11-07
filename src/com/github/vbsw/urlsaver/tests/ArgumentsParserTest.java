@@ -30,9 +30,9 @@ class CommandLineInfoTest {
 	private static final String str03 = "--";
 	private static final String str04 = "--asdf";
 	private static final String str05 = "-asdf";
-	private static final String str06 = ArgumentsConfig.PREFERENCES_OPTION[0];
-	private static final String str07 = "-" + ArgumentsConfig.PREFERENCES_OPTION[0];
-	private static final String str08 = "--" + ArgumentsConfig.PREFERENCES_OPTION[0];
+	private static final String str06 = ArgumentsConfig.SETTINGS_OPTION[0];
+	private static final String str07 = "-" + ArgumentsConfig.SETTINGS_OPTION[0];
+	private static final String str08 = "--" + ArgumentsConfig.SETTINGS_OPTION[0];
 	private static final String str09 = str06 + ArgumentsConfig.ASSIGINMENT_OPERATOR[0];
 	private static final String str10 = str07 + ArgumentsConfig.ASSIGINMENT_OPERATOR[0];
 	private static final String str11 = str08 + ArgumentsConfig.ASSIGINMENT_OPERATOR[0];
@@ -42,18 +42,18 @@ class CommandLineInfoTest {
 	 */
 	@Test
 	void testIsOption ( ) {
-		assertEquals(false,CommandLineInfo.isOption(str00,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(false,CommandLineInfo.isOption(str01,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(false,CommandLineInfo.isOption(str02,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(false,CommandLineInfo.isOption(str03,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(false,CommandLineInfo.isOption(str04,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(false,CommandLineInfo.isOption(str05,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(true,CommandLineInfo.isOption(str06,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(true,CommandLineInfo.isOption(str07,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(true,CommandLineInfo.isOption(str08,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(false,CommandLineInfo.isOption(str09 + path,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(false,CommandLineInfo.isOption(str10 + path,ArgumentsConfig.PREFERENCES_OPTION));
-		assertEquals(false,CommandLineInfo.isOption(str11 + path,ArgumentsConfig.PREFERENCES_OPTION));
+		assertEquals(false,CommandLineInfo.isOption(str00,ArgumentsConfig.SETTINGS_OPTION));
+		assertEquals(false,CommandLineInfo.isOption(str01,ArgumentsConfig.SETTINGS_OPTION));
+		assertEquals(false,CommandLineInfo.isOption(str02,ArgumentsConfig.SETTINGS_OPTION));
+		assertEquals(false,CommandLineInfo.isOption(str03,ArgumentsConfig.SETTINGS_OPTION));
+		assertEquals(false,CommandLineInfo.isOption(str04,ArgumentsConfig.SETTINGS_OPTION));
+		assertEquals(false,CommandLineInfo.isOption(str05,ArgumentsConfig.SETTINGS_OPTION));
+		assertEquals(true,CommandLineInfo.isOption(str06,ArgumentsConfig.SETTINGS_OPTION));
+		assertEquals(true,CommandLineInfo.isOption(str07,ArgumentsConfig.SETTINGS_OPTION));
+		assertEquals(true,CommandLineInfo.isOption(str08,ArgumentsConfig.SETTINGS_OPTION));
+		assertEquals(false,CommandLineInfo.isOption(str09 + path,ArgumentsConfig.SETTINGS_OPTION));
+		assertEquals(false,CommandLineInfo.isOption(str10 + path,ArgumentsConfig.SETTINGS_OPTION));
+		assertEquals(false,CommandLineInfo.isOption(str11 + path,ArgumentsConfig.SETTINGS_OPTION));
 	}
 
 	/**
@@ -61,18 +61,18 @@ class CommandLineInfoTest {
 	 */
 	@Test
 	void testGetValue ( ) {
-		assertEquals("",Parser.getArgumentValue(str00 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals("",Parser.getArgumentValue(str01 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals("",Parser.getArgumentValue(str02 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals("",Parser.getArgumentValue(str03 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals("",Parser.getArgumentValue(str04 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals("",Parser.getArgumentValue(str05 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals(path,Parser.getArgumentValue(str06 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals(path,Parser.getArgumentValue(str07 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals(path,Parser.getArgumentValue(str08 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals(path,Parser.getArgumentValue(str09 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals(path,Parser.getArgumentValue(str10 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
-		assertEquals(path,Parser.getArgumentValue(str11 + path,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals("",Parser.getArgumentValue(str00 + path,ArgumentsConfig.SETTINGS_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals("",Parser.getArgumentValue(str01 + path,ArgumentsConfig.SETTINGS_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals("",Parser.getArgumentValue(str02 + path,ArgumentsConfig.SETTINGS_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals("",Parser.getArgumentValue(str03 + path,ArgumentsConfig.SETTINGS_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals("",Parser.getArgumentValue(str04 + path,ArgumentsConfig.SETTINGS_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals("",Parser.getArgumentValue(str05 + path,ArgumentsConfig.SETTINGS_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals(path,Parser.getArgumentValue(str06 + path,ArgumentsConfig.SETTINGS_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals(path,Parser.getArgumentValue(str07 + path,ArgumentsConfig.SETTINGS_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals(path,Parser.getArgumentValue(str08 + path,ArgumentsConfig.SETTINGS_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals(path,Parser.getArgumentValue(str09 + path,ArgumentsConfig.SETTINGS_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals(path,Parser.getArgumentValue(str10 + path,ArgumentsConfig.SETTINGS_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
+		assertEquals(path,Parser.getArgumentValue(str11 + path,ArgumentsConfig.SETTINGS_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR));
 	}
 
 }

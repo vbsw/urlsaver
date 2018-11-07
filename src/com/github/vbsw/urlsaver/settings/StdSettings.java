@@ -6,7 +6,7 @@
  */
 
 
-package com.github.vbsw.urlsaver.pref;
+package com.github.vbsw.urlsaver.settings;
 
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Properties;
 
 import com.github.vbsw.urlsaver.api.Global;
-import com.github.vbsw.urlsaver.api.Preferences;
+import com.github.vbsw.urlsaver.api.Settings;
 import com.github.vbsw.urlsaver.api.Resource;
 import com.github.vbsw.urlsaver.api.ResourceLoader;
 import com.github.vbsw.urlsaver.api.ResourceVariants;
@@ -29,30 +29,30 @@ import com.github.vbsw.urlsaver.utility.Parser;
 /**
  * @author Vitali Baumtrok
  */
-public class StdPreferences extends Preferences {
+public class StdSettings extends Settings {
 
-	protected final ResourceVariants preferencesVariants = new ResourceVariants();
+	protected final ResourceVariants settingsVariants = new ResourceVariants();
 	protected final ResourceVariants fxmlVariants = new ResourceVariants();
 	protected final ResourceVariants cssVariants = new ResourceVariants();
 
-	protected final StringPreference windowTitle = new StringPreference();
-	protected final IntPreference windowWidth = new IntPreference();
-	protected final IntPreference windowHeight = new IntPreference();
-	protected final BooleanPreference windowMaximized = new BooleanPreference();
-	protected final StringPreference urlsFileExtension = new StringPreference();
-	protected final StringPreference urlsFileSelect = new StringPreference();
-	protected final BooleanPreference urlsFileAutoLoadAll = new BooleanPreference();
-	protected final BooleanPreference searchByPrefix = new BooleanPreference();
+	protected final StringSetting windowTitle = new StringSetting();
+	protected final IntSetting windowWidth = new IntSetting();
+	protected final IntSetting windowHeight = new IntSetting();
+	protected final BooleanSetting windowMaximized = new BooleanSetting();
+	protected final StringSetting urlsFileExtension = new StringSetting();
+	protected final StringSetting urlsFileSelect = new StringSetting();
+	protected final BooleanSetting urlsFileAutoLoadAll = new BooleanSetting();
+	protected final BooleanSetting searchByPrefix = new BooleanSetting();
 
-	protected boolean customPreferencesLoaded = false;
-	protected boolean customPreferencesSaved = true;
+	protected boolean customSettingsLoaded = false;
+	protected boolean customSettingsSaved = true;
 	protected boolean customFXMLLoaded = false;
 	protected boolean customCSSLoaded = false;
 
-	protected Path extractCustomPreferencesPath ( final List<String> args ) {
+	protected Path extractCustomSettingsPath ( final List<String> args ) {
 		if ( args.size() > 0 ) {
 			final String arg = args.get(0);
-			final String pathStrBare = Parser.getArgumentValue(arg,ArgumentsConfig.PREFERENCES_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR);
+			final String pathStrBare = Parser.getArgumentValue(arg,ArgumentsConfig.SETTINGS_OPTION,ArgumentsConfig.ASSIGINMENT_OPERATOR);
 			final String pathStr = Parser.trim(pathStrBare);
 			if ( pathStr.length() > 0 ) {
 				final Path path = Paths.get(pathStr);
@@ -60,7 +60,7 @@ public class StdPreferences extends Preferences {
 				if ( dir != null && Files.exists(dir) )
 					return path;
 				else
-					System.out.println("warning: preferences path does not exist");
+					System.out.println("warning: settings path does not exist");
 			}
 		}
 		return null;
@@ -76,14 +76,14 @@ public class StdPreferences extends Preferences {
 		return null;
 	}
 
-	protected void setPreferencesSavedValue ( final ResourceLoader resourceLoader, final List<String> args, final String filePathStr ) {
-		final Path customPath = extractCustomPreferencesPath(args);
+	protected void setSettingsSavedValue ( final ResourceLoader resourceLoader, final List<String> args, final String filePathStr ) {
+		final Path customPath = extractCustomSettingsPath(args);
 		final Resource resource;
 		if ( customPath == null )
 			resource = resourceLoader.getProgramFile().getOSFileResource(Paths.get(filePathStr));
 		else
 			resource = resourceLoader.getProgramFile().getOSFileResource(customPath);
-		preferencesVariants.setSaved(resource);
+		settingsVariants.setSaved(resource);
 	}
 
 	protected void setFXMLSavedValue ( final ResourceLoader resourceLoader, final List<String> args, final String filePathStr ) {
@@ -106,68 +106,68 @@ public class StdPreferences extends Preferences {
 		cssVariants.setSaved(resource);
 	}
 
-	protected void loadDefaultPreferences ( ) {
-		try ( final InputStream stream = getPreferences().getDefault().newInputStream() ) {
+	protected void loadDefaultSettings ( ) {
+		try ( final InputStream stream = getSettings().getDefault().newInputStream() ) {
 			final Properties properties = new Properties();
 			properties.load(stream);
-			windowTitle.setDefault(PropertiesReader.getWindowTitle(properties));
-			windowWidth.setDefault(PropertiesReader.getWindowWidth(properties));
-			windowHeight.setDefault(PropertiesReader.getWindowHeight(properties));
-			windowMaximized.setDefault(PropertiesReader.getWindowMaximized(properties));
-			urlsFileExtension.setDefault(PropertiesReader.getURLsFileExtension(properties));
-			urlsFileSelect.setDefault(PropertiesReader.getURLsFileSelect(properties));
-			urlsFileAutoLoadAll.setDefault(PropertiesReader.getURLsFileAutoLoadAll(properties));
-			searchByPrefix.setDefault(PropertiesReader.getSearchByPrefix(properties));
+			windowTitle.setDefault(SettingsReader.getWindowTitle(properties));
+			windowWidth.setDefault(SettingsReader.getWindowWidth(properties));
+			windowHeight.setDefault(SettingsReader.getWindowHeight(properties));
+			windowMaximized.setDefault(SettingsReader.getWindowMaximized(properties));
+			urlsFileExtension.setDefault(SettingsReader.getURLsFileExtension(properties));
+			urlsFileSelect.setDefault(SettingsReader.getURLsFileSelect(properties));
+			urlsFileAutoLoadAll.setDefault(SettingsReader.getURLsFileAutoLoadAll(properties));
+			searchByPrefix.setDefault(SettingsReader.getSearchByPrefix(properties));
 		} catch ( final Exception e ) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void loadCustomPreferences ( ) {
-		customPreferencesLoaded = false;
-		if ( getPreferences().getSaved().exists() ) {
-			try ( final InputStream stream = getPreferences().getSaved().newInputStream() ) {
+	public void loadCustomSettings ( ) {
+		customSettingsLoaded = false;
+		if ( getSettings().getSaved().exists() ) {
+			try ( final InputStream stream = getSettings().getSaved().newInputStream() ) {
 				final Properties properties = new Properties();
 				properties.load(stream);
-				windowTitle.setSaved(PropertiesReader.getWindowTitle(properties,windowTitle.getDefault()));
-				windowWidth.setSaved(PropertiesReader.getWindowWidth(properties,windowWidth.getDefault()));
-				windowHeight.setSaved(PropertiesReader.getWindowHeight(properties,windowHeight.getDefault()));
-				windowMaximized.setSaved(PropertiesReader.getWindowMaximized(properties,windowMaximized.getDefault()));
-				urlsFileExtension.setSaved(PropertiesReader.getURLsFileExtension(properties,urlsFileExtension.getDefault()));
-				urlsFileSelect.setSaved(PropertiesReader.getURLsFileSelect(properties,urlsFileSelect.getDefault()));
-				urlsFileAutoLoadAll.setSaved(PropertiesReader.getURLsFileAutoLoadAll(properties,urlsFileAutoLoadAll.getDefault()));
-				searchByPrefix.setSaved(PropertiesReader.getSearchByPrefix(properties,searchByPrefix.getDefault()));
-				customPreferencesLoaded = true;
+				windowTitle.setSaved(SettingsReader.getWindowTitle(properties,windowTitle.getDefault()));
+				windowWidth.setSaved(SettingsReader.getWindowWidth(properties,windowWidth.getDefault()));
+				windowHeight.setSaved(SettingsReader.getWindowHeight(properties,windowHeight.getDefault()));
+				windowMaximized.setSaved(SettingsReader.getWindowMaximized(properties,windowMaximized.getDefault()));
+				urlsFileExtension.setSaved(SettingsReader.getURLsFileExtension(properties,urlsFileExtension.getDefault()));
+				urlsFileSelect.setSaved(SettingsReader.getURLsFileSelect(properties,urlsFileSelect.getDefault()));
+				urlsFileAutoLoadAll.setSaved(SettingsReader.getURLsFileAutoLoadAll(properties,urlsFileAutoLoadAll.getDefault()));
+				searchByPrefix.setSaved(SettingsReader.getSearchByPrefix(properties,searchByPrefix.getDefault()));
+				customSettingsLoaded = true;
 			} catch ( final Exception e ) {
 				e.printStackTrace();
 			}
 		}
-		if ( !isCustomPreferencesLoaded() )
+		if ( !isCustomSettingsLoaded() )
 			resetSavedToDefault();
 		resetModifiedValuesToSaved();
 	}
 
 	@Override
 	public void initialize ( ) {
-		final Resource prefDefaultRes = Global.resourceLoader.getProgramFile().getJarFileResource(Global.resourceLoader.getDefaultPreferencesFilePath());
+		final Resource prefDefaultRes = Global.resourceLoader.getProgramFile().getJarFileResource(Global.resourceLoader.getDefaultSettingsFilePath());
 		final Resource fxmlDefaultRes = Global.resourceLoader.getProgramFile().getJarFileResource(Global.resourceLoader.getDefaultFXMLFilePath());
 		final Resource cssDefaultRes = Global.resourceLoader.getProgramFile().getJarFileResource(Global.resourceLoader.getDefaultCSSFilePath());
 
-		preferencesVariants.setDefault(prefDefaultRes);
+		settingsVariants.setDefault(prefDefaultRes);
 		fxmlVariants.setDefault(fxmlDefaultRes);
 		cssVariants.setDefault(cssDefaultRes);
-		setPreferencesSavedValue(Global.resourceLoader,Global.arguments,Global.resourceLoader.getCustomPreferencesFilePath());
+		setSettingsSavedValue(Global.resourceLoader,Global.arguments,Global.resourceLoader.getCustomSettingsFilePath());
 		setFXMLSavedValue(Global.resourceLoader,Global.arguments,Global.resourceLoader.getCustomFXMLFilePath());
 		setCSSSavedValue(Global.resourceLoader,Global.arguments,Global.resourceLoader.getCustomCSSFilePath());
 
-		loadDefaultPreferences();
-		loadCustomPreferences();
+		loadDefaultSettings();
+		loadCustomSettings();
 	}
 
 	@Override
-	public ResourceVariants getPreferences ( ) {
-		return preferencesVariants;
+	public ResourceVariants getSettings ( ) {
+		return settingsVariants;
 	}
 
 	@Override
@@ -217,13 +217,13 @@ public class StdPreferences extends Preferences {
 	}
 
 	@Override
-	public StringPreference getStringPereference ( final int preferenceId ) {
-		switch ( preferenceId ) {
-			case PreferencesConfig.WINDOW_TITLE_ID:
+	public StringSetting getStringPereference ( final int propertyId ) {
+		switch ( propertyId ) {
+			case SettingsConfig.WINDOW_TITLE_ID:
 			return windowTitle;
-			case PreferencesConfig.URLS_FILE_EXTENSION_ID:
+			case SettingsConfig.URLS_FILE_EXTENSION_ID:
 			return urlsFileExtension;
-			case PreferencesConfig.URLS_FILE_SELECT_ID:
+			case SettingsConfig.URLS_FILE_SELECT_ID:
 			return urlsFileSelect;
 			default:
 			return null;
@@ -231,11 +231,11 @@ public class StdPreferences extends Preferences {
 	}
 
 	@Override
-	public IntPreference getIntPreference ( final int preferenceId ) {
-		switch ( preferenceId ) {
-			case PreferencesConfig.WINDOW_WIDTH_ID:
+	public IntSetting getIntSetting ( final int propertyId ) {
+		switch ( propertyId ) {
+			case SettingsConfig.WINDOW_WIDTH_ID:
 			return windowWidth;
-			case PreferencesConfig.WINDOW_HEIGHT_ID:
+			case SettingsConfig.WINDOW_HEIGHT_ID:
 			return windowHeight;
 			default:
 			return null;
@@ -243,13 +243,13 @@ public class StdPreferences extends Preferences {
 	}
 
 	@Override
-	public BooleanPreference getBooleanPreference ( final int preferenceId ) {
-		switch ( preferenceId ) {
-			case PreferencesConfig.WINDOW_MAXIMIZED_ID:
+	public BooleanSetting getBooleanSetting ( final int propertyId ) {
+		switch ( propertyId ) {
+			case SettingsConfig.WINDOW_MAXIMIZED_ID:
 			return windowMaximized;
-			case PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID:
+			case SettingsConfig.URLS_FILE_AUTOLOAD_ALL_ID:
 			return urlsFileAutoLoadAll;
-			case PreferencesConfig.SEARCH_BY_PREFIX_ID:
+			case SettingsConfig.SEARCH_BY_PREFIX_ID:
 			return searchByPrefix;
 			default:
 			return null;
@@ -257,13 +257,13 @@ public class StdPreferences extends Preferences {
 	}
 
 	@Override
-	public boolean isCustomPreferencesLoaded ( ) {
-		return customPreferencesLoaded;
+	public boolean isCustomSettingsLoaded ( ) {
+		return customSettingsLoaded;
 	}
 
 	@Override
-	public boolean isCustomPreferencesSaved ( ) {
-		return customPreferencesSaved;
+	public boolean isCustomSettingsSaved ( ) {
+		return customSettingsSaved;
 	}
 
 	@Override
@@ -287,7 +287,7 @@ public class StdPreferences extends Preferences {
 	}
 
 	@Override
-	public void savePreferences ( ) {
+	public void saveSettings ( ) {
 		final StringBuilder stringBuilder = new StringBuilder(400);
 		final String newLine = System.lineSeparator();
 
@@ -318,12 +318,12 @@ public class StdPreferences extends Preferences {
 
 		try {
 			final byte[] bytes = stringBuilder.toString().getBytes(Global.resourceLoader.getCharset());
-			final Path path = getPreferences().getSaved().getPath();
+			final Path path = getSettings().getSaved().getPath();
 			Files.write(path,bytes);
-			customPreferencesSaved = true;
+			customSettingsSaved = true;
 
 		} catch ( final IOException e ) {
-			customPreferencesSaved = false;
+			customSettingsSaved = false;
 			e.printStackTrace();
 		}
 	}

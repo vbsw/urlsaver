@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import com.github.vbsw.urlsaver.api.Global;
 import com.github.vbsw.urlsaver.api.URLsIO;
 import com.github.vbsw.urlsaver.db.DBTable;
-import com.github.vbsw.urlsaver.pref.PreferencesConfig;
+import com.github.vbsw.urlsaver.settings.SettingsConfig;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -50,7 +50,7 @@ public class StdURLsIO extends URLsIO {
 
 	@Override
 	public void autoLoad ( ) {
-		if ( Global.preferences.getBooleanPreference(PreferencesConfig.URLS_FILE_AUTOLOAD_ALL_ID).getModified() )
+		if ( Global.settings.getBooleanSetting(SettingsConfig.URLS_FILE_AUTOLOAD_ALL_ID).getModified() )
 			for ( URLsLoadService service: urlsLoadServices )
 				service.start();
 	}

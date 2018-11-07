@@ -37,8 +37,8 @@ public class StdViewSelector extends ViewSelector {
 	}
 
 	@Override
-	public void selectPreferencesView ( ) {
-		stdGUI.tabPanes.top.control.getSelectionModel().select(stdGUI.tabPanes.top.preferences.control);
+	public void selectSettingsView ( ) {
+		stdGUI.tabPanes.top.control.getSelectionModel().select(stdGUI.tabPanes.top.settings.control);
 	}
 
 	@Override

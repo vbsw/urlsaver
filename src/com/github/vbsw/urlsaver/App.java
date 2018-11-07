@@ -16,10 +16,10 @@ import com.github.vbsw.urlsaver.gui.StdGUI;
 import com.github.vbsw.urlsaver.gui.StdLogger;
 import com.github.vbsw.urlsaver.gui.StdProperties;
 import com.github.vbsw.urlsaver.io.StdFXMLIO;
-import com.github.vbsw.urlsaver.io.StdPreferencesIO;
+import com.github.vbsw.urlsaver.io.StdSettingsIO;
 import com.github.vbsw.urlsaver.io.StdURLsIO;
-import com.github.vbsw.urlsaver.pref.StdPreferences;
 import com.github.vbsw.urlsaver.resources.StdResourceLoader;
+import com.github.vbsw.urlsaver.settings.StdSettings;
 import com.github.vbsw.urlsaver.utility.StdTextGenerator;
 
 import javafx.application.Application;
@@ -35,11 +35,11 @@ public class App extends Application {
 	public void start ( final Stage primaryStage ) throws Exception {
 		Global.arguments = getParameters().getRaw();
 		Global.resourceLoader = new StdResourceLoader();
-		Global.preferences = new StdPreferences();
+		Global.settings = new StdSettings();
 		Global.textGenerator = new StdTextGenerator();
 		Global.db = new StdDataBase();
 		Global.logger = new StdLogger();
-		Global.preferencesIO = new StdPreferencesIO();
+		Global.settingsIO = new StdSettingsIO();
 		Global.urlsIO = new StdURLsIO();
 		Global.fxmlIO = new StdFXMLIO();
 		Global.gui = new StdGUI();
@@ -47,7 +47,7 @@ public class App extends Application {
 		Global.properties = new StdProperties();
 
 		Global.resourceLoader.initialize();
-		Global.preferences.initialize();
+		Global.settings.initialize();
 		Global.db.initialize();
 		Global.logger.initialize();
 		Global.gui.initialize(primaryStage);

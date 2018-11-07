@@ -6,7 +6,7 @@
  */
 
 
-package com.github.vbsw.urlsaver.pref;
+package com.github.vbsw.urlsaver.settings;
 
 
 import java.util.Properties;
@@ -15,96 +15,96 @@ import java.util.Properties;
 /**
  * @author Vitali Baumtrok
  */
-public class PropertiesReader {
+public class SettingsReader {
 
 	public static String getWindowTitle ( final Properties properties ) {
 		final String defaultValue = "<window.title>";
-		final String value = PropertiesReader.getWindowTitle(properties,defaultValue);
+		final String value = SettingsReader.getWindowTitle(properties,defaultValue);
 		return value;
 	}
 
 	public static String getWindowTitle ( final Properties properties, final String defaultValue ) {
 		final String key = "window.title";
-		final String value = PropertiesReader.getPropertyValue(properties,key,defaultValue);
+		final String value = SettingsReader.getPropertyValue(properties,key,defaultValue);
 		return value;
 	}
 
 	public static int getWindowWidth ( final Properties properties ) {
-		final int value = PropertiesReader.getWindowWidth(properties,0);
+		final int value = SettingsReader.getWindowWidth(properties,0);
 		return value;
 	}
 
 	public static int getWindowWidth ( final Properties properties, final int defaultValue ) {
 		final String key = "window.width";
-		final int value = PropertiesReader.getPropertyValue(properties,key,defaultValue);
+		final int value = SettingsReader.getPropertyValue(properties,key,defaultValue);
 		return value;
 	}
 
 	public static int getWindowHeight ( final Properties properties ) {
-		final int value = PropertiesReader.getWindowHeight(properties,0);
+		final int value = SettingsReader.getWindowHeight(properties,0);
 		return value;
 	}
 
 	public static int getWindowHeight ( final Properties properties, final int defaultValue ) {
 		final String key = "window.height";
-		final int value = PropertiesReader.getPropertyValue(properties,key,0);
+		final int value = SettingsReader.getPropertyValue(properties,key,0);
 		return value;
 	}
 
 	public static boolean getWindowMaximized ( final Properties properties ) {
-		final boolean value = PropertiesReader.getWindowMaximized(properties,false);
+		final boolean value = SettingsReader.getWindowMaximized(properties,false);
 		return value;
 	}
 
 	public static boolean getWindowMaximized ( final Properties properties, final boolean defaultValue ) {
 		final String key = "window.maximized";
-		final boolean value = PropertiesReader.getPropertyValue(properties,key,defaultValue);
+		final boolean value = SettingsReader.getPropertyValue(properties,key,defaultValue);
 		return value;
 	}
 
 	public static String getURLsFileExtension ( final Properties properties ) {
 		final String defaultValue = "<urls.file.extension>";
-		final String value = PropertiesReader.getURLsFileExtension(properties,defaultValue);
+		final String value = SettingsReader.getURLsFileExtension(properties,defaultValue);
 		return value;
 	}
 
 	public static String getURLsFileExtension ( final Properties properties, final String defaultValue ) {
 		final String key = "urls.file.extension";
-		final String value = PropertiesReader.getPropertyValue(properties,key,defaultValue);
+		final String value = SettingsReader.getPropertyValue(properties,key,defaultValue);
 		return value;
 	}
 
 	public static String getURLsFileSelect ( final Properties properties ) {
 		final String defaultValue = "<urls.file.select>";
-		final String value = PropertiesReader.getURLsFileSelect(properties,defaultValue);
+		final String value = SettingsReader.getURLsFileSelect(properties,defaultValue);
 		return value;
 	}
 
 	public static String getURLsFileSelect ( final Properties properties, final String defaultValue ) {
 		final String key = "urls.file.select";
-		final String value = PropertiesReader.getPropertyValue(properties,key,defaultValue);
+		final String value = SettingsReader.getPropertyValue(properties,key,defaultValue);
 		return value;
 	}
 
 	public static boolean getURLsFileAutoLoadAll ( final Properties properties ) {
-		final boolean value = PropertiesReader.getURLsFileAutoLoadAll(properties,false);
+		final boolean value = SettingsReader.getURLsFileAutoLoadAll(properties,false);
 		return value;
 	}
 
 	public static boolean getURLsFileAutoLoadAll ( final Properties properties, final boolean defaultValue ) {
 		final String key = "urls.file.autoload.all";
-		final boolean value = PropertiesReader.getPropertyValue(properties,key,defaultValue);
+		final boolean value = SettingsReader.getPropertyValue(properties,key,defaultValue);
 		return value;
 	}
 
 	public static boolean getSearchByPrefix ( final Properties properties ) {
-		final boolean value = PropertiesReader.getSearchByPrefix(properties,true);
+		final boolean value = SettingsReader.getSearchByPrefix(properties,true);
 		return value;
 	}
 
 	public static boolean getSearchByPrefix ( final Properties properties, final boolean defaultValue ) {
 		final String key = "search.byprefix";
-		final boolean value = PropertiesReader.getPropertyValue(properties,key,defaultValue);
+		final boolean value = SettingsReader.getPropertyValue(properties,key,defaultValue);
 		return value;
 	}
 
@@ -127,7 +127,7 @@ public class PropertiesReader {
 	private static boolean getPropertyValue ( final Properties properties, final String key, final boolean defaultValue ) {
 		final String value = properties.getProperty(key);
 		if ( value != null )
-			return PropertiesReader.isTrue(value);
+			return SettingsReader.isTrue(value);
 		return defaultValue;
 	}
 

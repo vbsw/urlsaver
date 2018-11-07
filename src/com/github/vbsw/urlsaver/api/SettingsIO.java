@@ -12,15 +12,15 @@ package com.github.vbsw.urlsaver.api;
 /**
  * @author Vitali Baumtrok
  */
-public abstract class PreferencesIO {
+public abstract class SettingsIO {
 
-	public abstract void createPreferencesFile ( );
+	public abstract void createSettingsFile ( );
 
 	public abstract void createCSSFile ( );
 
 	public abstract void createFXMLFile ( );
 
-	public abstract void overwritePreferencesFile ( );
+	public abstract void overwriteSettingsFile ( );
 
 	public abstract void overwriteCSSFile ( );
 

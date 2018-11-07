@@ -20,7 +20,7 @@ public class ResourcesConfig {
 	public static final String CUSTOM_FXML_FILE_PATH = "urlsaver.fxml";
 	public static final String DEFAULT_FXML_FILE_PATH = "com/github/vbsw/urlsaver/resources/default.fxml";
 
-	public static final String DEFAULT_PREFERENCES_FILE_PATH = "com/github/vbsw/urlsaver/resources/default.pref";
-	public static final String CUSTOM_PREFERENCES_FILE_PATH = "urlsaver.pref";
+	public static final String DEFAULT_SETTINGS_FILE_PATH = "com/github/vbsw/urlsaver/resources/default.settings";
+	public static final String CUSTOM_SETTINGS_FILE_PATH = "urlsaver.settings";
 
 }

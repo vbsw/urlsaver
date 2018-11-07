@@ -23,7 +23,7 @@ public class ArgumentsCheck {
 
 	private static boolean startsWithConfigOption ( final String argument ) {
 		final int offset = Parser.seekContent(argument,0,argument.length(),'-');
-		for ( final String key: ArgumentsConfig.PREFERENCES_OPTION )
+		for ( final String key: ArgumentsConfig.SETTINGS_OPTION )
 			if ( argument.startsWith(key,offset) )
 				return true;
 		return false;

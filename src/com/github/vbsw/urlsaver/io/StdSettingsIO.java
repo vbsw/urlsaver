@@ -12,54 +12,54 @@ package com.github.vbsw.urlsaver.io;
 import java.nio.file.Path;
 
 import com.github.vbsw.urlsaver.api.Global;
-import com.github.vbsw.urlsaver.api.PreferencesIO;
+import com.github.vbsw.urlsaver.api.SettingsIO;
 import com.github.vbsw.urlsaver.api.Resource;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public class StdPreferencesIO extends PreferencesIO {
+public class StdSettingsIO extends SettingsIO {
 
 	@Override
-	public void createPreferencesFile ( ) {
-		final Resource srcResource = Global.preferences.getPreferences().getDefault();
-		final Resource destResource = Global.preferences.getPreferences().getSaved();
-		createFile(srcResource,destResource,"preferences");
+	public void createSettingsFile ( ) {
+		final Resource srcResource = Global.settings.getSettings().getDefault();
+		final Resource destResource = Global.settings.getSettings().getSaved();
+		createFile(srcResource,destResource,"settings");
 	}
 
 	@Override
 	public void createCSSFile ( ) {
-		final Resource srcResource = Global.preferences.getCSS().getDefault();
-		final Resource destResource = Global.preferences.getCSS().getSaved();
+		final Resource srcResource = Global.settings.getCSS().getDefault();
+		final Resource destResource = Global.settings.getCSS().getSaved();
 		createFile(srcResource,destResource,"CSS");
 	}
 
 	@Override
 	public void createFXMLFile ( ) {
-		final Resource srcResource = Global.preferences.getFXML().getDefault();
-		final Resource destResource = Global.preferences.getFXML().getSaved();
+		final Resource srcResource = Global.settings.getFXML().getDefault();
+		final Resource destResource = Global.settings.getFXML().getSaved();
 		createFile(srcResource,destResource,"FXML");
 	}
 
 	@Override
-	public void overwritePreferencesFile ( ) {
-		final Resource srcResource = Global.preferences.getPreferences().getDefault();
-		final Resource destResource = Global.preferences.getPreferences().getSaved();
-		overwriteFile(srcResource,destResource,"preferences");
+	public void overwriteSettingsFile ( ) {
+		final Resource srcResource = Global.settings.getSettings().getDefault();
+		final Resource destResource = Global.settings.getSettings().getSaved();
+		overwriteFile(srcResource,destResource,"settings");
 	}
 
 	@Override
 	public void overwriteCSSFile ( ) {
-		final Resource srcResource = Global.preferences.getCSS().getDefault();
-		final Resource destResource = Global.preferences.getCSS().getSaved();
+		final Resource srcResource = Global.settings.getCSS().getDefault();
+		final Resource destResource = Global.settings.getCSS().getSaved();
 		overwriteFile(srcResource,destResource,"CSS");
 	}
 
 	@Override
 	public void overwriteFXMLFile ( ) {
-		final Resource srcResource = Global.preferences.getFXML().getDefault();
-		final Resource destResource = Global.preferences.getFXML().getSaved();
+		final Resource srcResource = Global.settings.getFXML().getDefault();
+		final Resource destResource = Global.settings.getFXML().getSaved();
 		overwriteFile(srcResource,destResource,"FXML");
 	}
 

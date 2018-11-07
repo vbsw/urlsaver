@@ -22,13 +22,13 @@ public abstract class ResourceLoader {
 
 	public abstract ProgramFile getProgramFile ( );
 
-	public abstract String getCustomPreferencesFilePath ( );
+	public abstract String getCustomSettingsFilePath ( );
 
 	public abstract String getCustomFXMLFilePath ( );
 
 	public abstract String getCustomCSSFilePath ( );
 
-	public abstract String getDefaultPreferencesFilePath ( );
+	public abstract String getDefaultSettingsFilePath ( );
 
 	public abstract String getDefaultFXMLFilePath ( );
 

@@ -67,7 +67,7 @@ public class TabPanes {
 		public final Files files = new Files();
 		public final URLs urls = new URLs();
 		public final About about = new About();
-		public final Preferences preferences = new Preferences();
+		public final Settings settings = new Settings();
 		public TabPane control;
 
 		private void build ( final Parent root ) {
@@ -75,7 +75,7 @@ public class TabPanes {
 			files.build(control,root);
 			urls.build(control,root);
 			about.build(control,root);
-			preferences.build(control,root);
+			settings.build(control,root);
 			control.getSelectionModel().selectedItemProperty().addListener( ( ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue ) -> stdGUI.tabPanes.topTab_selected(observable,oldValue,newValue));
 		}
 	}
@@ -101,9 +101,9 @@ public class TabPanes {
 		}
 	}
 
-	public final class Preferences extends CustomTab {
+	public final class Settings extends CustomTab {
 		private void build ( final TabPane topPane, final Parent root ) {
-			control = stdGUI.tabPanes.getTab(topPane,"preferences_tab");
+			control = stdGUI.tabPanes.getTab(topPane,"settings_tab");
 		}
 
 		public void select ( ) {

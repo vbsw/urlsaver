@@ -38,7 +38,7 @@ public class HotKeys {
 
 		} else if ( keyCode == KeyCode.F3 ) {
 			event.consume();
-			Global.gui.getViewSelector().selectPreferencesView();
+			Global.gui.getViewSelector().selectSettingsView();
 
 		} else if ( keyCode == KeyCode.F4 ) {
 			event.consume();

@@ -6,13 +6,13 @@
  */
 
 
-package com.github.vbsw.urlsaver.pref;
+package com.github.vbsw.urlsaver.settings;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public class PreferencesConfig {
+public class SettingsConfig {
 
 	public static final int WINDOW_TITLE_ID = 0;
 	public static final int WINDOW_WIDTH_ID = 1;

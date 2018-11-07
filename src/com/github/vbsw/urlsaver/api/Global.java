@@ -19,11 +19,11 @@ public final class Global {
 
 	public static List<String> arguments;
 	public static ResourceLoader resourceLoader;
-	public static Preferences preferences;
+	public static Settings settings;
 	public static TextGenerator textGenerator;
 	public static DataBase db;
 	public static Logger logger;
-	public static PreferencesIO preferencesIO;
+	public static SettingsIO settingsIO;
 	public static URLsIO urlsIO;
 	public static FXMLIO fxmlIO;
 	public static GUI gui;

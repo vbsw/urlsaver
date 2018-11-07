@@ -12,23 +12,23 @@ package com.github.vbsw.urlsaver.api;
 /**
  * @author Vitali Baumtrok
  */
-public abstract class Preferences {
+public abstract class Settings {
 
 	public abstract void initialize ( );
 
-	public abstract void loadCustomPreferences ( );
+	public abstract void loadCustomSettings ( );
 
-	public abstract ResourceVariants getPreferences ( );
+	public abstract ResourceVariants getSettings ( );
 
 	public abstract ResourceVariants getFXML ( );
 
 	public abstract ResourceVariants getCSS ( );
 
-	public abstract StringPreference getStringPereference ( int preferenceId );
+	public abstract StringSetting getStringPereference ( int propertyId );
 
-	public abstract IntPreference getIntPreference ( int preferenceId );
+	public abstract IntSetting getIntSetting ( int propertyId );
 
-	public abstract BooleanPreference getBooleanPreference ( int preferenceId );
+	public abstract BooleanSetting getBooleanSetting ( int propertyId );
 
 	public abstract void resetSavedToDefault ( );
 
@@ -36,9 +36,9 @@ public abstract class Preferences {
 
 	public abstract void resetModifiedValuesToSaved ( );
 
-	public abstract boolean isCustomPreferencesLoaded ( );
+	public abstract boolean isCustomSettingsLoaded ( );
 
-	public abstract boolean isCustomPreferencesSaved ( );
+	public abstract boolean isCustomSettingsSaved ( );
 
 	public abstract boolean isCustomFXMLLoaded ( );
 
@@ -48,9 +48,9 @@ public abstract class Preferences {
 
 	public abstract void setCustomCSSLoaded ( boolean loaded );
 
-	public abstract void savePreferences ( );
+	public abstract void saveSettings ( );
 
-	public class BooleanPreference {
+	public class BooleanSetting {
 
 		private boolean defaultValue;
 		private boolean savedValue;
@@ -98,7 +98,7 @@ public abstract class Preferences {
 
 	}
 
-	public class IntPreference {
+	public class IntSetting {
 
 		private int defaultValue;
 		private int savedValue;
@@ -146,7 +146,7 @@ public abstract class Preferences {
 
 	}
 
-	public class StringPreference {
+	public class StringSetting {
 
 		private String defaultValue;
 		private String savedValue;
