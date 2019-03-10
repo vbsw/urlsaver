@@ -1,5 +1,5 @@
 /*
- *    Copyright 2018, Vitali Baumtrok (vbsw@mailbox.org).
+ *  Copyright 2018, 2019 Vitali Baumtrok (vbsw@mailbox.org).
  * Distributed under the Boost Software License, Version 1.0.
  *      (See accompanying file LICENSE or copy at
  *        http://www.boost.org/LICENSE_1_0.txt)
@@ -12,7 +12,7 @@ package com.github.vbsw.urlsaver.api;
 /**
  * @author Vitali Baumtrok
  */
-public class URLMeta {
+public class URLMetaDefinition {
 
 	public static final int DATE = 0;
 	public static final int SCORE = 1;
@@ -42,13 +42,13 @@ public class URLMeta {
 	private int getMetaKeyID ( final String metaKey ) {
 		final int metaKeyID;
 		if ( isNoneKey(metaKey) )
-			metaKeyID = URLMeta.NONE;
+			metaKeyID = URLMetaDefinition.NONE;
 		else if ( isDateKey(metaKey) )
-			metaKeyID = URLMeta.DATE;
+			metaKeyID = URLMetaDefinition.DATE;
 		else if ( isScoreKey(metaKey) )
-			metaKeyID = URLMeta.SCORE;
+			metaKeyID = URLMetaDefinition.SCORE;
 		else
-			metaKeyID = URLMeta.UNKNOWN;
+			metaKeyID = URLMetaDefinition.UNKNOWN;
 		return metaKeyID;
 	}
 

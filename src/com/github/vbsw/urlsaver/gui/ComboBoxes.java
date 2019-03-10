@@ -10,8 +10,8 @@ package com.github.vbsw.urlsaver.gui;
 
 
 import com.github.vbsw.urlsaver.api.Global;
-import com.github.vbsw.urlsaver.api.URLMeta;
-import com.github.vbsw.urlsaver.db.DBTable;
+import com.github.vbsw.urlsaver.api.URLMetaDefinition;
+import com.github.vbsw.urlsaver.db.DBURLs;
 import com.github.vbsw.urlsaver.utility.Parser;
 
 import javafx.beans.value.ObservableValue;
@@ -43,11 +43,11 @@ public class ComboBoxes {
 	}
 
 	private void score_selected ( final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue ) {
-		final DBTable selectedDBTable = Global.db.getSelectedDBTable();
+		final DBURLs selectedDBTable = Global.db.getSelectedURLs();
 		final String urlTyped = Parser.trim(stdGUI.textFields.url.control.getText());
 		final int urlIndex = selectedDBTable.getURLIndex(urlTyped);
 		if ( urlIndex >= 0 ) {
-			final String scoreOld = selectedDBTable.getMetaData(urlIndex,URLMeta.SCORE);
+			final String scoreOld = selectedDBTable.getMetaData(urlIndex,URLMetaDefinition.SCORE);
 			final String scoreNew = score.getScoreAsString();
 			final boolean equalDates = scoreOld == scoreNew || scoreOld != null && scoreOld.equals(scoreNew);
 			stdGUI.properties.urlScoreModifiedProperty().set(!equalDates);

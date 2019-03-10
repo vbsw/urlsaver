@@ -1,5 +1,5 @@
 /*
- *    Copyright 2018, Vitali Baumtrok (vbsw@mailbox.org).
+ *  Copyright 2018, 2019 Vitali Baumtrok (vbsw@mailbox.org).
  * Distributed under the Boost Software License, Version 1.0.
  *      (See accompanying file LICENSE or copy at
  *        http://www.boost.org/LICENSE_1_0.txt)
@@ -11,14 +11,15 @@ package com.github.vbsw.urlsaver.io;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
 import com.github.vbsw.urlsaver.api.Global;
-import com.github.vbsw.urlsaver.api.URLsIO;
-import com.github.vbsw.urlsaver.db.DBTable;
-import com.github.vbsw.urlsaver.settings.SettingsConfig;
+import com.github.vbsw.urlsaver.api.ISettings;
+import com.github.vbsw.urlsaver.api.IURLsIO;
+import com.github.vbsw.urlsaver.db.DBURLs;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -29,18 +30,19 @@ import javafx.event.EventHandler;
 /**
  * @author Vitali Baumtrok
  */
-public class StdURLsIO extends URLsIO {
+public class StdURLsIO implements IURLsIO {
 
 	protected final ArrayList<URLsLoadService> urlsLoadServices = new ArrayList<>();
 
 	@Override
-	public void initialize ( ) {
+	public void recreateServices ( ) {
+		final Charset inputCharset = Global.settings.getDefaultCharset();
 		urlsLoadServices.clear();
-		for ( DBTable record: Global.db.getTables() ) {
-			final URLsLoadService service = new URLsLoadService(Global.resourceLoader,Global.urlMeta,record);
-			final URLsLoadProgressListener progressListener = new URLsLoadProgressListener(record);
+		for ( DBURLs dbURLs: Global.db.getURLsList() ) {
+			final URLsLoadService service = new URLsLoadService(inputCharset,Global.urlMetaKey,dbURLs);
+			final URLsLoadProgressListener progressListener = new URLsLoadProgressListener(dbURLs);
 			final ServiceFailedListener failedListener = new ServiceFailedListener();
-			final FileLoadSucceededListener succeededListener = new FileLoadSucceededListener(record);
+			final FileLoadSucceededListener succeededListener = new FileLoadSucceededListener(dbURLs);
 			service.progressProperty().addListener(progressListener);
 			service.setOnFailed(failedListener);
 			service.setOnSucceeded(succeededListener);
@@ -49,8 +51,8 @@ public class StdURLsIO extends URLsIO {
 	}
 
 	@Override
-	public void autoLoad ( ) {
-		if ( Global.settings.getBooleanSetting(SettingsConfig.URLS_FILE_AUTOLOAD_ALL_ID).getModified() )
+	public void loadDefault ( ) {
+		if ( Global.settings.getBooleanProperty(ISettings.Property.urlsFileAutoLoadAll).modifiedValue )
 			for ( URLsLoadService service: urlsLoadServices )
 				service.start();
 	}
@@ -59,7 +61,7 @@ public class StdURLsIO extends URLsIO {
 	public void reloadAllFiles ( ) {
 		for ( URLsLoadService service: urlsLoadServices ) {
 			service.dbTable.beginLoading();
-			if ( Global.db.getSelectedDBTable() == service.dbTable )
+			if ( Global.db.getSelectedURLs() == service.dbTable )
 				Global.gui.refreshFileSelection();
 			service.restart();
 		}
@@ -67,22 +69,22 @@ public class StdURLsIO extends URLsIO {
 
 	@Override
 	public void reloadSelectedFile ( ) {
-		final DBTable selectedTable = Global.db.getSelectedDBTable();
+		final DBURLs selectedTable = Global.db.getSelectedURLs();
 		reloadFile(selectedTable);
 	}
 
-	public void cancelLoadingFile ( final DBTable dbTable ) {
+	public void cancelLoadingFile ( final DBURLs dbTable ) {
 		for ( URLsLoadService service: urlsLoadServices ) {
 			if ( service.dbTable == dbTable )
 				service.cancel();
 		}
 	}
 
-	public void reloadFile ( final DBTable dbTable ) {
+	public void reloadFile ( final DBURLs dbTable ) {
 		for ( URLsLoadService service: urlsLoadServices ) {
 			if ( service.dbTable == dbTable ) {
 				dbTable.beginLoading();
-				if ( Global.db.getSelectedDBTable() == dbTable )
+				if ( Global.db.getSelectedURLs() == dbTable )
 					Global.gui.refreshFileSelection();
 				service.restart();
 			}
@@ -91,20 +93,20 @@ public class StdURLsIO extends URLsIO {
 
 	@Override
 	public void saveAllFiles ( ) {
-		for ( DBTable record: Global.db.getTables() )
+		for ( DBURLs record: Global.db.getURLsList() )
 			saveFile(record);
 	}
 
 	@Override
 	public void saveSelectedFile ( ) {
-		saveFile(Global.db.getSelectedDBTable());
+		saveFile(Global.db.getSelectedURLs());
 	}
 
-	public void saveFile ( final DBTable record ) {
+	public void saveFile ( final DBURLs record ) {
 		if ( record != null && record.isDirty() ) {
 			final Path filePath = record.getPath();
 			boolean success = false;
-			try ( final BufferedWriter writer = Files.newBufferedWriter(filePath,Global.resourceLoader.getCharset()) ) {
+			try ( final BufferedWriter writer = Files.newBufferedWriter(filePath,Global.settings.getDefaultCharset()) ) {
 				record.write(writer);
 				success = true;
 			} catch ( final IOException e ) {
@@ -116,16 +118,16 @@ public class StdURLsIO extends URLsIO {
 	}
 
 	private class URLsLoadProgressListener implements ChangeListener<Number> {
-		private final DBTable record;
+		private final DBURLs record;
 
-		public URLsLoadProgressListener ( final DBTable record ) {
+		public URLsLoadProgressListener ( final DBURLs record ) {
 			this.record = record;
 		}
 
 		@Override
 		public void changed ( final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue ) {
 			final int percentLoaded = (int) (newValue.doubleValue() * 100);
-			final String listLabel = Global.textGenerator.getFileListLabel(record,percentLoaded);
+			final String listLabel = Global.labelProvider.getFileListLabel(record,percentLoaded);
 			record.setListLabel(listLabel);
 			Global.gui.refreshFileListView();
 			Global.gui.refreshFileInfo();
@@ -144,16 +146,16 @@ public class StdURLsIO extends URLsIO {
 
 	private final class FileLoadSucceededListener implements EventHandler<WorkerStateEvent> {
 
-		private final DBTable record;
+		private final DBURLs dbURLs;
 
-		public FileLoadSucceededListener ( final DBTable record ) {
-			this.record = record;
+		public FileLoadSucceededListener ( final DBURLs record ) {
+			this.dbURLs = record;
 		}
 
 		@Override
 		public void handle ( final WorkerStateEvent event ) {
-			record.endLoading();
-			Global.gui.recordLoaded(record);
+			dbURLs.loadingFinished();
+			Global.gui.dbURLsLoaded(dbURLs);
 		}
 
 	}

@@ -12,7 +12,7 @@ package com.github.vbsw.urlsaver.gui;
 import java.util.ArrayList;
 
 import com.github.vbsw.urlsaver.api.Global;
-import com.github.vbsw.urlsaver.db.DBTable;
+import com.github.vbsw.urlsaver.db.DBURLs;
 import com.github.vbsw.urlsaver.db.URLsSearchResult;
 import com.github.vbsw.urlsaver.utility.Parser;
 import com.github.vbsw.urlsaver.utility.WebBrowserAccess;
@@ -133,7 +133,7 @@ public class TableViews {
 		}
 
 		public void showSearchResults ( ) {
-			final DBTable record = Global.db.getSelectedDBTable();
+			final DBURLs record = Global.db.getSelectedURLs();
 			final ArrayList<URLsSearchResult> searchResult = record.getURLsSearchResults();
 			control.getItems().setAll(searchResult);
 			if ( control.getItems().size() > 0 ) {

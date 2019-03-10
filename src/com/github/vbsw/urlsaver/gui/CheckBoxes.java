@@ -1,5 +1,5 @@
 /*
- *    Copyright 2018, Vitali Baumtrok (vbsw@mailbox.org).
+ *  Copyright 2018, 2019 Vitali Baumtrok (vbsw@mailbox.org).
  * Distributed under the Boost Software License, Version 1.0.
  *      (See accompanying file LICENSE or copy at
  *        http://www.boost.org/LICENSE_1_0.txt)
@@ -10,8 +10,7 @@ package com.github.vbsw.urlsaver.gui;
 
 
 import com.github.vbsw.urlsaver.api.Global;
-import com.github.vbsw.urlsaver.api.Settings.BooleanSetting;
-import com.github.vbsw.urlsaver.settings.SettingsConfig;
+import com.github.vbsw.urlsaver.api.ISettings;
 
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
@@ -49,27 +48,27 @@ public class CheckBoxes {
 	}
 
 	private void maximize_changed ( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) {
-		final BooleanSetting windowMaximizedValue = Global.settings.getBooleanSetting(SettingsConfig.WINDOW_MAXIMIZED_ID);
-		final boolean valueChanged = windowMaximizedValue.getSaved() != newValue;
-		windowMaximizedValue.setModified(newValue);
+		final ISettings.BooleanProperty windowMaximizedValue = Global.settings.getBooleanProperty(ISettings.Property.windowMaximized);
+		final boolean valueChanged = windowMaximizedValue.savedValue != newValue;
+		windowMaximizedValue.modifiedValue = newValue;
 		maximize.setFontWeight(valueChanged);
 		stdGUI.properties.maximizeChangedProperty().set(valueChanged);
 		stdGUI.properties.refreshSettingsModifiedProperty();
 	}
 
 	private void loadAtStart_changed ( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) {
-		final BooleanSetting urlsFileAutoloadAllValue = Global.settings.getBooleanSetting(SettingsConfig.URLS_FILE_AUTOLOAD_ALL_ID);
-		final boolean valueChanged = urlsFileAutoloadAllValue.getSaved() != newValue;
-		urlsFileAutoloadAllValue.setModified(newValue);
+		final ISettings.BooleanProperty urlsFileAutoloadAllValue = Global.settings.getBooleanProperty(ISettings.Property.urlsFileAutoLoadAll);
+		final boolean valueChanged = urlsFileAutoloadAllValue.savedValue != newValue;
+		urlsFileAutoloadAllValue.modifiedValue = newValue;
 		urlsFileAutoloadAll.setFontWeight(valueChanged);
 		stdGUI.properties.loadAtStartChangedProperty().set(valueChanged);
 		stdGUI.properties.refreshSettingsModifiedProperty();
 	}
 
 	private void byPrefix_changed ( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) {
-		final BooleanSetting searchByPrefixValue = Global.settings.getBooleanSetting(SettingsConfig.SEARCH_BY_PREFIX_ID);
-		final boolean valueChanged = searchByPrefixValue.getSaved() != newValue;
-		searchByPrefixValue.setModified(newValue);
+		final ISettings.BooleanProperty searchByPrefixValue = Global.settings.getBooleanProperty(ISettings.Property.searchByPrefix);
+		final boolean valueChanged = searchByPrefixValue.savedValue != newValue;
+		searchByPrefixValue.modifiedValue = newValue;
 		byPrefix.setFontWeight(valueChanged);
 		stdGUI.properties.byPrefixChangedProperty().set(valueChanged);
 		stdGUI.properties.refreshSettingsModifiedProperty();

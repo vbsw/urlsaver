@@ -10,7 +10,8 @@ package com.github.vbsw.urlsaver.gui;
 
 
 import com.github.vbsw.urlsaver.api.Global;
-import com.github.vbsw.urlsaver.db.DBTable;
+import com.github.vbsw.urlsaver.db.DBURLs;
+import com.github.vbsw.urlsaver.db.DBURLsImport;
 
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
@@ -27,6 +28,7 @@ import javafx.scene.input.MouseEvent;
 public class ListViews {
 
 	public final Files files = new Files();
+	public final ImportURLs importURLs = new ImportURLs();
 
 	protected StdGUI stdGUI;
 
@@ -36,12 +38,14 @@ public class ListViews {
 
 	public void build ( final Parent root ) {
 		files.build(root);
+		importURLs.build(root);
 	}
 
 	private void files_keyPressed ( final KeyEvent event ) {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
 			event.consume();
+			/* select URLs tab */
 			if ( !stdGUI.tabPanes.top.urls.control.isDisable() ) {
 				stdGUI.tabPanes.top.control.getSelectionModel().select(stdGUI.tabPanes.top.urls.control);
 				stdGUI.textFields.urlSearch.control.requestFocus();
@@ -49,42 +53,82 @@ public class ListViews {
 		}
 	}
 
-	private void files_selected ( final ObservableValue<? extends DBTable> observable, final DBTable oldValue, final DBTable newValue ) {
-		Global.db.setSelectedTable(newValue);
+	private void import_keyPressed ( final KeyEvent event ) {
+		final KeyCode keyCode = event.getCode();
+		if ( keyCode == KeyCode.ENTER ) {
+			event.consume();
+			/* select filter */
+			/* TODO select filter */
+		}
+	}
+
+	private void files_selected ( final ObservableValue<? extends DBURLs> observable, final DBURLs oldValue, final DBURLs newValue ) {
+		Global.db.setSelectedURLs(newValue);
 		stdGUI.refreshFileSelection();
 		stdGUI.refreshURLsView();
 		stdGUI.refreshURLsInfo();
 	}
 
-	private ListCell<DBTable> filesCellFactory ( final ListView<DBTable> param ) {
-		final ListCell<DBTable> listCell = new FilePathListCell();
+	private void import_selected ( final ObservableValue<? extends DBURLsImport> observable, final DBURLsImport oldValue, final DBURLsImport newValue ) {
+		Global.db.setSelectedURLsImport(newValue);
+		/* TODO refresh import_selected */
+	}
+
+	private ListCell<DBURLs> filesCellFactory ( final ListView<DBURLs> param ) {
+		final ListCell<DBURLs> listCell = new DBURLsListCell();
 		return listCell;
 	}
 
 	private void filePathListViewItem_clicked ( final MouseEvent event ) {
 		if ( event.getClickCount() == 2 ) {
+			event.consume();
 			stdGUI.properties.confirmingSaveProperty().set(false);
 			stdGUI.refereshFileState();
 			stdGUI.refreshFileInfo();
 		}
 	}
 
+	private ListCell<DBURLsImport> importCellFactory ( final ListView<DBURLsImport> param ) {
+		final ListCell<DBURLsImport> listCell = new DBURLsImportListCell();
+		return listCell;
+	}
+
+	private void importPathListViewItem_clicked ( final MouseEvent event ) {
+		if ( event.getClickCount() == 2 ) {
+			event.consume();
+			/* select filter */
+			/* TODO select filter */
+		}
+	}
+
 	public final class Files {
-		public ListView<DBTable> control;
+		public ListView<DBURLs> control;
 		public boolean autoSelectRequested;
 
 		@SuppressWarnings ( "unchecked" )
 		private void build ( final Parent root ) {
-			control = (ListView<DBTable>) root.lookup("#file_list_view");
-			control.setCellFactory( ( ListView<DBTable> param ) -> filesCellFactory(param));
-			control.getSelectionModel().selectedItemProperty().addListener( ( ObservableValue<? extends DBTable> observable, DBTable oldValue, DBTable newValue ) -> files_selected(observable,oldValue,newValue));
+			control = (ListView<DBURLs>) root.lookup("#file_list_view");
+			control.setCellFactory( ( ListView<DBURLs> param ) -> filesCellFactory(param));
+			control.getSelectionModel().selectedItemProperty().addListener( ( ObservableValue<? extends DBURLs> observable, DBURLs oldValue, DBURLs newValue ) -> files_selected(observable,oldValue,newValue));
 			control.setOnKeyPressed(event -> files_keyPressed(event));
 		}
 	}
 
-	private final class FilePathListCell extends ListCell<DBTable> {
+	public final class ImportURLs {
+		public ListView<DBURLsImport> control;
+
+		@SuppressWarnings ( "unchecked" )
+		private void build ( final Parent root ) {
+			control = (ListView<DBURLsImport>) root.lookup("#import_list_view");
+			control.setCellFactory( ( ListView<DBURLsImport> param ) -> importCellFactory(param));
+			control.getSelectionModel().selectedItemProperty().addListener( ( ObservableValue<? extends DBURLsImport> observable, DBURLsImport oldValue, DBURLsImport newValue ) -> import_selected(observable,oldValue,newValue));
+			control.setOnKeyPressed(event -> import_keyPressed(event));
+		}
+	}
+
+	private final class DBURLsListCell extends ListCell<DBURLs> {
 		@Override
-		protected void updateItem ( final DBTable item, final boolean empty ) {
+		protected void updateItem ( final DBURLs item, final boolean empty ) {
 			super.updateItem(item,empty);
 			if ( empty ) {
 				setText(null);
@@ -93,6 +137,21 @@ public class ListViews {
 				final String text = item.getListLabel();
 				setText(text);
 				setOnMouseClicked(event -> filePathListViewItem_clicked(event));
+			}
+		}
+	}
+
+	private final class DBURLsImportListCell extends ListCell<DBURLsImport> {
+		@Override
+		protected void updateItem ( final DBURLsImport item, final boolean empty ) {
+			super.updateItem(item,empty);
+			if ( empty ) {
+				setText(null);
+				setOnMouseClicked(null);
+			} else {
+				final String text = item.getListLabel();
+				setText(text);
+				setOnMouseClicked(event -> importPathListViewItem_clicked(event));
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2018, Vitali Baumtrok (vbsw@mailbox.org).
+ *  Copyright 2018, 2019 Vitali Baumtrok (vbsw@mailbox.org).
  * Distributed under the Boost Software License, Version 1.0.
  *      (See accompanying file LICENSE or copy at
  *        http://www.boost.org/LICENSE_1_0.txt)
@@ -66,16 +66,18 @@ public class TabPanes {
 	public final class Top {
 		public final Files files = new Files();
 		public final URLs urls = new URLs();
-		public final About about = new About();
+		public final ImportUrls importUrls = new ImportUrls(); /* can't use "import" as designator */
 		public final Settings settings = new Settings();
+		public final About about = new About();
 		public TabPane control;
 
 		private void build ( final Parent root ) {
 			control = (TabPane) root.lookup("#top_tab_pane");
 			files.build(control,root);
 			urls.build(control,root);
-			about.build(control,root);
+			importUrls.build(control,root);
 			settings.build(control,root);
+			about.build(control,root);
 			control.getSelectionModel().selectedItemProperty().addListener( ( ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue ) -> stdGUI.tabPanes.topTab_selected(observable,oldValue,newValue));
 		}
 	}
@@ -95,9 +97,15 @@ public class TabPanes {
 		}
 	}
 
-	public final class About extends CustomTab {
+	public final class ImportUrls extends CustomTab {
 		private void build ( final TabPane topPane, final Parent root ) {
-			control = stdGUI.tabPanes.getTab(topPane,"about_tab");
+			control = stdGUI.tabPanes.getTab(topPane,"import_tab");
+			control.disableProperty().bind(Bindings.not(stdGUI.properties.urlsAvailableProperty()));
+		}
+
+		public void select ( ) {
+			stdGUI.tabPanes.top.control.getSelectionModel().select(control);
+			stdGUI.tabPanes.top.control.requestFocus();
 		}
 	}
 
@@ -109,6 +117,12 @@ public class TabPanes {
 		public void select ( ) {
 			stdGUI.tabPanes.top.control.getSelectionModel().select(control);
 			stdGUI.tabPanes.top.control.requestFocus();
+		}
+	}
+
+	public final class About extends CustomTab {
+		private void build ( final TabPane topPane, final Parent root ) {
+			control = stdGUI.tabPanes.getTab(topPane,"about_tab");
 		}
 	}
 

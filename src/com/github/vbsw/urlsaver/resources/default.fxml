@@ -41,12 +41,12 @@
                      </children>
                   </HBox>
                   <ListView fx:id="file_list_view" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                  <TextField fx:id="file_name_tf" editable="false" />
+                  <TextField fx:id="file_name_tf" editable="false" promptText="path" />
                   <HBox prefHeight="0.0" prefWidth="710.0" spacing="5.0">
                      <children>
-                        <Label fx:id="files_urls_count_label" prefHeight="17.0" prefWidth="200.0" text="URLs ?" />
-                        <Label fx:id="files_tags_count_label" prefWidth="200.0" text="Tags ?" />
-                        <Label fx:id="files_size_label" prefWidth="200.0" text="Size ?" />
+                        <Label fx:id="files_urls_count_label" minHeight="25.0" minWidth="200.0" prefHeight="25.0" prefWidth="200.0" text="URLs ?" />
+                        <Label fx:id="files_tags_count_label" minHeight="25.0" minWidth="200.0" prefHeight="25.0" prefWidth="200.0" text="Tags ?" />
+                        <Label fx:id="files_size_label" minHeight="25.0" minWidth="200.0" prefHeight="25.0" prefWidth="200.0" text="Size ?" />
                      </children>
                      <padding>
                         <Insets left="5.0" />
@@ -54,7 +54,7 @@
                   </HBox>
                </children>
                <padding>
-                  <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
                </padding>
             </VBox>
          </content></Tab>
@@ -110,6 +110,42 @@
                </padding>
             </VBox>
          </content></Tab>
+      <Tab fx:id="import_tab" disable="true" text="Import">
+         <content>
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+               <children>
+                  <HBox spacing="5.0">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <children>
+                        <Button mnemonicParsing="false" text="Refresh List" />
+                        <AnchorPane prefHeight="25.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                        <Button disable="true" mnemonicParsing="false" prefHeight="25.0" text="Sim. Import" />
+                     </children>
+                  </HBox>
+                  <ListView fx:id="import_list_view" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                  <TextField promptText="import by keywords (empty means all)" />
+                  <HBox spacing="5.0">
+                     <children>
+                        <Label fx:id="import_urls_count_label" minHeight="25.0" minWidth="200.0" prefHeight="25.0" prefWidth="200.0" text="URLs ?" />
+                        <Label fx:id="import_tags_count_label" minHeight="25.0" minWidth="200.0" prefHeight="25.0" prefWidth="200.0" text="Tags ?" />
+                        <AnchorPane HBox.hgrow="ALWAYS" />
+                        <Button disable="true" mnemonicParsing="false" text="Cancel" />
+                        <Button disable="true" mnemonicParsing="false" text="Import" />
+                        <Button disable="true" mnemonicParsing="false" text="Import, OK" />
+                     </children>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
+               </padding>
+            </VBox>
+         </content>
+      </Tab>
       <Tab fx:id="settings_tab" text="Settings">
          <content>
             <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
@@ -199,12 +235,12 @@
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Version 0.5.0" />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Version 0.6.0" />
                         <Label maxWidth="1.7976931348623157E308" text="  " />
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="URL Saver is a tool to manage URLs by keywords." />
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Source code is at https://github.com/vbsw/urlsaver." />
                         <Label maxWidth="1.7976931348623157E308" text="  " />
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Copyright 2018, Vitali Baumtrok (vbsw@mailbox.org)." />
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Copyright 2018, 2019 Vitali Baumtrok (vbsw@mailbox.org)." />
                         <Label maxWidth="1.7976931348623157E308" text="  " />
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="URL Saver is distributed under the terms of the" />
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Boost Software License, version 1.0." />

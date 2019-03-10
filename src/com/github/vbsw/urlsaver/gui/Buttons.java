@@ -1,5 +1,5 @@
 /*
- *    Copyright 2018, Vitali Baumtrok (vbsw@mailbox.org).
+ *  Copyright 2018, 2019 Vitali Baumtrok (vbsw@mailbox.org).
  * Distributed under the Boost Software License, Version 1.0.
  *      (See accompanying file LICENSE or copy at
  *        http://www.boost.org/LICENSE_1_0.txt)
@@ -15,12 +15,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 
 import com.github.vbsw.urlsaver.api.Global;
-import com.github.vbsw.urlsaver.api.Settings;
-import com.github.vbsw.urlsaver.api.URLMeta;
-import com.github.vbsw.urlsaver.db.DBTable;
+import com.github.vbsw.urlsaver.api.ISettings;
+import com.github.vbsw.urlsaver.api.URLMetaDefinition;
+import com.github.vbsw.urlsaver.db.DBURLs;
 import com.github.vbsw.urlsaver.db.DynArrayOfString;
 import com.github.vbsw.urlsaver.db.URLsSearchResult;
-import com.github.vbsw.urlsaver.settings.SettingsConfig;
 import com.github.vbsw.urlsaver.utility.Converter;
 import com.github.vbsw.urlsaver.utility.Parser;
 import com.github.vbsw.urlsaver.utility.WebBrowserAccess;
@@ -95,15 +94,15 @@ public class Buttons {
 	}
 
 	public void confirmURLEdit ( ) {
-		final DBTable selectedDBTable = Global.db.getSelectedDBTable();
+		final DBURLs selectedDBTable = Global.db.getSelectedURLs();
 		final String urlTyped = Parser.trim(stdGUI.textFields.url.control.getText());
 		final int urlIndex = selectedDBTable.getURLIndex(urlTyped);
 		final DynArrayOfString tags = Converter.toDynArrayListSorted(stdGUI.textAreas.tags.control.getText());
 		final String score = stdGUI.comboBoxes.score.getScoreAsString();
 		final String urlDate = stdGUI.datePickers.urlDate.getDateAsString();
 		selectedDBTable.setTags(urlIndex,tags);
-		selectedDBTable.setMetaData(urlIndex,URLMeta.SCORE,score);
-		selectedDBTable.setMetaData(urlIndex,URLMeta.DATE,urlDate);
+		selectedDBTable.setMetaData(urlIndex,URLMetaDefinition.SCORE,score);
+		selectedDBTable.setMetaData(urlIndex,URLMetaDefinition.DATE,urlDate);
 
 		final String tagsString = selectedDBTable.getTagsAsString(urlIndex);
 		final URLsSearchResult urlsResult = stdGUI.tableViews.urls.control.getSelectionModel().getSelectedItem();
@@ -116,7 +115,7 @@ public class Buttons {
 	}
 
 	public void confirmURLDelete ( ) {
-		final DBTable record = Global.db.getSelectedDBTable();
+		final DBURLs record = Global.db.getSelectedURLs();
 		final String url = stdGUI.tableViews.urls.control.getSelectionModel().getSelectedItem().getURL();
 		final int urlIndex = record.getURLIndex(url);
 		final int selectedIndex = stdGUI.tableViews.urls.control.getSelectionModel().getSelectedIndex();
@@ -134,7 +133,7 @@ public class Buttons {
 	}
 
 	public void confirmURLCreate ( ) {
-		final DBTable selectedRecord = Global.db.getSelectedDBTable();
+		final DBURLs selectedRecord = Global.db.getSelectedURLs();
 		final String url = Parser.trim(stdGUI.textFields.url.control.getText());
 		final String score = stdGUI.comboBoxes.score.getScoreAsString();
 		final String urlDate = stdGUI.datePickers.urlDate.getDateAsString();
@@ -142,8 +141,8 @@ public class Buttons {
 		final ArrayList<String> tags = Converter.toArrayList(stdGUI.textAreas.tags.control.getText());
 		for ( final String tag: tags )
 			selectedRecord.addTagToUrl(urlIndex,tag);
-		selectedRecord.setMetaData(urlIndex,URLMeta.SCORE,score);
-		selectedRecord.setMetaData(urlIndex,URLMeta.DATE,urlDate);
+		selectedRecord.setMetaData(urlIndex,URLMetaDefinition.SCORE,score);
+		selectedRecord.setMetaData(urlIndex,URLMetaDefinition.DATE,urlDate);
 		final String tagsString = selectedRecord.getTagsAsString(urlIndex);
 		stdGUI.textAreas.tags.control.setText(tagsString);
 		stdGUI.tableViews.urls.control.requestFocus();
@@ -230,7 +229,7 @@ public class Buttons {
 
 	private void fileSaveOK_clicked ( final ActionEvent event ) {
 		Global.urlsIO.saveSelectedFile();
-		if ( !Global.db.getSelectedDBTable().isDirty() ) {
+		if ( !Global.db.getSelectedURLs().isDirty() ) {
 			stdGUI.properties.selectedFileDirtyProperty().setValue(false);
 			stdGUI.properties.confirmingSaveProperty().setValue(false);
 		}
@@ -258,9 +257,9 @@ public class Buttons {
 	}
 
 	private void urlSearch_clicked ( final ActionEvent event ) {
-		final DBTable record = Global.db.getSelectedDBTable();
+		final DBURLs record = Global.db.getSelectedURLs();
 		final String searchString = record.getURLsSearchString();
-		final boolean searchByPrefix = Global.settings.getBooleanSetting(SettingsConfig.SEARCH_BY_PREFIX_ID).getSaved();
+		final boolean searchByPrefix = Global.settings.getBooleanProperty(ISettings.Property.searchByPrefix).savedValue;
 		final DynArrayOfString searchTags = Converter.toDynArrayList(searchString);
 
 		record.searchURLs(searchTags,searchByPrefix);
@@ -370,7 +369,7 @@ public class Buttons {
 		stdGUI.properties.confirmingCreateSettingsProperty().set(false);
 		stdGUI.properties.confirmingCreateCSSProperty().set(false);
 		stdGUI.properties.confirmingCreateFXMLProperty().set(false);
-		Global.settings.resetModifiedValuesToSaved();
+		Global.settings.setModifiedValuesToSaved();
 		stdGUI.refreshSettingsView();
 	}
 
@@ -381,12 +380,12 @@ public class Buttons {
 	}
 
 	private void saveSettings_clicked ( final ActionEvent event ) {
-		final Settings settings = Global.settings;
-		final String fileName = settings.getSettings().getSaved().getFileName().toString();
+		final ISettings settings = Global.settings;
+		final String fileName = settings.getSettingsResource().getFileName().toString();
 		settings.saveSettings();
 		stdGUI.properties.settingsModifiedProperty().set(false);
-		if ( settings.isCustomSettingsSaved() ) {
-			settings.resetSavedToModified();
+		if ( Global.properties.customSettingsSavedProperty().get() ) {
+			Global.settings.setSavedValuesToModified();
 			stdGUI.properties.titleChangedProperty().set(false);
 			stdGUI.properties.widthChangedProperty().set(false);
 			stdGUI.properties.heightChangedProperty().set(false);
@@ -423,7 +422,7 @@ public class Buttons {
 	 */
 
 	private void reloadSettingsFile_clicked ( final ActionEvent event ) {
-		Global.settings.loadCustomSettings();
+		Global.settings.reloadSettings();
 		stdGUI.refreshSettingsView();
 		stdGUI.refreshTitle();
 	}
@@ -445,12 +444,12 @@ public class Buttons {
 				stdGUI.buttons.settingsReload.control.requestFocus();
 			}
 		});
-		stdGUI.listViews.files.control.getItems().addAll(Global.db.getTables());
+		stdGUI.listViews.files.control.getItems().addAll(Global.db.getURLsList());
 		stdGUI.listViews.files.control.getSelectionModel().select(selectedIndex);
 	}
 
 	private void createSettingsFile_clicked ( final ActionEvent event ) {
-		if ( Global.settings.getSettings().getSaved().exists() ) {
+		if ( Global.settings.getSettingsResource().exists() ) {
 			stdGUI.properties.confirmingCreateSettingsProperty().set(true);
 			stdGUI.refreshSettingsView();
 			stdGUI.buttons.settingsCancel.control.requestFocus();
@@ -460,7 +459,7 @@ public class Buttons {
 	}
 
 	private void createCSSFile_clicked ( final ActionEvent event ) {
-		if ( Global.settings.getCSS().getSaved().exists() ) {
+		if ( Global.settings.getCSSResource().exists() ) {
 			stdGUI.properties.confirmingCreateCSSProperty().set(true);
 			stdGUI.refreshSettingsView();
 			stdGUI.buttons.settingsCancel.control.requestFocus();
@@ -470,7 +469,7 @@ public class Buttons {
 	}
 
 	private void createFXMLFile_clicked ( final ActionEvent event ) {
-		if ( Global.settings.getFXML().getSaved().exists() ) {
+		if ( Global.settings.getFXMLResource().exists() ) {
 			stdGUI.properties.confirmingCreateFXMLProperty().set(true);
 			stdGUI.refreshSettingsView();
 			stdGUI.buttons.settingsCancel.control.requestFocus();
@@ -517,18 +516,18 @@ public class Buttons {
 	}
 
 	public void createDefaultFile_clicked ( final ActionEvent event ) {
-		final String urlsDefaultFileName = Global.settings.getStringPereference(SettingsConfig.URLS_FILE_SELECT_ID).getSaved();
-		final Path urlsDefaultFilePath = Global.resourceLoader.getProgramFile().getDirectory().resolve(urlsDefaultFileName);
+		final String urlsDefaultFileName = Global.settings.getStringProperty(ISettings.Property.urlsFileSelect).savedValue;
+		final Path urlsDefaultFilePath = Global.pathProvider.getWorkingDirectory().resolve(urlsDefaultFileName);
 		try {
 			Files.createFile(urlsDefaultFilePath);
 			stdGUI.properties.createDefaultFilePossibleProperty().set(false);
-			Global.db.initialize();
-			Global.urlsIO.initialize();
-			final ArrayList<DBTable> records = Global.db.getTables();
-			stdGUI.listViews.files.control.getItems().setAll(records);
-			if ( records.size() > 0 ) {
+			Global.db.reload();
+			Global.urlsIO.recreateServices();
+			final ArrayList<DBURLs> dbURLsAll = Global.db.getURLsList();
+			stdGUI.listViews.files.control.getItems().setAll(dbURLsAll);
+			if ( dbURLsAll.size() > 0 ) {
 				stdGUI.listViews.files.control.requestFocus();
-				stdGUI.listViews.files.control.getSelectionModel().select(records.get(0));
+				stdGUI.listViews.files.control.getSelectionModel().select(dbURLsAll.get(0));
 				Global.logger.logSuccess("default file created (" + urlsDefaultFileName + ")");
 			}
 		} catch ( final IOException e ) {
@@ -590,7 +589,7 @@ public class Buttons {
 	public final class ReloadFile extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#reload_file_btn");
-			control.disableProperty().bind(Bindings.or(Bindings.not(stdGUI.properties.selectedProperty()),stdGUI.properties.confirmingSaveProperty()));
+			control.disableProperty().bind(Bindings.or(Bindings.not(stdGUI.properties.fileSelectedProperty()),stdGUI.properties.confirmingSaveProperty()));
 			control.setOnAction(event -> stdGUI.buttons.reloadFile_clicked(event));
 			control.setOnKeyPressed(event -> stdGUI.buttons.reloadFile_keyPressed(event));
 		}
@@ -599,7 +598,7 @@ public class Buttons {
 	public final class ReloadAllFiles extends CustomButton {
 		private void build ( final Parent root ) {
 			control = (Button) root.lookup("#reload_all_files_btn");
-			control.disableProperty().bind(Bindings.or(Bindings.not(stdGUI.properties.selectedProperty()),stdGUI.properties.confirmingSaveProperty()));
+			control.disableProperty().bind(Bindings.or(Bindings.not(stdGUI.properties.fileSelectedProperty()),stdGUI.properties.confirmingSaveProperty()));
 			control.setOnAction(event -> stdGUI.buttons.reloadAllFiles_clicked(event));
 			control.setOnKeyPressed(event -> stdGUI.buttons.reloadAllFiles_keyPressed(event));
 		}

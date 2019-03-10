@@ -1,5 +1,5 @@
 /*
- *    Copyright 2018, Vitali Baumtrok (vbsw@mailbox.org).
+ *  Copyright 2018, 2019 Vitali Baumtrok (vbsw@mailbox.org).
  * Distributed under the Boost Software License, Version 1.0.
  *      (See accompanying file LICENSE or copy at
  *        http://www.boost.org/LICENSE_1_0.txt)
@@ -10,11 +10,9 @@ package com.github.vbsw.urlsaver.gui;
 
 
 import com.github.vbsw.urlsaver.api.Global;
-import com.github.vbsw.urlsaver.api.Settings.IntSetting;
-import com.github.vbsw.urlsaver.api.Settings.StringSetting;
-import com.github.vbsw.urlsaver.db.DBTable;
+import com.github.vbsw.urlsaver.api.ISettings;
+import com.github.vbsw.urlsaver.db.DBURLs;
 import com.github.vbsw.urlsaver.db.DynArrayOfString;
-import com.github.vbsw.urlsaver.settings.SettingsConfig;
 import com.github.vbsw.urlsaver.utility.Converter;
 import com.github.vbsw.urlsaver.utility.Parser;
 
@@ -58,7 +56,7 @@ public class TextFields {
 	}
 
 	public void urlSearch_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
-		final DBTable record = Global.db.getSelectedDBTable();
+		final DBURLs record = Global.db.getSelectedURLs();
 		if ( newValue != null )
 			record.setURLsSearchString(newValue);
 		else
@@ -66,9 +64,9 @@ public class TextFields {
 	}
 
 	public void urlSearch_enterPressed ( final ActionEvent event ) {
-		final DBTable record = Global.db.getSelectedDBTable();
+		final DBURLs record = Global.db.getSelectedURLs();
 		final String searchString = record.getURLsSearchString();
-		final boolean searchByPrefix = Global.settings.getBooleanSetting(SettingsConfig.SEARCH_BY_PREFIX_ID).getSaved();
+		final boolean searchByPrefix = Global.settings.getBooleanProperty(ISettings.Property.searchByPrefix).savedValue;
 		final DynArrayOfString searchTags = Converter.toDynArrayList(searchString);
 
 		record.searchURLs(searchTags,searchByPrefix);
@@ -79,7 +77,7 @@ public class TextFields {
 
 	public void url_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final String urlTyped = Parser.trim(url.control.getText());
-		final DBTable selectedDBTable = Global.db.getSelectedDBTable();
+		final DBURLs selectedDBTable = Global.db.getSelectedURLs();
 		final boolean urlExists = selectedDBTable.getURLIndex(urlTyped) >= 0;
 		final boolean urlModified = urlTyped.length() > 0 && !urlExists;
 		stdGUI.properties.urlExistsProperty().set(urlExists);
@@ -89,9 +87,9 @@ public class TextFields {
 
 	private void title_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final String trimmedValue = Parser.trim(newValue);
-		final StringSetting windowTitleSetting = Global.settings.getStringPereference(SettingsConfig.WINDOW_TITLE_ID);
-		final boolean valueChanged = !windowTitleSetting.getSaved().equals(trimmedValue);
-		windowTitleSetting.setModified(newValue);
+		final ISettings.StringProperty windowTitleSetting = Global.settings.getStringProperty(ISettings.Property.windowTitle);
+		final boolean valueChanged = !windowTitleSetting.savedValue.equals(trimmedValue);
+		windowTitleSetting.modifiedValue = newValue;
 		title.setFontWeight(valueChanged);
 		stdGUI.properties.titleChangedProperty().set(valueChanged);
 		stdGUI.properties.refreshSettingsModifiedProperty();
@@ -100,10 +98,10 @@ public class TextFields {
 	private void width_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final int newValueInt = Converter.toUnsignedInteger(newValue);
 		final String newValueStr = Integer.toString(newValueInt);
-		final IntSetting windowWidthSetting = Global.settings.getIntSetting(SettingsConfig.WINDOW_WIDTH_ID);
-		final boolean valueChanged = newValueInt != windowWidthSetting.getSaved();
+		final ISettings.IntProperty windowWidthSetting = Global.settings.getIntProperty(ISettings.Property.windowWidth);
+		final boolean valueChanged = newValueInt != windowWidthSetting.savedValue;
 		if ( newValueStr.equals(newValue) ) {
-			windowWidthSetting.setModified(newValueInt);
+			windowWidthSetting.modifiedValue = newValueInt;
 			width.setFontWeight(valueChanged);
 			stdGUI.properties.widthChangedProperty().set(valueChanged);
 			stdGUI.properties.refreshSettingsModifiedProperty();
@@ -116,10 +114,10 @@ public class TextFields {
 	private void height_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final int newValueInt = Converter.toUnsignedInteger(newValue);
 		final String newValueStr = Integer.toString(newValueInt);
-		final IntSetting windowHeightSetting = Global.settings.getIntSetting(SettingsConfig.WINDOW_HEIGHT_ID);
-		final boolean valueChanged = newValueInt != windowHeightSetting.getSaved();
+		final ISettings.IntProperty windowHeightSetting = Global.settings.getIntProperty(ISettings.Property.windowHeight);
+		final boolean valueChanged = newValueInt != windowHeightSetting.savedValue;
 		if ( newValueStr.equals(newValue) ) {
-			windowHeightSetting.setModified(newValueInt);
+			windowHeightSetting.modifiedValue = newValueInt;
 			height.setFontWeight(valueChanged);
 			stdGUI.properties.heightChangedProperty().set(valueChanged);
 			stdGUI.properties.refreshSettingsModifiedProperty();
@@ -131,9 +129,9 @@ public class TextFields {
 
 	private void urlsFileExtension_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final String trimmedValue = Parser.trim(newValue);
-		final StringSetting urlsFileExtensionValue = Global.settings.getStringPereference(SettingsConfig.URLS_FILE_EXTENSION_ID);
-		final boolean valueChanged = !trimmedValue.equals(urlsFileExtensionValue.getSaved());
-		urlsFileExtensionValue.setModified(trimmedValue);
+		final ISettings.StringProperty urlsFileExtensionValue = Global.settings.getStringProperty(ISettings.Property.urlsFileExtension);
+		final boolean valueChanged = !trimmedValue.equals(urlsFileExtensionValue.savedValue);
+		urlsFileExtensionValue.modifiedValue = trimmedValue;
 		urlsFileExtension.setFontWeight(valueChanged);
 		stdGUI.properties.urlsFileExtensionChangedProperty().set(valueChanged);
 		stdGUI.properties.refreshSettingsModifiedProperty();
@@ -141,9 +139,9 @@ public class TextFields {
 
 	private void urlsFileSelect_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
 		final String trimmedValue = Parser.trim(newValue);
-		final StringSetting urlsFileSelectValue = Global.settings.getStringPereference(SettingsConfig.URLS_FILE_SELECT_ID);
-		final boolean valueChanged = !trimmedValue.equals(urlsFileSelectValue.getSaved());
-		urlsFileSelectValue.setModified(trimmedValue);
+		final ISettings.StringProperty urlsFileSelectValue = Global.settings.getStringProperty(ISettings.Property.urlsFileSelect);
+		final boolean valueChanged = !trimmedValue.equals(urlsFileSelectValue.savedValue);
+		urlsFileSelectValue.modifiedValue = trimmedValue;
 		urlsFileSelect.setFontWeight(valueChanged);
 		stdGUI.properties.urlsFileSelectChangedProperty().set(valueChanged);
 		stdGUI.properties.refreshSettingsModifiedProperty();

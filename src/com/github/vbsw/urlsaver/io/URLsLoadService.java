@@ -14,9 +14,8 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import com.github.vbsw.urlsaver.api.ResourceLoader;
-import com.github.vbsw.urlsaver.api.URLMeta;
-import com.github.vbsw.urlsaver.db.DBTable;
+import com.github.vbsw.urlsaver.api.URLMetaDefinition;
+import com.github.vbsw.urlsaver.db.DBURLs;
 import com.github.vbsw.urlsaver.utility.Parser;
 
 import javafx.concurrent.Service;
@@ -27,14 +26,14 @@ import javafx.concurrent.Worker;
 /**
  * @author Vitali Baumtrok
  */
-public final class URLsLoadService extends Service<DBTable> {
+public final class URLsLoadService extends Service<DBURLs> {
 
-	protected final ResourceLoader resourceLoader;
-	protected final URLMeta urlMeta;
-	public final DBTable dbTable;
+	protected final Charset inputCharset;
+	protected final URLMetaDefinition urlMeta;
+	public final DBURLs dbTable;
 
-	public URLsLoadService ( final ResourceLoader resourceLoader, final URLMeta urlMeta, final DBTable dbTable ) {
-		this.resourceLoader = resourceLoader;
+	public URLsLoadService ( final Charset inputCharset, final URLMetaDefinition urlMeta, final DBURLs dbTable ) {
+		this.inputCharset = inputCharset;
 		this.urlMeta = urlMeta;
 		this.dbTable = dbTable;
 	}
@@ -44,25 +43,25 @@ public final class URLsLoadService extends Service<DBTable> {
 	}
 
 	@Override
-	protected Task<DBTable> createTask ( ) {
-		final Task<DBTable> loadingTask = new URLsLoadTask(urlMeta,dbTable,resourceLoader.getCharset());
+	protected Task<DBURLs> createTask ( ) {
+		final Task<DBURLs> loadingTask = new URLsLoadTask(urlMeta,dbTable,inputCharset);
 		return loadingTask;
 	}
 
-	private static final class URLsLoadTask extends Task<DBTable> {
+	private static final class URLsLoadTask extends Task<DBURLs> {
 
-		private final URLMeta urlMeta;
-		private final DBTable dbTable;
+		private final URLMetaDefinition urlMeta;
+		private final DBURLs dbTable;
 		private final Charset charset;
 
-		public URLsLoadTask ( final URLMeta urlMeta, final DBTable dbTable, final Charset charset ) {
+		public URLsLoadTask ( final URLMetaDefinition urlMeta, final DBURLs dbTable, final Charset charset ) {
 			this.urlMeta = urlMeta;
 			this.dbTable = dbTable;
 			this.charset = charset;
 		}
 
 		@Override
-		protected DBTable call ( ) throws Exception {
+		protected DBURLs call ( ) throws Exception {
 			final byte[] bytes = getBytesFromFile(dbTable.getPath());
 			if ( bytes != null && bytes.length > 0 )
 				parseURLs(bytes);
@@ -160,22 +159,22 @@ public final class URLsLoadService extends Service<DBTable> {
 			final int metaKeyID = urlMeta.metaKeyID;
 			if ( !metaValue.isEmpty() ) {
 				switch ( metaKeyID ) {
-					case URLMeta.DATE:
-					case URLMeta.SCORE:
+					case URLMetaDefinition.DATE:
+					case URLMetaDefinition.SCORE:
 					dbTable.setMetaData(indexURL,metaKeyID,metaValue);
 					break;
-					case URLMeta.UNKNOWN:
+					case URLMetaDefinition.UNKNOWN:
 					System.out.println("unsuported key \"" + urlMeta.metaKey + "\" in \"" + dbTable.getFileName() + "\"");
 					break;
 				}
 			} else {
 				switch ( metaKeyID ) {
-					case URLMeta.DATE:
-					case URLMeta.SCORE:
+					case URLMetaDefinition.DATE:
+					case URLMetaDefinition.SCORE:
 					System.out.println("key \"" + urlMeta.metaKey + "\" has no value in " + dbTable.getFileName());
 					break;
 
-					case URLMeta.UNKNOWN:
+					case URLMetaDefinition.UNKNOWN:
 					System.out.println("unsuported key \"" + urlMeta.metaKey + "\" in \"" + dbTable.getFileName() + "\"");
 				}
 			}

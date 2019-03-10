@@ -18,6 +18,8 @@ public abstract class ViewSelector {
 
 	public abstract void selectURLsView ( );
 
+	public abstract void selectImportView ( );
+
 	public abstract void selectSettingsView ( );
 
 	public abstract void selectAboutView ( );

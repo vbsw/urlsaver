@@ -15,13 +15,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-import com.github.vbsw.urlsaver.api.URLMeta;
+import com.github.vbsw.urlsaver.api.URLMetaDefinition;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public class DBTable {
+public class DBURLs {
 
 	private static final int INITIAL_CAPACITY = 250;
 
@@ -44,11 +44,11 @@ public class DBTable {
 	private int selectedURLIndex;
 	private long fileSize;
 
-	public DBTable ( ) {
+	public DBURLs ( ) {
 		setStubs();
 	}
 
-	public DBTable ( final Path path ) {
+	public DBURLs ( final Path path ) {
 		setPath(path);
 	}
 
@@ -208,8 +208,8 @@ public class DBTable {
 					writer.write(tagsOnURL.values[j]);
 				}
 			}
-			final String score = metaDataOnURLs.values[i].values[URLMeta.SCORE];
-			final String date = metaDataOnURLs.values[i].values[URLMeta.DATE];
+			final String score = metaDataOnURLs.values[i].values[URLMetaDefinition.SCORE];
+			final String date = metaDataOnURLs.values[i].values[URLMetaDefinition.DATE];
 			final boolean metaExists = score != null || date != null;
 			if ( metaExists ) {
 				writer.newLine();
@@ -247,7 +247,7 @@ public class DBTable {
 		urlsSearch.getResults().clear();
 	}
 
-	public void endLoading ( ) {
+	public void loadingFinished ( ) {
 		refreshFileSize();
 		urlsCountSaved = urls.valuesLength;
 		tagsCountSaved = tags.valuesLength;
@@ -256,7 +256,7 @@ public class DBTable {
 	}
 
 	public void saveComplete ( ) {
-		endLoading();
+		loadingFinished();
 	}
 
 	public boolean isEqualTags ( final int urlIndex, final DynArrayOfString tags ) {

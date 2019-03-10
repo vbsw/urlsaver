@@ -10,7 +10,7 @@ package com.github.vbsw.urlsaver.gui;
 
 
 import com.github.vbsw.urlsaver.api.Global;
-import com.github.vbsw.urlsaver.db.DBTable;
+import com.github.vbsw.urlsaver.db.DBURLs;
 import com.github.vbsw.urlsaver.db.DynArrayOfString;
 import com.github.vbsw.urlsaver.utility.Converter;
 import com.github.vbsw.urlsaver.utility.Parser;
@@ -40,7 +40,7 @@ public class TextAreas {
 	}
 
 	public void tags_changed ( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
-		final DBTable selectedDBTable = Global.db.getSelectedDBTable();
+		final DBURLs selectedDBTable = Global.db.getSelectedURLs();
 		final String urlTyped = Parser.trim(stdGUI.textFields.url.control.getText());
 		final int urlIndex = selectedDBTable.getURLIndex(urlTyped);
 		if ( urlIndex >= 0 ) {

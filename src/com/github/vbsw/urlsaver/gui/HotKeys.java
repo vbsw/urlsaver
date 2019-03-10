@@ -38,9 +38,13 @@ public class HotKeys {
 
 		} else if ( keyCode == KeyCode.F3 ) {
 			event.consume();
-			Global.gui.getViewSelector().selectSettingsView();
+			Global.gui.getViewSelector().selectImportView();
 
 		} else if ( keyCode == KeyCode.F4 ) {
+			event.consume();
+			Global.gui.getViewSelector().selectSettingsView();
+
+		} else if ( keyCode == KeyCode.F5 ) {
 			event.consume();
 			Global.gui.getViewSelector().selectAboutView();
 
@@ -48,7 +52,7 @@ public class HotKeys {
 			event.consume();
 			Global.gui.confirmAny();
 			Global.urlsIO.saveSelectedFile();
-			if ( !Global.db.getSelectedDBTable().isDirty() ) {
+			if ( !Global.db.getSelectedURLs().isDirty() ) {
 				Global.properties.selectedFileDirtyProperty().setValue(false);
 				((StdGUI) Global.gui).properties.confirmingSaveProperty().setValue(false);
 			}

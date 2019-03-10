@@ -12,7 +12,7 @@ package com.github.vbsw.urlsaver.db;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.github.vbsw.urlsaver.api.URLMeta;
+import com.github.vbsw.urlsaver.api.URLMetaDefinition;
 
 
 /**
@@ -160,8 +160,8 @@ public class URLsSearch {
 	private void fillResults ( ) {
 		for ( final String url: resultsStrings ) {
 			final int urlIndex = urls.binarySearch(url);
-			final String accessed = metaDataOnURLs.values[urlIndex].values[URLMeta.DATE];
-			final String score = metaDataOnURLs.values[urlIndex].values[URLMeta.SCORE];
+			final String accessed = metaDataOnURLs.values[urlIndex].values[URLMetaDefinition.DATE];
+			final String score = metaDataOnURLs.values[urlIndex].values[URLMetaDefinition.SCORE];
 			final URLsSearchResult result = new URLsSearchResult();
 			result.setURL(url);
 			result.setDate(accessed);

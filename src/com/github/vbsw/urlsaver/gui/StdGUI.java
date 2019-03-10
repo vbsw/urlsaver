@@ -1,5 +1,5 @@
 /*
- *    Copyright 2018, Vitali Baumtrok (vbsw@mailbox.org).
+ *  Copyright 2018, 2019 Vitali Baumtrok (vbsw@mailbox.org).
  * Distributed under the Boost Software License, Version 1.0.
  *      (See accompanying file LICENSE or copy at
  *        http://www.boost.org/LICENSE_1_0.txt)
@@ -11,18 +11,14 @@ package com.github.vbsw.urlsaver.gui;
 
 import java.util.ArrayList;
 
-import javax.swing.text.html.CSS;
-
-import com.github.vbsw.urlsaver.api.GUI;
+import com.github.vbsw.urlsaver.api.IGUI;
 import com.github.vbsw.urlsaver.api.Global;
-import com.github.vbsw.urlsaver.api.Settings;
-import com.github.vbsw.urlsaver.api.Settings.BooleanSetting;
-import com.github.vbsw.urlsaver.api.TextGenerator;
+import com.github.vbsw.urlsaver.api.ILabelProvider;
+import com.github.vbsw.urlsaver.api.ISettings;
 import com.github.vbsw.urlsaver.api.ViewSelector;
-import com.github.vbsw.urlsaver.db.DBTable;
+import com.github.vbsw.urlsaver.db.DBURLs;
 import com.github.vbsw.urlsaver.db.URLsSearchResult;
 import com.github.vbsw.urlsaver.gui.CheckBoxes.CustomCheckBox;
-import com.github.vbsw.urlsaver.settings.SettingsConfig;
 import com.github.vbsw.urlsaver.utility.Parser;
 
 import javafx.application.Platform;
@@ -38,9 +34,9 @@ import javafx.stage.WindowEvent;
 /**
  * @author Vitali Baumtrok
  */
-public class StdGUI extends GUI {
+public class StdGUI implements IGUI {
 
-	public StdProperties properties;
+	public Properties properties;
 
 	public ViewSelector viewSelector;
 	public HotKeys hotKeys;
@@ -55,16 +51,14 @@ public class StdGUI extends GUI {
 	public DatePickers datePickers;
 
 	public Scene scene;
-	public CSS css;
 
 	private void setWindowTitle ( final String title ) {
 		final Stage stage = (Stage) scene.getWindow();
 		stage.setTitle(title);
 	}
 
-	@Override
 	public void initialize ( final Stage primaryStage ) {
-		this.properties = (StdProperties) Global.properties;
+		this.properties = (Properties) Global.properties;
 		this.viewSelector = new StdViewSelector(this);
 		this.hotKeys = new HotKeys();
 		this.buttons = new Buttons(this);
@@ -77,28 +71,28 @@ public class StdGUI extends GUI {
 		this.comboBoxes = new ComboBoxes(this);
 		this.datePickers = new DatePickers(this);
 
-		final int windowWidth = Global.settings.getIntSetting(SettingsConfig.WINDOW_WIDTH_ID).getSaved();
-		final int windowHeight = Global.settings.getIntSetting(SettingsConfig.WINDOW_HEIGHT_ID).getSaved();
-		final String urlsFileToSelect = Global.settings.getStringPereference(SettingsConfig.URLS_FILE_SELECT_ID).getSaved();
+		final int windowWidth = Global.settings.getIntProperty(ISettings.Property.windowWidth).savedValue;
+		final int windowHeight = Global.settings.getIntProperty(ISettings.Property.windowHeight).savedValue;
+		final String urlsFileToSelect = Global.settings.getStringProperty(ISettings.Property.urlsFileSelect).savedValue;
 		final Parent rootStub = new AnchorPane();
 		scene = new Scene(rootStub,windowWidth,windowHeight);
 		scene.addEventFilter(KeyEvent.KEY_PRESSED,event -> hotKeys.keyPressed(event));
 		reloadFXML();
 		reloadCSS();
-		listViews.files.control.getItems().addAll(Global.db.getTables());
-		listViews.files.autoSelectRequested = Global.settings.getBooleanSetting(SettingsConfig.URLS_FILE_AUTOLOAD_ALL_ID).getSaved() && Global.db.getTableByFileName(urlsFileToSelect) != null;
+		listViews.files.control.getItems().addAll(Global.db.getURLsList());
+		listViews.files.autoSelectRequested = Global.settings.getBooleanProperty(ISettings.Property.urlsFileAutoLoadAll).savedValue && Global.db.getURLsByFileName(urlsFileToSelect) != null;
 		refreshCreateDefaultFileButton();
 
 		primaryStage.setOnCloseRequest(event -> onCloseRequest(event));
 		primaryStage.setScene(scene);
-		primaryStage.setMaximized(Global.settings.getBooleanSetting(SettingsConfig.WINDOW_MAXIMIZED_ID).getSaved());
+		primaryStage.setMaximized(Global.settings.getBooleanProperty(ISettings.Property.windowMaximized).savedValue);
 		primaryStage.show();
 
 		refreshSettingsView();
 		selectDefaultFile();
 
-		Global.urlsIO.initialize();
-		Global.urlsIO.autoLoad();
+		Global.urlsIO.recreateServices();
+		Global.urlsIO.loadDefault();
 	}
 
 	public void onCloseRequest ( final WindowEvent event ) {
@@ -130,7 +124,7 @@ public class StdGUI extends GUI {
 
 	@Override
 	public void refreshTitle ( ) {
-		final DBTable dbTable = Global.db.getSelectedDBTable();
+		final DBURLs dbTable = Global.db.getSelectedURLs();
 		final String windowTitle = createWindowTitle(dbTable);
 		setWindowTitle(windowTitle);
 	}
@@ -140,14 +134,14 @@ public class StdGUI extends GUI {
 		return viewSelector;
 	}
 
-	public String createWindowTitle ( final DBTable record ) {
-		final String windowTitleCustom = Global.settings.getStringPereference(SettingsConfig.WINDOW_TITLE_ID).getSaved();
+	public String createWindowTitle ( final DBURLs dbURLs ) {
+		final String windowTitleCustom = Global.settings.getStringProperty(ISettings.Property.windowTitle).savedValue;
 		final String windowTitle;
-		if ( record != null )
-			if ( record.isDirty() )
-				windowTitle = windowTitleCustom + " (" + record.getFileName() + " *)";
+		if ( dbURLs != null )
+			if ( dbURLs.isDirty() )
+				windowTitle = windowTitleCustom + " (" + dbURLs.getFileName() + " *)";
 			else
-				windowTitle = windowTitleCustom + " (" + record.getFileName() + ")";
+				windowTitle = windowTitleCustom + " (" + dbURLs.getFileName() + ")";
 		else
 			windowTitle = windowTitleCustom;
 		return windowTitle;
@@ -158,10 +152,10 @@ public class StdGUI extends GUI {
 	}
 
 	private boolean isDefaultFileAvailable ( ) {
-		final ArrayList<DBTable> records = Global.db.getTables();
-		final String defaultFileName = Global.settings.getStringPereference(SettingsConfig.URLS_FILE_SELECT_ID).getSaved();
-		for ( final DBTable record: records )
-			if ( record.getFileName().equals(defaultFileName) )
+		final ArrayList<DBURLs> dbURLsAll = Global.db.getURLsList();
+		final String defaultFileName = Global.settings.getStringProperty(ISettings.Property.urlsFileSelect).savedValue;
+		for ( final DBURLs dbURLs: dbURLsAll )
+			if ( dbURLs.getFileName().equals(defaultFileName) )
 				return false;
 		return true;
 	}
@@ -182,30 +176,32 @@ public class StdGUI extends GUI {
 	}
 
 	public void reloadCSS ( ) {
-		final Settings settings = Global.settings;
+		final ISettings settings = Global.settings;
 		final String cssURI;
-		if ( settings.getCSS().getSaved().exists() ) {
-			cssURI = settings.getCSS().getSaved().getURI().toString();
-			settings.setCustomCSSLoaded(true);
+		if ( settings.getCSSResource().exists() ) {
+			cssURI = settings.getCSSResource().getURI().toString();
+			Global.properties.customCSSLoadedProperty().set(true);
 		} else {
-			cssURI = settings.getCSS().getDefault().getURI().toString();
-			settings.setCustomCSSLoaded(false);
+			cssURI = settings.getDefaultCSSResource().getURI().toString();
+			Global.properties.customCSSLoadedProperty().set(false);
 		}
 		scene.getStylesheets().clear();
 		scene.getStylesheets().add(cssURI);
 	}
 
 	public void refreshSettingsView ( ) {
-		final Settings settings = Global.settings;
-		final boolean disable = !settings.isCustomSettingsLoaded() || properties.confirmingCreateSettingsProperty().get() || properties.confirmingCreateCSSProperty().get() || properties.confirmingCreateFXMLProperty().get();
-		textFields.title.control.setText(settings.getStringPereference(SettingsConfig.WINDOW_TITLE_ID).getModified());
-		textFields.width.control.setText(Integer.toString(settings.getIntSetting(SettingsConfig.WINDOW_WIDTH_ID).getModified()));
-		textFields.height.control.setText(Integer.toString(settings.getIntSetting(SettingsConfig.WINDOW_HEIGHT_ID).getModified()));
-		textFields.urlsFileExtension.control.setText(settings.getStringPereference(SettingsConfig.URLS_FILE_EXTENSION_ID).getModified());
-		textFields.urlsFileSelect.control.setText(settings.getStringPereference(SettingsConfig.URLS_FILE_SELECT_ID).getModified());
-		refreshCheckBoxView(checkBoxes.maximize,settings.getBooleanSetting(SettingsConfig.WINDOW_MAXIMIZED_ID));
-		refreshCheckBoxView(checkBoxes.urlsFileAutoloadAll,settings.getBooleanSetting(SettingsConfig.URLS_FILE_AUTOLOAD_ALL_ID));
-		refreshCheckBoxView(checkBoxes.byPrefix,settings.getBooleanSetting(SettingsConfig.SEARCH_BY_PREFIX_ID));
+		final ISettings settings = Global.settings;
+		final boolean customSettingsLoaded = Global.properties.customSettingsLoadedProperty().get();
+		final boolean disable = !customSettingsLoaded || properties.confirmingCreateSettingsProperty().get() || properties.confirmingCreateCSSProperty().get() || properties.confirmingCreateFXMLProperty().get();
+
+		textFields.title.control.setText(settings.getStringProperty(ISettings.Property.windowTitle).modifiedValue);
+		textFields.width.control.setText(Integer.toString(settings.getIntProperty(ISettings.Property.windowWidth).modifiedValue));
+		textFields.height.control.setText(Integer.toString(settings.getIntProperty(ISettings.Property.windowHeight).modifiedValue));
+		textFields.urlsFileExtension.control.setText(settings.getStringProperty(ISettings.Property.urlsFileExtension).modifiedValue);
+		textFields.urlsFileSelect.control.setText(settings.getStringProperty(ISettings.Property.urlsFileSelect).modifiedValue);
+		refreshCheckBoxView(checkBoxes.maximize,settings.getBooleanProperty(ISettings.Property.windowMaximized));
+		refreshCheckBoxView(checkBoxes.urlsFileAutoloadAll,settings.getBooleanProperty(ISettings.Property.urlsFileAutoLoadAll));
+		refreshCheckBoxView(checkBoxes.byPrefix,settings.getBooleanProperty(ISettings.Property.searchByPrefix));
 		textFields.title.control.setDisable(disable);
 		textFields.width.control.setDisable(disable);
 		textFields.height.control.setDisable(disable);
@@ -217,40 +213,40 @@ public class StdGUI extends GUI {
 	}
 
 	public void selectDefaultFile ( ) {
-		final String urlsFileSelect = Global.settings.getStringPereference(SettingsConfig.URLS_FILE_SELECT_ID).getModified();
-		final DBTable record = Global.db.getTableByFileName(urlsFileSelect);
-		if ( record != null ) {
+		final String urlsFileSelect = Global.settings.getStringProperty(ISettings.Property.urlsFileSelect).modifiedValue;
+		final DBURLs dbURLs = Global.db.getURLsByFileName(urlsFileSelect);
+		if ( dbURLs != null ) {
 			listViews.files.control.requestFocus();
-			listViews.files.control.getSelectionModel().select(record);
+			listViews.files.control.getSelectionModel().select(dbURLs);
 		}
 	}
 
 	public void refereshFileState ( ) {
-		final DBTable record = Global.db.getSelectedDBTable();
-		if ( record != null ) {
-			properties.urlsAvailableProperty().set(record.isLoaded());
-			properties.selectedFileDirtyProperty().setValue(record.isDirty());
-			properties.selectedProperty().set(true);
+		final DBURLs dbURLs = Global.db.getSelectedURLs();
+		if ( dbURLs != null ) {
+			properties.urlsAvailableProperty().set(dbURLs.isLoaded());
+			properties.selectedFileDirtyProperty().setValue(dbURLs.isDirty());
+			properties.fileSelectedProperty().set(true);
 		} else {
 			properties.urlsAvailableProperty().set(false);
 			properties.selectedFileDirtyProperty().setValue(false);
-			properties.selectedProperty().set(false);
+			properties.fileSelectedProperty().set(false);
 		}
 	}
 
 	@Override
 	public void refreshFileInfo ( ) {
-		final DBTable record = Global.db.getSelectedDBTable();
+		final DBURLs dbURLs = Global.db.getSelectedURLs();
 		final String pathString;
 		final String urlsCountString;
 		final String tagsCountString;
 		final String fileSizeString;
-		if ( record != null ) {
-			final TextGenerator textGenerator = Global.textGenerator;
-			pathString = record.getPathAsString();
-			urlsCountString = textGenerator.getURLsCountLabel(record);
-			tagsCountString = textGenerator.getTagsCountLabel(record);
-			fileSizeString = textGenerator.getFileSizeLabel(record);
+		if ( dbURLs != null ) {
+			final ILabelProvider labelProvider = Global.labelProvider;
+			pathString = dbURLs.getPathAsString();
+			urlsCountString = labelProvider.getURLsCountLabel(dbURLs);
+			tagsCountString = labelProvider.getTagsCountLabel(dbURLs);
+			fileSizeString = labelProvider.getFileSizeLabel(dbURLs);
 		} else {
 			pathString = "";
 			urlsCountString = "";
@@ -269,16 +265,16 @@ public class StdGUI extends GUI {
 	}
 
 	@Override
-	public void recordLoaded ( final DBTable record ) {
-		final boolean fileIsAlreadySelected = (Global.db.getSelectedDBTable() == record);
+	public void dbURLsLoaded ( final DBURLs dbURLs ) {
+		final boolean fileIsAlreadySelected = (Global.db.getSelectedURLs() == dbURLs);
 
 		if ( listViews.files.autoSelectRequested ) {
-			final String urlsFileSelect = Global.settings.getStringPereference(SettingsConfig.URLS_FILE_SELECT_ID).getSaved();
-			final DBTable recordToSelect = Global.db.getTableByFileName(urlsFileSelect);
-			if ( recordToSelect == record ) {
+			final String urlsFileSelect = Global.settings.getStringProperty(ISettings.Property.urlsFileSelect).savedValue;
+			final DBURLs dbURLsToSelect = Global.db.getURLsByFileName(urlsFileSelect);
+			if ( dbURLsToSelect == dbURLs ) {
 				listViews.files.autoSelectRequested = false;
 				if ( tabPanes.top.urls.control.disabledProperty().getValue() ) {
-					listViews.files.control.getSelectionModel().select(recordToSelect);
+					listViews.files.control.getSelectionModel().select(dbURLsToSelect);
 					tabPanes.top.control.getSelectionModel().select(tabPanes.top.urls.control);
 					textFields.urlSearch.control.requestFocus();
 					refreshFileSelection();
@@ -311,26 +307,26 @@ public class StdGUI extends GUI {
 		}
 	}
 
-	private void refreshCheckBoxView ( final CustomCheckBox customCheckBox, final BooleanSetting settingsValue ) {
+	private void refreshCheckBoxView ( final CustomCheckBox customCheckBox, final ISettings.BooleanProperty booleanProperty ) {
 		if ( customCheckBox.control.isSelected() ) {
-			if ( !settingsValue.getModified() )
-				customCheckBox.control.setSelected(settingsValue.getModified());
-			else if ( !settingsValue.getSaved() )
+			if ( !booleanProperty.modifiedValue )
+				customCheckBox.control.setSelected(booleanProperty.modifiedValue);
+			else if ( !booleanProperty.savedValue )
 				customCheckBox.setFontWeight(true);
 		} else {
-			if ( settingsValue.getModified() )
-				customCheckBox.control.setSelected(settingsValue.getModified());
-			else if ( settingsValue.getSaved() )
+			if ( booleanProperty.modifiedValue )
+				customCheckBox.control.setSelected(booleanProperty.modifiedValue);
+			else if ( booleanProperty.savedValue )
 				customCheckBox.setFontWeight(true);
 		}
 	}
 
 	public void refreshURLsView ( ) {
-		final DBTable record = Global.db.getSelectedDBTable();
-		if ( record != null ) {
-			final String urlSearchString = record.getURLsSearchString();
-			final ArrayList<URLsSearchResult> urlsSearchResults = record.getURLsSearchResults();
-			final int selectedURLIndex = record.getSelectedURLIndex();
+		final DBURLs dbURLs = Global.db.getSelectedURLs();
+		if ( dbURLs != null ) {
+			final String urlSearchString = dbURLs.getURLsSearchString();
+			final ArrayList<URLsSearchResult> urlsSearchResults = dbURLs.getURLsSearchResults();
+			final int selectedURLIndex = dbURLs.getSelectedURLIndex();
 			textFields.urlSearch.control.setText(urlSearchString);
 			tableViews.urls.control.getItems().setAll(urlsSearchResults);
 			if ( selectedURLIndex >= 0 )
@@ -339,9 +335,9 @@ public class StdGUI extends GUI {
 	}
 
 	public void resetURLsProperties ( ) {
-		final DBTable selectedRecord = Global.db.getSelectedDBTable();
+		final DBURLs selectedDBURLs = Global.db.getSelectedURLs();
 		final String urlTyped = Parser.trim(textFields.url.control.getText());
-		final boolean urlExists = urlTyped.length() > 0 && selectedRecord.getURLIndex(urlTyped) >= 0;
+		final boolean urlExists = urlTyped.length() > 0 && selectedDBURLs.getURLIndex(urlTyped) >= 0;
 		properties.urlExistsProperty().set(urlExists);
 		properties.urlDeleteRequestedProperty().set(false);
 		properties.urlModifiedProperty().set(false);
@@ -351,8 +347,8 @@ public class StdGUI extends GUI {
 	}
 
 	public void refreshURLsInfo ( ) {
-		final DBTable record = Global.db.getSelectedDBTable();
-		if ( record != null ) {
+		final DBURLs dbURLs = Global.db.getSelectedURLs();
+		if ( dbURLs != null ) {
 			final URLsSearchResult selectedURL = tableViews.urls.control.getSelectionModel().getSelectedItem();
 			final int selectedURLIndex;
 			final String urlString;
@@ -360,10 +356,10 @@ public class StdGUI extends GUI {
 			final String date;
 			final String score;
 			if ( selectedURL != null ) {
-				final int urlIndex = record.getURLIndex(selectedURL.getURL());
+				final int urlIndex = dbURLs.getURLIndex(selectedURL.getURL());
 				selectedURLIndex = tableViews.urls.control.getSelectionModel().getSelectedIndex();
 				urlString = selectedURL.getURL();
-				tagsString = record.getTagsAsString(urlIndex);
+				tagsString = dbURLs.getTagsAsString(urlIndex);
 				date = selectedURL.getDate();
 				score = selectedURL.getScore();
 			} else {
@@ -373,7 +369,7 @@ public class StdGUI extends GUI {
 				date = "";
 				score = "";
 			}
-			record.setSelectedURLIndex(selectedURLIndex);
+			dbURLs.setSelectedURLIndex(selectedURLIndex);
 			textFields.url.control.setText(urlString);
 			textAreas.tags.control.setText(tagsString);
 			datePickers.urlDate.setDate(date);

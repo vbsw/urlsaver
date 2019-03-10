@@ -14,8 +14,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 import com.github.vbsw.urlsaver.api.Global;
-import com.github.vbsw.urlsaver.api.URLMeta;
-import com.github.vbsw.urlsaver.db.DBTable;
+import com.github.vbsw.urlsaver.api.URLMetaDefinition;
+import com.github.vbsw.urlsaver.db.DBURLs;
 import com.github.vbsw.urlsaver.utility.Parser;
 
 import javafx.beans.value.ObservableValue;
@@ -46,11 +46,11 @@ public class DatePickers {
 	}
 
 	private void urlDate_textChanged ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
-		final DBTable selectedDBTable = Global.db.getSelectedDBTable();
+		final DBURLs selectedDBTable = Global.db.getSelectedURLs();
 		final String urlTyped = Parser.trim(stdGUI.textFields.url.control.getText());
 		final int urlIndex = selectedDBTable.getURLIndex(urlTyped);
 		if ( urlIndex >= 0 ) {
-			final String urlDateStrOld = selectedDBTable.getMetaData(urlIndex,URLMeta.DATE);
+			final String urlDateStrOld = selectedDBTable.getMetaData(urlIndex,URLMetaDefinition.DATE);
 			final String urlDateStrNew = stdGUI.datePickers.urlDate.getDateAsString();
 			final boolean equalDates = urlDateStrOld == urlDateStrNew || urlDateStrOld != null && urlDateStrOld.equals(urlDateStrNew);
 			stdGUI.properties.urlDateModifiedProperty().set(!equalDates);

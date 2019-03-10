@@ -37,6 +37,11 @@ public class StdViewSelector extends ViewSelector {
 	}
 
 	@Override
+	public void selectImportView ( ) {
+		stdGUI.tabPanes.top.control.getSelectionModel().select(stdGUI.tabPanes.top.importUrls.control);
+	}
+
+	@Override
 	public void selectSettingsView ( ) {
 		stdGUI.tabPanes.top.control.getSelectionModel().select(stdGUI.tabPanes.top.settings.control);
 	}

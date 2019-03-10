@@ -1,5 +1,5 @@
 /*
- *    Copyright 2018, Vitali Baumtrok (vbsw@mailbox.org).
+ *  Copyright 2018, 2019 Vitali Baumtrok (vbsw@mailbox.org).
  * Distributed under the Boost Software License, Version 1.0.
  *      (See accompanying file LICENSE or copy at
  *        http://www.boost.org/LICENSE_1_0.txt)
@@ -14,7 +14,7 @@ package com.github.vbsw.urlsaver.db;
  */
 public class DynArrayOfString2 {
 
-	public static final int INITIAL_CAPACITY = 10;
+	public static final int INITIAL_CAPACITY = 7;
 
 	public DynArrayOfString[] values;
 	public int valuesLength;
