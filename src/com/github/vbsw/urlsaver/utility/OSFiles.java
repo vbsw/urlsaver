@@ -21,6 +21,9 @@ import java.util.ArrayList;
  */
 public class OSFiles {
 
+	/**
+	 * Returns unordered list of files in given directory.
+	 */
 	public static ArrayList<Path> getFilesFromDirectory ( final Path directory, final String... extensions ) {
 		final ArrayList<Path> paths = new ArrayList<Path>(10);
 		try ( final DirectoryStream<Path> filePathsStream = Files.newDirectoryStream(directory) ) {

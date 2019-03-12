@@ -30,9 +30,9 @@ public class ListViews {
 	public final Files files = new Files();
 	public final ImportURLs importURLs = new ImportURLs();
 
-	protected StdGUI stdGUI;
+	protected GUI stdGUI;
 
-	public ListViews ( final StdGUI stdGUI ) {
+	public ListViews ( final GUI stdGUI ) {
 		this.stdGUI = stdGUI;
 	}
 

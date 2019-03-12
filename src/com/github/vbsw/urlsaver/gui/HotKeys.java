@@ -54,7 +54,7 @@ public class HotKeys {
 			Global.urlsIO.saveSelectedFile();
 			if ( !Global.db.getSelectedURLs().isDirty() ) {
 				Global.properties.selectedFileDirtyProperty().setValue(false);
-				((StdGUI) Global.gui).properties.confirmingSaveProperty().setValue(false);
+				((GUI) Global.gui).properties.confirmingSaveProperty().setValue(false);
 			}
 			Global.gui.refreshFileInfo();
 			Global.gui.refreshTitle();

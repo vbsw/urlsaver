@@ -43,7 +43,7 @@ import javafx.scene.input.KeyEvent;
  */
 public class Buttons {
 
-	protected StdGUI stdGUI;
+	protected GUI stdGUI;
 
 	public final QuitApp quitApp = new QuitApp();
 	public final QuitAppSave quitAppSave = new QuitAppSave();
@@ -66,7 +66,7 @@ public class Buttons {
 	public final SettingsCreate settingsCreate = new SettingsCreate();
 	public final SettingsOverwriteOK settingsOverwriteOK = new SettingsOverwriteOK();
 
-	public Buttons ( StdGUI stdGUI ) {
+	public Buttons ( GUI stdGUI ) {
 		this.stdGUI = stdGUI;
 	}
 

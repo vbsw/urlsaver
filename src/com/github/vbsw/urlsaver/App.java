@@ -14,11 +14,11 @@ import com.github.vbsw.urlsaver.api.URLMetaDefinition;
 import com.github.vbsw.urlsaver.api.Global;
 import com.github.vbsw.urlsaver.db.DB;
 import com.github.vbsw.urlsaver.gui.Properties;
-import com.github.vbsw.urlsaver.gui.StdGUI;
-import com.github.vbsw.urlsaver.gui.StdLogger;
-import com.github.vbsw.urlsaver.io.StdFXMLIO;
+import com.github.vbsw.urlsaver.gui.GUI;
+import com.github.vbsw.urlsaver.gui.Logger;
+import com.github.vbsw.urlsaver.io.FXMLIO;
 import com.github.vbsw.urlsaver.io.SettingsIO;
-import com.github.vbsw.urlsaver.io.StdURLsIO;
+import com.github.vbsw.urlsaver.io.URLsIO;
 import com.github.vbsw.urlsaver.settings.Settings;
 import com.github.vbsw.urlsaver.utility.LabelProvider;
 import com.github.vbsw.urlsaver.utility.PathProvider;
@@ -41,11 +41,11 @@ public class App extends Application {
 		final Settings settings = new Settings(appArguments);
 		final LabelProvider labelProvider = new LabelProvider();
 		final DB db = new DB();
-		final StdLogger logger = new StdLogger();
+		final Logger logger = new Logger();
 		final SettingsIO settingsIO = new SettingsIO();
-		final StdURLsIO urlsIO = new StdURLsIO();
-		final StdFXMLIO fxmlIO = new StdFXMLIO();
-		final StdGUI gui = new StdGUI();
+		final URLsIO urlsIO = new URLsIO();
+		final FXMLIO fxmlIO = new FXMLIO();
+		final GUI gui = new GUI();
 		final URLMetaDefinition urlMetaDefinition = new URLMetaDefinition();
 
 		Global.properties = properties;
@@ -64,7 +64,6 @@ public class App extends Application {
 		db.initialize();
 		logger.initialize();
 		gui.initialize(primaryStage);
-
 	}
 
 	private String[] getAppArguements ( ) {

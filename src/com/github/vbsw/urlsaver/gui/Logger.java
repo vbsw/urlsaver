@@ -19,12 +19,12 @@ import com.github.vbsw.urlsaver.api.ILogger;
 /**
  * @author Vitali Baumtrok
  */
-public class StdLogger implements ILogger {
+public class Logger implements ILogger {
 
-	protected StdGUI stdGUI;
+	protected GUI stdGUI;
 
 	public void initialize ( ) {
-		this.stdGUI = (StdGUI) Global.gui;
+		this.stdGUI = (GUI) Global.gui;
 	}
 
 	@Override

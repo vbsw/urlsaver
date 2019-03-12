@@ -20,8 +20,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-import com.github.vbsw.urlsaver.resources.JarFileResource;
-
 
 /**
  * @author Vitali Baumtrok
@@ -84,7 +82,7 @@ public interface IResource {
 
 		@Override
 		public InputStream getInputStream ( ) throws IOException {
-			final ClassLoader classLoader = JarFileResource.class.getClassLoader();
+			final ClassLoader classLoader = IResource.JarFile.class.getClassLoader();
 			final InputStream stream = classLoader.getResourceAsStream(filePathInsideJar);
 			if ( stream == null ) {
 				throw new NoSuchFileException(filePathInsideJar);

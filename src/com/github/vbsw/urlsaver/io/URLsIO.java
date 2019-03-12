@@ -30,7 +30,7 @@ import javafx.event.EventHandler;
 /**
  * @author Vitali Baumtrok
  */
-public class StdURLsIO implements IURLsIO {
+public class URLsIO implements IURLsIO {
 
 	protected final ArrayList<URLsLoadService> urlsLoadServices = new ArrayList<>();
 
@@ -155,7 +155,7 @@ public class StdURLsIO implements IURLsIO {
 		@Override
 		public void handle ( final WorkerStateEvent event ) {
 			dbURLs.loadingFinished();
-			Global.gui.dbURLsLoaded(dbURLs);
+			Global.gui.dbURLsLoadingFinished(dbURLs);
 		}
 
 	}

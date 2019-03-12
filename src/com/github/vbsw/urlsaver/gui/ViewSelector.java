@@ -9,17 +9,17 @@
 package com.github.vbsw.urlsaver.gui;
 
 
-import com.github.vbsw.urlsaver.api.ViewSelector;
+import com.github.vbsw.urlsaver.api.IViewSelector;
 
 
 /**
  * @author Vitali Baumtrok
  */
-public class StdViewSelector extends ViewSelector {
+public class ViewSelector implements IViewSelector {
 
-	protected StdGUI stdGUI;
+	protected GUI stdGUI;
 
-	public StdViewSelector ( final StdGUI stdGUI ) {
+	public ViewSelector ( final GUI stdGUI ) {
 		this.stdGUI = stdGUI;
 	}
 

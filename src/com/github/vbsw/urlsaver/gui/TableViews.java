@@ -34,11 +34,11 @@ import javafx.scene.input.MouseEvent;
  */
 public class TableViews {
 
-	protected StdGUI stdGUI;
+	protected GUI stdGUI;
 
 	public final URLs urls = new URLs();
 
-	public TableViews ( final StdGUI stdGUI ) {
+	public TableViews ( final GUI stdGUI ) {
 		this.stdGUI = stdGUI;
 	}
 

@@ -29,8 +29,8 @@ public interface IGUI {
 
 	public void refreshTitle ( );
 
-	public void dbURLsLoaded ( DBURLs record );
+	public void dbURLsLoadingFinished ( DBURLs record );
 
-	public ViewSelector getViewSelector ( );
+	public IViewSelector getViewSelector ( );
 
 }

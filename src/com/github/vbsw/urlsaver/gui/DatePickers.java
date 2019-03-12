@@ -33,11 +33,11 @@ public class DatePickers {
 	private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DatePickers.datePattern);
 	private static final StringConverter<LocalDate> converter = new Converter();
 
-	protected StdGUI stdGUI;
+	protected GUI stdGUI;
 
 	public final URLDate urlDate = new URLDate();
 
-	public DatePickers ( final StdGUI stdGUI ) {
+	public DatePickers ( final GUI stdGUI ) {
 		this.stdGUI = stdGUI;
 	}
 

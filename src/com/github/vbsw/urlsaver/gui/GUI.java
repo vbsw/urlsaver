@@ -15,7 +15,7 @@ import com.github.vbsw.urlsaver.api.IGUI;
 import com.github.vbsw.urlsaver.api.Global;
 import com.github.vbsw.urlsaver.api.ILabelProvider;
 import com.github.vbsw.urlsaver.api.ISettings;
-import com.github.vbsw.urlsaver.api.ViewSelector;
+import com.github.vbsw.urlsaver.api.IViewSelector;
 import com.github.vbsw.urlsaver.db.DBURLs;
 import com.github.vbsw.urlsaver.db.URLsSearchResult;
 import com.github.vbsw.urlsaver.gui.CheckBoxes.CustomCheckBox;
@@ -34,11 +34,11 @@ import javafx.stage.WindowEvent;
 /**
  * @author Vitali Baumtrok
  */
-public class StdGUI implements IGUI {
+public class GUI implements IGUI {
 
 	public Properties properties;
 
-	public ViewSelector viewSelector;
+	public IViewSelector viewSelector;
 	public HotKeys hotKeys;
 	public Buttons buttons;
 	public CheckBoxes checkBoxes;
@@ -59,7 +59,7 @@ public class StdGUI implements IGUI {
 
 	public void initialize ( final Stage primaryStage ) {
 		this.properties = (Properties) Global.properties;
-		this.viewSelector = new StdViewSelector(this);
+		this.viewSelector = new ViewSelector(this);
 		this.hotKeys = new HotKeys();
 		this.buttons = new Buttons(this);
 		this.checkBoxes = new CheckBoxes(this);
@@ -130,7 +130,7 @@ public class StdGUI implements IGUI {
 	}
 
 	@Override
-	public ViewSelector getViewSelector ( ) {
+	public IViewSelector getViewSelector ( ) {
 		return viewSelector;
 	}
 
@@ -265,7 +265,7 @@ public class StdGUI implements IGUI {
 	}
 
 	@Override
-	public void dbURLsLoaded ( final DBURLs dbURLs ) {
+	public void dbURLsLoadingFinished ( final DBURLs dbURLs ) {
 		final boolean fileIsAlreadySelected = (Global.db.getSelectedURLs() == dbURLs);
 
 		if ( listViews.files.autoSelectRequested ) {

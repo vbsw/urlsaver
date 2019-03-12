@@ -21,7 +21,7 @@ import javafx.scene.Parent;
 /**
  * @author Vitali Baumtrok
  */
-public class StdFXMLIO implements IFXMLIO {
+public class FXMLIO implements IFXMLIO {
 
 	@Override
 	public Parent readFXML ( ) {

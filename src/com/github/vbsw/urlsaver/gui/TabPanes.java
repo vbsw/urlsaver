@@ -24,9 +24,9 @@ import javafx.scene.control.TabPane;
 public class TabPanes {
 
 	public final Top top = new Top();
-	protected StdGUI stdGUI;
+	protected GUI stdGUI;
 
-	public TabPanes ( final StdGUI stdGUI ) {
+	public TabPanes ( final GUI stdGUI ) {
 		this.stdGUI = stdGUI;
 	}
 

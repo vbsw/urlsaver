@@ -26,11 +26,11 @@ import javafx.scene.control.ComboBox;
  */
 public class ComboBoxes {
 
-	protected StdGUI stdGUI;
+	protected GUI stdGUI;
 
 	public final Score score = new Score();
 
-	public ComboBoxes ( final StdGUI stdGUI ) {
+	public ComboBoxes ( final GUI stdGUI ) {
 		this.stdGUI = stdGUI;
 	}
 

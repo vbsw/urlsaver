@@ -9,18 +9,19 @@
 package com.github.vbsw.urlsaver.api;
 
 
-import javafx.beans.property.SimpleBooleanProperty;
-
-
 /**
  * @author Vitali Baumtrok
  */
-public abstract class Properties {
+public interface IViewSelector {
 
-	public abstract SimpleBooleanProperty selectedFileDirtyProperty ( );
+	public abstract void selectFilesView ( );
 
-	public abstract SimpleBooleanProperty confirmingSaveProperty ( );
+	public abstract void selectURLsView ( );
 
-	public abstract SimpleBooleanProperty confirmingQuitProperty ( );
+	public abstract void selectImportView ( );
+
+	public abstract void selectSettingsView ( );
+
+	public abstract void selectAboutView ( );
 
 }

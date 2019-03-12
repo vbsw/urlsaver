@@ -26,9 +26,9 @@ public class CheckBoxes {
 	public final LoadAtStart urlsFileAutoloadAll = new LoadAtStart();
 	public final ByPrefix byPrefix = new ByPrefix();
 
-	protected StdGUI stdGUI;
+	protected GUI stdGUI;
 
-	public CheckBoxes ( final StdGUI stdGUI ) {
+	public CheckBoxes ( final GUI stdGUI ) {
 		this.stdGUI = stdGUI;
 	}
 

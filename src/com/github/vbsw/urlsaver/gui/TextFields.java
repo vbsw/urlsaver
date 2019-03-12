@@ -38,9 +38,9 @@ public class TextFields {
 	public final FileExtension urlsFileExtension = new FileExtension();
 	public final DefaultFile urlsFileSelect = new DefaultFile();
 
-	protected StdGUI stdGUI;
+	protected GUI stdGUI;
 
-	public TextFields ( final StdGUI stdGUI ) {
+	public TextFields ( final GUI stdGUI ) {
 		this.stdGUI = stdGUI;
 	}
 

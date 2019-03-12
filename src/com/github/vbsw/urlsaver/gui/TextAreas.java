@@ -28,9 +28,9 @@ public class TextAreas {
 	public final Tags tags = new Tags();
 	public final Log log = new Log();
 
-	protected StdGUI stdGUI;
+	protected GUI stdGUI;
 
-	public TextAreas ( final StdGUI stdGUI ) {
+	public TextAreas ( final GUI stdGUI ) {
 		this.stdGUI = stdGUI;
 	}
 
