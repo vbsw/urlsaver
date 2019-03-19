@@ -125,7 +125,7 @@
                      </children>
                   </HBox>
                   <ListView fx:id="import_list_view" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                  <TextField promptText="import by keywords (empty means all)" />
+                  <TextField fx:id="import_keys_tf" promptText="import by keywords (empty means all)" />
                   <HBox spacing="5.0">
                      <children>
                         <Label fx:id="import_urls_count_label" minHeight="25.0" minWidth="200.0" prefHeight="25.0" prefWidth="200.0" text="URLs ?" />

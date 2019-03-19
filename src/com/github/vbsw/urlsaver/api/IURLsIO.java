@@ -14,13 +14,13 @@ package com.github.vbsw.urlsaver.api;
  */
 public interface IURLsIO {
 
-	public void loadDefault ( );
-
 	public void recreateServices ( );
 
 	public void reloadAllFiles ( );
 
 	public void reloadSelectedFile ( );
+
+	public void importSelectedFile ( );
 
 	public void saveAllFiles ( );
 

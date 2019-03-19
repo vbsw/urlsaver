@@ -17,6 +17,7 @@ import com.github.vbsw.urlsaver.api.ILabelProvider;
 import com.github.vbsw.urlsaver.api.ISettings;
 import com.github.vbsw.urlsaver.api.IViewSelector;
 import com.github.vbsw.urlsaver.db.DBURLs;
+import com.github.vbsw.urlsaver.db.DBURLsImport;
 import com.github.vbsw.urlsaver.db.URLsSearchResult;
 import com.github.vbsw.urlsaver.gui.CheckBoxes.CustomCheckBox;
 import com.github.vbsw.urlsaver.utility.Parser;
@@ -92,7 +93,9 @@ public class GUI implements IGUI {
 		selectDefaultFile();
 
 		Global.urlsIO.recreateServices();
-		Global.urlsIO.loadDefault();
+		if ( Global.settings.getBooleanProperty(ISettings.Property.urlsFileAutoLoadAll).modifiedValue )
+			Global.urlsIO.reloadAllFiles();
+		Global.urlsIO.importSelectedFile();
 	}
 
 	public void onCloseRequest ( final WindowEvent event ) {
@@ -375,6 +378,26 @@ public class GUI implements IGUI {
 			datePickers.urlDate.setDate(date);
 			comboBoxes.score.selectScore(score);
 		}
+	}
+
+	@Override
+	public void refreshImportSelection ( ) {
+		// TODO refreshImportSelection
+	}
+
+	@Override
+	public void dbURLsImportFinished ( final DBURLsImport dbURLsImport ) {
+		// TODO dbURLsImportFinished
+	}
+
+	@Override
+	public void refreshImportListView ( ) {
+		// TODO refreshImportListView
+	}
+
+	@Override
+	public void refreshImportInfo ( ) {
+		// TODO refreshImportInfo
 	}
 
 }

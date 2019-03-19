@@ -171,8 +171,8 @@ public class DBURLs {
 		return loadedFlag;
 	}
 
-	public void setURLsSearchString ( final String searchString ) {
-		this.urlsSearchString = searchString;
+	public void setURLsSearchString ( final String searchKeys ) {
+		this.urlsSearchString = searchKeys;
 	}
 
 	public String getURLsSearchString ( ) {

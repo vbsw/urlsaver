@@ -57,8 +57,7 @@ public class ListViews {
 		final KeyCode keyCode = event.getCode();
 		if ( keyCode == KeyCode.ENTER ) {
 			event.consume();
-			/* select filter */
-			/* TODO select filter */
+			stdGUI.textFields.importKeys.control.requestFocus();
 		}
 	}
 
@@ -71,7 +70,8 @@ public class ListViews {
 
 	private void import_selected ( final ObservableValue<? extends DBURLsImport> observable, final DBURLsImport oldValue, final DBURLsImport newValue ) {
 		Global.db.setSelectedURLsImport(newValue);
-		/* TODO refresh import_selected */
+		stdGUI.properties.confirmingImportURLsProperty().set(false);
+		/* no info to refresh */
 	}
 
 	private ListCell<DBURLs> filesCellFactory ( final ListView<DBURLs> param ) {

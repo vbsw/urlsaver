@@ -10,6 +10,7 @@ package com.github.vbsw.urlsaver.api;
 
 
 import com.github.vbsw.urlsaver.db.DBURLs;
+import com.github.vbsw.urlsaver.db.DBURLsImport;
 
 
 /**
@@ -27,10 +28,18 @@ public interface IGUI {
 
 	public void refreshFileListView ( );
 
+	public void refreshImportSelection ( );
+
 	public void refreshTitle ( );
 
 	public void dbURLsLoadingFinished ( DBURLs record );
 
+	public void dbURLsImportFinished ( DBURLsImport dbURLsImport );
+
 	public IViewSelector getViewSelector ( );
+
+	public void refreshImportListView ( );
+
+	public void refreshImportInfo ( );
 
 }

@@ -12,6 +12,7 @@ package com.github.vbsw.urlsaver.gui;
 import com.github.vbsw.urlsaver.api.Global;
 import com.github.vbsw.urlsaver.api.ISettings;
 import com.github.vbsw.urlsaver.db.DBURLs;
+import com.github.vbsw.urlsaver.db.DBURLsImport;
 import com.github.vbsw.urlsaver.db.DynArrayOfString;
 import com.github.vbsw.urlsaver.utility.Converter;
 import com.github.vbsw.urlsaver.utility.Parser;
@@ -37,6 +38,7 @@ public class TextFields {
 	public final Height height = new Height();
 	public final FileExtension urlsFileExtension = new FileExtension();
 	public final DefaultFile urlsFileSelect = new DefaultFile();
+	public final ImportKeys importKeys = new ImportKeys();
 
 	protected GUI stdGUI;
 
@@ -53,14 +55,15 @@ public class TextFields {
 		height.build(root);
 		urlsFileExtension.build(root);
 		urlsFileSelect.build(root);
+		importKeys.build(root);
 	}
 
 	public void urlSearch_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
-		final DBURLs record = Global.db.getSelectedURLs();
+		final DBURLs dbURLs = Global.db.getSelectedURLs();
 		if ( newValue != null )
-			record.setURLsSearchString(newValue);
+			dbURLs.setURLsSearchString(newValue);
 		else
-			record.setURLsSearchString("");
+			dbURLs.setURLsSearchString("");
 	}
 
 	public void urlSearch_enterPressed ( final ActionEvent event ) {
@@ -73,6 +76,18 @@ public class TextFields {
 		stdGUI.tableViews.urls.showSearchResults();
 		stdGUI.refreshURLsInfo();
 		stdGUI.resetURLsProperties();
+	}
+
+	public void importKeys_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
+		final DBURLsImport dbURLsImport = Global.db.getSelectedURLsImport();
+		if (newValue != null)
+			dbURLsImport.setURLsImportKeysString(newValue);
+		else
+			dbURLsImport.setURLsImportKeysString("");
+	}
+
+	public void importKeys_enterPressed ( final ActionEvent event ) {
+		// TODO importKeys_enterPressed
 	}
 
 	public void url_changed ( final ObservableValue<? extends String> observable, final String oldValue, final String newValue ) {
@@ -211,6 +226,14 @@ public class TextFields {
 		private void build ( final Parent root ) {
 			control = (TextField) root.lookup("#settings_default_file_tf");
 			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> urlsFileSelect_changed(observable,oldValue,newValue));
+		}
+	}
+
+	public class ImportKeys extends CustomTextField {
+		private void build ( final Parent root ) {
+			control = (TextField) root.lookup("#import_keys_tf");
+			control.textProperty().addListener( ( ObservableValue<? extends String> observable, String oldValue, String newValue ) -> importKeys_changed(observable,oldValue,newValue));
+			control.setOnAction(event -> importKeys_enterPressed(event));
 		}
 	}
 

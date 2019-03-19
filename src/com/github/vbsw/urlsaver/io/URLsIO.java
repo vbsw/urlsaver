@@ -17,9 +17,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 
 import com.github.vbsw.urlsaver.api.Global;
-import com.github.vbsw.urlsaver.api.ISettings;
 import com.github.vbsw.urlsaver.api.IURLsIO;
 import com.github.vbsw.urlsaver.db.DBURLs;
+import com.github.vbsw.urlsaver.db.DBURLsImport;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -33,6 +33,7 @@ import javafx.event.EventHandler;
 public class URLsIO implements IURLsIO {
 
 	protected final ArrayList<URLsLoadService> urlsLoadServices = new ArrayList<>();
+	protected final ArrayList<URLsImportLoadService> urlsImportLoadServices = new ArrayList<>();
 
 	@Override
 	public void recreateServices ( ) {
@@ -48,13 +49,16 @@ public class URLsIO implements IURLsIO {
 			service.setOnSucceeded(succeededListener);
 			urlsLoadServices.add(service);
 		}
-	}
-
-	@Override
-	public void loadDefault ( ) {
-		if ( Global.settings.getBooleanProperty(ISettings.Property.urlsFileAutoLoadAll).modifiedValue )
-			for ( URLsLoadService service: urlsLoadServices )
-				service.start();
+		for ( DBURLsImport dbURLsImport: Global.db.getURLsImportList() ) {
+			final URLsImportLoadService service = new URLsImportLoadService(inputCharset,Global.urlMetaKey,dbURLsImport);
+			final URLsImportLoadProgressListener progressListener = new URLsImportLoadProgressListener(dbURLsImport);
+			final ServiceFailedListener failedListener = new ServiceFailedListener();
+			final ImportSucceededListener succeededListener = new ImportSucceededListener(dbURLsImport);
+			service.progressProperty().addListener(progressListener);
+			service.setOnFailed(failedListener);
+			service.setOnSucceeded(succeededListener);
+			urlsImportLoadServices.add(service);
+		}
 	}
 
 	@Override
@@ -69,8 +73,14 @@ public class URLsIO implements IURLsIO {
 
 	@Override
 	public void reloadSelectedFile ( ) {
-		final DBURLs selectedTable = Global.db.getSelectedURLs();
-		reloadFile(selectedTable);
+		final DBURLs dbURLs = Global.db.getSelectedURLs();
+		reloadFile(dbURLs);
+	}
+
+	@Override
+	public void importSelectedFile ( ) {
+		final DBURLsImport dbURLsImport = Global.db.getSelectedURLsImport();
+		importFile(dbURLsImport);
 	}
 
 	public void cancelLoadingFile ( final DBURLs dbTable ) {
@@ -80,13 +90,24 @@ public class URLsIO implements IURLsIO {
 		}
 	}
 
-	public void reloadFile ( final DBURLs dbTable ) {
-		for ( URLsLoadService service: urlsLoadServices ) {
-			if ( service.dbTable == dbTable ) {
-				dbTable.beginLoading();
-				if ( Global.db.getSelectedURLs() == dbTable )
+	public void reloadFile ( final DBURLs dbURLs ) {
+		for ( URLsLoadService urlsLoadService: urlsLoadServices ) {
+			if ( urlsLoadService.dbTable == dbURLs ) {
+				dbURLs.beginLoading();
+				if ( Global.db.getSelectedURLs() == dbURLs )
 					Global.gui.refreshFileSelection();
-				service.restart();
+				urlsLoadService.restart();
+			}
+		}
+	}
+
+	public void importFile ( final DBURLsImport dbURLsImport ) {
+		for ( URLsImportLoadService urLsImportLoadService: urlsImportLoadServices ) {
+			if ( urLsImportLoadService.dbURLsImport == dbURLsImport ) {
+				dbURLsImport.beginImport();
+				if ( Global.db.getSelectedURLsImport() == dbURLsImport )
+					Global.gui.refreshImportSelection();
+				urLsImportLoadService.restart();
 			}
 		}
 	}
@@ -118,19 +139,37 @@ public class URLsIO implements IURLsIO {
 	}
 
 	private class URLsLoadProgressListener implements ChangeListener<Number> {
-		private final DBURLs record;
+		private final DBURLs dbURLs;
 
-		public URLsLoadProgressListener ( final DBURLs record ) {
-			this.record = record;
+		public URLsLoadProgressListener ( final DBURLs dbURLs ) {
+			this.dbURLs = dbURLs;
 		}
 
 		@Override
 		public void changed ( final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue ) {
 			final int percentLoaded = (int) (newValue.doubleValue() * 100);
-			final String listLabel = Global.labelProvider.getFileListLabel(record,percentLoaded);
-			record.setListLabel(listLabel);
+			final String listLabel = Global.labelProvider.getFileListLabel(dbURLs,percentLoaded);
+			dbURLs.setListLabel(listLabel);
 			Global.gui.refreshFileListView();
 			Global.gui.refreshFileInfo();
+		}
+
+	}
+
+	private class URLsImportLoadProgressListener implements ChangeListener<Number> {
+		private final DBURLsImport dbURLsImport;
+
+		public URLsImportLoadProgressListener ( final DBURLsImport dbURLsImport ) {
+			this.dbURLsImport = dbURLsImport;
+		}
+
+		@Override
+		public void changed ( final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue ) {
+			final int percentLoaded = (int) (newValue.doubleValue() * 100);
+			final String listLabel = Global.labelProvider.getImportListLabel(dbURLsImport,percentLoaded);
+			dbURLsImport.setListLabel(listLabel);
+			Global.gui.refreshImportListView();
+			Global.gui.refreshImportInfo();
 		}
 
 	}
@@ -156,6 +195,22 @@ public class URLsIO implements IURLsIO {
 		public void handle ( final WorkerStateEvent event ) {
 			dbURLs.loadingFinished();
 			Global.gui.dbURLsLoadingFinished(dbURLs);
+		}
+
+	}
+
+	private final class ImportSucceededListener implements EventHandler<WorkerStateEvent> {
+
+		private final DBURLsImport dbURLsImport;
+
+		public ImportSucceededListener ( final DBURLsImport dbURLsImport ) {
+			this.dbURLsImport = dbURLsImport;
+		}
+
+		@Override
+		public void handle ( final WorkerStateEvent event ) {
+			dbURLsImport.importFinished();
+			Global.gui.dbURLsImportFinished(dbURLsImport);
 		}
 
 	}

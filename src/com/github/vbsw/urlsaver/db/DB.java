@@ -21,6 +21,7 @@ import com.github.vbsw.urlsaver.api.Global;
 import com.github.vbsw.urlsaver.api.IDB;
 import com.github.vbsw.urlsaver.api.ISettings;
 import com.github.vbsw.urlsaver.utility.OSFiles;
+import com.github.vbsw.urlsaver.utility.Parser;
 
 
 /**
@@ -145,7 +146,6 @@ public class DB implements IDB {
 	private ArrayList<Path> filterMyAnimeList ( final ArrayList<Path> xmlFiles ) {
 		if ( xmlFiles.size() > 0 ) {
 			final ArrayList<Path> list = new ArrayList<Path>(xmlFiles.size());
-			final byte[] filter = new byte[] { '<', 'm', 'y', 'a', 'n', 'i', 'm', 'e', 'l', 'i', 's', 't', '>' };
 			for ( Path path: xmlFiles ) {
 				final byte[] buffer = new byte[1000];
 				int bytesRead = 0;
@@ -154,24 +154,12 @@ public class DB implements IDB {
 				} catch ( IOException e ) {
 					e.printStackTrace();
 				}
-				for ( int i = 0; i < bytesRead - filter.length; i += 1 ) {
-					if ( matchBytes(buffer,filter,i) ) {
-						list.add(path);
-					}
-				}
+				if ( Parser.isMyAnimeListXML(buffer,0,bytesRead) )
+					list.add(path);
 			}
 			return list;
 		}
 		return xmlFiles;
-	}
-
-	private boolean matchBytes ( final byte[] buffer, final byte[] filter, final int offset ) {
-		for ( int i = 0; i < filter.length; i += 1 ) {
-			if ( buffer[offset + i] != filter[i] ) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	private ArrayList<Path> getSortedPaths ( final ArrayList<Path> paths ) {

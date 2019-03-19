@@ -141,4 +141,35 @@ public class Parser {
 		return fromLeft;
 	}
 
+	public static boolean isMyAnimeListXML ( final byte[] bytes, final int fromLeft, final int toRight ) {
+		final byte[] filter = new byte[] { '<', 'm', 'y', 'a', 'n', 'i', 'm', 'e', 'l', 'i', 's', 't', '>' };
+		final int index = Parser.seekMatch(bytes,fromLeft,toRight,filter);
+		final boolean match = index < toRight;
+		return match;
+	}
+
+	public static int seekMatch ( final byte[] bytes, final int fromLeft, final int toRight, final byte[] word ) {
+		if ( fromLeft < toRight ) {
+			final int rightLimit = toRight - word.length;
+			if ( fromLeft < rightLimit )
+				for ( int i = fromLeft; i < rightLimit; i += 1 )
+					if ( Parser.isMatch(bytes,i,word) )
+						return i;
+			return toRight;
+		}
+		return fromLeft;
+	}
+
+	/**
+	 * Empty word returns always true!
+	 */
+	private static boolean isMatch ( final byte[] bytes, final int offset, final byte[] word ) {
+		for ( int i = 0; i < word.length; i += 1 ) {
+			if ( bytes[offset + i] != word[i] ) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 }

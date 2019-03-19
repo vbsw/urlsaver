@@ -39,6 +39,7 @@ public class Properties implements IProperties {
 	private final SimpleBooleanProperty confirmingCreateSettings = new SimpleBooleanProperty();
 	private final SimpleBooleanProperty confirmingCreateCSS = new SimpleBooleanProperty();
 	private final SimpleBooleanProperty confirmingCreateFXML = new SimpleBooleanProperty();
+	private final SimpleBooleanProperty confirmingImportURLs = new SimpleBooleanProperty();
 	private final SimpleBooleanProperty settingsModified = new SimpleBooleanProperty();
 	private final SimpleBooleanProperty titleChanged = new SimpleBooleanProperty();
 	private final SimpleBooleanProperty widthChanged = new SimpleBooleanProperty();
@@ -127,6 +128,10 @@ public class Properties implements IProperties {
 
 	public SimpleBooleanProperty confirmingCreateFXMLProperty ( ) {
 		return confirmingCreateFXML;
+	}
+
+	public SimpleBooleanProperty confirmingImportURLsProperty ( ) {
+		return confirmingImportURLs;
 	}
 
 	public SimpleBooleanProperty settingsModifiedProperty ( ) {

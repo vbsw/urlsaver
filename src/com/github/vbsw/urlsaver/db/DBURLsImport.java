@@ -9,8 +9,6 @@
 package com.github.vbsw.urlsaver.db;
 
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 
@@ -21,26 +19,26 @@ import java.nio.file.Path;
  */
 public class DBURLsImport {
 
+	public final DBURLs dbURLs = new DBURLs();
+
 	private Path path;
 	private String pathString;
 	private String listLabel;
 	private String fileName;
 	private long fileSize;
+	private String urlsImportKeysString;
 
 	public DBURLsImport ( final Path path ) {
 		setPath(path);
 	}
 
-	public String getListLabel ( ) {
-		return null;
-	}
-
 	public void setPath ( final Path path ) {
 		this.path = path;
+		dbURLs.setPath(path);
 		if ( path != null ) {
 			this.pathString = path.toString();
 			this.fileName = path.getFileName().toString();
-			refreshFileSize();
+			this.fileSize = dbURLs.getFileSize();
 		} else {
 			setStubs();
 		}
@@ -58,6 +56,10 @@ public class DBURLsImport {
 		this.listLabel = listLabel;
 	}
 
+	public String getListLabel ( ) {
+		return listLabel;
+	}
+
 	public String getFileName ( ) {
 		return fileName;
 	}
@@ -66,13 +68,21 @@ public class DBURLsImport {
 		return fileSize;
 	}
 
-	private void refreshFileSize ( ) {
-		try {
-			fileSize = Files.size(path);
-		} catch ( IOException e ) {
-			fileSize = -1;
-			e.printStackTrace();
-		}
+	public void setURLsImportKeysString ( final String importKeys ) {
+		urlsImportKeysString = importKeys;
+	}
+
+	public String getURLsImportKeysString ( ) {
+		return urlsImportKeysString;
+	}
+
+	public void beginImport ( ) {
+		dbURLs.beginLoading();
+	}
+
+	public void importFinished ( ) {
+		dbURLs.loadingFinished();
+		fileSize = dbURLs.getFileSize();
 	}
 
 	private void setStubs ( ) {
